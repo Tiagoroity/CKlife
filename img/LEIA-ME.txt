@@ -1,0 +1,269 @@
+FOTOS DO CK LIFE
+
+Coloque as fotos nesta pasta (img) com exatamente estes nomes. Formato .jpg.
+Tamanho recomendado: até 1200 px de largura e até 300 KB cada (dá para reduzir em squoosh.app).
+Foto que ainda não existir não quebra nada: o app mostra o verde da marca no lugar.
+
+MODELO (capa das telas e fundo da tela de entrada)
+  modelo.jpg  -> foto vertical da modelo, sem textos
+
+LOGO
+  logo.png  -> logo CK Life com fundo transparente (já colocada)
+  icone-512.png, icone-192.png, apple-touch-icon.png -> ícone do app (já colocados)
+
+EXERCÍCIOS (fotos da Maya fazendo o movimento) — formato vertical, sem texto
+  Nome do arquivo: ex-<código>.jpg. Exercício sem foto mostra um cartão verde com as iniciais.
+  Todos os 40 exercícios de casa já têm foto. Para trocar uma, salve por cima com o mesmo nome:
+  ex-agacho.jpg  -> Agachamento livre
+  ex-agacho.jpg  -> Agachamento com salto
+  ex-afundocasa.jpg  -> Afundo alternado
+  ex-bulgarocasa.jpg  -> Agachamento búlgaro na cadeira
+  ex-sumocasa.jpg  -> Agachamento sumô
+  ex-ponte.jpg  -> Ponte de glúteo
+  ex-ponte.jpg  -> Ponte com uma perna
+  ex-wallsit.jpg  -> Cadeira na parede
+  ex-stepup.jpg  -> Subida na cadeira
+  ex-coice.jpg  -> Coice em quatro apoios
+  ex-elevlatdeit.jpg  -> Elevação lateral de perna deitado
+  ex-panturrilha.jpg  -> Panturrilha em pé
+  ex-flexao.jpg  -> Flexão de braço
+  ex-flexjoelho.jpg  -> Flexão com joelhos
+  ex-flexinc.jpg  -> Flexão inclinada no sofá
+  ex-flexdiam.jpg  -> Flexão diamante
+  ex-pike.jpg  -> Flexão pike (ombros)
+  ex-mergulho.jpg  -> Tríceps no banco
+  ex-invrow.jpg  -> Remada invertida na mesa
+  ex-barrafixa.jpg  -> Barra fixa
+  ex-supermann.jpg  -> Super-homem
+  ex-perdigueiro.jpg  -> Perdigueiro
+  ex-prancha.jpg  -> Prancha
+  ex-pranchalat.jpg  -> Prancha lateral
+  ex-toqueombro.jpg  -> Prancha com toque no ombro
+  ex-escalador.jpg  -> Escalador (mountain climber)
+  ex-abdsupra.jpg  -> Abdominal supra
+  ex-abdinfra.jpg  -> Abdominal infra
+  ex-bicicleta.jpg  -> Abdominal bicicleta
+  ex-deadbug.jpg  -> Dead bug
+  ex-hollow.jpg  -> Canoa (hollow)
+  ex-vup.jpg  -> Abdominal canivete
+  ex-polichinelo.jpg  -> Polichinelo
+  ex-burpee.jpg  -> Burpee
+  ex-corrida.jpg  -> Corrida estacionária
+  ex-skater.jpg  -> Patinador
+  ex-pularcorda.jpg  -> Pular corda
+  ex-along.jpg  -> Alongamento de posterior
+  ex-crianca.jpg  -> Postura da criança
+  ex-alongquad.jpg  -> Alongamento de quadríceps
+
+  Fotos que chegaram mas ainda não têm exercício no app: ex-hidrante.jpg, ex-russo.jpg, ex-abdpe.jpg
+
+TREINOS (capa de cada programa)
+  treino-comecando.jpg  -> Começando em casa
+  treino-calistenia.jpg  -> Calistenia base
+  treino-hiit.jpg  -> Queima em casa (HIIT)
+  treino-gluteos.jpg  -> Glúteos em casa
+  treino-abdomen.jpg  -> Abdômen em casa
+  treino-seteminutos.jpg  -> Treino de 7 minutos
+  treino-mobilidade.jpg  -> Mobilidade e alongamento
+
+RECEITAS (uma foto por receita)
+  receita-r0.jpg  -> Omelete de espinafre e queijo branco
+  receita-r1.jpg  -> Panqueca de banana e aveia
+  receita-r2.jpg  -> Crepioca de frango
+  receita-r3.jpg  -> Tapioca de ovo e tomate
+  receita-r4.jpg  -> Overnight oats de morango
+  receita-r5.jpg  -> Mingau de aveia com canela
+  receita-r6.jpg  -> Ovos mexidos com cottage
+  receita-r7.jpg  -> Pão integral com abacate e ovo
+  receita-r8.jpg  -> Smoothie verde de couve e abacaxi
+  receita-r9.jpg  -> Iogurte com granola caseira e frutas
+  receita-r10.jpg  -> Cuscuz nordestino com ovo
+  receita-r11.jpg  -> Pão de queijo de frigideira
+  receita-r12.jpg  -> Wrap de ovo com peito de peru
+  receita-r13.jpg  -> Panqueca proteica de whey
+  receita-r14.jpg  -> Shakshuka fit
+  receita-r15.jpg  -> Torrada francesa integral
+  receita-r16.jpg  -> Bowl de açaí sem açúcar
+  receita-r17.jpg  -> Muffin salgado de legumes
+  receita-r18.jpg  -> Sanduíche de atum e cenoura
+  receita-r19.jpg  -> Chia pudding de coco
+  receita-r20.jpg  -> Bolinho de aveia de micro-ondas
+  receita-r21.jpg  -> Omelete de forno com brócolis
+  receita-r22.jpg  -> Tapioca de queijo coalho e orégano
+  receita-r23.jpg  -> Vitamina de banana com aveia
+  receita-r24.jpg  -> Ovo pochê com aspargos
+  receita-r25.jpg  -> Grão-de-bico crocante de forno
+  receita-r26.jpg  -> Homus com palitos de cenoura
+  receita-r27.jpg  -> Chips de batata-doce de airfryer
+  receita-r28.jpg  -> Chips de couve
+  receita-r29.jpg  -> Pipoca de panela com azeite
+  receita-r30.jpg  -> Ovos cozidos temperados
+  receita-r31.jpg  -> Rolinho de peito de peru e cream cheese
+  receita-r32.jpg  -> Pão de frango proteico
+  receita-r33.jpg  -> Bolinho de atum de forno
+  receita-r34.jpg  -> Edamame com sal grosso
+  receita-r35.jpg  -> Palitos de abobrinha empanados
+  receita-r36.jpg  -> Pizza de frigideira de aveia
+  receita-r37.jpg  -> Tomate-cereja com muçarela de búfala
+  receita-r38.jpg  -> Mix de castanhas temperado
+  receita-r39.jpg  -> Sanduíche natural de frango
+  receita-r40.jpg  -> Coxinha de batata-doce fit
+  receita-r41.jpg  -> Pasta de ricota com ervas
+  receita-r42.jpg  -> Bolacha de arroz com pasta de amendoim
+  receita-r43.jpg  -> Esfiha fit de carne
+  receita-r44.jpg  -> Wrap de alface com atum
+  receita-r45.jpg  -> Frango grelhado com limão e ervas
+  receita-r46.jpg  -> Tilápia assada com legumes
+  receita-r47.jpg  -> Escondidinho de batata-doce com frango
+  receita-r48.jpg  -> Carne moída com abobrinha
+  receita-r49.jpg  -> Arroz integral com brócolis
+  receita-r50.jpg  -> Strogonoff fit de frango
+  receita-r51.jpg  -> Salmão com crosta de gergelim
+  receita-r52.jpg  -> Feijão caseiro com pouco óleo
+  receita-r53.jpg  -> Quibe de forno com abóbora
+  receita-r54.jpg  -> Frango xadrez
+  receita-r55.jpg  -> Peixe ao molho de tomate
+  receita-r56.jpg  -> Almôndegas de forno ao sugo
+  receita-r57.jpg  -> Escondidinho de mandioquinha com carne
+  receita-r58.jpg  -> Frango ao curry com legumes
+  receita-r59.jpg  -> Lasanha de berinjela
+  receita-r60.jpg  -> Lasanha de abobrinha com frango
+  receita-r61.jpg  -> Hambúrguer caseiro de patinho
+  receita-r62.jpg  -> Hambúrguer de grão-de-bico
+  receita-r63.jpg  -> Picadinho de carne com legumes
+  receita-r64.jpg  -> Moqueca de peixe light
+  receita-r65.jpg  -> Frango desfiado com milho e ervilha
+  receita-r66.jpg  -> Escondidinho de couve-flor
+  receita-r67.jpg  -> Macarrão integral à bolonhesa
+  receita-r68.jpg  -> Espaguete de abobrinha com camarão
+  receita-r69.jpg  -> Risoto de quinoa com cogumelos
+  receita-r70.jpg  -> Frango assado com batata-doce
+  receita-r71.jpg  -> Bife acebolado de patinho
+  receita-r72.jpg  -> Omelete de forno com atum
+  receita-r73.jpg  -> Escondidinho de abóbora com carne seca
+  receita-r74.jpg  -> Frango à parmegiana de forno
+  receita-r75.jpg  -> Peito de peru assado com ervas
+  receita-r76.jpg  -> Arroz de couve-flor
+  receita-r77.jpg  -> Purê de abóbora
+  receita-r78.jpg  -> Lentilha refogada
+  receita-r79.jpg  -> Filé de frango recheado com espinafre
+  receita-r80.jpg  -> Salada de grão-de-bico
+  receita-r81.jpg  -> Salada Caesar fit
+  receita-r82.jpg  -> Salada de quinoa colorida
+  receita-r83.jpg  -> Salada de atum com feijão-branco
+  receita-r84.jpg  -> Salada caprese
+  receita-r85.jpg  -> Salada de frango com manga
+  receita-r86.jpg  -> Tabule
+  receita-r87.jpg  -> Salada de lentilha
+  receita-r88.jpg  -> Salada grega
+  receita-r89.jpg  -> Salada de rúcula com morango e nozes
+  receita-r90.jpg  -> Salada de ovo e batata-doce
+  receita-r91.jpg  -> Salada de repolho com cenoura
+  receita-r92.jpg  -> Salada de pepino com iogurte
+  receita-r93.jpg  -> Salada de frango com abacate
+  receita-r94.jpg  -> Salada de beterraba e laranja
+  receita-r95.jpg  -> Salada de feijão-fradinho
+  receita-r96.jpg  -> Salada de camarão com abacaxi
+  receita-r97.jpg  -> Salada morna de legumes assados
+  receita-r98.jpg  -> Salada de salmão defumado
+  receita-r99.jpg  -> Salada de macarrão integral com atum
+  receita-r100.jpg  -> Frango ao molho de mostarda
+  receita-r101.jpg  -> Carne de panela com legumes
+  receita-r102.jpg  -> Bowl de frango, arroz integral e feijão
+  receita-r103.jpg  -> Poke de salmão
+  receita-r104.jpg  -> Yakisoba fit de legumes e frango
+  receita-r105.jpg  -> Tilápia empanada na aveia
+  receita-r106.jpg  -> Escondidinho de mandioca com frango
+  receita-r107.jpg  -> Berinjela recheada com carne
+  receita-r108.jpg  -> Abobrinha recheada com frango
+  receita-r109.jpg  -> Pimentão recheado
+  receita-r110.jpg  -> Frango com quiabo
+  receita-r111.jpg  -> Bacalhau à gomes de sá fit
+  receita-r112.jpg  -> Sardinha assada com tomate
+  receita-r113.jpg  -> Frango teriyaki fit
+  receita-r114.jpg  -> Panqueca integral de carne
+  receita-r115.jpg  -> Nhoque de batata-doce ao sugo
+  receita-r116.jpg  -> Escalope de mignon com cogumelos
+  receita-r117.jpg  -> Fígado acebolado
+  receita-r118.jpg  -> Frango com abóbora e alecrim
+  receita-r119.jpg  -> Tacos de alface com carne
+  receita-r120.jpg  -> Burrito bowl
+  receita-r121.jpg  -> Kafta assada
+  receita-r122.jpg  -> Wrap integral de frango
+  receita-r123.jpg  -> Couscous marroquino com legumes
+  receita-r124.jpg  -> Tofu grelhado com legumes
+  receita-r125.jpg  -> Frango à passarinho na airfryer
+  receita-r126.jpg  -> Polenta cremosa com ragu
+  receita-r127.jpg  -> Camarão com chuchu
+  receita-r128.jpg  -> Ovos mexidos com legumes e arroz
+  receita-r129.jpg  -> Arroz carreteiro fit
+  receita-r130.jpg  -> Galinhada com açafrão
+  receita-r131.jpg  -> Salpicão fit
+  receita-r132.jpg  -> Frango grelhado com chimichurri
+  receita-r133.jpg  -> Ratatouille
+  receita-r134.jpg  -> Quiche de frango com massa de aveia
+  receita-r135.jpg  -> Sopa de legumes com frango
+  receita-r136.jpg  -> Creme de abóbora com gengibre
+  receita-r137.jpg  -> Caldo verde fit
+  receita-r138.jpg  -> Sopa de lentilha
+  receita-r139.jpg  -> Canja de galinha
+  receita-r140.jpg  -> Creme de brócolis
+  receita-r141.jpg  -> Sopa de feijão com macarrão
+  receita-r142.jpg  -> Sopa de mandioquinha com carne
+  receita-r143.jpg  -> Creme de couve-flor
+  receita-r144.jpg  -> Sopa de tomate assado
+  receita-r145.jpg  -> Sopa de ervilha
+  receita-r146.jpg  -> Sopa de grão-de-bico com espinafre
+  receita-r147.jpg  -> Creme de cenoura com laranja
+  receita-r148.jpg  -> Sopa de peixe
+  receita-r149.jpg  -> Sopa de abóbora com frango
+  receita-r150.jpg  -> Mousse de chocolate com abacate
+  receita-r151.jpg  -> Brigadeiro de whey
+  receita-r152.jpg  -> Sorvete de banana (nice cream)
+  receita-r153.jpg  -> Bolo de caneca de chocolate
+  receita-r154.jpg  -> Pudim de chia com cacau
+  receita-r155.jpg  -> Cookies de banana e aveia
+  receita-r156.jpg  -> Brownie de batata-doce
+  receita-r157.jpg  -> Pudim de leite fit
+  receita-r158.jpg  -> Mousse de maracujá fit
+  receita-r159.jpg  -> Panna cotta de iogurte com frutas vermelhas
+  receita-r160.jpg  -> Banana assada com canela
+  receita-r161.jpg  -> Maçã assada com aveia
+  receita-r162.jpg  -> Picolé de iogurte com morango
+  receita-r163.jpg  -> Trufa de tâmara e cacau
+  receita-r164.jpg  -> Cheesecake fit de frutas vermelhas
+  receita-r165.jpg  -> Bolo de cenoura fit
+  receita-r166.jpg  -> Bolo de banana sem açúcar
+  receita-r167.jpg  -> Pavê fit de morango
+  receita-r168.jpg  -> Gelatina proteica de frutas
+  receita-r169.jpg  -> Doce de abóbora sem açúcar
+  receita-r170.jpg  -> Beijinho de coco fit
+  receita-r171.jpg  -> Sorvete de manga com iogurte
+  receita-r172.jpg  -> Barrinha de cereal caseira
+  receita-r173.jpg  -> Crepe de cacau com morango
+  receita-r174.jpg  -> Brigadeiro de colher de batata-doce
+  receita-r175.jpg  -> Pêra cozida com especiarias
+  receita-r176.jpg  -> Iogurte grego com mel e nozes
+  receita-r177.jpg  -> Torta de limão fit
+  receita-r178.jpg  -> Muffin de blueberry
+  receita-r179.jpg  -> Palha italiana fit
+  receita-r180.jpg  -> Creme de papaia
+  receita-r181.jpg  -> Bombom de morango fit
+  receita-r182.jpg  -> Cuscuz doce de tapioca
+  receita-r183.jpg  -> Arroz-doce fit
+  receita-r184.jpg  -> Mingau de chocolate proteico
+  receita-r185.jpg  -> Sorvete de morango com whey
+  receita-r186.jpg  -> Panqueca doce de cacau
+  receita-r187.jpg  -> Brownie de feijão preto
+  receita-r188.jpg  -> Romeu e Julieta fit
+  receita-r189.jpg  -> Bolo de fubá fit
+  receita-r190.jpg  -> Musse de limão com iogurte
+  receita-r191.jpg  -> Frutas grelhadas com canela
+  receita-r192.jpg  -> Petit gâteau fit
+  receita-r193.jpg  -> Pudim de tapioca com coco
+  receita-r194.jpg  -> Brigadeiro de amendoim
+  receita-r195.jpg  -> Açaí cremoso proteico
+  receita-r196.jpg  -> Torta de maçã fit
+  receita-r197.jpg  -> Mousse de morango com whey
+  receita-r198.jpg  -> Cocada de forno fit
+  receita-r199.jpg  -> Bolo de laranja integral
