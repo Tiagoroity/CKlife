@@ -701,9 +701,36 @@ input[type=date].input::-webkit-date-and-time-value{text-align:left;margin:0}
 .planlist>div{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--line);font-weight:600;font-size:15px}
 .planlist>div svg{color:var(--accent);flex:0 0 auto}
 .obhero>img[src*=desenv]{object-position:center 0}
+
+/* tela de carregamento */
+.splash{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;justify-content:space-between;background:linear-gradient(135deg,#0E3D32,#2E7D5A 60%,#7BA77A);color:#fff;transition:opacity .4s}
+.splash.sai{opacity:0;pointer-events:none}
+.splash-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 12%}
+.splash::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,24,19,.55),transparent 30%,transparent 50%,rgba(6,24,19,.92))}
+.splash-top,.splash-bot{position:relative;z-index:1;padding:max(28px,env(safe-area-inset-top,0px)) 24px 0}
+.splash-top{display:flex;align-items:center;gap:12px}
+.splash-top img{border-radius:14px}
+.splash-top b{font-family:var(--display);font-size:24px;font-weight:800}
+.splash-top em,.splash-bot em{font-style:normal;color:#B9DDB2}
+.splash-bot{padding-bottom:max(36px,env(safe-area-inset-bottom,0px))}
+.splash-bot h1{font-family:var(--display);font-size:38px;line-height:1;font-weight:800;margin:0 0 22px;letter-spacing:-.03em;color:#fff}
+.splash-bar{height:8px;border-radius:9px;background:rgba(255,255,255,.2);overflow:hidden}
+.splash-bar i{display:block;height:100%;width:40%;border-radius:9px;background:linear-gradient(90deg,#2E7D5A,#3DDC6E);animation:barra 1.4s ease-in-out infinite}
+@keyframes barra{0%{transform:translateX(-100%)}100%{transform:translateX(260%)}}
+.splash-bot p{margin:12px 0 0;color:rgba(255,255,255,.85);font-size:15px;text-align:center}
+/* botão esperando resposta */
+.btn.carregando,.link.carregando{position:relative;color:transparent!important;pointer-events:none}
+.btn.carregando::after{content:"";position:absolute;left:50%;top:50%;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;border:3px solid rgba(255,255,255,.35);border-top-color:#fff;animation:gira .8s linear infinite}
+@keyframes gira{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.splash-bar i{animation:none;width:100%}}
 </style>
 
 <!-- Entrar / criar conta -->
+<div class="splash" id="splash" role="status" aria-live="polite" aria-label="Carregando">
+  <img class="splash-bg" src="img/modelo.jpg" alt="" onerror="this.remove()">
+  <div class="splash-top"><img src="img/icone-192.png" alt="" width="52" height="52" onerror="this.remove()"><b>CK <em>Life</em></b></div>
+  <div class="splash-bot"><h1>Sua evolução,<br><em>todos os dias.</em></h1><div class="splash-bar"><i></i></div><p>Carregando sua evolução…</p></div>
+</div>
 <section class="screen" id="v-login" hidden>
   <div class="panel">
     <div class="lhero"><img src="img/modelo.jpg" alt="" onerror="this.remove()">
@@ -1271,7 +1298,13 @@ N.iniciar = async (DB, modoAdm, aoRecuperar) => {
   DB.cidades.sort((a, b) => String(a.nome).localeCompare(b.nome));
   try{ N.existeAdmin = !!(await q(sb.rpc("existe_admin"))); }catch(e){}
   const { data: { session } } = await sb.auth.getSession();
-  if(session) await N.carregar(DB, session.user, modoAdm);
+  if(session){
+    // internet oscilou ao abrir: tenta de novo antes de mandar para a tela de entrada
+    for(let t = 0; t < 3; t++){
+      try{ await N.carregar(DB, session.user, modoAdm); break; }
+      catch(e){ console.warn("Falha ao carregar, tentando de novo", e); if(t === 2) throw e; await new Promise(r => setTimeout(r, 1500)); }
+    }
+  }
 };
 N.carregar = async (DB, user, modoAdm) => {
   N.uid = user.id; N.email = user.email;
@@ -1322,14 +1355,19 @@ function traduz(e){
 /* gravação: só o que mudou, alguns instantes depois da última alteração */
 let tm = null, rodando = false, deNovo = false, avisar = null;
 N.aoErro = f => avisar = f;
-N.salvar = DB => { clearTimeout(tm); tm = setTimeout(() => grava(DB), 700); };
-window.addEventListener("pagehide", () => { if(tm){ clearTimeout(tm); tm = null; if(N._db) grava(N._db); } });
+N.salvar = DB => { N._db = DB; clearTimeout(tm); tm = setTimeout(() => grava(DB), 700); };
+// grava na hora quando a aluna sai do app, troca de aba ou bloqueia o celular
+const agora = () => { if(tm){ clearTimeout(tm); tm = null; if(N._db) grava(N._db); } };
+window.addEventListener("pagehide", agora);
+document.addEventListener("visibilitychange", () => { if(document.visibilityState === "hidden") agora(); });
 async function grava(DB){
   N._db = DB; tm = null;
   if(!SNAP || !N.uid) return;
   if(rodando){ deNovo = true; return; }
   rodando = true;
   const ops = [], s = SNAP;
+  // cópia do retrato antes desta rodada: se a gravação falhar, volta e tenta de novo
+  const antes = { users: { ...s.users }, adms: { ...s.adms }, cols: Object.fromEntries(Object.entries(s.cols).map(([k, v]) => [k, { ...v }])), unicos: { ...s.unicos }, ev: s.ev, acc: new Set(s.acc) };
   try{
     /* pessoas */
     const vistos = new Set();
@@ -1373,7 +1411,11 @@ async function grava(DB){
     const acc = []; Object.entries(DB.acessos || {}).forEach(([d, L]) => L.forEach(id => { const k = d + "|" + id; if(!s.acc.has(k)){ s.acc.add(k); if(id === N.uid) acc.push({ dia: d, user_id: id }); } }));
     if(acc.length) ops.push(q(sb.from("acessos").upsert(acc, { ignoreDuplicates: true })));
     await Promise.all(ops);
-  }catch(e){ console.warn("Erro ao salvar", e); if(avisar) avisar(e); }
+  }catch(e){
+    console.warn("Erro ao salvar", e); if(avisar) avisar(e);
+    Object.assign(s, antes, { ev: s.ev });
+    clearTimeout(tm); tm = setTimeout(() => grava(DB), 4000);
+  }
   rodando = false;
   if(deNovo){ deNovo = false; grava(DB); }
 }
@@ -2181,10 +2223,14 @@ function sessao(){ if(NU.ativo) return NU.uid ? userById(NU.uid) || null : null;
 function setSess(id){ memSess = id; LS.sess(id); }
 async function logout(){ const adm = modoAdmin(); if(NU.ativo){ fechaTudo(); await NU.sair(); location.reload(); return; } setSess(null); ME = null; fechaTudo(); adm ? showAdminLogin() : showLogin(); }
 document.querySelectorAll("[data-logout]").forEach(b => b.onclick = logout);
-function show(v){ ["v-login","v-admlogin","v-onb","v-bloq","v-app","v-admin"].forEach(x => $(x).hidden = x !== v); window.scrollTo(0, 0); }
+function show(v){ ["v-login","v-admlogin","v-onb","v-bloq","v-app","v-admin"].forEach(x => $(x).hidden = x !== v); escondeSplash(); window.scrollTo(0, 0); }
+function escondeSplash(){ const s = $("splash"); if(s && !s.classList.contains("sai")){ s.classList.add("sai"); setTimeout(() => s.remove(), 450); } }
+setTimeout(escondeSplash, 15000);
 
 /* ---------- Entrar e criar conta ---------- */
-function lmsg(t, ok){ if(t && !ok) SOM.erro(); const m = $("login-msg"); m.hidden = !t; m.className = "msg " + (ok ? "msg-ok" : "msg-bad"); m.textContent = t || ""; }
+function lmsg(t, ok){ if(t && !ok) SOM.erro(); const m = $("login-msg"); m.hidden = !t; m.className = "msg " + (ok ? "msg-ok" : "msg-bad"); m.textContent = t || "";
+  const carregando = !!t && ok && /…$/.test(t);
+  document.querySelectorAll("#v-login [type=submit], #b-esqueci").forEach(b => { b.classList.toggle("carregando", carregando); b.disabled = carregando; }); }
 function modoAuth(cad){ $("tg-cad").setAttribute("aria-pressed", cad); $("tg-login").setAttribute("aria-pressed", !cad); $("f-cad").hidden = !cad; $("f-login").hidden = cad; lmsg(""); }
 $("tg-login").onclick = () => modoAuth(false);
 $("tg-cad").onclick = () => modoAuth(true);
@@ -2207,7 +2253,7 @@ $("f-login").addEventListener("submit", async e => {
 $("b-esqueci").onclick = async () => {
   if(!NU.ativo) return lmsg("Peça ao administrador para criar uma senha nova para você.", true);
   const email = $("l-email").value.trim().toLowerCase(); if(!email) return lmsg("Digite seu e-mail no campo acima e toque de novo em Esqueci minha senha.");
-  const e = await NU.reset(email); e ? lmsg(e) : lmsg("Enviamos um link para criar uma senha nova. Confira seu e-mail (e a caixa de spam).", true);
+  lmsg("Enviando o link…", true); const e = await NU.reset(email); e ? lmsg(e) : lmsg("Enviamos um link para criar uma senha nova. Confira seu e-mail (e a caixa de spam).", true);
 };
 function telaNovaSenha(){
   show("v-login"); modoAuth(false); $("f-login").hidden = true; $("f-cad").hidden = true;
@@ -2260,8 +2306,10 @@ function showAdminLogin(aviso){
   show("v-admlogin");
   $("fa").onsubmit = async e => {
     e.preventDefault();
-    const em = $("fa-e").value.trim().toLowerCase(), s = $("fa-s").value, erro = m => { SOM.erro(); $("fa-msg").innerHTML = `<div class="msg msg-bad">${m}</div>`; };
+    const bt = $("fa").querySelector("[type=submit]"), espera = on => { bt.classList.toggle("carregando", on); bt.disabled = on; };
+    const em = $("fa-e").value.trim().toLowerCase(), s = $("fa-s").value, erro = m => { espera(false); SOM.erro(); $("fa-msg").innerHTML = `<div class="msg msg-bad">${m}</div>`; };
     if(NU.ativo){
+      espera(true);
       if(temAdm){
         const r = await NU.entrar(em, s); if(r.erro) return erro(r.erro);
         await NU.carregar(DB, r.user, true); if(!NU.admin){ await NU.sair(); return erro("Esta conta não tem acesso ao painel."); }
