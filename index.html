@@ -304,7 +304,7 @@ ol.steps li::before{content:counter(s);width:28px;height:28px;border-radius:50%;
 
 /* Folhas e telas cheias */
 .sheet,.full{position:fixed;inset:0;z-index:20;background:var(--bg);overflow-y:auto;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);animation:sobe .22s ease-out}
-@keyframes sobe{from{transform:translateY(16px);opacity:.4}to{transform:none;opacity:1}}
+@keyframes sobe{from{transform:translateY(24px)}to{transform:none}}
 .sheet-head{position:sticky;top:0;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:flex;align-items:center;gap:12px;padding:12px max(16px,env(safe-area-inset-right,0px)) 12px max(16px,env(safe-area-inset-left,0px));z-index:2}
 .sheet-head b{flex:1;min-width:0;font-family:var(--display);font-size:19px;line-height:1.1}
 .sheet-body{max-width:640px;margin:0 auto;padding:8px max(16px,env(safe-area-inset-right,0px)) 60px max(16px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:18px}
@@ -526,7 +526,6 @@ body[data-ro="1"] .needs-edit{display:none!important}
 .rdet{isolation:isolate}
 .rdet>.ph{z-index:-1;opacity:.9}
 .rdet>.ph+.rdet-art{display:none}
-#v-login{background:linear-gradient(180deg,rgba(245,248,239,.0) 0%,rgba(245,248,239,.0) 30%,var(--bg) 62%),url(img/modelo.jpg) right top/auto 62% no-repeat,var(--bg)}
 .brand-logo{height:56px;width:auto;display:block}
 
 /* ===== Fotos reais da Maya (substituem o boneco) ===== */
@@ -617,14 +616,100 @@ body[data-ro="1"] .needs-edit{display:none!important}
 .fx-stage.larga::before{content:"";position:absolute;inset:-20px;background:var(--bg) center/cover;filter:blur(18px) brightness(.55)}
 .fx-stage.larga img{position:relative;object-fit:contain;animation:none}
 .pfull .fx-stage.larga img{height:62%;margin-top:14%}
+
+/* tela de entrada: foto da Maya no topo */
+#v-login{align-items:flex-start;padding-top:0}
+.lhero{position:relative;margin:0 -16px 4px;min-height:min(56vh,460px);border-radius:0 0 32px 32px;overflow:hidden;background:linear-gradient(135deg,#0E3D32,#2E7D5A 60%,#7BA77A);display:flex;flex-direction:column;justify-content:space-between;color:#fff}
+.lhero>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 10%}
+.lhero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,24,19,.55) 0%,transparent 28%,transparent 45%,rgba(6,24,19,.92) 100%)}
+.lhero-top{position:relative;z-index:1;display:flex;align-items:center;gap:10px;padding:max(18px,env(safe-area-inset-top,0px)) 18px 0}
+.lhero-top .wordmark{color:#fff}
+.lhero-top .wordmark b{color:#B9DDB2}
+.lhero-tx{position:relative;z-index:1;padding:0 20px 26px}
+.lhero-tx h1{font-family:var(--display);font-size:38px;font-weight:800;line-height:1;letter-spacing:-.03em;color:#fff;margin:0}
+.lhero-tx h1 em{font-style:normal;color:#B9DDB2}
+.lhero-tx p{margin:10px 0 0;color:rgba(255,255,255,.9);font-size:15px;max-width:300px}
+@media (min-width:480px){.lhero{margin:16px 0 4px;border-radius:32px}}
+
+/* ===== ajustes de design (revisão) ===== */
+.capa-foto{object-position:center 6%}
+.capa .avatar{left:16px;right:auto;top:16px;width:40px;height:40px;font-size:16px}
+.capa{min-height:230px;padding-top:70px}
+.today{grid-template-columns:minmax(0,1fr);min-height:270px;padding:22px 20px}
+.today>div:first-child{position:relative;z-index:1;max-width:62%;display:flex;flex-direction:column}
+.today .hfig{position:absolute;top:0;right:0;bottom:0;width:60%;height:auto;margin:0;border-radius:0}
+.today .hfig img,.today .hfig .fx img{border-radius:0;object-position:center 25%;-webkit-mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.6) 30%,#000 60%);mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.6) 30%,#000 60%)}
+.today .hfig .fx{background:none}
+.today h2{font-size:28px;line-height:1.05}
+.today .meta{gap:6px;margin:12px 0 18px}
+.today .meta span{font-size:12px;padding:5px 9px;background:rgba(14,61,50,.55);backdrop-filter:blur(4px)}
+.today .btn{min-height:48px;padding:0 18px}
+.today.done>div:first-child{max-width:none}
+.today .hfig{inset:0 0 0 auto;height:100%;min-height:100%}
+.today .hfig>.fx,.today .hfig>.ph{position:absolute;inset:0;width:100%;height:100%}
+/* iPhone: campo de data não pode passar da tela */
+input[type=date].input{-webkit-appearance:none;appearance:none;display:block;width:100%;min-width:0;max-width:100%;min-height:52px;text-align:left;line-height:1.2}
+input[type=date].input::-webkit-date-and-time-value{text-align:left;margin:0}
+.field{min-width:0}
+.row2>*{min-width:0}
+
+.objlist{display:flex;flex-direction:column;gap:10px}
+.objlist button{display:grid;grid-template-columns:88px minmax(0,1fr) auto;align-items:center;gap:14px;text-align:left;background:var(--surface);border:1.5px solid var(--line);border-radius:20px;padding:0 16px 0 0;min-height:84px;overflow:hidden;color:var(--ink);box-shadow:var(--shadow-sm);cursor:pointer}
+.objlist button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.objf{align-self:stretch;position:relative;background:linear-gradient(135deg,#0E3D32,#2E7D5A)}
+.objf img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 25%}
+.objt b{display:block;font-size:16px}
+.objt small{display:block;color:var(--muted);font-size:13px;line-height:1.3;margin-top:2px}
+.objok{width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center}
+.objlist button>svg{color:var(--muted)}
+.water{display:grid;grid-template-columns:repeat(auto-fit,minmax(26px,1fr));gap:6px}
+.cup{width:auto;min-width:0;height:40px}
+/* cartões de programa: foto à esquerda, compactos */
+.pcard{grid-template-columns:112px minmax(0,1fr);gap:14px;padding:0 14px 0 0;min-height:128px;align-items:center;overflow:hidden;border-radius:20px}
+.pcard>div:first-child{padding:14px 0}
+.pcard .pf{order:-1;margin:0;align-self:stretch;min-height:128px}
+.pcard .pf .fx,.pcard .pf .ph{position:absolute;inset:0;width:100%;height:100%}
+.pcard .pf img{-webkit-mask-image:none;mask-image:none;object-position:center 25%}
+.pcard h4{font-size:18px;line-height:1.1}
+.pcard p{font-size:13px;line-height:1.3}
+.pcard .tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.pcard .tags .tag{font-size:11.5px;padding:3px 8px}
+.pcard .tag.c{font-size:11px;padding:3px 8px}
+
+/* cabeçalho com foto grande (programa e treino) */
+.phero{position:relative;border-radius:24px;overflow:hidden;min-height:300px;display:flex;align-items:flex-end;background:linear-gradient(135deg,#0E3D32,#2E7D5A 60%,#7BA77A);color:#fff;box-shadow:0 18px 40px -22px rgba(14,61,50,.7)}
+.phero>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 22%}
+.phero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(6,24,19,.55) 55%,rgba(6,24,19,.94) 100%)}
+.phero-tx{position:relative;z-index:1;padding:18px 18px 18px}
+.phero-eb{display:inline-block;font-size:11.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;background:rgba(61,220,110,.9);color:#062016;border-radius:999px;padding:4px 10px}
+.phero h2{font-size:28px;font-weight:800;line-height:1.05;color:#fff;margin:8px 0 4px}
+.phero p{margin:0;color:rgba(255,255,255,.85);font-size:14px;line-height:1.4}
+.phero-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.phero-chips span{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:700;background:rgba(255,255,255,.16);backdrop-filter:blur(6px);border-radius:999px;padding:6px 10px}
+.phero{min-height:min(64vh,520px)}
+.phero>img{object-position:center 15%}
+.phero::after{background:linear-gradient(180deg,transparent 45%,rgba(6,24,19,.6) 66%,rgba(6,24,19,.95) 100%)}
+.exn.th .fx img,.dica .fx img,.rest .nx .fx img,.qcard .qi .fx img{object-position:center 58%}
+.hscroll{scroll-padding-inline:16px}
+.capa-foto[src*="ex-"]{object-position:center 18%}
+.capa .hello{display:flex;align-items:center}
+.capa .hello .avatar{position:static;flex:0 0 auto}
+.capa .hello h2{font-size:24px;line-height:1.1;margin:0}
+.capa .hello .k{font-size:13px;overflow-wrap:anywhere}
+.planlist{display:flex;flex-direction:column;gap:0;padding:16px 18px}
+.planlist h3{font-size:18px;margin:0 0 6px}
+.planlist>div{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--line);font-weight:600;font-size:15px}
+.planlist>div svg{color:var(--accent);flex:0 0 auto}
+.obhero>img[src*=desenv]{object-position:center 0}
 </style>
 
 <!-- Entrar / criar conta -->
 <section class="screen" id="v-login" hidden>
   <div class="panel">
-    <div class="brandrow"><span class="logo-slot"></span><div class="wordmark">CK <b>Life</b><small>Sua evolução, todos os dias</small></div></div>
-    <h1 class="bigtitle">Sua evolução, <em>todos os dias.</em></h1>
-    <p class="lead">Treinos em casa feitos para mulheres. Construa a sua melhor versão, no seu ritmo.</p>
+    <div class="lhero"><img src="img/modelo.jpg" alt="" onerror="this.remove()">
+      <div class="lhero-top"><span class="logo-slot"></span><div class="wordmark">CK <b>Life</b></div></div>
+      <div class="lhero-tx"><h1>Sua evolução, <em>todos os dias.</em></h1><p>Treinos em casa feitos para mulheres. No seu ritmo.</p></div>
+    </div>
     <div class="seg" role="group" aria-label="Entrar ou criar conta">
       <button id="tg-cad" aria-pressed="true" type="button">Criar conta</button>
       <button id="tg-login" aria-pressed="false" type="button">Já tenho conta</button>
@@ -1926,7 +2011,7 @@ const P = {
   play:'<path d="M7 4.5v15l12-7.5z" fill="currentColor" stroke="none"/>',
   pause:'<path d="M8 5v14M16 5v14" stroke-width="3"/>',
   prev:'<path d="M18 6l-8 6 8 6zM6 6v12"/>', next:'<path d="M6 6l8 6-8 6zM18 6v12"/>',
-  close:'<path d="M6 6l12 12M18 6L6 18"/>', back:'<path d="M15 5l-7 7 7 7"/>', check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+  close:'<path d="M6 6l12 12M18 6L6 18"/>', back:'<path d="M15 5l-7 7 7 7"/>', chev:'<path d="M9 5l7 7-7 7"/>', check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
   clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>', bolt:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',
   chair:'<path d="M7 3v10h10V3M5 13h14M7 13v8M17 13v8"/>', mesa:'<path d="M3 8h18M5 8v12M19 8v12M3 8l2-3h14l2 3"/>', barra:'<path d="M3 5h18M7 5v4M17 5v4"/><circle cx="12" cy="14" r="2.5"/><path d="M12 16.5V21"/>', corda:'<path d="M5 4v6M19 4v6"/><path d="M5 10c0 8 14 8 14 0"/>',
   flame:'<path d="M12 2s5 4.6 5 10a5 5 0 0 1-10 0c0-2.2 1-3.9 2-5 0 1.6.8 3 2 3 0-3 1-6 1-8z" fill="currentColor" stroke="none"/>',
@@ -1955,7 +2040,7 @@ const P = {
   sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/>'
 };
 const foto = (src, alt = "") => `<img class="ph" src="${src}" alt="${alt}" loading="lazy" onerror="this.remove()">`;
-const capa = (titulo, sub, extra = "") => `<div class="capa"><img class="capa-foto" src="img/modelo.jpg" alt="" onerror="this.remove()"><div class="capa-tx">${extra}${titulo ? `<h1>${titulo}</h1>` : ""}${sub ? `<p>${sub}</p>` : ""}</div></div>`;
+const capa = (titulo, sub, extra = "", src = "img/modelo.jpg") => `<div class="capa"><img class="capa-foto" src="${src}" alt="" onerror="this.remove()"><div class="capa-tx">${extra}${titulo ? `<h1>${titulo}</h1>` : ""}${sub ? `<p>${sub}</p>` : ""}</div></div>`;
 const ic = (k, s = 22, sw = 2) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[k] || ""}</svg>`;
 let LOGON = 0;
 const LOGO = (s = 34, g = "ckg" + (++LOGON)) => `<svg width="${s}" height="${s}" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="${g}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0E3D32"/><stop offset=".55" stop-color="#2E7D5A"/><stop offset="1" stop-color="#7BA77A"/></linearGradient></defs><rect width="40" height="40" rx="12" fill="#2E7D5A"/><rect width="40" height="40" rx="12" fill="url(#${g})"/><path d="M18.5 9.6a10.4 10.4 0 1 0 0 20.8" stroke="#F5F8EF" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="23.6" cy="11.3" r="2.3" fill="#F5F8EF"/><path d="M23.1 14.9c-1.7 3-1.3 5.5.2 7.6 1.3 1.8.8 4.6-1 7.4" stroke="#F5F8EF" stroke-width="2.6" fill="none" stroke-linecap="round"/><path d="M23.4 22.3l5.6 6.9" stroke="#F5F8EF" stroke-width="2.6" stroke-linecap="round"/><path d="M23.3 19.4l7.4-6.4" stroke="#B9DDB2" stroke-width="2.6" stroke-linecap="round"/><path d="M26.5 12.6h4.4V17" stroke="#B9DDB2" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
@@ -2316,6 +2401,7 @@ const OBJS = [
   ["condicionamento","Condicionamento","Mais fôlego e disposição no dia a dia","bolt",["hiit","seteminutos","comecando"]],
   ["mobilidade","Mobilidade","Corpo solto, postura e menos dores","leaf",["mobilidade","comecando"]]
 ];
+const OBJFOTO = { emagrecer: "polichinelo", definir: "coice", massa: "desenv", condicionamento: "escalador", mobilidade: "pranchalat" };
 const objById = id => OBJS.find(o => o[0] === id) || OBJS[0];
 const FRASES = ["Cada treino conta.", "Você está mais perto do que ontem.", "Continue evoluindo.", "Seu ritmo. Sua evolução.", "Construa a sua melhor versão."];
 const frase = (k = 0) => FRASES[(new Date().getDate() + k) % FRASES.length];
@@ -2330,7 +2416,7 @@ const OBQ = [
   { k: "dias", t: "Quantos dias por semana?", s: "Comece com o que dá para manter.", o: [[2,"2 dias","Leve"],[3,"3 dias","Recomendado"],[4,"4 dias","Focado"],[5,"5 dias","Intenso"],[6,"6 dias","Atleta"]], grade: 1 },
   { k: "medidas" }, { k: "pronto" }
 ];
-const OBFOTO = { objetivo: "img/modelo.jpg", itens: "img/ex-wallsit.jpg", nivel: "img/ex-afundocasa.jpg", tempo: "img/ex-polichinelo.jpg", dias: "img/ex-agacho.jpg", medidas: "img/ex-pranchalat.jpg" };
+const OBFOTO = { pronto: "img/ex-desenv.jpg", objetivo: "img/modelo.jpg", itens: "img/ex-wallsit.jpg", nivel: "img/ex-afundocasa.jpg", tempo: "img/ex-polichinelo.jpg", dias: "img/ex-agacho.jpg", medidas: "img/ex-pranchalat.jpg" };
 const OBFOTO_OPC = { "nivel:iniciante": "agacho", "nivel:intermediario": "afundocasa", "nivel:avancado": "escalador" };
 const obHero = (k, voltar, dots, t, sub) => `<div class="obhero"><img src="${OBFOTO[k] || "img/modelo.jpg"}" alt="" onerror="this.remove()"><div class="obhero-top">${voltar}<div style="flex:1">${dots}</div></div><div class="obhero-tx"><h1>${t}</h1><p>${sub}</p></div></div>`;
 function onboarding(){
@@ -2351,13 +2437,20 @@ function onboarding(){
       <div id="ob-msg"></div><button class="btn btn-accent btn-block btn-lg" id="ob-next">Montar meu plano</button>`;
   } else {
     const p = progById(OB.prog), m = metas({ ...ME, perfil: OB });
-    h = `<div class="brandrow"><span class="logo-slot">${LOGO()}</span><div class="wordmark">CK <b>Life</b></div></div>
-      <h1 class="bigtitle" style="font-size:38px">Seu plano está <em>pronto.</em></h1><p class="lead">Seu ritmo. Sua evolução.</p>
+    const NIVN = { iniciante: "Iniciante", intermediario: "Intermediário", avancado: "Avançado" };
+    h = obHero("pronto", "", "", `Seu plano está pronto, ${esc(ME.nome.split(" ")[0])}!`, "Com base nas suas respostas, montamos um plano só seu.") + `
+      <div class="card planlist"><h3>Seu plano</h3>
+        <div>${ic("calendar", 18)}<span>${OB.dias} dias por semana</span></div>
+        <div>${ic("inicio", 18)}<span>Em casa${OB.itens && OB.itens.length ? "" : ", sem equipamentos"}</span></div>
+        <div>${ic("target", 18)}<span>Objetivo: ${esc(objById(OB.objetivo)[1])}</span></div>
+        <div>${ic("star", 18)}<span>Nível: ${NIVN[OB.nivel] || "Iniciante"}</span></div>
+        <div>${ic("clock", 18)}<span>${OB.tempo} minutos por treino</span></div>
+      </div>
       <div class="pcard on" style="--pc:${p.cor}"><div><span class="tag c">Recomendado para você</span><h4 style="margin-top:10px">${esc(p.nome)}</h4><p>${esc(p.desc)}</p>
         <div class="tags"><span class="tag">${p.semanas} semanas</span><span class="tag">${OB.dias}x por semana</span><span class="tag">~${p.min} min</span></div></div><div class="pf">${window.BONECO.thumb(exById(p.dias[0].itens[0][0]), sexoB())}${foto(`img/treino-${p.id}.jpg`)}</div></div>
       <div class="card"><h3>Sua meta diária</h3><dl class="kv"><dt>Calorias</dt><dd class="num">${int(m.kcal)} kcal</dd><dt>Proteína</dt><dd class="num">${m.p} g</dd><dt>Água</dt><dd class="num">${(m.agua * .25).toFixed(1).replace(".", ",")} litros</dd></dl></div>
-      <button class="btn btn-grad btn-block btn-lg" id="ob-next">Começar minha evolução</button>
-      <button class="link" id="ob-back" style="align-self:center">Mudar respostas</button>`;
+      <button class="btn btn-accent btn-block btn-lg" id="ob-next">Começar agora</button>
+      <button class="link" id="ob-back" style="align-self:center">Ajustar respostas</button>`;
   }
   $("onb").innerHTML = h;
   const bk = $("ob-back"); if(bk) bk.onclick = () => { OB.i = q.k === "pronto" ? 0 : OB.i - 1; onboarding(); };
@@ -2433,8 +2526,8 @@ function rInicio(){
   $("t-inicio").innerHTML = `
     <div class="capa"><img class="capa-foto" src="img/modelo.jpg" alt="" onerror="this.remove()"><button class="avatar" id="h-av" aria-label="Perfil">${esc(ME.nome[0].toUpperCase())}</button><div class="capa-tx"><span class="hi">Olá, ${esc(ME.nome.split(" ")[0])} 👋</span><h1>Vamos evoluir hoje?</h1><p>${hojeFeito ? "Treino de hoje feito. " + frase() : "Seu treino está pronto."}</p></div></div>
     ${hojeFeito ? `<div class="today done"><div><span class="eyebrow">Treino de hoje concluído</span><h2>Você está mais perto do que ontem.</h2><p>${ultimo ? `${esc(ultimo.nome)} · ${ultimo.min} min · ${int(ultimo.kcal)} kcal` : ""}</p><div class="meta" style="margin-bottom:10px"><span>${ic("flame", 14)} ${s} ${s === 1 ? "dia" : "dias"} seguidos</span></div><button class="btn btn-sm" id="h-extra">Quero treinar mais</button></div></div>`
-    : `<div class="today"><div><span class="eyebrow">Treino de hoje</span><h2>${esc(T.nome)}</h2><p>${esc(p.nome)} · semana ${semana()} de ${p.semanas}</p>
-        <div class="meta"><span>${ic("target", 14)} ${esc(p.foco)}</span><span>${ic("clock", 14)} ${minTreino(T)} min</span><span>${ic("bolt", 14)} ${nivelN}</span><span>${ic("flame", 14)} ~${kcalTreino(T)} kcal</span></div>
+    : `<div class="today"><div><span class="eyebrow">Treino de hoje</span><h2>${esc(T.nome)}</h2><p>Semana ${semana()} de ${p.semanas}</p>
+        <div class="meta"><span>${ic("clock", 14)} ${minTreino(T)} min</span><span>${ic("bolt", 14)} ${nivelN}</span><span>${ic("flame", 14)} ~${kcalTreino(T)} kcal</span></div>
         <button class="btn" id="h-go">${ic("play", 16)} Começar treino</button></div>
         <div class="hfig">${window.BONECO.thumb(exById(T.steps[0].id), "f")}${foto(`img/treino-${p.id}.jpg`)}</div></div>`}
     ${av ? `<div class="notice">${ic("speaker", 22)}<div><b>${esc(av.titulo)}</b><p>${esc(av.texto)}</p></div></div>` : ""}
@@ -2450,7 +2543,7 @@ function rInicio(){
       <div class="week">${sem.map(d => { const dt = new Date(d + "T12:00:00"); return `<div class="wd ${feitos.has(d) ? "done" : ""} ${d === today() ? "hoje" : ""}"><span>${DIAS_CURTO[dt.getDay()]}</span><i>${feitos.has(d) ? ic("check", 16, 3) : dt.getDate()}</i></div>`; }).join("")}</div>
     </div>
     <div><div class="sec-title"><h3>Escolha seu objetivo</h3><span class="muted" style="font-size:13px">Atual: ${obj[1]}</span></div>
-      <div class="objs" style="margin-top:12px">${OBJS.map(o => `<button data-obj="${o[0]}" aria-pressed="${o[0] === ME.perfil.objetivo}"><span class="oi">${ic(o[3], 20)}</span>${o[1]}</button>`).join("")}</div></div>
+      <div class="objlist" style="margin-top:12px">${OBJS.map(o => `<button data-obj="${o[0]}" aria-pressed="${o[0] === ME.perfil.objetivo}"><span class="objf"><img src="img/ex-${OBJFOTO[o[0]]}.jpg" alt="" loading="lazy" onerror="this.remove()"></span><span class="objt"><b>${o[1]}</b><small>${o[2]}</small></span>${o[0] === ME.perfil.objetivo ? `<span class="objok">${ic("check", 14, 3)}</span>` : ic("chev", 18)}</button>`).join("")}</div></div>
     <div class="sec-title"><h3>Treinos rápidos</h3><button class="link" id="h-rap">Ver todos</button></div>
     <div class="hscroll">${QUICK.map(q => { const t = treinoRapido(q); return `<button class="qcard" data-q="${q.id}"><span class="qi">${window.BONECO.thumb(exById(q.itens[0][0]), "f")}<em>${minTreino(t)} min</em></span><b>${esc(q.nome)}</b><small>${esc(q.foco)}</small></button>`; }).join("")}</div>
     <div class="sec-title"><h3>Receita do dia</h3><button class="link" id="h-card">Ver cardápio</button></div>
@@ -2506,7 +2599,7 @@ function rTreinar(){
   const seg = `<div class="seg" role="group">${[["programas","Programas"],["rapidos","Rápidos"],["exercicios","Exercícios"]].map(([k, n]) => `<button data-v="${k}" aria-pressed="${TV === k}">${n}</button>`).join("")}</div>`;
   let body = "";
   if(TV === "programas"){
-    const atual = progAtual(), rec = recomenda(ME.perfil), L = PROGS.filter(p => p.local === TL).sort((a, b) => (b.id === rec) - (a.id === rec));
+    const atual = progAtual(), rec = recomenda(ME.perfil), L = PROGS.filter(p => p.local === TL && p.id !== atual.id).sort((a, b) => (b.id === rec) - (a.id === rec));
     const feitos = (ME.prog && ME.prog.feitos) || 0, tot = atual.semanas * atual.diasSem;
     body = `<button class="pcard on" style="--pc:${atual.cor}" data-prog="${atual.id}"><div><span class="tag c">Seu programa</span><h4 style="margin-top:10px">${esc(atual.nome)}</h4><p>Semana ${semana()} de ${atual.semanas} · ${feitos} de ${tot} treinos</p><div class="prog" style="margin-top:12px"><i style="width:${Math.min(100, 100 * feitos / tot)}%;background:${atual.cor}"></i></div></div><div class="pf">${window.BONECO.thumb(exById(atual.dias[0].itens[0][0]), sexoB())}${foto(`img/treino-${atual.id}.jpg`)}</div></button>
       ${L.map(p => `<button class="pcard" style="--pc:${p.cor}" data-prog="${p.id}"><div>${p.id === rec ? `<span class="tag c" style="margin-bottom:8px;display:inline-block">Recomendado para você</span>` : ""}<h4>${esc(p.nome)}</h4><p>${esc(p.sub)}</p><div class="tags"><span class="tag c">${p.nivel}</span><span class="tag">${p.semanas} semanas</span><span class="tag">~${p.min} min</span></div></div><div class="pf">${window.BONECO.thumb(exById(p.dias[0].itens[0][0]), sexoB())}${foto(`img/treino-${p.id}.jpg`)}</div></button>`).join("")}`;
@@ -2521,7 +2614,7 @@ function rTreinar(){
       <div class="chips scroll">${["", ...usados].map(g => `<button class="chip" data-g="${g}" aria-pressed="${EXF.m === g}">${g ? M[g] : "Todos os músculos"}</button>`).join("")}</div>
       <div class="list">${L.map(e => `<button class="exrow" data-ex="${e.id}">${thumbEx(e.id)}<span style="min-width:0"><b>${esc(e.nome)}</b><small>${esc(window.BONECO.info(e).prim.map(m => M[m]).join(", "))}</small><span class="tags" style="margin-top:4px"><span class="tag ${emCasa(e.id) ? "g" : ""}">${emCasa(e.id) ? esc(EQN[META[e.id].eq]) : "Academia"}</span></span></span><span class="muted">${ic("back", 16)}</span></button>`).join("") || `<div class="empty">Nenhum exercício encontrado.</div>`}</div>`;
   }
-  $("t-treinar").innerHTML = capa("Treinos", "Escolha seu treino e evolua todos os dias.") + seg + body;
+  $("t-treinar").innerHTML = capa("Treinos", "Escolha seu treino e evolua todos os dias.", "", "img/ex-desenv.jpg") + seg + body;
   $("t-treinar").querySelectorAll(".seg [data-v]").forEach(b => b.onclick = () => { TV = b.dataset.v; SOM.tap(); rTreinar(); });
   $("t-treinar").querySelectorAll("[data-prog]").forEach(b => b.onclick = () => abrirPrograma(b.dataset.prog));
   $("t-treinar").querySelectorAll("[data-l]").forEach(b => b.onclick = () => { TL = b.dataset.l; rTreinar(); });
@@ -2532,13 +2625,13 @@ function rTreinar(){
   const iq = $("ex-q"); if(iq){ let tq; iq.oninput = e => { clearTimeout(tq); tq = setTimeout(() => { EXF.q = e.target.value; rTreinar(); const i = $("ex-q"); i.focus(); i.setSelectionRange(i.value.length, i.value.length); }, 250); }; }
   $("t-treinar").querySelectorAll(".exrow svg").forEach(s => { if(s.closest(".muted")) s.style.transform = "rotate(180deg)"; });
 }
+const phero = (src, eyebrow, titulo, desc, chips) => `<div class="phero"><img src="${src}" alt="" onerror="this.remove()"><div class="phero-tx">${eyebrow ? `<span class="phero-eb">${eyebrow}</span>` : ""}<h2>${titulo}</h2>${desc ? `<p>${desc}</p>` : ""}${chips && chips.length ? `<div class="phero-chips">${chips.map(c => `<span>${c}</span>`).join("")}</div>` : ""}</div></div>`;
 function abrirPrograma(id){
   const p = progById(id), atual = ME.prog && ME.prog.id === id, sem = atual ? semana() : 1, prox = atual ? diaAtual() : 0;
   sheet(p.nome, `
-    <div class="pcard on" style="--pc:${p.cor};min-height:180px"><div><span class="tag c">${p.nivel}</span><h4 style="margin-top:10px;font-size:26px">${esc(p.nome)}</h4><p>${esc(p.desc)}</p>
-      <div class="tags"><span class="tag">${p.semanas} semanas</span><span class="tag">${p.diasSem}x por semana</span><span class="tag">~${p.min} min</span><span class="tag">${esc(p.foco)}</span></div></div><div class="pf">${window.BONECO.thumb(exById(p.dias[0].itens[0][0]), sexoB())}${foto(`img/treino-${p.id}.jpg`)}</div></div>
+    ${phero(`img/treino-${p.id}.jpg`, esc(p.nivel), esc(p.nome), esc(p.desc), [`${ic("calendar", 14)} ${p.semanas} semanas`, `${ic("repeat", 14)} ${p.diasSem}x por semana`, `${ic("clock", 14)} ~${p.min} min`])}
     ${atual ? `<div class="card"><div class="sec-title"><h3>Seu progresso</h3><span class="muted num">Semana ${sem} de ${p.semanas}</span></div><div class="prog" style="margin-top:12px"><i style="width:${Math.min(100, 100 * (ME.prog.feitos || 0) / (p.semanas * p.diasSem))}%"></i></div><p class="hint" style="margin:10px 0 0">A cada semana as repetições e o tempo aumentam um pouco. Ao terminar um treino, diga se foi fácil ou difícil e o app ajusta.</p></div>` : ""}
-    <div><h3 style="font-size:20px;margin-bottom:6px">Treinos</h3><div class="card" style="padding:4px 16px">${p.dias.map((d, i) => { const t = montaTreino(d, sem, {}); return `<button class="dayrow ${atual && i === prox ? "next" : ""}" data-d="${i}"><span class="dn">${i + 1}</span><span style="min-width:0"><b>${esc(d.nome)}</b><small>${minTreino(t)} min · ${new Set(d.itens.map(x => x[0])).size} exercícios${atual && i === prox ? " · próximo" : ""}</small></span><span class="muted">${ic("play", 16)}</span></button>`; }).join("")}</div></div>
+    <div><h3 style="font-size:20px;margin-bottom:6px">Treinos</h3><div class="card" style="padding:4px 16px">${p.dias.map((d, i) => { const t = montaTreino(d, sem, {}); return `<button class="dayrow ${atual && i === prox ? "next" : ""}" data-d="${i}"><span class="dn">${i + 1}</span><span style="min-width:0"><b>${esc(d.nome)}</b><small>${minTreino(t)} min · ${new Set(d.itens.map(x => x[0])).size} exercícios${atual && i === prox ? " · próximo" : ""}</small></span><span class="muted">${ic("chev", 16)}</span></button>`; }).join("")}</div></div>
     ${atual ? `<button class="btn btn-accent btn-block btn-lg" id="pg-go">${ic("play", 16)} Treinar agora</button>` : `<button class="btn btn-accent btn-block btn-lg" id="pg-set">Começar este programa</button>`}`, () => { if(TAB === "treinar") rTreinar(); else if(TAB === "inicio") rInicio(); });
   $("sheet-body").querySelectorAll("[data-d]").forEach(b => b.onclick = () => abrirTreinoPreview(montaTreino(p.dias[+b.dataset.d], sem, { prog: p.id, di: +b.dataset.d, sem, cor: p.cor, sub: p.nome })));
   const go = $("pg-go"); if(go) go.onclick = () => { fecharSheet(); iniciaTreino(treinoDoDia()); };
@@ -2548,8 +2641,7 @@ function abrirTreinoPreview(T){
   const ids = [...new Set(T.steps.map(s => s.id))], first = T.steps.filter((s, i) => T.steps.findIndex(x => x.id === s.id) === i);
   const rod = T.steps[0].rodadas, ser = T.steps.some(s => s.series > 1);
   sheet(T.nome, `
-    <div class="today" style="--pc:${T.cor || "#3DDC6E"};min-height:170px"><div><span class="eyebrow">${esc(T.sub || "Treino")}</span><h2>${esc(T.nome)}</h2>
-      <div class="meta"><span>${ic("clock", 14)} ${minTreino(T)} min</span><span>${ic("flame", 14)} ~${kcalTreino(T)} kcal</span>${rod > 1 ? `<span>${ic("repeat", 14)} ${rod} rodadas</span>` : ""}</div></div><div class="hfig">${window.BONECO.thumb(exById(ids[0]), sexoB())}</div></div>
+    ${phero(window.BONECO.fotoDe(exById(ids[0])), esc(T.sub || "Treino"), esc(T.nome), "", [`${ic("clock", 14)} ${minTreino(T)} min`, `${ic("flame", 14)} ~${kcalTreino(T)} kcal`, ...(rod > 1 ? [`${ic("repeat", 14)} ${rod} rodadas`] : [])])}
     <div><h3 style="font-size:20px;margin-bottom:8px">${ids.length} exercícios${rod > 1 ? `, repetidos ${rod} vezes` : ""}</h3>
       <div class="list">${first.map(s => { const e = exById(s.id); return `<button class="exrow" data-ex="${s.id}">${thumbEx(s.id)}<span style="min-width:0"><b>${esc(e.nome)}</b><small>${ser ? `${s.series} séries · ` : ""}descanso ${s.desc || 0}s</small></span><span class="sr num">${valTxt(s)}<small>${s.modo === "t" ? "TEMPO" : "REPS"}</small></span></button>`; }).join("")}</div></div>
     <p class="hint" style="margin:0">Toque num exercício para ver como fazer antes de começar.</p>
@@ -3004,11 +3096,11 @@ function rEvolucao(){
   const T = ME.treinos || [], min = T.reduce((a, t) => a + (t.min || 0), 0), kcal = T.reduce((a, t) => a + (t.kcal || 0), 0), feitos = diasTreino(), M = medalhas();
   const ref = new Date(); ref.setDate(1); ref.setMonth(ref.getMonth() + CALM);
   const ano = ref.getFullYear(), mes = ref.getMonth(), ini = (new Date(ano, mes, 1).getDay() + 6) % 7, nd = new Date(ano, mes + 1, 0).getDate();
-  const nomeMes = ref.toLocaleDateString("pt-BR", { month: "long", year: "numeric" });
+  const nomeMes = (s => s.charAt(0).toUpperCase() + s.slice(1))(ref.toLocaleDateString("pt-BR", { month: "long", year: "numeric" }));
   $("t-evolucao").innerHTML = `
-    ${capa("Sua evolução", frase(3))}
+    ${capa("Sua evolução", frase(3), "", "img/ex-alongquad.jpg")}
     <div class="stats"><div class="stat"><b class="num">${T.length}</b><span>treinos</span></div><div class="stat"><b class="num">${int(min)}</b><span>minutos</span></div><div class="stat"><b class="num">${int(kcal)}</b><span>kcal gastas</span></div></div>
-    <div class="card"><div class="sec-title"><h3 style="text-transform:capitalize">${nomeMes}</h3><span style="display:flex;gap:6px"><button class="iconbtn sm" id="cal-p" aria-label="Mês anterior">${ic("back", 16)}</button><button class="iconbtn sm" id="cal-n" aria-label="Próximo mês" ${CALM >= 0 ? "disabled" : ""} style="transform:rotate(180deg)">${ic("back", 16)}</button></span></div>
+    <div class="card"><div class="sec-title"><h3>${nomeMes}</h3><span style="display:flex;gap:6px"><button class="iconbtn sm" id="cal-p" aria-label="Mês anterior">${ic("back", 16)}</button><button class="iconbtn sm" id="cal-n" aria-label="Próximo mês" ${CALM >= 0 ? "disabled" : ""} style="transform:rotate(180deg)">${ic("back", 16)}</button></span></div>
       <div class="cal" style="margin-top:12px">${["S","T","Q","Q","S","S","D"].map(d => `<span class="wh">${d}</span>`).join("")}${Array.from({ length: ini }, () => `<span class="o"></span>`).join("")}${Array.from({ length: nd }, (_, k) => { const d = `${ano}-${pad(mes + 1)}-${pad(k + 1)}`; return `<span class="${feitos.has(d) ? "f" : ""} ${d === today() ? "h" : ""}">${k + 1}</span>`; }).join("")}</div>
       <p class="hint" style="margin:10px 0 0">${[...feitos].filter(d => d.startsWith(`${ano}-${pad(mes + 1)}`)).length} dias treinados neste mês · sequência atual de ${streak()} ${streak() === 1 ? "dia" : "dias"}</p></div>
     <div class="card"><div class="sec-title"><h3>Peso</h3><button class="link" id="ev-peso">Registrar peso</button></div>${pesoChart(ME.pesos || [])}</div>
@@ -3048,7 +3140,7 @@ function rPerfil(){
   const profs = (DB.profissionais || []).filter(x => x.ativo).sort((a, b) => (a.ordem || 0) - (b.ordem || 0));
   const th = document.documentElement.dataset.theme || "light";
   $("t-perfil").innerHTML = `
-    ${capa("", "", `<div class="hello" style="gap:14px"><span class="avatar" style="width:64px;height:64px;font-size:26px">${esc(ME.nome[0].toUpperCase())}</span><div><h2 style="color:#fff">${esc(ME.nome)}</h2><div class="k" style="color:rgba(245,248,239,.8)">${esc(ME.email)}</div></div></div>`)}
+    ${capa("", "", `<div class="hello" style="gap:14px"><span class="avatar" style="width:64px;height:64px;font-size:26px">${esc(ME.nome[0].toUpperCase())}</span><div><h2 style="color:#fff">${esc(ME.nome)}</h2><div class="k" style="color:rgba(245,248,239,.8)">${esc(ME.email)}</div></div></div>`, "img/ex-panturrilha.jpg")}
     <div class="today" style="--pc:${prem ? "#3DDC6E" : "#FFB23F"};min-height:0;grid-template-columns:1fr"><div><span class="eyebrow">${prem ? (ME.premium.tipo === "teste" ? "Premium · teste grátis" : "Premium") : "Plano gratuito"}</span>
       <h2 style="font-size:24px">${prem ? (ME.premium.tipo === "vitalicio" ? "Premium vitalício" : `Premium até ${brD(ME.premium.ate)}`) : "Treine sem anúncios"}</h2>
       <p>${prem ? "Sem anúncios e com tudo liberado." : "Assine o Premium e treine sem interrupções."}</p>
