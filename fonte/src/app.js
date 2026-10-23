@@ -630,12 +630,15 @@ const NIVEIS = [[0, "Começando"], [5, "Firme"], [15, "Constante"], [30, "Dedica
 const nivelAluna = n => { let atual = NIVEIS[0], prox = null; NIVEIS.forEach((x, i) => { if(n >= x[0]){ atual = x; prox = NIVEIS[i + 1] || null; } }); return { nome: atual[1], prox, falta: prox ? prox[0] - n : 0, pct: prox ? Math.round(100 * (n - atual[0]) / (prox[0] - atual[0])) : 100 }; };
 const mascaraTel = v => { const d = String(v).replace(/\D/g, "").slice(0, 11); if(d.length <= 2) return d ? `(${d}` : ""; if(d.length <= 6) return `(${d.slice(0, 2)}) ${d.slice(2)}`; if(d.length <= 10) return `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}`; return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`; };
 document.addEventListener("input", e => { if(e.target.matches && e.target.matches('input[inputmode="tel"]')){ const a = e.target.value, b = mascaraTel(a); if(a !== b) e.target.value = b; } });
-function escolheFoto(){
-  const inp = document.createElement("input"); inp.type = "file"; inp.accept = "image/*";
-  inp.onchange = () => { const f = inp.files && inp.files[0]; if(!f) return; const rd = new FileReader();
-    rd.onload = () => { const im = new Image(); im.onload = () => { const S = 320, c = document.createElement("canvas"); c.width = c.height = S; const x = c.getContext("2d"), m = Math.min(im.width, im.height); x.drawImage(im, (im.width - m) / 2, (im.height - m) / 2, m, m, 0, 0, S, S); ME.foto = c.toDataURL("image/jpeg", .82); save(); sincFotoPerfil(); SOM.chime && SOM.chime(); toast("Foto do perfil atualizada"); rPerfil(); atualizaTopo(); }; im.onerror = () => toast("Não deu para abrir essa imagem"); im.src = rd.result; };
-    rd.readAsDataURL(f); };
-  inp.click();
+async function escolheFoto(){
+  const f = await escolheArquivo("image/*"); if(!f) return;
+  if(f.size > 25 * 1024 * 1024) return toast("Foto muito grande. Escolha outra.");
+  let b; try{ b = await comprimeImg(f, 900); }catch(e){ return toast("Não deu para abrir essa foto. Tente outra (JPG ou PNG)."); }
+  const u = URL.createObjectURL(b), im = new Image();
+  im.onload = () => { const S = 320, c = document.createElement("canvas"); c.width = c.height = S; const x = c.getContext("2d"), m = Math.min(im.width, im.height);
+    x.drawImage(im, (im.width - m) / 2, Math.max(0, (im.height - m) * (im.height > im.width ? .3 : .5)), m, m, 0, 0, S, S); URL.revokeObjectURL(u);
+    ME.foto = c.toDataURL("image/jpeg", .82); save(); sincFotoPerfil(); SOM.chime && SOM.chime(); vibra(15); toast("Foto do perfil atualizada"); rerender(); atualizaTopo(); };
+  im.onerror = () => { URL.revokeObjectURL(u); toast("Não deu para abrir essa foto. Tente outra."); }; im.src = u;
 }
 function menuFoto(){
   sheet("Foto do perfil", `<div class="fotobig">${ME.foto ? `<img src="${ME.foto}" alt="">` : `<span>${esc(ME.nome.trim()[0].toUpperCase())}</span>`}</div>

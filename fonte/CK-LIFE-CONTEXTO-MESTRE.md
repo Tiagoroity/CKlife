@@ -582,3 +582,12 @@ Você vai continuar o desenvolvimento do CK Life, meu app de treino em casa para
 - src/figurinhas.js: no chat, painel de emojis (com recentes), figurinhas CK (treino, humor, amigas), "Minhas" figurinhas criadas com foto (guardadas no aparelho), filtros de foto (Natural, Glow, Rosado, Dourado, Suave, Vivo, P&B) no chat, Stories e posts. Figurinha vai como PNG e aparece sem balão.
 - Admin: menu agrupado em Métricas, Usuárias, Social e moderação, Conteúdo, Comercial, Proteção, Configurações.
 - Pendentes: maquiagem virtual com detecção de rosto (precisa biblioteca de IA de rosto), grupos da comunidade, vídeo, notificações push.
+
+## NOVIDADES (23/10/2026)
+- Banco: fonte/sql/novidades.sql (partes 1–3). Grupos (grupos, membros_grupo, posts.grupo_id, grupos_info), vídeo no bucket social (50 MB, mp4/webm/mov), figurinhas (só a dona), humor_diario (só a dona; admin não lê), desafio_participantes + desafio_contagem (só totais), push_inscricoes + push_fila (privada) + push_pegar/push_expirou (código de uso único) + gatilho em notificacoes usando pg_net → https://cklife.vercel.app/api/push.
+- Testes: testes-banco/testes_novidades.sql. Total 172 OK, 0 falhas.
+- Vercel: api/push.js (web-push). Precisa da variável VAPID_PRIVATE (chave entregue ao Tiago em arquivo local; NÃO está no GitHub). Chave pública fica no app (src/novidades.js) e na função.
+- sw.js na raiz: só notificações (sem cache).
+- App: src/novidades.js (grupos na Comunidade, vídeo em posts/Stories, avisos no celular em Perfil, contagem real dos desafios, figurinhas e humor sincronizados). Maquiagem virtual (batom/blush) em src/figurinhas.js com MediaPipe Face Landmarker carregado do jsDelivr na hora (a foto não sai do aparelho).
+- Correção da foto de perfil: seletor de arquivo agora fica no documento (iPhone perdia a foto); recorte prioriza o rosto; perfis de outras alunas atualizam a cada 3 min.
+- Admin: seção Grupos (Social e moderação).

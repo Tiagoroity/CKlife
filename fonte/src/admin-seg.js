@@ -334,7 +334,31 @@ let PAPEL_ESCOLHIDO = null;
 VIEWS.seguranca = vSeguranca; VIEWS.lgpd = () => { SEGA = "lgpd"; ir("seguranca"); }; VIEWS.incidentes = () => { SEGA = "incidentes"; ir("seguranca"); }; VIEWS.auditoria = () => { SEGA = "auditoria"; ir("seguranca"); }; VIEWS.documentos = () => { SEGA = "documentos"; ir("seguranca"); };
 /* menu do painel organizado por assunto */
 GRUPOS.length = 0;
-GRUPOS.push(["Métricas", ["resumo","metricas","explorarm"]], ["Usuárias", ["alunos","ciclo"]], ["Social e moderação", ["comunidade","moderacao"]],
+GRUPOS.push(["Métricas", ["resumo","metricas","explorarm"]], ["Usuárias", ["alunos","ciclo"]], ["Social e moderação", ["comunidade","grupos","moderacao"]],
   ["Conteúdo", ["receitas","exercicios","avisos","banners","destaques","categorias"]],
   ["Comercial", ["empresas","profissionais","servicos","agendamentos","avaliacoes","parceiros","cupons","produtos","anunciantes","campanhas","financeiro"]],
   ["Proteção", ["seguranca"]], ["Configurações", ["cidades","segmentos","admins","config"]]);
+
+/* ---------- Grupos da comunidade ---------- */
+AIC.grupos = '<circle cx="9" cy="8" r="3.2"/><circle cx="17" cy="9" r="2.5"/><path d="M3 19c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5M15 14.2c3 0 5.5 1.8 5.5 4.8"/>';
+SECOES.push(["grupos", "Grupos"]);
+async function vGrupos(){
+  $("adm-main").innerHTML = `<div class="head"><div><h1>Grupos da comunidade</h1><p class="muted">Grupos por objetivo ou por cidade. As alunas entram e saem quando quiserem; ninguém vê a lista de membras, só o total.</p></div><button class="btn btn-accent needs-edit" id="gp-novo">+ Novo grupo</button></div><div id="gp-b"><div class="card">Carregando…</div></div>`;
+  if(!SB2()) return $("gp-b").innerHTML = `<div class="card">Funciona no app oficial, com o banco conectado.</div>`;
+  let L, cont = {};
+  try{ L = await sq(SB2().from("grupos").select("*").order("ordem").order("nome")); (await sq(SB2().rpc("grupos_info")) || []).forEach(g => cont[g.id] = g.membros); }catch(e){ return $("gp-b").innerHTML = semBanco(e).replace("seguranca.sql", "novidades.sql"); }
+  $("gp-b").innerHTML = `<div class="tbl"><table><thead><tr><th>Grupo</th><th>Cidade</th><th>Membras</th><th>Status</th><th></th></tr></thead><tbody>${L.map(g => `<tr><td><b>${esc(g.emoji || "")} ${esc(g.nome)}</b><br><small class="muted">${esc(g.descricao || "")}</small></td><td>${esc((DB().cidades.find(c => +c.id === +g.cidade) || {}).nome || "Todas")}</td><td class="num">${int(cont[g.id] || 0)}</td><td><span class="st ${g.ativo ? "ok" : "off"}">${g.ativo ? "Ativo" : "Oculto"}</span></td><td><button class="btn btn-line btn-sm needs-edit" data-gp="${g.id}">Editar</button></td></tr>`).join("") || `<tr><td colspan="5" class="empty">Nenhum grupo. Rode o novidades.sql no Supabase.</td></tr>`}</tbody></table></div>`;
+  const form = g => { const x = g || { ativo: true, ordem: 10, cor: "#2E7D5A" };
+    modal(g ? "Editar grupo" : "Novo grupo", `<div class="formgrid"><div class="field"><label for="gp-n">Nome</label><input class="input" id="gp-n" value="${esc(x.nome || "")}" maxlength="60"></div><div class="field"><label for="gp-e">Emoji</label><input class="input" id="gp-e" value="${esc(x.emoji || "")}" maxlength="8"></div>
+      <div class="field full"><label for="gp-d">Descrição</label><textarea class="input" id="gp-d" maxlength="300">${esc(x.descricao || "")}</textarea></div>
+      <div class="field"><label for="gp-c">Cidade</label><select class="input" id="gp-c"><option value="">Todas</option>${DB().cidades.map(c => `<option value="${c.id}" ${+c.id === +x.cidade ? "selected" : ""}>${esc(c.nome)}</option>`).join("")}</select></div>
+      <div class="field"><label for="gp-cor">Cor</label><input class="input" type="color" id="gp-cor" value="${esc(x.cor || "#2E7D5A")}"></div><div class="field"><label for="gp-o">Ordem</label><input class="input num" id="gp-o" value="${esc(x.ordem)}"></div>
+      <label class="field xf-chk"><input type="checkbox" id="gp-a" ${x.ativo ? "checked" : ""}> Visível para as alunas</label></div><button class="btn btn-accent" id="gp-ok">Salvar</button>`);
+    $("gp-ok").onclick = async () => { const nome = val("gp-n"); if(nome.length < 3) return toast("Nome com pelo menos 3 letras");
+      const d = { nome, emoji: val("gp-e") || null, descricao: val("gp-d") || null, cidade: val("gp-c") ? +val("gp-c") : null, cor: val("gp-cor"), ordem: +val("gp-o") || 0, ativo: $("gp-a").checked };
+      try{ if(g) await sq(SB2().from("grupos").update(d).eq("id", g.id)); else await sq(SB2().from("grupos").insert({ ...d, slug: (nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 34) + "-" + Math.random().toString(36).slice(2, 5)) }));
+        F.nuvem.sb.rpc("auditar", { p_acao: g ? "grupo_alterado" : "grupo_criado", p_recurso: "grupos", p_alvo: nome }); fechar(); toast("Grupo salvo"); vGrupos(); }catch(e){ toast("Sem permissão ou dados inválidos"); } }; };
+  const nv = $("gp-novo"); if(nv) nv.onclick = () => form();
+  $("gp-b").querySelectorAll("[data-gp]").forEach(b => b.onclick = () => form(L.find(g => g.id === b.dataset.gp)));
+}
+VIEWS.grupos = vGrupos;

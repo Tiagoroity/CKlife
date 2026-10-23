@@ -1592,6 +1592,30 @@ ul.xp-lista:not(:has(svg)) li::before{content:"•";color:var(--accent);font-wei
 .xp-msg.fig .so-mfoto{aspect-ratio:1;height:150px}
 .fl-vis{position:relative;display:block}.fl-vis canvas{position:absolute;inset:6px;margin:auto;max-width:calc(100% - 12px);max-height:calc(100% - 12px);width:auto;height:auto}
 .fl-vis canvas{width:calc(100% - 12px);height:calc(100% - 12px);max-width:none;max-height:none;object-fit:contain;border-radius:0}
+@media (max-width:360px){.so-head h1{font-size:18px}.so-hb{gap:2px}.so-hb .iconbtn{width:40px;height:40px}}
+/* ===== Novidades: grupos, vídeo, maquiagem ===== */
+.so-grupos{margin:2px 0 6px}.so-grupos .sec-title{margin-bottom:8px}
+#gr-row{gap:10px}.so-gr{flex:0 0 132px;display:grid;gap:2px;text-align:left;padding:12px;border:0;border-radius:18px;background:var(--surface);box-shadow:var(--shadow-sm);font:inherit;color:var(--ink);border-top:4px solid var(--gc)}
+.so-gr i{font-style:normal;font-size:24px}.so-gr b{font-size:14px;line-height:1.2}.so-gr small{font-size:12px;color:var(--muted)}.so-gr.eu{background:var(--accent-soft)}
+.so-gr-lin{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:14px;margin-bottom:8px;border:0;border-left:5px solid var(--gc);border-radius:16px;background:var(--surface);box-shadow:var(--shadow-sm);font:inherit;color:var(--ink)}
+.so-gr-lin>i{font-style:normal;font-size:28px}.so-gr-lin span{flex:1;display:grid;gap:2px}.so-gr-lin small{color:var(--muted);font-size:12.5px}.so-gr-lin em{font-style:normal;font-size:12px;font-weight:800;color:var(--accent)}
+.so-gr-top{text-align:center;padding:16px;border-radius:var(--r);background:linear-gradient(160deg,color-mix(in srgb,var(--gc) 16%,var(--surface)),var(--surface));margin-bottom:12px}
+.so-gr-top>i{font-style:normal;font-size:46px}.so-gr-top h2{margin:4px 0}.so-gr-top p{color:var(--muted);margin:0 0 4px}.so-gr-top small{color:var(--muted);font-weight:700}
+.so-gr-top .acts{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.so-gtag{border:0;background:none;padding:0;font:inherit;font-weight:700;color:var(--accent)}
+.so-cp-grupo{margin:4px 0 0;font-size:13.5px;color:var(--muted)}
+.pvid{background:#000;border-radius:18px;overflow:hidden}.pvid video{display:block;width:100%;max-height:70vh;background:#000}
+.cp-prev video{width:100%;max-height:300px;border-radius:14px;background:#000}
+.so-sv-img video{width:100%;height:100%;object-fit:contain;background:#000}
+.xe-part{color:var(--accent)!important;font-weight:700}
+.fl-mk-b{margin-left:auto}.so-prev-top .fl-mk-b+.btn{margin-left:6px!important}
+.fl-mk{padding:8px 12px 0;display:grid;gap:8px}.fl-mk-l{display:flex;gap:8px;align-items:center;overflow-x:auto;scrollbar-width:none}
+.fl-mk-l>span{color:#cfd6d2;font-size:12px;font-weight:800;flex:none}
+.fl-bt{flex:none;display:grid;justify-items:center;gap:3px;border:0;background:none;color:#cfd6d2;font:inherit;font-size:11px}
+.fl-bt::before{content:"";width:30px;height:30px;border-radius:50%;background:var(--bt,#333);border:2px solid rgba(255,255,255,.3)}
+.fl-bt[data-bt=""]::before{display:none}.fl-bt[data-bt=""]{font-size:20px;line-height:30px}
+.fl-bt[aria-pressed=true]::before{border-color:#3DDC6E;box-shadow:0 0 0 2px #3DDC6E}.fl-bt[aria-pressed=true]{color:#fff}
+.fl-mk .chip{background:rgba(255,255,255,.1);color:#fff;border-color:transparent}.fl-mk .chip[aria-pressed=true]{background:#3DDC6E;color:#062}
 </style>
 
 <!-- Entrar / criar conta -->
@@ -4254,12 +4278,13 @@ async function urls(paths, segs = 600){
   return paths.map(p => (MID.get(p) || {}).u || "");
 }
 // se a URL temporária ainda vale, usa direto (sem piscar ao redesenhar)
+const eVideo = p => /\.(mp4|webm|mov)$/i.test(p || "");
 const midiaPronta = path => { const m = MID.get(path); return m && m.t > Date.now() ? `src="${esc(m.u)}" data-m="${esc(path)}" data-mok="1"` : `data-m="${esc(path)}"`; };
 function ligaMidia(root, segs){
   const els = [...(root || document).querySelectorAll("[data-m]:not([data-mok])")]; if(!els.length) return;
   urls(els.map(e => e.dataset.m), segs).then(us => els.forEach((e, i) => { e.dataset.mok = 1;
     if(!us[i]){ e.classList.add("m-falha"); if(e.tagName === "IMG") e.removeAttribute("src"); return; }
-    if(e.tagName === "IMG") e.src = us[i]; else e.style.backgroundImage = `url("${us[i]}")`; }));
+    if(e.tagName === "IMG" || e.tagName === "VIDEO") e.src = us[i]; else e.style.backgroundImage = `url("${us[i]}")`; }));
 }
 // barreiras de interface para conteúdo privado (não substituem a segurança do banco)
 document.addEventListener("contextmenu", e => { if(e.target.closest && e.target.closest(".priv")) e.preventDefault(); });
@@ -4270,7 +4295,11 @@ async function sobe(pasta, dono, blob, ext, tipo){
   const r = await SB().storage.from("social").upload(path, blob, { contentType: tipo, cacheControl: "0", upsert: false });
   if(r.error) throw r.error; return path;
 }
-function escolheArquivo(accept, captura){ return new Promise(ok => { const i = document.createElement("input"); i.type = "file"; i.accept = accept; if(captura) i.setAttribute("capture", captura); i.onchange = () => ok(i.files && i.files[0] || null); i.click(); }); }
+// o campo fica no documento até a escolha: no iPhone, campo solto pode "perder" a foto escolhida
+function escolheArquivo(accept, captura){ return new Promise(ok => { const i = document.createElement("input"); i.type = "file"; i.accept = accept; if(captura) i.setAttribute("capture", captura);
+  i.style.cssText = "position:fixed;left:-9999px;top:0;width:1px;height:1px;opacity:0"; document.body.appendChild(i);
+  let feito = false; const fim = v => { if(feito) return; feito = true; ok(v); setTimeout(() => i.remove(), 1000); };
+  i.addEventListener("change", () => fim(i.files && i.files[0] || null)); i.addEventListener("cancel", () => fim(null)); i.click(); }); }
 async function imagemValida(f, max){
   if(!f) return null;
   if(!/^image\/(jpeg|jpg|png|webp|heic|heif|gif)$/i.test(f.type || "") && !/\.(jpe?g|png|webp|heic|heif)$/i.test(f.name || "")){ toast("Formato não suportado. Use foto JPG ou PNG."); return null; }
@@ -4296,8 +4325,8 @@ async function garantePerfil(){
 }
 function migraBloqueios(){ const L = ME.chatBloq || []; if(!L.length) return; SB().from("bloqueios").insert(L.map(b => ({ quem: NU.uid, bloqueado: b.id }))).then(() => { ME.chatBloq = []; save(); }); }
 async function carregaPerfis(ids){
-  const falta = [...new Set(ids.filter(i => i && !PERFIS.has(i)))]; if(!falta.length || !SO.on()) return;
-  for(let i = 0; i < falta.length; i += 80){ try{ (await q(SB().from("perfis").select("user_id,username,nome,foto_mini,privado").in("user_id", falta.slice(i, i + 80)))).forEach(p => PERFIS.set(p.user_id, p)); }catch(e){} }
+  const falta = [...new Set(ids.filter(i => i && (!PERFIS.has(i) || (i !== NU.uid && Date.now() - (PERFIS.get(i)._t || 0) > 180000))))]; if(!falta.length || !SO.on()) return;
+  for(let i = 0; i < falta.length; i += 80){ try{ (await q(SB().from("perfis").select("user_id,username,nome,foto_mini,privado").in("user_id", falta.slice(i, i + 80)))).forEach(p => { p._t = Date.now(); PERFIS.set(p.user_id, { ...(PERFIS.get(p.user_id) || {}), ...p }); }); }catch(e){} }
 }
 async function sincFotoPerfil(){ // chamada quando a aluna troca a foto pelo Perfil antigo
   await detectaSocial(); if(!SO.on()) return; try{ await garantePerfil(); const foto = ME.foto ? await sobe("perfil", NU.uid, await (await fetch(ME.foto)).blob(), "jpg", "image/jpeg") : null;
@@ -4533,7 +4562,7 @@ async function completaPosts(rows){
   if(ids.length){ [cu, co, sv] = await Promise.all([q(SB().from("curtidas").select("post_id,user_id").in("post_id", ids)), q(SB().from("comentarios").select("*").in("post_id", ids).order("criado", { ascending: true })), q(SB().from("salvos").select("post_id").eq("user_id", NU.uid).in("post_id", ids)).catch(() => [])]); }
   sv.forEach(s => SALVOS.add(s.post_id));
   await carregaPerfis([...rows.map(p => p.user_id), ...co.map(c => c.user_id)]);
-  return rows.map(p => ({ id: p.id, user: p.user_id, nome: p.nome, foto: p.foto, texto: p.texto, img: p.img, midia: p.midia, conquista: p.conquista, criado: p.criado, oculto: p.oculto,
+  return rows.map(p => ({ id: p.id, user: p.user_id, nome: p.nome, foto: p.foto, texto: p.texto, img: p.img, midia: p.midia, conquista: p.conquista, criado: p.criado, oculto: p.oculto, grupo: p.grupo_id || null,
     curtidas: cu.filter(c => c.post_id === p.id).map(c => c.user_id), coments: co.filter(c => c.post_id === p.id).map(c => ({ id: c.id, user: c.user_id, nome: c.nome, foto: c.foto, texto: c.texto, criado: c.criado })) }));
 }
 async function feedBusca(ids){ if(!ids.length || !SO.on()) return []; const rows = await q(SB().from("posts").select("*").in("id", ids)); const L = await completaPosts(rows); return ids.map(i => L.find(p => p.id === i)).filter(Boolean); }
@@ -4551,9 +4580,9 @@ function postHtml(p){
   const meu = p.user === ME.id, liked = (p.curtidas || []).includes(ME.id), nc = (p.coments || []).length, nl = (p.curtidas || []).length, us = userP(p.user), salvo = SALVOS.has(p.id);
   const cq = p.conquista ? `<div class="so-pconq"><i>${esc(p.conquista.emoji || "🏆")}</i><div><b>${esc(p.conquista.titulo || "Conquista")}</b><small>${esc(p.conquista.frase || "")}</small></div></div>` : "";
   return `<article class="post" data-id="${p.id}">
-    <header>${avU(p.user, p.nome, p.foto)}<div class="pmeta"><b>${esc(nomeP(p.user, p.nome))}</b><small>${us ? "@" + esc(us) + " · " : ""}${tempoAtras(p.criado)}${p.oculto ? " · oculto pela moderação" : ""}</small></div><button class="iconbtn sm" data-mais aria-label="Opções">${ic("dots", 18)}</button></header>
+    <header>${avU(p.user, p.nome, p.foto)}<div class="pmeta"><b>${esc(nomeP(p.user, p.nome))}</b><small>${us ? "@" + esc(us) + " · " : ""}${tempoAtras(p.criado)}${p.oculto ? " · oculto pela moderação" : ""}${p.grupo && GRP.get(p.grupo) ? ` · <button class="so-gtag" data-grupo="${p.grupo}">${esc(GRP.get(p.grupo).emoji || "")} ${esc(GRP.get(p.grupo).nome)}</button>` : ""}</small></div><button class="iconbtn sm" data-mais aria-label="Opções">${ic("dots", 18)}</button></header>
     ${p.texto ? `<p class="ptx ${p.texto.length > 260 ? "so-trunc" : ""}">${rico(p.texto)}</p>${p.texto.length > 260 ? `<button class="link so-vermais" data-vermais>ver mais</button>` : ""}` : ""}${cq}
-    ${p.midia ? `<div class="pimg priv" data-abre><img ${midiaPronta(p.midia)} alt="" loading="lazy" draggable="false"><i class="pheart">${ic("heart", 70)}</i></div>` : p.img ? `<div class="pimg priv" data-abre><img src="${esc(p.img)}" alt="" loading="lazy" draggable="false"><i class="pheart">${ic("heart", 70)}</i></div>` : ""}
+    ${p.midia && eVideo(p.midia) ? `<div class="pimg pvid priv"><video data-m="${esc(p.midia)}" playsinline muted loop preload="metadata" controls controlslist="nodownload noplaybackrate" disablepictureinpicture></video></div>` : p.midia ? `<div class="pimg priv" data-abre><img ${midiaPronta(p.midia)} alt="" loading="lazy" draggable="false"><i class="pheart">${ic("heart", 70)}</i></div>` : p.img ? `<div class="pimg priv" data-abre><img src="${esc(p.img)}" alt="" loading="lazy" draggable="false"><i class="pheart">${ic("heart", 70)}</i></div>` : ""}
     <div class="pacts"><button class="pl ${liked ? "on" : ""}" data-like aria-label="Curtir">${ic("heart", 22)}<span>${nl || ""}</span></button><button data-abre aria-label="Comentar">${ic("chat", 21)}<span>${nc || ""}</span></button>${SO.on() ? `<button data-share aria-label="Compartilhar">${ic("send", 20)}</button><button class="so-save ${salvo ? "on" : ""}" data-save aria-label="Salvar">${ic("bookmark", 20)}</button>` : ""}
       ${nl ? `<small class="pquem" data-quem role="button">${liked ? (nl === 1 ? "Você curtiu" : `Você e mais ${nl - 1}`) : `${nl} ${nl === 1 ? "curtida" : "curtidas"}`}</small>` : ""}</div>
     ${(p.coments || []).slice(-2).map(c => `<p class="pc"><b>${esc(nomeP(c.user, c.nome).split(" ")[0])}</b> ${rico(c.texto)}</p>`).join("")}
@@ -4606,12 +4635,13 @@ function abreComposer(texto0, blob0, extra){
     ${!texto0 && !cq ? `<div class="chips scroll so-temas">${[["💪","Treino de hoje","Treino de hoje concluído! "],["🥗","Receita","Fiz uma receita do app hoje: "],["✨","Motivação","Lembrete do dia: "],["👋","Me apresentar","Oi, meninas! Sou "],["🙋","Pergunta","Alguém tem dica de "]].map(([e, n, t]) => `<button class="chip" data-tema="${esc(t)}">${e} ${n}</button>`).join("")}</div>` : ""}
     <textarea class="input cmp-tx" id="cp-t" maxlength="1000" placeholder="O que você quer compartilhar hoje? 💚">${esc(texto0 || "")}</textarea><small class="so-cont" id="cp-n">0/1000</small>
     <div id="cp-prev" class="cp-prev"></div>
-    <div class="toolbar"><button class="btn btn-line" id="cp-foto">${ic("camera", 18)} Foto</button><span class="hint">Compartilhe só o que você quiser. Seu peso, medidas e ciclo nunca são postados.</span></div>
+    ${extra && extra.grupo ? `<p class="so-cp-grupo">${esc(extra.grupo.emoji || "")} Publicando em <b>${esc(extra.grupo.nome)}</b></p>` : ""}<div class="toolbar"><button class="btn btn-line" id="cp-foto">${ic("camera", 18)} Foto</button><button class="btn btn-line" id="cp-video">${ic("play", 18)} Vídeo</button><span class="hint">Compartilhe só o que você quiser. Seu peso, medidas e ciclo nunca são postados.</span></div>
     <button class="btn btn-accent btn-block btn-lg" id="cp-ok">Publicar</button>`);
   const cont = () => { const n = $("cp-t").value.length; $("cp-n").textContent = `${n}/1000`; }; $("cp-t").oninput = cont; cont();
   $("sheet-body").querySelectorAll("[data-tema]").forEach(b => b.onclick = () => { const t = $("cp-t"); t.value = b.dataset.tema + t.value; t.focus(); t.setSelectionRange(t.value.length, t.value.length); cont(); SOM.tap(); });
-  const prev = async () => { $("cp-prev").innerHTML = blob ? `<img src="${await blobParaURL(blob)}" alt=""><button class="iconbtn sm" id="cp-x" aria-label="Tirar foto">${ic("close", 16)}</button>` : ""; const x = $("cp-x"); if(x) x.onclick = () => { blob = null; prev(); }; };
+  const prev = async () => { if(prev.u){ URL.revokeObjectURL(prev.u); prev.u = null; } $("cp-prev").innerHTML = blob && /^video\//.test(blob.type || "") ? `<video src="${prev.u = URL.createObjectURL(blob)}" playsinline muted loop autoplay controls></video><button class="iconbtn sm" id="cp-x" aria-label="Tirar vídeo">${ic("close", 16)}</button>` : blob ? `<img src="${await blobParaURL(blob)}" alt=""><button class="iconbtn sm" id="cp-x" aria-label="Tirar foto">${ic("close", 16)}</button>` : ""; const x = $("cp-x"); if(x) x.onclick = () => { blob = null; prev(); }; };
   prev();
+  const cv = $("cp-video"); if(cv) cv.onclick = async () => { const f = await escolheArquivo("video/*"); const v = await videoValido(f); if(v){ blob = v; prev(); } };
   $("cp-foto").onclick = async () => { const f = await escolheArquivo("image/*"); let b = await imagemValida(f, 1440); if(b) b = await escolheFiltro(b); if(b){ blob = b; prev(); } };
   $("cp-ok").onclick = async () => { const t = $("cp-t").value.trim(); if(!t && !blob && !cq) return toast("Escreva algo ou escolha uma foto"); if(ME.bloqueado) return toast("Sua conta está bloqueada");
     const b = $("cp-ok"); b.classList.add("carregando"); b.disabled = true;
@@ -4624,8 +4654,8 @@ CM.publicar = async (texto, blob, extra) => {
   if(!SO.on()) return CM_pub0(texto, blob);
   await garantePerfil();
   const id = novoId(); let midia = null;
-  if(blob) midia = await sobe("post", NU.uid, blob, "jpg", "image/jpeg");
-  const r = await SB().from("posts").insert({ id, user_id: NU.uid, nome: EU.nome || ME.nome, foto: EU.foto_mini || await miniFoto(ME.foto), texto, midia, conquista: (extra && extra.conquista) || null });
+  if(blob){ const v = /^video\//.test(blob.type || ""); const ext = !v ? "jpg" : /quicktime/.test(blob.type) ? "mov" : /webm/.test(blob.type) ? "webm" : "mp4"; midia = await sobe("post", NU.uid, blob, ext, v ? (blob.type || "video/mp4") : "image/jpeg"); }
+  const r = await SB().from("posts").insert({ id, user_id: NU.uid, nome: EU.nome || ME.nome, foto: EU.foto_mini || await miniFoto(ME.foto), texto, midia, conquista: (extra && extra.conquista) || null, ...(extra && extra.grupo ? { grupo_id: extra.grupo.id } : {}) });
   if(r.error) throw r.error;
 };
 // o painel (moderação) também enxerga fotos privadas de posts via URL temporária
@@ -4735,7 +4765,8 @@ async function carregaStories(){
 const CORES_ST = ["#0E3D32","#2E7D5A","#C2577B","#6C5FB5","#D08A2E","#17211D"];
 async function criarStory(){
   if(ME.bloqueado) return toast("Sua conta está bloqueada");
-  const f = await escolheArquivo("image/*"); let b = await imagemValida(f, 1920); if(!b) return; b = await escolheFiltro(b); if(!b) return;
+  const f = await escolheArquivo("image/*,video/*");
+  if(f && /^video\//.test(f.type || "")) return storyVideo(f); let b = await imagemValida(f, 1920); if(!b) return; b = await escolheFiltro(b); if(!b) return;
   let cor = CORES_ST[0];
   sheet("Novo Story", `<div class="so-stprev priv" id="sp-p"><img src="${await blobParaURL(b)}" alt=""><span id="sp-tx" class="so-sttx" hidden></span></div>
     <div class="field"><label for="sp-t">Texto sobre a foto (opcional)</label><input class="input" id="sp-t" maxlength="120" placeholder="Ex.: Treino feito! 💪"></div>
@@ -4771,18 +4802,20 @@ async function mostraStory(){
   cancelAnimationFrame(SV.raf); const meu = g.u === NU.uid, box = $("story");
   box.innerHTML = `<div class="so-sv-barras">${g.ss.map((x, i) => `<i><b style="width:${i < SV.si ? 100 : 0}%"></b></i>`).join("")}</div>
     <div class="so-sv-top"><button class="so-sv-quem" id="sv-perfil">${avU(g.u)}<span><b>${esc(nomeP(g.u))}</b><small>${tempoAtras(s.criado)}</small></span></button><button class="iconbtn" id="sv-mais" aria-label="Opções">${ic("dots", 18)}</button><button class="iconbtn" id="sv-x" aria-label="Fechar">${ic("close", 18)}</button></div>
-    <div class="so-sv-img"><img data-m="${esc(s.midia)}" alt="" draggable="false"></div>
+    <div class="so-sv-img">${eVideo(s.midia) ? `<video playsinline autoplay preload="auto" disablepictureinpicture controlslist="nodownload"></video>` : `<img data-m="${esc(s.midia)}" alt="" draggable="false">`}</div>
     <button class="so-sv-nav ant" id="sv-ant" aria-label="Anterior"></button><button class="so-sv-nav prox" id="sv-prox" aria-label="Próximo"></button>
     <div class="so-sv-pe">${meu ? `<button class="btn btn-soft btn-sm" id="sv-vistas">${ic("perfil", 15)} <span id="sv-nv">Quem viu</span></button><button class="btn btn-soft btn-sm" id="sv-novo">${ic("plus", 15)} Novo</button>` : `<div class="so-reac">${["💚","🔥","👏","😍","💪"].map(e => `<button data-reac="${e}" aria-label="Reagir ${e}">${e}</button>`).join("")}</div><input class="input" id="sv-resp" maxlength="500" placeholder="Responder a ${esc(nomeP(g.u).split(" ")[0])}…"><button class="btn btn-accent" id="sv-env" aria-label="Enviar">${ic("send", 17)}</button>`}</div>`;
-  const img = box.querySelector(".so-sv-img img");
+  const img = box.querySelector(".so-sv-img img, .so-sv-img video"), vid = img && img.tagName === "VIDEO" ? img : null;
   const us = await urls([s.midia], 300); if(!SV) return;
+  let DUR = 6000;
   if(!us[0]){ img.replaceWith(Object.assign(document.createElement("p"), { className: "so-sv-falha", textContent: "Este Story não está mais disponível." })); }
+  else if(vid){ vid.src = us[0]; await new Promise(r => { vid.onloadedmetadata = r; vid.onerror = r; setTimeout(r, 6000); }); if(vid.duration && isFinite(vid.duration)) DUR = Math.min(30000, vid.duration * 1000); vid.play().catch(() => { vid.muted = true; vid.play().catch(() => {}); }); }
   else { img.src = us[0]; await new Promise(r => { if(img.complete) r(); else { img.onload = r; img.onerror = r; } }); }
   if(!SV) return;
   if(!meu && !STO.vistos.has(s.id)){ STO.vistos.add(s.id); SB().from("story_vistas").insert({ story_id: s.id, user_id: NU.uid }).then(() => {}); }
-  const DUR = 6000; let ini = performance.now(), gasto = 0;
+  let ini = performance.now(), gasto = 0;
   const barra = box.querySelectorAll(".so-sv-barras b")[SV.si];
-  const passo = t => { if(!SV) return; if(SV.pausa){ ini = t - gasto; SV.raf = requestAnimationFrame(passo); return; } gasto = t - ini; barra.style.width = Math.min(100, gasto / DUR * 100) + "%"; if(gasto >= DUR) return avanca(1); SV.raf = requestAnimationFrame(passo); };
+  const passo = t => { if(!SV) return; if(SV.pausa){ if(vid && !vid.paused) vid.pause(); ini = t - gasto; SV.raf = requestAnimationFrame(passo); return; } if(vid && vid.paused && vid.src) vid.play().catch(() => {}); gasto = t - ini; barra.style.width = Math.min(100, gasto / DUR * 100) + "%"; if(gasto >= DUR) return avanca(1); SV.raf = requestAnimationFrame(passo); };
   SV.raf = requestAnimationFrame(passo);
   const avanca = d => { if(!SV) return; SV.si += d; if(SV.si < 0){ SV.gi--; if(SV.gi < 0) return fechaStory(); SV.si = 0; } else if(SV.si >= g.ss.length){ SV.gi++; SV.si = 0; if(SV.gi >= STO.grupos.length) return fechaStory(); } mostraStory(); };
   const solto = () => SV && SV.solto && Date.now() - SV.solto < 450;
@@ -5569,17 +5602,205 @@ function escolheFiltro(blob, titulo){
     const u = URL.createObjectURL(blob), im = await new Promise(ok => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => ok(null); i.src = u; }); if(!im) return fim(blob);
     let box = $("so-filtro"); if(!box){ box = document.createElement("div"); box.id = "so-filtro"; box.className = "so-prev priv"; document.body.appendChild(box); }
     const base = paraCanvas(im, 900), mini = paraCanvas(im, 140); let esc0 = "original";
-    box.innerHTML = `<div class="so-prev-top"><button class="iconbtn" id="fl-x" aria-label="Cancelar">${ic("close", 20)}</button><b>${titulo || "Filtros"}</b><button class="btn btn-accent btn-sm" id="fl-ok" style="margin-left:auto">Usar</button></div><div class="fl-vis"><canvas id="fl-cv"></canvas></div>
-      <div class="fl-row">${FILTROS.map(([k, n]) => { const m = document.createElement("canvas"); m.width = mini.width; m.height = mini.height; m.getContext("2d").drawImage(mini, 0, 0); aplicaFiltro(m, k); return `<button data-fl="${k}" aria-pressed="${k === esc0}"><img src="${m.toDataURL("image/jpeg", .7)}" alt=""><small>${n}</small></button>`; }).join("")}</div>`;
+    box.innerHTML = `<div class="so-prev-top"><button class="iconbtn" id="fl-x" aria-label="Cancelar">${ic("close", 20)}</button><b>${titulo || "Filtros"}</b><button class="btn btn-soft btn-sm fl-mk-b" id="fl-mk">💄 Maquiagem</button><button class="btn btn-accent btn-sm" id="fl-ok" style="margin-left:auto">Usar</button></div><div class="fl-vis"><canvas id="fl-cv"></canvas></div>
+      <div class="fl-mk" id="fl-mkp" hidden></div><div class="fl-row">${FILTROS.map(([k, n]) => { const m = document.createElement("canvas"); m.width = mini.width; m.height = mini.height; m.getContext("2d").drawImage(mini, 0, 0); aplicaFiltro(m, k); return `<button data-fl="${k}" aria-pressed="${k === esc0}"><img src="${m.toDataURL("image/jpeg", .7)}" alt=""><small>${n}</small></button>`; }).join("")}</div>`;
     box.hidden = false;
-    const mostra = () => { const cv = $("fl-cv"); cv.width = base.width; cv.height = base.height; cv.getContext("2d").drawImage(base, 0, 0); aplicaFiltro(cv, esc0); };
+    const MK = { rosto: null, batom: null, blush: false, forca: .6 };
+    const mostra = () => { const cv = $("fl-cv"); cv.width = base.width; cv.height = base.height; cv.getContext("2d").drawImage(base, 0, 0); aplicaFiltro(cv, esc0); if(MK.rosto) aplicaMaquiagem(cv, MK); };
+    const painelMk = () => { const p = $("fl-mkp"); p.hidden = false;
+      p.innerHTML = `<div class="fl-mk-l"><span>Batom</span>${[["", "Sem"], ...BATONS].map(([c, n]) => `<button class="fl-bt" data-bt="${c}" aria-pressed="${(MK.batom || "") === c}" ${c ? `style="--bt:${c}"` : ""}>${c ? "" : "∅"}<small>${n}</small></button>`).join("")}</div>
+        <div class="fl-mk-l"><button class="chip" id="mk-bl" aria-pressed="${MK.blush}">🌸 Blush</button>${[[.35, "Suave"], [.6, "Média"], [.9, "Forte"]].map(([v, n]) => `<button class="chip" data-fz="${v}" aria-pressed="${MK.forca === v}">${n}</button>`).join("")}</div>`;
+      p.querySelectorAll("[data-bt]").forEach(b => b.onclick = () => { MK.batom = b.dataset.bt || null; vibra(6); painelMk(); mostra(); });
+      p.querySelectorAll("[data-fz]").forEach(b => b.onclick = () => { MK.forca = +b.dataset.fz; painelMk(); mostra(); });
+      $("mk-bl").onclick = () => { MK.blush = !MK.blush; vibra(6); painelMk(); mostra(); }; };
+    $("fl-mk").onclick = async () => { const bt = $("fl-mk"); if(MK.rosto){ const p = $("fl-mkp"); p.hidden = !p.hidden; return; }
+      bt.disabled = true; bt.textContent = "Procurando rosto…";
+      try{ MK.rosto = await achaRosto(base); }catch(e){ console.warn(e); }
+      bt.disabled = false; bt.textContent = "💄 Maquiagem";
+      if(!MK.rosto) return toast("Não encontrei um rosto nesta foto. Tente uma foto de frente e bem iluminada.");
+      MK.batom = BATONS[1][0]; MK.blush = true; painelMk(); mostra(); };
     mostra();
     box.querySelectorAll("[data-fl]").forEach(b => b.onclick = () => { esc0 = b.dataset.fl; box.querySelectorAll("[data-fl]").forEach(y => y.setAttribute("aria-pressed", y === b)); vibra(6); mostra(); });
     const sai = r => { box.hidden = true; box.innerHTML = ""; URL.revokeObjectURL(u); fim(r); };
     $("fl-x").onclick = () => sai(null);
-    $("fl-ok").onclick = () => { if(esc0 === "original") return sai(blob); const cv = aplicaFiltro(paraCanvas(im, 1600), esc0); cv.toBlob(b => sai(b || blob), "image/jpeg", .88); };
+    $("fl-ok").onclick = () => { const temMk = MK.rosto && (MK.batom || MK.blush); if(esc0 === "original" && !temMk) return sai(blob); const cv = aplicaFiltro(paraCanvas(im, 1600), esc0); if(temMk) aplicaMaquiagem(cv, MK); cv.toBlob(b => sai(b || blob), "image/jpeg", .88); };
   });
 }
+
+/* ---------- Maquiagem virtual (reconhecimento de rosto no próprio aparelho; a foto não sai do celular) ---------- */
+const BATONS = [["#B5655B", "Nude"], ["#D9567A", "Rosa"], ["#E56B5A", "Coral"], ["#B3122E", "Vermelho"], ["#6E1530", "Vinho"]];
+const MP_V = "0.10.14";
+let FACE = null;
+async function achaRosto(cv){
+  if(!FACE){
+    const vision = await import(`https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MP_V}/vision_bundle.mjs`);
+    const fs = await vision.FilesetResolver.forVisionTasks(`https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MP_V}/wasm`);
+    FACE = await vision.FaceLandmarker.createFromOptions(fs, { baseOptions: { modelAssetPath: "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task", delegate: "CPU" }, runningMode: "IMAGE", numFaces: 1 });
+  }
+  const r = FACE.detect(cv); return r && r.faceLandmarks && r.faceLandmarks[0] ? r.faceLandmarks[0].map(p => ({ x: p.x, y: p.y })) : null;
+}
+const LABIO_FORA = [61,146,91,181,84,17,314,405,321,375,291,409,270,269,267,0,37,39,40,185], LABIO_DENTRO = [78,95,88,178,87,14,317,402,318,324,308,415,310,311,312,13,82,81,80,191];
+function aplicaMaquiagem(cv, MK){
+  const W = cv.width, H = cv.height, x = cv.getContext("2d"), L = MK.rosto, P = i => [L[i].x * W, L[i].y * H];
+  const larg = Math.hypot(P(234)[0] - P(454)[0], P(234)[1] - P(454)[1]);
+  const camada = desenho => { const m = document.createElement("canvas"); m.width = W; m.height = H; const mx = m.getContext("2d"); desenho(mx);
+    const s = document.createElement("canvas"), k = Math.max(1, Math.round(larg / 90)); s.width = Math.max(1, W / k | 0); s.height = Math.max(1, H / k | 0); s.getContext("2d").drawImage(m, 0, 0, s.width, s.height); return s; };
+  if(MK.batom){
+    const lab = camada(mx => { mx.fillStyle = MK.batom; mx.beginPath(); LABIO_FORA.forEach((i, n) => { const [a, b] = P(i); n ? mx.lineTo(a, b) : mx.moveTo(a, b); }); mx.closePath(); LABIO_DENTRO.forEach((i, n) => { const [a, b] = P(i); n ? mx.lineTo(a, b) : mx.moveTo(a, b); }); mx.closePath(); mx.fill("evenodd"); });
+    x.save(); x.globalCompositeOperation = "multiply"; x.globalAlpha = .55 * MK.forca + .1; x.drawImage(lab, 0, 0, W, H);
+    x.globalCompositeOperation = "soft-light"; x.globalAlpha = .5 * MK.forca; x.drawImage(lab, 0, 0, W, H); x.restore();
+  }
+  if(MK.blush){
+    const bl = camada(mx => { [[205, 50], [425, 280]].forEach(([c, d]) => { const [a, b] = P(c), [a2, b2] = P(d), cx = (a + a2) / 2, cy = (b + b2) / 2, r = larg * .13;
+      const g = mx.createRadialGradient(cx, cy, 0, cx, cy, r); g.addColorStop(0, "rgba(232,96,120,.9)"); g.addColorStop(1, "rgba(232,96,120,0)"); mx.fillStyle = g; mx.beginPath(); mx.arc(cx, cy, r, 0, 7); mx.fill(); }); });
+    x.save(); x.globalCompositeOperation = "soft-light"; x.globalAlpha = .7 * MK.forca + .1; x.drawImage(bl, 0, 0, W, H); x.globalCompositeOperation = "multiply"; x.globalAlpha = .18 * MK.forca; x.drawImage(bl, 0, 0, W, H); x.restore();
+  }
+}
+
+
+/* ===================== NOVIDADES =====================
+   Grupos da comunidade, vídeos em posts e Stories, notificações no celular,
+   desafios com número real de participantes, figurinhas e humor salvos na conta.
+   Tudo depende do novidades.sql; sem ele, os recursos ficam escondidos ou locais, sem erro. */
+const NV_OK = () => SO.on();
+const GRP = new Map(); let GRP_T = 0;
+const nMembras = n => n ? `${int(n)} ${n === 1 ? "membra" : "membras"}` : "Seja a primeira 💚";
+async function carregaGrupos(forca){
+  if(!NV_OK() || (!forca && Date.now() - GRP_T < 120000)) return [...GRP.values()];
+  try{ const L = await q(SB().rpc("grupos_info")); GRP.clear(); (L || []).forEach(g => GRP.set(g.id, g)); GRP_T = Date.now(); }catch(e){}
+  return [...GRP.values()];
+}
+/* ---------- Vídeo ---------- */
+function videoValido(f, maxSeg){
+  return new Promise(ok => { if(!f) return ok(null);
+    if(!/^video\/(mp4|webm|quicktime)$/i.test(f.type || "")){ toast("Use vídeo MP4 ou MOV."); return ok(null); }
+    if(f.size > 50 * 1024 * 1024){ toast("Vídeo muito grande (máx. 50 MB). Grave um mais curto."); return ok(null); }
+    const v = document.createElement("video"), u = URL.createObjectURL(f); v.preload = "metadata"; v.muted = true;
+    v.onloadedmetadata = () => { URL.revokeObjectURL(u); if(v.duration > (maxSeg || 60) + 1){ toast(`Vídeo de até ${maxSeg || 60} segundos.`); return ok(null); } ok(f); };
+    v.onerror = () => { URL.revokeObjectURL(u); ok(f); }; v.src = u; });
+}
+async function storyVideo(f){
+  const b = await videoValido(f, 30); if(!b) return;
+  const u = URL.createObjectURL(b);
+  sheet("Novo Story", `<div class="so-stprev priv"><video src="${u}" playsinline autoplay muted loop style="width:100%;height:100%;object-fit:cover"></video></div>
+    <p class="hint">${ic("clock", 13)} Vídeo de até 30 segundos. Fica visível por 24 horas.</p><button class="btn btn-accent btn-block btn-lg" id="sv-ok">Publicar Story</button>`, () => URL.revokeObjectURL(u));
+  $("sv-ok").onclick = async () => { const bt = $("sv-ok"); bt.disabled = true; bt.classList.add("carregando");
+    try{ await garantePerfil(); const ext = /quicktime/.test(b.type) ? "mov" : /webm/.test(b.type) ? "webm" : "mp4";
+      const midia = await sobe("story", NU.uid, b, ext, b.type || "video/mp4"); await q(SB().from("stories").insert({ user_id: NU.uid, midia, texto: null, cor: CORES_ST[0] }));
+      SOM.done ? SOM.done() : SOM.check(); fecharSheet(); toast("Story publicado por 24 horas 💚"); carregaStories(); }
+    catch(e){ toast(/mime|size|payload|too large|bucket/i.test(String(e && e.message)) ? "Vídeo não aceito ainda. O banco precisa da atualização de vídeos." : ERR_MSG(e)); bt.disabled = false; bt.classList.remove("carregando"); } };
+}
+/* vídeo do feed toca sozinho (sem som) quando aparece e pausa quando sai da tela */
+const VIDOBS = "IntersectionObserver" in window ? new IntersectionObserver(es => es.forEach(e => { const v = e.target; if(e.isIntersecting && v.src) v.play().catch(() => {}); else v.pause(); }), { threshold: .6 }) : null;
+new MutationObserver(() => { if(VIDOBS) document.querySelectorAll(".pvid video:not([data-obs])").forEach(v => { v.dataset.obs = 1; VIDOBS.observe(v); }); }).observe(document.body, { childList: true, subtree: true });
+
+/* ---------- Grupos ---------- */
+document.addEventListener("click", e => { const b = e.target.closest && e.target.closest("[data-grupo]"); if(!b) return; e.stopPropagation(); const g = GRP.get(b.dataset.grupo); if(g) abrirGrupo(g); }, true);
+const rJuntasN = rJuntas;
+rJuntas = function(){ rJuntasN.apply(this, arguments); if(!NV_OK()) return;
+  carregaGrupos().then(L => { const row = $("st-row"); if(!L.length || !row || $("gr-row")) return;
+    const meus = L.filter(g => g.eu), outros = L.filter(g => !g.eu);
+    row.insertAdjacentHTML("afterend", `<div class="so-grupos"><div class="sec-title"><h3>Grupos</h3><button class="link" id="gr-todos">Ver todos</button></div><div class="hscroll" id="gr-row">${[...meus, ...outros].slice(0, 10).map(g => `<button class="so-gr ${g.eu ? "eu" : ""}" data-grupo="${g.id}" style="--gc:${g.cor || "#2E7D5A"}"><i>${esc(g.emoji || "💚")}</i><b>${esc(g.nome)}</b><small>${nMembras(g.membros)}</small></button>`).join("")}</div></div>`);
+    $("gr-todos").onclick = todosGrupos; }); };
+async function todosGrupos(){
+  const L = await carregaGrupos(true);
+  sheet("Grupos", `<p class="hint">Encontre mulheres com os mesmos objetivos. Você pode entrar e sair quando quiser.</p>${L.map(g => `<button class="so-gr-lin" data-grupo="${g.id}" style="--gc:${g.cor || "#2E7D5A"}"><i>${esc(g.emoji || "💚")}</i><span><b>${esc(g.nome)}</b><small>${esc(g.descricao || "")}</small><small class="num">${nMembras(g.membros)}</small></span>${g.eu ? `<em>Participando</em>` : ""}</button>`).join("") || `<div class="card empty"><p>Nenhum grupo ainda.</p></div>`}`);
+}
+async function abrirGrupo(g){
+  sheet(g.nome, `<div class="so-gr-top" style="--gc:${g.cor || "#2E7D5A"}"><i>${esc(g.emoji || "💚")}</i><h2>${esc(g.nome)}</h2><p>${esc(g.descricao || "")}</p><small class="num">${nMembras(g.membros)}</small>
+    <div class="acts">${g.eu ? `<button class="btn btn-accent" id="gr-pub">${ic("plus", 16)} Publicar no grupo</button><button class="btn btn-line" id="gr-sair">Sair</button>` : `<button class="btn btn-accent btn-lg" id="gr-entrar">Entrar no grupo</button>`}</div></div>
+    <div class="feed" id="gr-feed"><div class="post skel"></div></div>`);
+  const ent = $("gr-entrar"); if(ent) ent.onclick = async () => { ent.disabled = true; try{ await q(SB().from("membros_grupo").insert({ grupo_id: g.id, user_id: NU.uid })); SOM.check(); vibra(15); toast(`Bem-vinda ao grupo ${g.nome} 💚`); g.eu = true; g.membros++; abrirGrupo(g); }catch(e){ ent.disabled = false; toast(ERR_MSG(e)); } };
+  const sa = $("gr-sair"); if(sa) sa.onclick = async () => { if(!confirm(`Sair do grupo ${g.nome}?`)) return; try{ await q(SB().from("membros_grupo").delete().eq("grupo_id", g.id).eq("user_id", NU.uid)); g.eu = false; g.membros = Math.max(0, g.membros - 1); abrirGrupo(g); }catch(e){ toast(ERR_MSG(e)); } };
+  const pb = $("gr-pub"); if(pb) pb.onclick = () => abreComposer("", null, { grupo: g });
+  let L = []; try{ L = await completaPosts(await q(SB().from("posts").select("*").eq("grupo_id", g.id).order("criado", { ascending: false }).limit(30))); }catch(e){}
+  const box = $("gr-feed"); if(!box) return;
+  box.innerHTML = L.length ? L.map(postHtml).join("") : `<div class="card empty"><p>${g.eu ? "Comece a conversa do grupo 💚" : "Entre no grupo para participar das conversas."}</p></div>`;
+  box.querySelectorAll(".post").forEach(el => ligaPost(el, L.find(p => p.id === el.dataset.id))); ligaMidia(box);
+}
+
+/* ---------- Notificações no celular ---------- */
+const VAPID = "BJ7wud6TE-eeF889qLG9sRvdppjzQvNJgifeuMN8MrTEkvSYjKbSrLvPyyxPgRJLXywLSwypDdj9RaoTQm60bCc";
+const PUSH_OK = () => "serviceWorker" in navigator && "PushManager" in window && "Notification" in window;
+const pwaInstalado = () => matchMedia("(display-mode: standalone)").matches || navigator.standalone;
+let SWREG = null;
+if("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("/sw.js").then(r => { SWREG = r; }).catch(() => {});
+if("serviceWorker" in navigator) navigator.serviceWorker.addEventListener("message", e => { if(e.data && e.data.tipo === "push"){ const n = String(e.data.url || ""); if(/n=mensagem|n=story/.test(n)) tab("juntas"); else if(/n=/.test(n)) tab("juntas"); } });
+const b64u = s => { const p = "=".repeat((4 - s.length % 4) % 4), b = atob((s + p).replace(/-/g, "+").replace(/_/g, "/")); return Uint8Array.from([...b].map(c => c.charCodeAt(0))); };
+async function inscrevePush(silencioso){
+  if(!PUSH_OK() || !NV_OK()) return false;
+  const reg = SWREG || await navigator.serviceWorker.ready; let sub = await reg.pushManager.getSubscription();
+  if(!sub) sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64u(VAPID) });
+  const j = sub.toJSON(); await q(SB().from("push_inscricoes").upsert({ endpoint: j.endpoint, user_id: NU.uid, p256dh: j.keys.p256dh, auth: j.keys.auth }));
+  if(!silencioso){ SOM.check(); toast("Pronto! Você vai receber avisos no celular 💚"); } return true;
+}
+async function ativarNotificacoes(){
+  if(ehIOS() && !pwaInstalado()) return sheet("Notificações no iPhone", `<p>No iPhone, os avisos funcionam com o CK Life instalado na tela de início:</p><ol class="hint" style="line-height:1.8"><li>Toque em <b>Compartilhar</b> (quadrado com seta) no Safari.</li><li>Escolha <b>Adicionar à Tela de Início</b>.</li><li>Abra o CK Life pelo ícone e ative os avisos aqui.</li></ol>`);
+  if(!PUSH_OK()) return toast("Este navegador não recebe notificações. Use Chrome ou o app instalado.");
+  if(Notification.permission === "denied") return toast("Os avisos estão bloqueados. Libere nas configurações do navegador.");
+  const p = await Notification.requestPermission(); if(p !== "granted") return toast("Tudo bem! Você pode ativar depois.");
+  try{ await inscrevePush(); rerender(); }catch(e){ console.warn(e); toast(XERR(e) ? "Os avisos no celular estão sendo ativados. Tente mais tarde." : "Não deu para ativar agora."); }
+}
+async function desativarNotificacoes(){
+  try{ const reg = SWREG || await navigator.serviceWorker.ready, sub = await reg.pushManager.getSubscription(); if(sub){ await SB().from("push_inscricoes").delete().eq("endpoint", sub.endpoint); await sub.unsubscribe(); } toast("Avisos no celular desligados"); rerender(); }catch(e){ toast("Não deu agora"); }
+}
+const pushLigado = () => PUSH_OK() && Notification.permission === "granted";
+setTimeout(() => { if(pushLigado() && NV_OK()) inscrevePush(true).catch(() => {}); carregaGrupos(); }, 9000);
+const rPerfilN = rPerfil;
+rPerfil = function(){ rPerfilN.apply(this, arguments); const lem = $("p-lemb"); if(!lem || $("p-push")) return;
+  lem.insertAdjacentHTML("beforebegin", setRow("p-push", "bell", "Avisos no celular", pushLigado() ? "Ligados: mensagens, curtidas e conquistas" : "Mensagens, comentários e conquistas", sw(pushLigado())));
+  $("p-push").onclick = () => pushLigado() ? desativarNotificacoes() : ativarNotificacoes(); };
+
+/* ---------- Desafios: participantes reais ---------- */
+let DCONT = null, DCONT_T = 0;
+async function contagemDesafios(){ if(!NV_OK()) return null; if(DCONT && Date.now() - DCONT_T < 120000) return DCONT; try{ DCONT = await q(SB().rpc("desafio_contagem")); DCONT_T = Date.now(); }catch(e){ DCONT = null; } return DCONT; }
+const rTreinarN = rTreinar;
+rTreinar = function(){ rTreinarN.apply(this, arguments);
+  contagemDesafios().then(c => { if(!c) return; document.querySelectorAll("[data-des]").forEach(b => { const n = +c[b.dataset.des] || 0; if(n >= 2 && !b.querySelector(".xe-part")) b.querySelector("small").insertAdjacentHTML("afterend", `<small class="xe-part">${int(n)} mulheres participando</small>`); });
+    const meu = document.querySelector(".xe-desafios .xe-des"), id = ME.desafio && !ME.desafio.fim && ME.desafio.id, n = id ? +c[id] || 0 : 0;
+    if(meu && n >= 2 && !meu.querySelector(".xe-part")) meu.querySelector("small").insertAdjacentHTML("afterend", `<small class="xe-part">Você e mais ${int(n - 1)} ${n - 1 === 1 ? "mulher" : "mulheres"} neste desafio</small>`); });
+  const ok = $("des-ok"); void ok; };
+/* sincroniza entrada, saída e conclusão do desafio */
+const desafioSync = { async entrar(id, ini){ if(!NV_OK()) return; try{ await q(SB().from("desafio_participantes").update({ saiu: true }).eq("user_id", NU.uid).is("fim", null).eq("saiu", false)); await q(SB().from("desafio_participantes").insert({ desafio: id, user_id: NU.uid, ...(ini ? { inicio: ini } : {}) })); DCONT_T = 0; }catch(e){} },
+  async sair(){ if(!NV_OK()) return; try{ await q(SB().from("desafio_participantes").update({ saiu: true }).eq("user_id", NU.uid).is("fim", null).eq("saiu", false)); DCONT_T = 0; }catch(e){} },
+  async fim(){ if(!NV_OK()) return; try{ await q(SB().from("desafio_participantes").update({ fim: today() }).eq("user_id", NU.uid).is("fim", null).eq("saiu", false)); }catch(e){} } };
+{ let antes = null; setInterval(() => { if(!ME) return; const d = ME.desafio ? ME.desafio.id + "|" + ME.desafio.ini + "|" + (ME.desafio.fim || "") : "";
+  if(antes !== null && d !== antes){ const [id, , fim] = d.split("|"); if(!d) desafioSync.sair(); else if(fim) desafioSync.fim(); else desafioSync.entrar(id); } antes = d; }, 1500); }
+
+/* ---------- Humor do dia na conta (só a própria aluna lê) ---------- */
+let HUM_SYNC = false;
+const HUMset0 = HUM.set.bind(HUM);
+HUM.set = v => { const antes = HUM.get(); HUMset0(v); if(!NV_OK()) return;
+  Object.entries(v).forEach(([d, x]) => { const a = antes[d]; if(!a || a.h !== x.h || a.e !== x.e) SB().from("humor_diario").upsert({ user_id: NU.uid, dia: d, humor: x.h, energia: x.e || null }).then(() => {}); }); };
+setTimeout(async () => { if(!NV_OK() || HUM_SYNC) return; HUM_SYNC = true;
+  try{ const L = await q(SB().from("humor_diario").select("dia,humor,energia").gte("dia", addD(today(), -30))); if(!L.length) return; const H = HUM.get(); let mudou = false;
+    L.forEach(r => { if(!H[r.dia]){ H[r.dia] = { h: r.humor, e: r.energia }; mudou = true; } }); if(mudou){ HUMset0(H); if(TAB === "inicio") rInicio(); } }catch(e){} }, 7000);
+
+/* ---------- Figurinhas na conta ---------- */
+let FIG_NUVEM = null;
+async function figNuvem(){
+  if(!NV_OK()) return []; if(FIG_NUVEM) return FIG_NUVEM;
+  try{ const L = await q(SB().from("figurinhas").select("id,midia").order("criado", { ascending: false }).limit(40)); const us = await urls(L.map(x => x.midia), 3600); FIG_NUVEM = L.map((x, i) => ({ ...x, u: us[i] })).filter(x => x.u); }catch(e){ FIG_NUVEM = []; }
+  return FIG_NUVEM;
+}
+/* sobe as figurinhas que estavam só no aparelho (uma vez) */
+setTimeout(async () => { if(!NV_OK()) return; const loc = MINHAS.get(); if(!loc.length) return; const ja = await figNuvem(); if(ja.length >= 40) return;
+  for(const u of loc.slice(0, 40 - ja.length)){ try{ const b = await dataBlob(u); const midia = await sobe("figurinha", NU.uid, b, "png", "image/png"); await q(SB().from("figurinhas").insert({ user_id: NU.uid, midia })); }catch(e){ if(XERR(e)) return; } }
+  MINHAS.set([]); FIG_NUVEM = null; }, 12000);
+const MINHAS_set0 = MINHAS.set.bind(MINHAS);
+MINHAS.set = L => { const antes = MINHAS.get(); MINHAS_set0(L); if(!NV_OK()) return; const novas = L.filter(u => !antes.includes(u));
+  novas.forEach(async u => { try{ const b = await dataBlob(u); const midia = await sobe("figurinha", NU.uid, b, "png", "image/png"); await q(SB().from("figurinhas").insert({ user_id: NU.uid, midia })); MINHAS_set0(MINHAS.get().filter(x => x !== u)); FIG_NUVEM = null; }catch(e){} }); };
+const desenhaPainelN = desenhaPainel;
+desenhaPainel = async function(c){ await desenhaPainelN.apply(this, arguments); if(PAN.aba !== "minhas" || !NV_OK()) return;
+  const L = await figNuvem(); const box = document.querySelector("#fg-pan .fg-figs"); if(!box || !L.length) return;
+  box.querySelector(".fg-nova").insertAdjacentHTML("afterend", L.map(x => `<button data-fn="${x.id}"><img src="${esc(x.u)}" alt="Minha figurinha"></button>`).join(""));
+  box.querySelectorAll("[data-fn]").forEach(b => { const x = L.find(y => y.id === b.dataset.fn);
+    b.onclick = () => { b.classList.add("pop"); vibra(10); mandaFig(c, x.u); };
+    let tm; b.onpointerdown = () => { tm = setTimeout(async () => { if(!confirm("Apagar esta figurinha?")) return; try{ await q(SB().from("figurinhas").delete().eq("id", x.id)); SB().storage.from("social").remove([x.midia]); FIG_NUVEM = null; desenhaPainel(c); }catch(e){ toast(ERR_MSG(e)); } }, 650); }; b.onpointerup = b.onpointerleave = () => clearTimeout(tm); }); };
+
+/* desafio que já estava ativo antes desta versão: registra uma vez */
+setTimeout(async () => { if(!NV_OK() || !ME.desafio || ME.desafio.fim) return;
+  try{ const L = await q(SB().from("desafio_participantes").select("id").eq("user_id", NU.uid).is("fim", null).eq("saiu", false)); if(!L.length) desafioSync.entrar(ME.desafio.id, ME.desafio.ini); }catch(e){} }, 10000);
 
 const TABS = [["inicio","Início"],["treinar","Treinos"],["dieta","Nutrição"],["juntas","Comunidade"],["explorar","Explorar"],["perfil","Perfil"],["evolucao","Evolução"]];
 const NAV = TABS.slice(0, 6), NAV_DE = { evolucao: "perfil" };
@@ -5646,12 +5867,15 @@ const NIVEIS = [[0, "Começando"], [5, "Firme"], [15, "Constante"], [30, "Dedica
 const nivelAluna = n => { let atual = NIVEIS[0], prox = null; NIVEIS.forEach((x, i) => { if(n >= x[0]){ atual = x; prox = NIVEIS[i + 1] || null; } }); return { nome: atual[1], prox, falta: prox ? prox[0] - n : 0, pct: prox ? Math.round(100 * (n - atual[0]) / (prox[0] - atual[0])) : 100 }; };
 const mascaraTel = v => { const d = String(v).replace(/\D/g, "").slice(0, 11); if(d.length <= 2) return d ? `(${d}` : ""; if(d.length <= 6) return `(${d.slice(0, 2)}) ${d.slice(2)}`; if(d.length <= 10) return `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}`; return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`; };
 document.addEventListener("input", e => { if(e.target.matches && e.target.matches('input[inputmode="tel"]')){ const a = e.target.value, b = mascaraTel(a); if(a !== b) e.target.value = b; } });
-function escolheFoto(){
-  const inp = document.createElement("input"); inp.type = "file"; inp.accept = "image/*";
-  inp.onchange = () => { const f = inp.files && inp.files[0]; if(!f) return; const rd = new FileReader();
-    rd.onload = () => { const im = new Image(); im.onload = () => { const S = 320, c = document.createElement("canvas"); c.width = c.height = S; const x = c.getContext("2d"), m = Math.min(im.width, im.height); x.drawImage(im, (im.width - m) / 2, (im.height - m) / 2, m, m, 0, 0, S, S); ME.foto = c.toDataURL("image/jpeg", .82); save(); sincFotoPerfil(); SOM.chime && SOM.chime(); toast("Foto do perfil atualizada"); rPerfil(); atualizaTopo(); }; im.onerror = () => toast("Não deu para abrir essa imagem"); im.src = rd.result; };
-    rd.readAsDataURL(f); };
-  inp.click();
+async function escolheFoto(){
+  const f = await escolheArquivo("image/*"); if(!f) return;
+  if(f.size > 25 * 1024 * 1024) return toast("Foto muito grande. Escolha outra.");
+  let b; try{ b = await comprimeImg(f, 900); }catch(e){ return toast("Não deu para abrir essa foto. Tente outra (JPG ou PNG)."); }
+  const u = URL.createObjectURL(b), im = new Image();
+  im.onload = () => { const S = 320, c = document.createElement("canvas"); c.width = c.height = S; const x = c.getContext("2d"), m = Math.min(im.width, im.height);
+    x.drawImage(im, (im.width - m) / 2, Math.max(0, (im.height - m) * (im.height > im.width ? .3 : .5)), m, m, 0, 0, S, S); URL.revokeObjectURL(u);
+    ME.foto = c.toDataURL("image/jpeg", .82); save(); sincFotoPerfil(); SOM.chime && SOM.chime(); vibra(15); toast("Foto do perfil atualizada"); rerender(); atualizaTopo(); };
+  im.onerror = () => { URL.revokeObjectURL(u); toast("Não deu para abrir essa foto. Tente outra."); }; im.src = u;
 }
 function menuFoto(){
   sheet("Foto do perfil", `<div class="fotobig">${ME.foto ? `<img src="${ME.foto}" alt="">` : `<span>${esc(ME.nome.trim()[0].toUpperCase())}</span>`}</div>
@@ -8212,10 +8436,34 @@ let PAPEL_ESCOLHIDO = null;
 VIEWS.seguranca = vSeguranca; VIEWS.lgpd = () => { SEGA = "lgpd"; ir("seguranca"); }; VIEWS.incidentes = () => { SEGA = "incidentes"; ir("seguranca"); }; VIEWS.auditoria = () => { SEGA = "auditoria"; ir("seguranca"); }; VIEWS.documentos = () => { SEGA = "documentos"; ir("seguranca"); };
 /* menu do painel organizado por assunto */
 GRUPOS.length = 0;
-GRUPOS.push(["Métricas", ["resumo","metricas","explorarm"]], ["Usuárias", ["alunos","ciclo"]], ["Social e moderação", ["comunidade","moderacao"]],
+GRUPOS.push(["Métricas", ["resumo","metricas","explorarm"]], ["Usuárias", ["alunos","ciclo"]], ["Social e moderação", ["comunidade","grupos","moderacao"]],
   ["Conteúdo", ["receitas","exercicios","avisos","banners","destaques","categorias"]],
   ["Comercial", ["empresas","profissionais","servicos","agendamentos","avaliacoes","parceiros","cupons","produtos","anunciantes","campanhas","financeiro"]],
   ["Proteção", ["seguranca"]], ["Configurações", ["cidades","segmentos","admins","config"]]);
+
+/* ---------- Grupos da comunidade ---------- */
+AIC.grupos = '<circle cx="9" cy="8" r="3.2"/><circle cx="17" cy="9" r="2.5"/><path d="M3 19c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5M15 14.2c3 0 5.5 1.8 5.5 4.8"/>';
+SECOES.push(["grupos", "Grupos"]);
+async function vGrupos(){
+  $("adm-main").innerHTML = `<div class="head"><div><h1>Grupos da comunidade</h1><p class="muted">Grupos por objetivo ou por cidade. As alunas entram e saem quando quiserem; ninguém vê a lista de membras, só o total.</p></div><button class="btn btn-accent needs-edit" id="gp-novo">+ Novo grupo</button></div><div id="gp-b"><div class="card">Carregando…</div></div>`;
+  if(!SB2()) return $("gp-b").innerHTML = `<div class="card">Funciona no app oficial, com o banco conectado.</div>`;
+  let L, cont = {};
+  try{ L = await sq(SB2().from("grupos").select("*").order("ordem").order("nome")); (await sq(SB2().rpc("grupos_info")) || []).forEach(g => cont[g.id] = g.membros); }catch(e){ return $("gp-b").innerHTML = semBanco(e).replace("seguranca.sql", "novidades.sql"); }
+  $("gp-b").innerHTML = `<div class="tbl"><table><thead><tr><th>Grupo</th><th>Cidade</th><th>Membras</th><th>Status</th><th></th></tr></thead><tbody>${L.map(g => `<tr><td><b>${esc(g.emoji || "")} ${esc(g.nome)}</b><br><small class="muted">${esc(g.descricao || "")}</small></td><td>${esc((DB().cidades.find(c => +c.id === +g.cidade) || {}).nome || "Todas")}</td><td class="num">${int(cont[g.id] || 0)}</td><td><span class="st ${g.ativo ? "ok" : "off"}">${g.ativo ? "Ativo" : "Oculto"}</span></td><td><button class="btn btn-line btn-sm needs-edit" data-gp="${g.id}">Editar</button></td></tr>`).join("") || `<tr><td colspan="5" class="empty">Nenhum grupo. Rode o novidades.sql no Supabase.</td></tr>`}</tbody></table></div>`;
+  const form = g => { const x = g || { ativo: true, ordem: 10, cor: "#2E7D5A" };
+    modal(g ? "Editar grupo" : "Novo grupo", `<div class="formgrid"><div class="field"><label for="gp-n">Nome</label><input class="input" id="gp-n" value="${esc(x.nome || "")}" maxlength="60"></div><div class="field"><label for="gp-e">Emoji</label><input class="input" id="gp-e" value="${esc(x.emoji || "")}" maxlength="8"></div>
+      <div class="field full"><label for="gp-d">Descrição</label><textarea class="input" id="gp-d" maxlength="300">${esc(x.descricao || "")}</textarea></div>
+      <div class="field"><label for="gp-c">Cidade</label><select class="input" id="gp-c"><option value="">Todas</option>${DB().cidades.map(c => `<option value="${c.id}" ${+c.id === +x.cidade ? "selected" : ""}>${esc(c.nome)}</option>`).join("")}</select></div>
+      <div class="field"><label for="gp-cor">Cor</label><input class="input" type="color" id="gp-cor" value="${esc(x.cor || "#2E7D5A")}"></div><div class="field"><label for="gp-o">Ordem</label><input class="input num" id="gp-o" value="${esc(x.ordem)}"></div>
+      <label class="field xf-chk"><input type="checkbox" id="gp-a" ${x.ativo ? "checked" : ""}> Visível para as alunas</label></div><button class="btn btn-accent" id="gp-ok">Salvar</button>`);
+    $("gp-ok").onclick = async () => { const nome = val("gp-n"); if(nome.length < 3) return toast("Nome com pelo menos 3 letras");
+      const d = { nome, emoji: val("gp-e") || null, descricao: val("gp-d") || null, cidade: val("gp-c") ? +val("gp-c") : null, cor: val("gp-cor"), ordem: +val("gp-o") || 0, ativo: $("gp-a").checked };
+      try{ if(g) await sq(SB2().from("grupos").update(d).eq("id", g.id)); else await sq(SB2().from("grupos").insert({ ...d, slug: (nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 34) + "-" + Math.random().toString(36).slice(2, 5)) }));
+        F.nuvem.sb.rpc("auditar", { p_acao: g ? "grupo_alterado" : "grupo_criado", p_recurso: "grupos", p_alvo: nome }); fechar(); toast("Grupo salvo"); vGrupos(); }catch(e){ toast("Sem permissão ou dados inválidos"); } }; };
+  const nv = $("gp-novo"); if(nv) nv.onclick = () => form();
+  $("gp-b").querySelectorAll("[data-gp]").forEach(b => b.onclick = () => form(L.find(g => g.id === b.dataset.gp)));
+}
+VIEWS.grupos = vGrupos;
 
 window.ADMIN = { abrir };
 })();

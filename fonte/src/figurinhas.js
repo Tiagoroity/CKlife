@@ -118,14 +118,57 @@ function escolheFiltro(blob, titulo){
     const u = URL.createObjectURL(blob), im = await new Promise(ok => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => ok(null); i.src = u; }); if(!im) return fim(blob);
     let box = $("so-filtro"); if(!box){ box = document.createElement("div"); box.id = "so-filtro"; box.className = "so-prev priv"; document.body.appendChild(box); }
     const base = paraCanvas(im, 900), mini = paraCanvas(im, 140); let esc0 = "original";
-    box.innerHTML = `<div class="so-prev-top"><button class="iconbtn" id="fl-x" aria-label="Cancelar">${ic("close", 20)}</button><b>${titulo || "Filtros"}</b><button class="btn btn-accent btn-sm" id="fl-ok" style="margin-left:auto">Usar</button></div><div class="fl-vis"><canvas id="fl-cv"></canvas></div>
-      <div class="fl-row">${FILTROS.map(([k, n]) => { const m = document.createElement("canvas"); m.width = mini.width; m.height = mini.height; m.getContext("2d").drawImage(mini, 0, 0); aplicaFiltro(m, k); return `<button data-fl="${k}" aria-pressed="${k === esc0}"><img src="${m.toDataURL("image/jpeg", .7)}" alt=""><small>${n}</small></button>`; }).join("")}</div>`;
+    box.innerHTML = `<div class="so-prev-top"><button class="iconbtn" id="fl-x" aria-label="Cancelar">${ic("close", 20)}</button><b>${titulo || "Filtros"}</b><button class="btn btn-soft btn-sm fl-mk-b" id="fl-mk">💄 Maquiagem</button><button class="btn btn-accent btn-sm" id="fl-ok" style="margin-left:auto">Usar</button></div><div class="fl-vis"><canvas id="fl-cv"></canvas></div>
+      <div class="fl-mk" id="fl-mkp" hidden></div><div class="fl-row">${FILTROS.map(([k, n]) => { const m = document.createElement("canvas"); m.width = mini.width; m.height = mini.height; m.getContext("2d").drawImage(mini, 0, 0); aplicaFiltro(m, k); return `<button data-fl="${k}" aria-pressed="${k === esc0}"><img src="${m.toDataURL("image/jpeg", .7)}" alt=""><small>${n}</small></button>`; }).join("")}</div>`;
     box.hidden = false;
-    const mostra = () => { const cv = $("fl-cv"); cv.width = base.width; cv.height = base.height; cv.getContext("2d").drawImage(base, 0, 0); aplicaFiltro(cv, esc0); };
+    const MK = { rosto: null, batom: null, blush: false, forca: .6 };
+    const mostra = () => { const cv = $("fl-cv"); cv.width = base.width; cv.height = base.height; cv.getContext("2d").drawImage(base, 0, 0); aplicaFiltro(cv, esc0); if(MK.rosto) aplicaMaquiagem(cv, MK); };
+    const painelMk = () => { const p = $("fl-mkp"); p.hidden = false;
+      p.innerHTML = `<div class="fl-mk-l"><span>Batom</span>${[["", "Sem"], ...BATONS].map(([c, n]) => `<button class="fl-bt" data-bt="${c}" aria-pressed="${(MK.batom || "") === c}" ${c ? `style="--bt:${c}"` : ""}>${c ? "" : "∅"}<small>${n}</small></button>`).join("")}</div>
+        <div class="fl-mk-l"><button class="chip" id="mk-bl" aria-pressed="${MK.blush}">🌸 Blush</button>${[[.35, "Suave"], [.6, "Média"], [.9, "Forte"]].map(([v, n]) => `<button class="chip" data-fz="${v}" aria-pressed="${MK.forca === v}">${n}</button>`).join("")}</div>`;
+      p.querySelectorAll("[data-bt]").forEach(b => b.onclick = () => { MK.batom = b.dataset.bt || null; vibra(6); painelMk(); mostra(); });
+      p.querySelectorAll("[data-fz]").forEach(b => b.onclick = () => { MK.forca = +b.dataset.fz; painelMk(); mostra(); });
+      $("mk-bl").onclick = () => { MK.blush = !MK.blush; vibra(6); painelMk(); mostra(); }; };
+    $("fl-mk").onclick = async () => { const bt = $("fl-mk"); if(MK.rosto){ const p = $("fl-mkp"); p.hidden = !p.hidden; return; }
+      bt.disabled = true; bt.textContent = "Procurando rosto…";
+      try{ MK.rosto = await achaRosto(base); }catch(e){ console.warn(e); }
+      bt.disabled = false; bt.textContent = "💄 Maquiagem";
+      if(!MK.rosto) return toast("Não encontrei um rosto nesta foto. Tente uma foto de frente e bem iluminada.");
+      MK.batom = BATONS[1][0]; MK.blush = true; painelMk(); mostra(); };
     mostra();
     box.querySelectorAll("[data-fl]").forEach(b => b.onclick = () => { esc0 = b.dataset.fl; box.querySelectorAll("[data-fl]").forEach(y => y.setAttribute("aria-pressed", y === b)); vibra(6); mostra(); });
     const sai = r => { box.hidden = true; box.innerHTML = ""; URL.revokeObjectURL(u); fim(r); };
     $("fl-x").onclick = () => sai(null);
-    $("fl-ok").onclick = () => { if(esc0 === "original") return sai(blob); const cv = aplicaFiltro(paraCanvas(im, 1600), esc0); cv.toBlob(b => sai(b || blob), "image/jpeg", .88); };
+    $("fl-ok").onclick = () => { const temMk = MK.rosto && (MK.batom || MK.blush); if(esc0 === "original" && !temMk) return sai(blob); const cv = aplicaFiltro(paraCanvas(im, 1600), esc0); if(temMk) aplicaMaquiagem(cv, MK); cv.toBlob(b => sai(b || blob), "image/jpeg", .88); };
   });
+}
+
+/* ---------- Maquiagem virtual (reconhecimento de rosto no próprio aparelho; a foto não sai do celular) ---------- */
+const BATONS = [["#B5655B", "Nude"], ["#D9567A", "Rosa"], ["#E56B5A", "Coral"], ["#B3122E", "Vermelho"], ["#6E1530", "Vinho"]];
+const MP_V = "0.10.14";
+let FACE = null;
+async function achaRosto(cv){
+  if(!FACE){
+    const vision = await import(`https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MP_V}/vision_bundle.mjs`);
+    const fs = await vision.FilesetResolver.forVisionTasks(`https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MP_V}/wasm`);
+    FACE = await vision.FaceLandmarker.createFromOptions(fs, { baseOptions: { modelAssetPath: "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task", delegate: "CPU" }, runningMode: "IMAGE", numFaces: 1 });
+  }
+  const r = FACE.detect(cv); return r && r.faceLandmarks && r.faceLandmarks[0] ? r.faceLandmarks[0].map(p => ({ x: p.x, y: p.y })) : null;
+}
+const LABIO_FORA = [61,146,91,181,84,17,314,405,321,375,291,409,270,269,267,0,37,39,40,185], LABIO_DENTRO = [78,95,88,178,87,14,317,402,318,324,308,415,310,311,312,13,82,81,80,191];
+function aplicaMaquiagem(cv, MK){
+  const W = cv.width, H = cv.height, x = cv.getContext("2d"), L = MK.rosto, P = i => [L[i].x * W, L[i].y * H];
+  const larg = Math.hypot(P(234)[0] - P(454)[0], P(234)[1] - P(454)[1]);
+  const camada = desenho => { const m = document.createElement("canvas"); m.width = W; m.height = H; const mx = m.getContext("2d"); desenho(mx);
+    const s = document.createElement("canvas"), k = Math.max(1, Math.round(larg / 90)); s.width = Math.max(1, W / k | 0); s.height = Math.max(1, H / k | 0); s.getContext("2d").drawImage(m, 0, 0, s.width, s.height); return s; };
+  if(MK.batom){
+    const lab = camada(mx => { mx.fillStyle = MK.batom; mx.beginPath(); LABIO_FORA.forEach((i, n) => { const [a, b] = P(i); n ? mx.lineTo(a, b) : mx.moveTo(a, b); }); mx.closePath(); LABIO_DENTRO.forEach((i, n) => { const [a, b] = P(i); n ? mx.lineTo(a, b) : mx.moveTo(a, b); }); mx.closePath(); mx.fill("evenodd"); });
+    x.save(); x.globalCompositeOperation = "multiply"; x.globalAlpha = .55 * MK.forca + .1; x.drawImage(lab, 0, 0, W, H);
+    x.globalCompositeOperation = "soft-light"; x.globalAlpha = .5 * MK.forca; x.drawImage(lab, 0, 0, W, H); x.restore();
+  }
+  if(MK.blush){
+    const bl = camada(mx => { [[205, 50], [425, 280]].forEach(([c, d]) => { const [a, b] = P(c), [a2, b2] = P(d), cx = (a + a2) / 2, cy = (b + b2) / 2, r = larg * .13;
+      const g = mx.createRadialGradient(cx, cy, 0, cx, cy, r); g.addColorStop(0, "rgba(232,96,120,.9)"); g.addColorStop(1, "rgba(232,96,120,0)"); mx.fillStyle = g; mx.beginPath(); mx.arc(cx, cy, r, 0, 7); mx.fill(); }); });
+    x.save(); x.globalCompositeOperation = "soft-light"; x.globalAlpha = .7 * MK.forca + .1; x.drawImage(bl, 0, 0, W, H); x.globalCompositeOperation = "multiply"; x.globalAlpha = .18 * MK.forca; x.drawImage(bl, 0, 0, W, H); x.restore();
+  }
 }

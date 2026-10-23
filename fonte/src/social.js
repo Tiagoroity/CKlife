@@ -37,12 +37,13 @@ async function urls(paths, segs = 600){
   return paths.map(p => (MID.get(p) || {}).u || "");
 }
 // se a URL temporária ainda vale, usa direto (sem piscar ao redesenhar)
+const eVideo = p => /\.(mp4|webm|mov)$/i.test(p || "");
 const midiaPronta = path => { const m = MID.get(path); return m && m.t > Date.now() ? `src="${esc(m.u)}" data-m="${esc(path)}" data-mok="1"` : `data-m="${esc(path)}"`; };
 function ligaMidia(root, segs){
   const els = [...(root || document).querySelectorAll("[data-m]:not([data-mok])")]; if(!els.length) return;
   urls(els.map(e => e.dataset.m), segs).then(us => els.forEach((e, i) => { e.dataset.mok = 1;
     if(!us[i]){ e.classList.add("m-falha"); if(e.tagName === "IMG") e.removeAttribute("src"); return; }
-    if(e.tagName === "IMG") e.src = us[i]; else e.style.backgroundImage = `url("${us[i]}")`; }));
+    if(e.tagName === "IMG" || e.tagName === "VIDEO") e.src = us[i]; else e.style.backgroundImage = `url("${us[i]}")`; }));
 }
 // barreiras de interface para conteúdo privado (não substituem a segurança do banco)
 document.addEventListener("contextmenu", e => { if(e.target.closest && e.target.closest(".priv")) e.preventDefault(); });
@@ -53,7 +54,11 @@ async function sobe(pasta, dono, blob, ext, tipo){
   const r = await SB().storage.from("social").upload(path, blob, { contentType: tipo, cacheControl: "0", upsert: false });
   if(r.error) throw r.error; return path;
 }
-function escolheArquivo(accept, captura){ return new Promise(ok => { const i = document.createElement("input"); i.type = "file"; i.accept = accept; if(captura) i.setAttribute("capture", captura); i.onchange = () => ok(i.files && i.files[0] || null); i.click(); }); }
+// o campo fica no documento até a escolha: no iPhone, campo solto pode "perder" a foto escolhida
+function escolheArquivo(accept, captura){ return new Promise(ok => { const i = document.createElement("input"); i.type = "file"; i.accept = accept; if(captura) i.setAttribute("capture", captura);
+  i.style.cssText = "position:fixed;left:-9999px;top:0;width:1px;height:1px;opacity:0"; document.body.appendChild(i);
+  let feito = false; const fim = v => { if(feito) return; feito = true; ok(v); setTimeout(() => i.remove(), 1000); };
+  i.addEventListener("change", () => fim(i.files && i.files[0] || null)); i.addEventListener("cancel", () => fim(null)); i.click(); }); }
 async function imagemValida(f, max){
   if(!f) return null;
   if(!/^image\/(jpeg|jpg|png|webp|heic|heif|gif)$/i.test(f.type || "") && !/\.(jpe?g|png|webp|heic|heif)$/i.test(f.name || "")){ toast("Formato não suportado. Use foto JPG ou PNG."); return null; }
@@ -79,8 +84,8 @@ async function garantePerfil(){
 }
 function migraBloqueios(){ const L = ME.chatBloq || []; if(!L.length) return; SB().from("bloqueios").insert(L.map(b => ({ quem: NU.uid, bloqueado: b.id }))).then(() => { ME.chatBloq = []; save(); }); }
 async function carregaPerfis(ids){
-  const falta = [...new Set(ids.filter(i => i && !PERFIS.has(i)))]; if(!falta.length || !SO.on()) return;
-  for(let i = 0; i < falta.length; i += 80){ try{ (await q(SB().from("perfis").select("user_id,username,nome,foto_mini,privado").in("user_id", falta.slice(i, i + 80)))).forEach(p => PERFIS.set(p.user_id, p)); }catch(e){} }
+  const falta = [...new Set(ids.filter(i => i && (!PERFIS.has(i) || (i !== NU.uid && Date.now() - (PERFIS.get(i)._t || 0) > 180000))))]; if(!falta.length || !SO.on()) return;
+  for(let i = 0; i < falta.length; i += 80){ try{ (await q(SB().from("perfis").select("user_id,username,nome,foto_mini,privado").in("user_id", falta.slice(i, i + 80)))).forEach(p => { p._t = Date.now(); PERFIS.set(p.user_id, { ...(PERFIS.get(p.user_id) || {}), ...p }); }); }catch(e){} }
 }
 async function sincFotoPerfil(){ // chamada quando a aluna troca a foto pelo Perfil antigo
   await detectaSocial(); if(!SO.on()) return; try{ await garantePerfil(); const foto = ME.foto ? await sobe("perfil", NU.uid, await (await fetch(ME.foto)).blob(), "jpg", "image/jpeg") : null;
@@ -316,7 +321,7 @@ async function completaPosts(rows){
   if(ids.length){ [cu, co, sv] = await Promise.all([q(SB().from("curtidas").select("post_id,user_id").in("post_id", ids)), q(SB().from("comentarios").select("*").in("post_id", ids).order("criado", { ascending: true })), q(SB().from("salvos").select("post_id").eq("user_id", NU.uid).in("post_id", ids)).catch(() => [])]); }
   sv.forEach(s => SALVOS.add(s.post_id));
   await carregaPerfis([...rows.map(p => p.user_id), ...co.map(c => c.user_id)]);
-  return rows.map(p => ({ id: p.id, user: p.user_id, nome: p.nome, foto: p.foto, texto: p.texto, img: p.img, midia: p.midia, conquista: p.conquista, criado: p.criado, oculto: p.oculto,
+  return rows.map(p => ({ id: p.id, user: p.user_id, nome: p.nome, foto: p.foto, texto: p.texto, img: p.img, midia: p.midia, conquista: p.conquista, criado: p.criado, oculto: p.oculto, grupo: p.grupo_id || null,
     curtidas: cu.filter(c => c.post_id === p.id).map(c => c.user_id), coments: co.filter(c => c.post_id === p.id).map(c => ({ id: c.id, user: c.user_id, nome: c.nome, foto: c.foto, texto: c.texto, criado: c.criado })) }));
 }
 async function feedBusca(ids){ if(!ids.length || !SO.on()) return []; const rows = await q(SB().from("posts").select("*").in("id", ids)); const L = await completaPosts(rows); return ids.map(i => L.find(p => p.id === i)).filter(Boolean); }
@@ -334,9 +339,9 @@ function postHtml(p){
   const meu = p.user === ME.id, liked = (p.curtidas || []).includes(ME.id), nc = (p.coments || []).length, nl = (p.curtidas || []).length, us = userP(p.user), salvo = SALVOS.has(p.id);
   const cq = p.conquista ? `<div class="so-pconq"><i>${esc(p.conquista.emoji || "🏆")}</i><div><b>${esc(p.conquista.titulo || "Conquista")}</b><small>${esc(p.conquista.frase || "")}</small></div></div>` : "";
   return `<article class="post" data-id="${p.id}">
-    <header>${avU(p.user, p.nome, p.foto)}<div class="pmeta"><b>${esc(nomeP(p.user, p.nome))}</b><small>${us ? "@" + esc(us) + " · " : ""}${tempoAtras(p.criado)}${p.oculto ? " · oculto pela moderação" : ""}</small></div><button class="iconbtn sm" data-mais aria-label="Opções">${ic("dots", 18)}</button></header>
+    <header>${avU(p.user, p.nome, p.foto)}<div class="pmeta"><b>${esc(nomeP(p.user, p.nome))}</b><small>${us ? "@" + esc(us) + " · " : ""}${tempoAtras(p.criado)}${p.oculto ? " · oculto pela moderação" : ""}${p.grupo && GRP.get(p.grupo) ? ` · <button class="so-gtag" data-grupo="${p.grupo}">${esc(GRP.get(p.grupo).emoji || "")} ${esc(GRP.get(p.grupo).nome)}</button>` : ""}</small></div><button class="iconbtn sm" data-mais aria-label="Opções">${ic("dots", 18)}</button></header>
     ${p.texto ? `<p class="ptx ${p.texto.length > 260 ? "so-trunc" : ""}">${rico(p.texto)}</p>${p.texto.length > 260 ? `<button class="link so-vermais" data-vermais>ver mais</button>` : ""}` : ""}${cq}
-    ${p.midia ? `<div class="pimg priv" data-abre><img ${midiaPronta(p.midia)} alt="" loading="lazy" draggable="false"><i class="pheart">${ic("heart", 70)}</i></div>` : p.img ? `<div class="pimg priv" data-abre><img src="${esc(p.img)}" alt="" loading="lazy" draggable="false"><i class="pheart">${ic("heart", 70)}</i></div>` : ""}
+    ${p.midia && eVideo(p.midia) ? `<div class="pimg pvid priv"><video data-m="${esc(p.midia)}" playsinline muted loop preload="metadata" controls controlslist="nodownload noplaybackrate" disablepictureinpicture></video></div>` : p.midia ? `<div class="pimg priv" data-abre><img ${midiaPronta(p.midia)} alt="" loading="lazy" draggable="false"><i class="pheart">${ic("heart", 70)}</i></div>` : p.img ? `<div class="pimg priv" data-abre><img src="${esc(p.img)}" alt="" loading="lazy" draggable="false"><i class="pheart">${ic("heart", 70)}</i></div>` : ""}
     <div class="pacts"><button class="pl ${liked ? "on" : ""}" data-like aria-label="Curtir">${ic("heart", 22)}<span>${nl || ""}</span></button><button data-abre aria-label="Comentar">${ic("chat", 21)}<span>${nc || ""}</span></button>${SO.on() ? `<button data-share aria-label="Compartilhar">${ic("send", 20)}</button><button class="so-save ${salvo ? "on" : ""}" data-save aria-label="Salvar">${ic("bookmark", 20)}</button>` : ""}
       ${nl ? `<small class="pquem" data-quem role="button">${liked ? (nl === 1 ? "Você curtiu" : `Você e mais ${nl - 1}`) : `${nl} ${nl === 1 ? "curtida" : "curtidas"}`}</small>` : ""}</div>
     ${(p.coments || []).slice(-2).map(c => `<p class="pc"><b>${esc(nomeP(c.user, c.nome).split(" ")[0])}</b> ${rico(c.texto)}</p>`).join("")}
@@ -389,12 +394,13 @@ function abreComposer(texto0, blob0, extra){
     ${!texto0 && !cq ? `<div class="chips scroll so-temas">${[["💪","Treino de hoje","Treino de hoje concluído! "],["🥗","Receita","Fiz uma receita do app hoje: "],["✨","Motivação","Lembrete do dia: "],["👋","Me apresentar","Oi, meninas! Sou "],["🙋","Pergunta","Alguém tem dica de "]].map(([e, n, t]) => `<button class="chip" data-tema="${esc(t)}">${e} ${n}</button>`).join("")}</div>` : ""}
     <textarea class="input cmp-tx" id="cp-t" maxlength="1000" placeholder="O que você quer compartilhar hoje? 💚">${esc(texto0 || "")}</textarea><small class="so-cont" id="cp-n">0/1000</small>
     <div id="cp-prev" class="cp-prev"></div>
-    <div class="toolbar"><button class="btn btn-line" id="cp-foto">${ic("camera", 18)} Foto</button><span class="hint">Compartilhe só o que você quiser. Seu peso, medidas e ciclo nunca são postados.</span></div>
+    ${extra && extra.grupo ? `<p class="so-cp-grupo">${esc(extra.grupo.emoji || "")} Publicando em <b>${esc(extra.grupo.nome)}</b></p>` : ""}<div class="toolbar"><button class="btn btn-line" id="cp-foto">${ic("camera", 18)} Foto</button><button class="btn btn-line" id="cp-video">${ic("play", 18)} Vídeo</button><span class="hint">Compartilhe só o que você quiser. Seu peso, medidas e ciclo nunca são postados.</span></div>
     <button class="btn btn-accent btn-block btn-lg" id="cp-ok">Publicar</button>`);
   const cont = () => { const n = $("cp-t").value.length; $("cp-n").textContent = `${n}/1000`; }; $("cp-t").oninput = cont; cont();
   $("sheet-body").querySelectorAll("[data-tema]").forEach(b => b.onclick = () => { const t = $("cp-t"); t.value = b.dataset.tema + t.value; t.focus(); t.setSelectionRange(t.value.length, t.value.length); cont(); SOM.tap(); });
-  const prev = async () => { $("cp-prev").innerHTML = blob ? `<img src="${await blobParaURL(blob)}" alt=""><button class="iconbtn sm" id="cp-x" aria-label="Tirar foto">${ic("close", 16)}</button>` : ""; const x = $("cp-x"); if(x) x.onclick = () => { blob = null; prev(); }; };
+  const prev = async () => { if(prev.u){ URL.revokeObjectURL(prev.u); prev.u = null; } $("cp-prev").innerHTML = blob && /^video\//.test(blob.type || "") ? `<video src="${prev.u = URL.createObjectURL(blob)}" playsinline muted loop autoplay controls></video><button class="iconbtn sm" id="cp-x" aria-label="Tirar vídeo">${ic("close", 16)}</button>` : blob ? `<img src="${await blobParaURL(blob)}" alt=""><button class="iconbtn sm" id="cp-x" aria-label="Tirar foto">${ic("close", 16)}</button>` : ""; const x = $("cp-x"); if(x) x.onclick = () => { blob = null; prev(); }; };
   prev();
+  const cv = $("cp-video"); if(cv) cv.onclick = async () => { const f = await escolheArquivo("video/*"); const v = await videoValido(f); if(v){ blob = v; prev(); } };
   $("cp-foto").onclick = async () => { const f = await escolheArquivo("image/*"); let b = await imagemValida(f, 1440); if(b) b = await escolheFiltro(b); if(b){ blob = b; prev(); } };
   $("cp-ok").onclick = async () => { const t = $("cp-t").value.trim(); if(!t && !blob && !cq) return toast("Escreva algo ou escolha uma foto"); if(ME.bloqueado) return toast("Sua conta está bloqueada");
     const b = $("cp-ok"); b.classList.add("carregando"); b.disabled = true;
@@ -407,8 +413,8 @@ CM.publicar = async (texto, blob, extra) => {
   if(!SO.on()) return CM_pub0(texto, blob);
   await garantePerfil();
   const id = novoId(); let midia = null;
-  if(blob) midia = await sobe("post", NU.uid, blob, "jpg", "image/jpeg");
-  const r = await SB().from("posts").insert({ id, user_id: NU.uid, nome: EU.nome || ME.nome, foto: EU.foto_mini || await miniFoto(ME.foto), texto, midia, conquista: (extra && extra.conquista) || null });
+  if(blob){ const v = /^video\//.test(blob.type || ""); const ext = !v ? "jpg" : /quicktime/.test(blob.type) ? "mov" : /webm/.test(blob.type) ? "webm" : "mp4"; midia = await sobe("post", NU.uid, blob, ext, v ? (blob.type || "video/mp4") : "image/jpeg"); }
+  const r = await SB().from("posts").insert({ id, user_id: NU.uid, nome: EU.nome || ME.nome, foto: EU.foto_mini || await miniFoto(ME.foto), texto, midia, conquista: (extra && extra.conquista) || null, ...(extra && extra.grupo ? { grupo_id: extra.grupo.id } : {}) });
   if(r.error) throw r.error;
 };
 // o painel (moderação) também enxerga fotos privadas de posts via URL temporária
@@ -518,7 +524,8 @@ async function carregaStories(){
 const CORES_ST = ["#0E3D32","#2E7D5A","#C2577B","#6C5FB5","#D08A2E","#17211D"];
 async function criarStory(){
   if(ME.bloqueado) return toast("Sua conta está bloqueada");
-  const f = await escolheArquivo("image/*"); let b = await imagemValida(f, 1920); if(!b) return; b = await escolheFiltro(b); if(!b) return;
+  const f = await escolheArquivo("image/*,video/*");
+  if(f && /^video\//.test(f.type || "")) return storyVideo(f); let b = await imagemValida(f, 1920); if(!b) return; b = await escolheFiltro(b); if(!b) return;
   let cor = CORES_ST[0];
   sheet("Novo Story", `<div class="so-stprev priv" id="sp-p"><img src="${await blobParaURL(b)}" alt=""><span id="sp-tx" class="so-sttx" hidden></span></div>
     <div class="field"><label for="sp-t">Texto sobre a foto (opcional)</label><input class="input" id="sp-t" maxlength="120" placeholder="Ex.: Treino feito! 💪"></div>
@@ -554,18 +561,20 @@ async function mostraStory(){
   cancelAnimationFrame(SV.raf); const meu = g.u === NU.uid, box = $("story");
   box.innerHTML = `<div class="so-sv-barras">${g.ss.map((x, i) => `<i><b style="width:${i < SV.si ? 100 : 0}%"></b></i>`).join("")}</div>
     <div class="so-sv-top"><button class="so-sv-quem" id="sv-perfil">${avU(g.u)}<span><b>${esc(nomeP(g.u))}</b><small>${tempoAtras(s.criado)}</small></span></button><button class="iconbtn" id="sv-mais" aria-label="Opções">${ic("dots", 18)}</button><button class="iconbtn" id="sv-x" aria-label="Fechar">${ic("close", 18)}</button></div>
-    <div class="so-sv-img"><img data-m="${esc(s.midia)}" alt="" draggable="false"></div>
+    <div class="so-sv-img">${eVideo(s.midia) ? `<video playsinline autoplay preload="auto" disablepictureinpicture controlslist="nodownload"></video>` : `<img data-m="${esc(s.midia)}" alt="" draggable="false">`}</div>
     <button class="so-sv-nav ant" id="sv-ant" aria-label="Anterior"></button><button class="so-sv-nav prox" id="sv-prox" aria-label="Próximo"></button>
     <div class="so-sv-pe">${meu ? `<button class="btn btn-soft btn-sm" id="sv-vistas">${ic("perfil", 15)} <span id="sv-nv">Quem viu</span></button><button class="btn btn-soft btn-sm" id="sv-novo">${ic("plus", 15)} Novo</button>` : `<div class="so-reac">${["💚","🔥","👏","😍","💪"].map(e => `<button data-reac="${e}" aria-label="Reagir ${e}">${e}</button>`).join("")}</div><input class="input" id="sv-resp" maxlength="500" placeholder="Responder a ${esc(nomeP(g.u).split(" ")[0])}…"><button class="btn btn-accent" id="sv-env" aria-label="Enviar">${ic("send", 17)}</button>`}</div>`;
-  const img = box.querySelector(".so-sv-img img");
+  const img = box.querySelector(".so-sv-img img, .so-sv-img video"), vid = img && img.tagName === "VIDEO" ? img : null;
   const us = await urls([s.midia], 300); if(!SV) return;
+  let DUR = 6000;
   if(!us[0]){ img.replaceWith(Object.assign(document.createElement("p"), { className: "so-sv-falha", textContent: "Este Story não está mais disponível." })); }
+  else if(vid){ vid.src = us[0]; await new Promise(r => { vid.onloadedmetadata = r; vid.onerror = r; setTimeout(r, 6000); }); if(vid.duration && isFinite(vid.duration)) DUR = Math.min(30000, vid.duration * 1000); vid.play().catch(() => { vid.muted = true; vid.play().catch(() => {}); }); }
   else { img.src = us[0]; await new Promise(r => { if(img.complete) r(); else { img.onload = r; img.onerror = r; } }); }
   if(!SV) return;
   if(!meu && !STO.vistos.has(s.id)){ STO.vistos.add(s.id); SB().from("story_vistas").insert({ story_id: s.id, user_id: NU.uid }).then(() => {}); }
-  const DUR = 6000; let ini = performance.now(), gasto = 0;
+  let ini = performance.now(), gasto = 0;
   const barra = box.querySelectorAll(".so-sv-barras b")[SV.si];
-  const passo = t => { if(!SV) return; if(SV.pausa){ ini = t - gasto; SV.raf = requestAnimationFrame(passo); return; } gasto = t - ini; barra.style.width = Math.min(100, gasto / DUR * 100) + "%"; if(gasto >= DUR) return avanca(1); SV.raf = requestAnimationFrame(passo); };
+  const passo = t => { if(!SV) return; if(SV.pausa){ if(vid && !vid.paused) vid.pause(); ini = t - gasto; SV.raf = requestAnimationFrame(passo); return; } if(vid && vid.paused && vid.src) vid.play().catch(() => {}); gasto = t - ini; barra.style.width = Math.min(100, gasto / DUR * 100) + "%"; if(gasto >= DUR) return avanca(1); SV.raf = requestAnimationFrame(passo); };
   SV.raf = requestAnimationFrame(passo);
   const avanca = d => { if(!SV) return; SV.si += d; if(SV.si < 0){ SV.gi--; if(SV.gi < 0) return fechaStory(); SV.si = 0; } else if(SV.si >= g.ss.length){ SV.gi++; SV.si = 0; if(SV.gi >= STO.grupos.length) return fechaStory(); } mostraStory(); };
   const solto = () => SV && SV.solto && Date.now() - SV.solto < 450;
