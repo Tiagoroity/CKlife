@@ -1422,3 +1422,11 @@ ul.xp-lista:not(:has(svg)) li::before{content:"•";color:var(--accent);font-wei
 .so-prev-pe .input{flex:1;background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.3);color:#fff}.so-prev-pe .input::placeholder{color:rgba(255,255,255,.65)}
 .so-aud button{background:rgba(0,0,0,.08)}.xp-msg.eu .so-aud button{background:rgba(255,255,255,.22);color:inherit}
 .so-aud{cursor:default}.so-aud i{cursor:pointer;height:6px}
+/* visto */
+.so-st0,.so-st1,.so-st2,.so-st3{display:inline-flex;align-items:center;vertical-align:-2px;margin-left:3px;opacity:1}
+.xp-msg.eu .so-st1,.xp-msg.eu .so-st2{color:rgba(255,255,255,.75)}
+.xp-msg.eu .so-st3{color:#9BE7FF}
+.xp-conv .so-st1,.xp-conv .so-st2{color:var(--muted)}.xp-conv .so-st3{color:#1E9BD7}
+:root[data-theme="dark"] .xp-msg.eu .so-st1,:root[data-theme="dark"] .xp-msg.eu .so-st2{color:rgba(4,23,15,.6)}
+:root[data-theme="dark"] .xp-msg.eu .so-st3{color:#0B5FA5}
+.so-sttxt{font-weight:600}

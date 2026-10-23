@@ -555,10 +555,11 @@ async function listaConversas(){
     : `<div class="empty">${ic("chat", 34, 1.6)}<p>Nenhuma conversa ainda. Encontre mulheres da comunidade e mande um oi 💚</p></div>`;
   box.querySelectorAll("[data-cv]").forEach(b => b.onclick = () => abreConversa(CONV.find(c => c.id === b.dataset.cv)));
 }
-// status com identidade CK Life: corações (enviada = 1 contorno, entregue = 2 contornos, lida = 2 cheios)
-const HZ = f => `<svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z" fill="${f ? "currentColor" : "none"}" stroke="currentColor" stroke-width="2.4"/></svg>`;
-const stIcone = m => m.pend ? `<i class="so-st0" title="Enviando">${ic("clock", 11)}</i>` : m.lida_em ? `<i class="so-st3" title="Lida">${HZ(1)}${HZ(1)}</i>` : m.entregue_em ? `<i class="so-st2" title="Entregue">${HZ(0)}${HZ(0)}</i>` : `<i class="so-st1" title="Enviada">${HZ(0)}</i>`;
-const stTexto = m => m.pend ? "Enviando…" : m.lida_em ? `Lida ${new Date(m.lida_em).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}` : m.entregue_em ? "Entregue" : "Enviada";
+// status: ✓ enviada · ✓✓ entregue · ✓✓ colorido = visto
+const CK1 = `<svg viewBox="0 0 16 12" width="15" height="12" aria-hidden="true"><path d="M1.5 6.5l3.5 3.5L14.5 1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const CK2 = `<svg viewBox="0 0 22 12" width="19" height="12" aria-hidden="true"><path d="M1.5 6.5l3.5 3.5L14.5 1M8.5 9l1 1L19.5 1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const stIcone = m => m.pend ? `<i class="so-st0" title="Enviando">${ic("clock", 12)}</i>` : m.lida_em ? `<i class="so-st3" title="Visto">${CK2}</i>` : m.entregue_em ? `<i class="so-st2" title="Entregue">${CK2}</i>` : `<i class="so-st1" title="Enviada">${CK1}</i>`;
+const stTexto = m => m.pend ? "Enviando…" : m.lida_em ? `Visto ${new Date(m.lida_em).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}` : m.entregue_em ? "Entregue" : "Enviada";
 async function contaNaoLidas(){ try{ const r = await q(SB().rpc("nao_lidas")); NAOLIDAS = {}; (r || []).forEach(x => NAOLIDAS[x.conversa_id] = +x.n); }catch(e){} return NAOLIDAS; }
 async function abreConversa(c){
   if(!c) return; const o = outroDe(c); await carregaPerfis([o]);
@@ -655,6 +656,21 @@ async function enviaMsg(c, d){
     throw e;
   }
 }
+setInterval(async () => {
+  if(!CHAT || document.visibilityState !== "visible" || $("sheet").hidden || !SO.on()) return;
+  const c = CHAT.c, minhas = CHAT.msgs.filter(m => m.autor === NU.uid && !m.pend && !m.lida_em).map(m => m.id);
+  try{
+    const ult = CHAT.msgs.filter(m => !m.pend).slice(-1)[0];
+    const [novas, st] = await Promise.all([
+      q(SB().from("mensagens").select("*").eq("conversa_id", c.id).gt("criado", ult ? ult.criado : "1970-01-01").order("criado", { ascending: true }).limit(50)),
+      minhas.length ? q(SB().from("mensagens").select("id,entregue_em,lida_em").in("id", minhas.slice(-60))) : Promise.resolve([])]);
+    if(!CHAT || CHAT.c.id !== c.id) return;
+    let mudou = false;
+    st.forEach(x => { const m = CHAT.msgs.find(y => y.id === x.id); if(m && (m.entregue_em !== x.entregue_em || m.lida_em !== x.lida_em)){ m.entregue_em = x.entregue_em; m.lida_em = x.lida_em; mudou = true; } });
+    novas.forEach(m => { if(!CHAT.msgs.some(x => x.id === m.id)){ CHAT.msgs.push(m); mudou = true; } });
+    if(mudou){ desenhaMsgs(); if(novas.some(m => m.autor !== NU.uid)) marcaLidas(); }
+  }catch(e){}
+}, 4000);
 let LIDAS_T = null;
 function marcaLidas(){ clearTimeout(LIDAS_T); LIDAS_T = setTimeout(async () => { if(!CHAT || document.visibilityState !== "visible" || $("sheet").hidden) return; try{ const n = await q(SB().rpc("marcar_lidas", { p_conversa: CHAT.c.id })); if(n) atualizaBadges(); }catch(e){} }, 400); }
 document.addEventListener("visibilitychange", () => { if(document.visibilityState === "visible"){ if(CHAT) marcaLidas(); if(SO.on() && ME) sincroniza(); } });
