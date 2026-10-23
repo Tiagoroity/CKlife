@@ -362,3 +362,66 @@ async function vGrupos(){
   $("gp-b").querySelectorAll("[data-gp]").forEach(b => b.onclick = () => form(L.find(g => g.id === b.dataset.gp)));
 }
 VIEWS.grupos = vGrupos;
+
+/* ---------- Figurinhas (catálogo único: Stories, chat, comentários, comunidade, reações) ---------- */
+AIC.figurinhas = '<path d="M14 3H6a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h8l7-7V6a3 3 0 0 0-3-3h-4z"/><path d="M14 21v-4a3 3 0 0 1 3-3h4"/><path d="M8.5 10.5h.01M13.5 10.5h.01M8.5 14c1.5 1.4 3.5 1.4 5 0"/>';
+SECOES.push(["figurinhas", "Figurinhas"]);
+GRUPOS.forEach(g => { if(g[0] === "Conteúdo" && !g[1].includes("figurinhas")) g[1].push("figurinhas"); });
+const FCATS_ADM = [["motivacao","Motivação"],["treino","Treino"],["conquistas","Conquistas"],["constancia","Constância"],["humor","Humor"],["reacoes","Reações"],["comunidade","Comunidade"],["autocuidado","Autocuidado"],["ciclo","Ciclo e bem-estar"],["ck","CK Life"]];
+const FLAGS = [["em_stories","Stories"],["em_chat","Chat"],["em_comentarios","Comentários"],["em_comunidade","Comunidade"],["em_reacoes","Reação rápida"]];
+let FGA = { q: "", cat: "", st: "" };
+async function vFigurinhas(){
+  $("adm-main").innerHTML = `<div class="head"><div><h1>Figurinhas</h1><p class="muted">Um catálogo só para Stories, chat, comentários e comunidade. Desativar aqui tira a figurinha de todos os lugares.</p></div><button class="btn btn-accent needs-edit" id="fa-novo">+ Nova figurinha</button></div>
+    <div class="toolbar"><input class="input" id="fa-q" placeholder="Buscar por nome ou tag" value="${esc(FGA.q)}" style="max-width:260px"><select class="input" id="fa-c" style="max-width:190px"><option value="">Todas as categorias</option>${FCATS_ADM.map(([k, n]) => `<option value="${k}" ${FGA.cat === k ? "selected" : ""}>${n}</option>`).join("")}</select><select class="input" id="fa-s" style="max-width:150px"><option value="">Todas</option><option value="on" ${FGA.st === "on" ? "selected" : ""}>Ativas</option><option value="off" ${FGA.st === "off" ? "selected" : ""}>Desativadas</option><option value="dest" ${FGA.st === "dest" ? "selected" : ""}>Em destaque</option></select></div>
+    <div id="fa-b"><div class="card">Carregando…</div></div>`;
+  if(!SB2()) return $("fa-b").innerHTML = `<div class="card">Funciona no app oficial, com o banco conectado.</div>`;
+  let L, uso = {};
+  try{ L = await sq(SB2().from("figurinhas_catalogo").select("*").order("ordem")); }catch(e){ return $("fa-b").innerHTML = semBanco(e).replace("seguranca.sql", "figurinhas.sql"); }
+  try{ (await sq(SB2().from("figurinha_uso").select("figurinha_id,n").gte("dia", addD(today(), -30)))).forEach(u => uso[u.figurinha_id] = (uso[u.figurinha_id] || 0) + u.n); }catch(e){}
+  if(!L.length) return $("fa-b").innerHTML = `<div class="card">Nenhuma figurinha no banco. Rode o <b>figurinhas.sql</b> no Supabase para importar as 100 figurinhas oficiais.</div>`;
+  const n = s => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  const V = L.filter(f => (!FGA.cat || f.categoria === FGA.cat) && (!FGA.st || (FGA.st === "on" ? f.ativa : FGA.st === "off" ? !f.ativa : f.destaque)) && (!FGA.q || n(f.nome + " " + (f.tags || []).join(" ")).includes(n(FGA.q))));
+  const top = Object.entries(uso).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([id, k]) => { const f = L.find(x => x.id === id); return f ? `<span class="fa-top"><img src="${esc(f.mini || f.arquivo)}" alt="">${int(k)}</span>` : ""; }).join("");
+  $("fa-b").innerHTML = `<div class="grid g4">${kpi("Figurinhas", int(L.length), `${int(L.filter(f => f.ativa).length)} ativas`, "figurinhas", 1)}${kpi("Em destaque", int(L.filter(f => f.destaque).length))}${kpi("Usos (30 dias)", int(Object.values(uso).reduce((a, b) => a + b, 0)))}<div class="kpi"><span>Mais usadas</span><div class="fa-tops">${top || "<small class='muted'>Sem dados ainda</small>"}</div></div></div>
+    <p class="muted" style="font-size:13px">${V.length} figurinha(s). Toque para editar.</p>
+    <div class="fa-grade">${V.map(f => `<button class="fa-it ${f.ativa ? "" : "off"}" data-fa="${esc(f.id)}"><img src="${esc(f.mini || f.arquivo)}" alt="" loading="lazy"><b>${esc(f.nome)}</b><small>${esc((FCATS_ADM.find(c => c[0] === f.categoria) || [, f.categoria])[1])}${f.destaque ? " · ★" : ""}${uso[f.id] ? " · " + int(uso[f.id]) + " usos" : ""}</small>${f.ativa ? "" : `<em>Desativada</em>`}</button>`).join("")}</div>`;
+  let tq; $("fa-q").oninput = e => { clearTimeout(tq); tq = setTimeout(() => { FGA.q = e.target.value; vFigurinhas(); }, 350); };
+  $("fa-c").onchange = e => { FGA.cat = e.target.value; vFigurinhas(); }; $("fa-s").onchange = e => { FGA.st = e.target.value; vFigurinhas(); };
+  $("fa-b").querySelectorAll("[data-fa]").forEach(b => b.onclick = () => formFig(L.find(f => f.id === b.dataset.fa), L));
+  const nv = $("fa-novo"); if(nv) nv.onclick = () => formFig(null, L);
+}
+function formFig(f, L){
+  const x = f || { categoria: "motivacao", tags: [], ativa: true, destaque: false, ordem: ((L || []).reduce((m, k) => Math.max(m, k.ordem || 0), 0) + 10), em_stories: true, em_chat: true, em_comentarios: true, em_comunidade: true, em_reacoes: false };
+  let arquivo = null;
+  modal(f ? "Editar figurinha" : "Nova figurinha", `<div class="fa-prev">${f ? `<img src="${esc(f.arquivo)}" alt="">` : `<span class="muted">PNG ou WEBP com fundo transparente</span>`}</div>
+    ${f ? "" : `<input type="file" accept="image/png,image/webp" id="ff-a" class="input">`}
+    <div class="formgrid"><div class="field"><label for="ff-n">Nome (a frase da figurinha)</label><input class="input" id="ff-n" value="${esc(x.nome || "")}" maxlength="80"></div>
+      <div class="field"><label for="ff-c">Categoria</label><select class="input" id="ff-c">${FCATS_ADM.map(([k, n]) => `<option value="${k}" ${x.categoria === k ? "selected" : ""}>${n}</option>`).join("")}</select></div>
+      <div class="field full"><label for="ff-t">Tags (separe por vírgula)</label><input class="input" id="ff-t" value="${esc((x.tags || []).join(", "))}" placeholder="pos-treino, apoio, chat"></div>
+      <div class="field"><label for="ff-o">Ordem</label><input class="input num" id="ff-o" value="${esc(x.ordem)}"></div>
+      <label class="field xf-chk"><input type="checkbox" id="ff-at" ${x.ativa ? "checked" : ""}> Ativa</label><label class="field xf-chk"><input type="checkbox" id="ff-de" ${x.destaque ? "checked" : ""}> Em destaque</label>
+      ${FLAGS.map(([k, n]) => `<label class="field xf-chk"><input type="checkbox" data-fl="${k}" ${x[k] ? "checked" : ""}> ${n}</label>`).join("")}</div>
+    <p class="muted" style="font-size:12.5px">Tag <b>pos-treino</b> aparece primeiro depois do treino; <b>apoio</b> nos comentários; <b>dado:sequencia:7</b> só aparece para quem tem 7+ dias de sequência (nunca mostra número falso).</p>
+    <button class="btn btn-accent needs-edit" id="ff-ok">Salvar</button>`);
+  const fa = $("ff-a"); if(fa) fa.onchange = async () => { const fl = fa.files[0]; if(!fl) return; if(!/png|webp/.test(fl.type)) return toast("Use PNG ou WEBP transparente");
+    arquivo = fl; $("mbox").querySelector(".fa-prev").innerHTML = `<img src="${URL.createObjectURL(fl)}" alt="">`; if(!val("ff-n")) $("ff-n").value = fl.name.replace(/\.\w+$/, "").replace(/[-_]+/g, " "); };
+  $("ff-ok").onclick = async () => {
+    const nome = val("ff-n"); if(!nome) return toast("Informe o nome");
+    const d = { nome, categoria: val("ff-c"), tags: val("ff-t").split(",").map(t => t.trim().toLowerCase()).filter(Boolean), ordem: +val("ff-o") || 1000, ativa: $("ff-at").checked, destaque: $("ff-de").checked };
+    $("mbox").querySelectorAll("[data-fl]").forEach(c => d[c.dataset.fl] = c.checked);
+    const bt = $("ff-ok"); bt.disabled = true;
+    try{
+      if(!f){ if(!arquivo) throw new Error("Escolha o arquivo da figurinha");
+        const id = nome.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 44) + "-" + Math.random().toString(36).slice(2, 5);
+        const reduz = (max, tipo) => new Promise(ok => { const im = new Image(); im.onload = () => { const k = Math.min(1, max / Math.max(im.width, im.height)), c = document.createElement("canvas"); c.width = Math.round(im.width * k); c.height = Math.round(im.height * k); c.getContext("2d").drawImage(im, 0, 0, c.width, c.height); c.toBlob(ok, tipo, .88); }; im.src = URL.createObjectURL(arquivo); });
+        const tipo = "image/webp", app = await reduz(512, tipo), mini = await reduz(168, tipo);
+        const sobeF = async (b, nomeArq) => { const path = `figurinhas/${nomeArq}`; const r = await SB2().storage.from("catalogo").upload(path, b, { contentType: b.type || tipo, upsert: true }); if(r.error) throw r.error; return SB2().storage.from("catalogo").getPublicUrl(path).data.publicUrl; };
+        d.id = id; d.arquivo = await sobeF(app, id + ".webp"); d.mini = await sobeF(mini, id + "-mini.webp");
+        await sq(SB2().from("figurinhas_catalogo").insert(d)); }
+      else await sq(SB2().from("figurinhas_catalogo").update(d).eq("id", f.id));
+      F.nuvem.sb.rpc("auditar", { p_acao: f ? "figurinha_alterada" : "figurinha_criada", p_recurso: "figurinhas", p_alvo: nome });
+      fechar(); toast("Figurinha salva"); vFigurinhas();
+    }catch(e){ bt.disabled = false; toast(e.message && /Escolha/.test(e.message) ? e.message : "Sem permissão ou arquivo não aceito"); }
+  };
+}
+VIEWS.figurinhas = vFigurinhas;

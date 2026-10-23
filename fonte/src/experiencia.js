@@ -3,6 +3,8 @@
    "Meu dia" no Início (check-in, Meu Ritmo, sequência, contexto), momentos especiais com Story automático,
    desafios pessoais, Minha Jornada e coleção de conquistas. Tudo pessoal: nada de ranking de corpo, peso ou ciclo. */
 const XMARCOS = [3, 7, 15, 30, 50, 100];
+const FIM_TIT = ["Treino concluído.", "Hoje teve!", "Constância construída.", "Mais um check ✓"];
+const FIM_MSG = ["Você apareceu por você hoje.", "Mais um passo na sua evolução.", "Você está construindo sua melhor versão.", "Cada treino conta. Esse contou muito.", "Seu ritmo, sua evolução."];
 const XHUMOR = [["1", "😴", "Cansada"], ["2", "😌", "Tranquila"], ["3", "🙂", "Bem"], ["4", "🔥", "Animada"]];
 const XENERGIA = [["baixa", "Pouca energia"], ["ok", "Normal"], ["alta", "Muita energia"]];
 const HUM = { get(){ try{ return JSON.parse(localStorage.getItem("ck_hum_" + ME.id) || "{}"); }catch(e){ return {}; } }, set(v){ try{ localStorage.setItem("ck_hum_" + ME.id, JSON.stringify(v)); }catch(e){} } };   // fica só no aparelho
@@ -122,14 +124,20 @@ async function publicarMomento(emoji, titulo, sub){
 const celebrar0 = celebrar;
 celebrar = async function(c){ await celebrar0(c); vibra([40, 60, 120]);
   const sh = $("ce-share"); if(sh && SO.on()){ sh.insertAdjacentHTML("beforebegin", `<button class="btn btn-share btn-block" id="ce-story">${ic("plus", 18)} Adicionar aos Stories</button>`);
-    $("ce-story").onclick = () => { const bx = $("celebra"); if(bx){ bx.hidden = true; bx.innerHTML = ""; } publicarMomento(c[3], c[4], c[5]); }; }
+    $("ce-story").onclick = () => { const bx = $("celebra"); if(bx){ bx.hidden = true; bx.innerHTML = ""; } compartilharConquista((ME.treinos || []).slice(-1)[0] && (ME.treinos || []).slice(-1)[0].d === today() ? (ME.treinos || []).slice(-1)[0] : null); }; }
   const em = document.querySelector("#celebra .so-cel-in"); if(em && !em.querySelector(".xe-moment")) em.insertAdjacentHTML("afterbegin", `<span class="xe-moment">CK Moment</span>`);
 };
 const fimTreino0 = fimTreino;
 fimTreino = function(parcial){ fimTreino0.apply(this, arguments);
   const sh = $("fim-share"), t = (ME.treinos || []).slice(-1)[0];
-  if(sh && !parcial && SO.on() && t){ sh.insertAdjacentHTML("beforebegin", `<button class="btn btn-share btn-block" id="fim-story">${ic("plus", 18)} Adicionar aos Stories</button>`);
-    $("fim-story").onclick = () => { const ok = $("fim-ok"); if(ok) ok.click(); setTimeout(() => publicarMomento("🔥", "TREINO CONCLUÍDO", `${t.nome} · ${t.min} min`), 400); }; }
+  if(!parcial && t){
+    // momento CK Life: mensagem variada + Create · Keep · Live
+    const h = document.querySelector("#play .done-hero h2"), pp = h && h.nextElementSibling;
+    if(h) h.textContent = FIM_TIT[Math.floor(Math.random() * FIM_TIT.length)];
+    if(pp && pp.tagName === "P") pp.textContent = FIM_MSG[Math.floor(Math.random() * FIM_MSG.length)];
+    if(h) h.insertAdjacentHTML("beforebegin", `<div class="ckl-mom" aria-label="${MARCA.slogan}"><span>CREATE <i>✓</i></span><span>KEEP <i>✓</i></span><span>LIVE <i>♥</i></span></div>`);
+    const ok = $("fim-ok"); if(ok){ ok.insertAdjacentHTML("beforebegin", `<button class="btn btn-accent btn-lg btn-block" id="fim-conq">${ic("share", 18)} Compartilhar minha conquista</button>`); ok.classList.remove("btn-accent"); ok.classList.add("btn-share");
+      $("fim-conq").onclick = () => { if(!SO.on()) return toast("Entre na comunidade para publicar Stories"); compartilharConquista(t); }; } }
   verificaDesafio();
 };
 /* aniversário de jornada: uma vez por ano */

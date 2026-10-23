@@ -79,8 +79,15 @@ const fotoP = (src, alt = "") => `<img class="ph" src="${src.replace(/^img\//, "
 const capa = (titulo, sub, extra = "", src = "img/modelo.jpg") => `<div class="capa"><img class="capa-foto" src="${src}" alt="" onerror="this.remove()"><div class="capa-tx">${extra}${titulo ? `<h1>${titulo}</h1>` : ""}${sub ? `<p>${sub}</p>` : ""}</div></div>`;
 const ic = (k, s = 22, sw = 2) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[k] || ""}</svg>`;
 let LOGON = 0;
-const LOGO = (s = 34, g = "ckg" + (++LOGON)) => `<svg width="${s}" height="${s}" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="${g}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0E3D32"/><stop offset=".55" stop-color="#2E7D5A"/><stop offset="1" stop-color="#7BA77A"/></linearGradient></defs><rect width="40" height="40" rx="12" fill="#2E7D5A"/><rect width="40" height="40" rx="12" fill="url(#${g})"/><path d="M18.5 9.6a10.4 10.4 0 1 0 0 20.8" stroke="#F5F8EF" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="23.6" cy="11.3" r="2.3" fill="#F5F8EF"/><path d="M23.1 14.9c-1.7 3-1.3 5.5.2 7.6 1.3 1.8.8 4.6-1 7.4" stroke="#F5F8EF" stroke-width="2.6" fill="none" stroke-linecap="round"/><path d="M23.4 22.3l5.6 6.9" stroke="#F5F8EF" stroke-width="2.6" stroke-linecap="round"/><path d="M23.3 19.4l7.4-6.4" stroke="#B9DDB2" stroke-width="2.6" stroke-linecap="round"/><path d="M26.5 12.6h4.4V17" stroke="#B9DDB2" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-document.querySelectorAll(".logo-slot").forEach(e => e.innerHTML = LOGO());
+/* ===== MARCA CK LIFE (um lugar só para nome, slogan e logos oficiais) ===== */
+const MARCA = {
+  nome: "CK Life", slogan: "Create. Keep. Live.", sloganPt: "Crie. Mantenha. Viva.", assinatura: "Sua vida. Seu ritmo. Sua evolução.",
+  conceito: [["Create", "Crie uma nova versão de você."], ["Keep", "Mantenha sua constância."], ["Live", "Viva sua evolução."]],
+  logo: { completa: "img/marca/ck-logo.webp", completaClara: "img/marca/ck-logo-claro.webp", simbolo: "img/marca/ck-simbolo.webp", simboloClaro: "img/marca/ck-simbolo-claro.webp", icone: "img/icone-192.png" }
+};
+window.MARCA = MARCA;
+const LOGO = (s = 34, claro) => `<img class="ck-simb" src="${claro ? MARCA.logo.simboloClaro : MARCA.logo.simbolo}" alt="CK Life" width="${Math.round(s * 1.24)}" height="${s}" draggable="false">`;
+document.querySelectorAll(".logo-slot").forEach(e => e.innerHTML = LOGO(e.closest(".adm-brand") ? 30 : 34, !!e.closest(".lhero,.adm-brand,.splash")));
 
 /* ---------- Voz do celular ---------- */
 const VOZ = { ok: "speechSynthesis" in window, v: null, lista: [] };
@@ -289,7 +296,7 @@ $("f-cad").addEventListener("submit", async e => {
 /* ---------- Entrada do painel do administrador (link separado: #admin) ---------- */
 function showAdminLogin(aviso){
   const temAdm = NU.ativo ? NU.existeAdmin : DB.users.some(u => u.admin && !u.exemplo);
-  $("admlogin").innerHTML = `<div class="brandrow"><span class="logo-slot">${LOGO()}</span><div class="wordmark">CK <b>Life</b><small>Painel do administrador</small></div></div>
+  $("admlogin").innerHTML = `<div class="brandrow"><span class="logo-slot">${LOGO(34)}</span><div class="wordmark">CK <b>Life</b><small>Admin</small></div></div>
     <h1 class="bigtitle" style="font-size:40px">${temAdm ? "Entrar no <em>painel</em>" : "Criar conta de <em>administrador</em>"}</h1>
     <p class="lead">${temAdm ? "Alunas, anúncios, parceiros, receitas e financeiro." : "Esta é a primeira vez. Crie a conta que vai administrar o app."}</p>
     ${aviso ? `<div class="msg msg-bad">${esc(aviso)}</div>` : ""}
@@ -483,7 +490,7 @@ function onboarding(){
   } else {
     const p = progById(OB.prog), m = metas({ ...ME, perfil: OB });
     const NIVN = { iniciante: "Iniciante", intermediario: "Intermediário", avancado: "Avançado" };
-    h = obHero("pronto", "", "", `Seu plano está pronto, ${esc(ME.nome.split(" ")[0])}!`, "Com base nas suas respostas, montamos um plano só seu.") + `
+    h = obHero("pronto", "", "", `Seu plano está pronto, ${esc(ME.nome.split(" ")[0])}!`, "Com base nas suas respostas, montamos um plano só seu. " + MARCA.sloganPt) + `
       <div class="card planlist"><h3>Seu plano</h3>
         <div>${ic("calendar", 18)}<span>${OB.dias} dias por semana</span></div>
         <div>${ic("inicio", 18)}<span>Em casa${OB.itens && OB.itens.length ? "" : ", sem equipamentos"}</span></div>
@@ -549,10 +556,10 @@ const CM = {
     if(!CM.nuvem()){ const x = CM.local().find(y => y.id === p.id); if(x){ x.curtidas = (x.curtidas || []).filter(u => u !== ME.id); if(on) x.curtidas.push(ME.id); save(); } return; }
     const r = on ? await NU.sb.from("curtidas").insert({ post_id: p.id, user_id: NU.uid }) : await NU.sb.from("curtidas").delete().eq("post_id", p.id).eq("user_id", NU.uid); if(r.error && !/duplicate/i.test(r.error.message || "")) throw r.error;
   },
-  async comentar(p, texto){
-    const c = { id: novoId(), user: ME.id, nome: ME.nome, foto: await miniFoto(ME.foto, 64), texto, criado: new Date().toISOString() };
+  async comentar(p, texto, figurinha){
+    const c = { id: novoId(), user: ME.id, nome: ME.nome, foto: await miniFoto(ME.foto, 64), texto: texto || "", figurinha: figurinha || null, criado: new Date().toISOString() };
     if(!CM.nuvem()){ const x = CM.local().find(y => y.id === p.id); x.coments = x.coments || []; x.coments.push(c); save(); return c; }
-    const r = await NU.sb.from("comentarios").insert({ id: c.id, post_id: p.id, user_id: NU.uid, nome: c.nome, foto: c.foto, texto }); if(r.error) throw r.error; return c;
+    const r = await NU.sb.from("comentarios").insert({ id: c.id, post_id: p.id, user_id: NU.uid, nome: c.nome, foto: c.foto, texto: c.texto, ...(figurinha ? { figurinha } : {}) }); if(r.error) throw r.error; return c;
   },
   async apagaPost(p){ if(!CM.nuvem()){ DB.posts = CM.local().filter(x => x.id !== p.id); save(); return; } const r = await NU.sb.from("posts").delete().eq("id", p.id); if(r.error) throw r.error; },
   async apagaComent(p, c){ if(!CM.nuvem()){ const x = CM.local().find(y => y.id === p.id); if(x) x.coments = (x.coments || []).filter(k => k.id !== c.id); save(); return; } const r = await NU.sb.from("comentarios").delete().eq("id", c.id); if(r.error) throw r.error; },
@@ -763,7 +770,7 @@ function rInicio(){
     <div class="dica-dia">${ic("leaf", 20)}<div><b>Dica do dia</b><p>${esc(doDia(DICAS_DIA))}</p></div></div>
     <div class="card"><div class="sec-title"><h3>Cupons de desconto</h3><span class="muted num">${L.length % (DB.config.treinosParaCupom || 8)}/${DB.config.treinosParaCupom || 8}</span></div>
       <p class="hint" style="margin:6px 0 10px">A cada ${DB.config.treinosParaCupom || 8} treinos você ganha um cupom numa loja parceira.</p><div class="prog"><i style="width:${100 * (L.length % (DB.config.treinosParaCupom || 8)) / (DB.config.treinosParaCupom || 8)}%"></i></div></div>
-    <p class="slogan">CK <b>Life</b> · Sua evolução, todos os dias.</p>`;
+    <p class="slogan"><b>${MARCA.slogan}</b><br>${MARCA.assinatura}</p>`;
   const go = $("h-go"); if(go) go.onclick = () => iniciaTreino(T);
   const ex = $("h-extra"); if(ex) ex.onclick = () => { TV = "rapidos"; tab("treinar"); };
   $("h-av").onclick = () => tab("perfil");
@@ -1093,7 +1100,7 @@ function fimTreino(parcial){
     ${novas.map(m => `<div class="nx" style="max-width:none">${`<span class="exn" style="background:radial-gradient(circle at 30% 30%,#FFE08A,#FFB23F);color:#3a2200;width:56px;height:56px;border-radius:50%">${ic(m.ic, 26)}</span>`}<span><b>Nova conquista: ${esc(m.nome)}</b><small>${esc(m.desc)}</small></span></div>`).join("")}
     ${ganhou ? `<div class="coupon" style="width:100%;border-color:#3DDC6E"><b>Você ganhou um cupom!</b><span>${ganhou.desconto}% na ${esc(ganhou.loja)}</span><span class="code">${ganhou.codigo}</span></div>` : ""}
     ${parcial ? "" : `<p style="color:#cfd6d2;margin:10px 0 0;font-weight:600">Como foi o treino?</p><div class="rate"><button data-r="-1">Fácil</button><button data-r="0" aria-pressed="true">Na medida</button><button data-r="1">Difícil</button></div>`}
-    <button class="btn btn-accent btn-lg btn-block" id="fim-ok" style="margin-top:8px">Ver minha evolução</button><button class="btn btn-share btn-block" id="fim-share">${ic("share", 18)} Compartilhar conquista</button><button class="btn btn-share btn-block" id="fim-post">${ic("juntas", 18)} Postar na comunidade</button><button class="btn btn-line btn-block" id="fim-out">Fazer outro treino</button>
+    <button class="btn btn-accent btn-lg btn-block" id="fim-ok" style="margin-top:8px">Ver minha evolução</button><button class="btn btn-share btn-block" id="fim-share">${ic("share", 18)} Enviar cartão (WhatsApp, Instagram)</button><button class="btn btn-share btn-block" id="fim-post">${ic("juntas", 18)} Postar na comunidade</button><button class="btn btn-line btn-block" id="fim-out">Fazer outro treino</button>
   </div></div>`;
   if(!parcial) confete($("play"));
   let rate = 0;

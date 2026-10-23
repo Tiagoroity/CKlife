@@ -4,14 +4,23 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0E3D32">
-<link rel="icon" href="img/icone-192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="img/marca/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="img/marca/favicon-16.png">
+<link rel="icon" type="image/png" sizes="192x192" href="img/icone-192.png">
 <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="CK Life">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="description" content="CK Life: treino em casa para mulheres. Sua evolução, todos os dias.">
+<meta name="description" content="CK Life · Create. Keep. Live. Treino, rotina, ciclo e comunidade para mulheres. Sua vida. Seu ritmo. Sua evolução.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CK Life">
+<meta property="og:title" content="CK Life · Create. Keep. Live.">
+<meta property="og:description" content="Sua vida. Seu ritmo. Sua evolução. Treino, rotina, ciclo e comunidade para mulheres.">
+<meta property="og:image" content="https://cklife.vercel.app/img/marca/og-ck-life.jpg">
+<meta property="og:url" content="https://cklife.vercel.app/">
+<meta name="twitter:card" content="summary_large_image">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}</style>
 </head>
 <body>
@@ -1616,19 +1625,76 @@ ul.xp-lista:not(:has(svg)) li::before{content:"•";color:var(--accent);font-wei
 .fl-bt[data-bt=""]::before{display:none}.fl-bt[data-bt=""]{font-size:20px;line-height:30px}
 .fl-bt[aria-pressed=true]::before{border-color:#3DDC6E;box-shadow:0 0 0 2px #3DDC6E}.fl-bt[aria-pressed=true]{color:#fff}
 .fl-mk .chip{background:rgba(255,255,255,.1);color:#fff;border-color:transparent}.fl-mk .chip[aria-pressed=true]{background:#3DDC6E;color:#062}
+.nav-arrasta{will-change:transform}
+/* ===== Marca CK Life ===== */
+.ck-simb{height:auto;width:auto;max-height:38px;display:block;object-fit:contain}
+.logo-slot{display:inline-flex;align-items:center}
+.adm-brand .ck-simb{max-height:32px}.lhero-top .ck-simb{max-height:44px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25))}
+.splash-top img{width:auto;height:52px;object-fit:contain}
+.ckl-mom{display:flex;gap:14px;justify-content:center;margin:2px 0 4px;color:#B9DDB2;font-size:13px;font-weight:800;letter-spacing:.16em}
+.ckl-mom span{display:inline-flex;gap:5px;align-items:center;animation:sobe .5s both}.ckl-mom span:nth-child(2){animation-delay:.15s}.ckl-mom span:nth-child(3){animation-delay:.3s}
+.ckl-mom i{font-style:normal;color:#3DDC6E}.ckl-mom span:last-child i{color:#F38BA8}
+/* ===== Figurinhas: seletor ===== */
+.fg-sel{position:fixed;inset:0;z-index:120;background:rgba(5,12,9,.45);display:flex;align-items:flex-end;justify-content:center}
+.fg-sel[hidden]{display:none}
+.fg-sel-in{width:100%;max-width:560px;max-height:78vh;background:var(--surface);border-radius:24px 24px 0 0;padding:12px 14px calc(12px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:8px;animation:sobe .22s ease-out}
+.fg-sel-top{display:flex;align-items:center;justify-content:space-between}.fg-sel-top b{font-family:var(--display);font-size:18px}
+.fg-busca{margin:0}.fg-sel .chips{flex:none}
+.fg-sel-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;overflow-y:auto;min-height:180px;padding:2px}
+.fg-it{position:relative;border:0;background:none;padding:4px;border-radius:16px;aspect-ratio:1}.fg-it img{width:100%;height:100%;object-fit:contain}
+.fg-it:active{background:var(--surface-2)}
+.fg-it.fav::after,.fg-figs button.fav::after{content:"♥";position:absolute;top:2px;right:4px;color:#E0457B;font-size:14px;text-shadow:0 0 3px #fff}
+.fg-figs button{position:relative}
+.fg-dica{margin:0;text-align:center;font-size:12px}.fg-vazio{grid-column:1/-1;text-align:center;padding:24px 0}
+.fg-fcats{margin-top:8px}
+/* ===== Editor de Story ===== */
+.st-ed{position:fixed;inset:0;z-index:110;background:#050806;display:flex;flex-direction:column;touch-action:none}
+.st-ed[hidden]{display:none}
+.st-top{display:flex;justify-content:space-between;align-items:center;padding:calc(10px + env(safe-area-inset-top,0px)) 12px 8px}
+.st-top .iconbtn{background:rgba(255,255,255,.14);color:#fff;border:0}
+.st-acoes{display:flex;gap:8px}.st-acoes .iconbtn{font-size:18px}.st-lixo{background:#C0392B!important}
+.st-palco{position:relative;flex:1;min-height:0;margin:0 auto;aspect-ratio:9/16;max-width:100%;max-height:100%;overflow:hidden;border-radius:18px;background:#111}
+.st-fundo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.st-grad{background:linear-gradient(170deg,#0B2A22,#1F5C46 55%,#6E9E6D)}
+.st-camadas{position:absolute;inset:0}
+.st-cam{position:absolute;left:0;top:0;transform-origin:center;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab}
+.st-cam.st-fig img{width:42vmin;max-width:220px;display:block;pointer-events:none}
+.st-cam.st-txt{color:#fff;font:800 22px var(--display);padding:8px 14px;border-radius:14px;white-space:nowrap}
+.st-cam.sel{outline:2px dashed rgba(255,255,255,.85);outline-offset:4px;border-radius:12px}
+.st-ass{position:absolute;right:12px;bottom:12px;color:rgba(255,255,255,.92);font:800 13px var(--display);text-shadow:0 1px 4px rgba(0,0,0,.4);pointer-events:none}.st-ass b{color:#fff}
+.st-barra{display:flex;gap:8px;align-items:center;padding:10px 12px calc(12px + env(safe-area-inset-bottom,0px))}
+.st-barra button{flex:1;display:grid;justify-items:center;gap:2px;background:rgba(255,255,255,.1);color:#fff;border:0;border-radius:16px;padding:8px 4px;font:inherit;min-height:56px}
+.st-barra i{font-style:normal;font-size:20px;font-weight:800}.st-barra small{font-size:11px;font-weight:700;color:#cfd6d2}
+.st-barra .st-pub{flex:1.3;background:#3DDC6E;color:#062;font-size:16px}
+.st-txt-ed{position:absolute;left:0;right:0;bottom:0;background:rgba(5,8,6,.94);padding:14px 14px calc(14px + env(safe-area-inset-bottom,0px));display:grid;gap:10px;z-index:3}
+/* ===== Figurinhas em posts e comentários ===== */
+.pfig{display:grid;place-items:center;padding:6px 0}.pfig-img{width:min(62%,260px);height:auto}
+.cmt-fig{display:block;width:96px;height:96px;object-fit:contain;margin-top:4px}
+.cm-reac{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding:4px 2px}.cm-reac:empty{display:none}
+.cm-reac button{flex:none;border:0;background:none;padding:0;width:52px;height:52px}.cm-reac img{width:100%;height:100%;object-fit:contain}
+.cbar #cm-fig{flex:none}
+.cp-figp{position:relative;display:grid;place-items:center}.cp-figp:empty{display:none}.cp-figp .pfig-img{width:150px}.cp-figp .iconbtn{position:absolute;top:0;right:calc(50% - 90px)}
+.fa-grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.fa-it{position:relative;display:grid;justify-items:center;gap:3px;padding:10px 8px;border:1px solid var(--line);border-radius:16px;background:var(--surface);font:inherit;color:var(--ink);text-align:center}
+.fa-it img{width:96px;height:96px;object-fit:contain}.fa-it b{font-size:12.5px;line-height:1.2}.fa-it small{font-size:11px;color:var(--muted)}
+.fa-it.off{opacity:.5}.fa-it em{position:absolute;top:6px;left:6px;font-style:normal;font-size:10px;font-weight:800;background:var(--bad-soft,#fdecec);color:var(--bad,#c0392b);padding:2px 6px;border-radius:99px}
+.fa-tops{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}.fa-top{display:inline-flex;align-items:center;gap:3px;font-size:12px;font-weight:800}.fa-top img{width:30px;height:30px;object-fit:contain}
+.fa-prev{display:grid;place-items:center;min-height:140px;background:repeating-conic-gradient(#eee 0 25%,#fff 0 50%) 0 0/20px 20px;border-radius:14px;margin-bottom:10px}.fa-prev img{max-height:180px}
+.cbar{grid-template-columns:auto minmax(0,1fr) auto!important;align-items:center}.cbar #cm-fig img{border-radius:8px}
+.cbar .cm-reac{grid-column:1/-1;margin:-4px 0 0}
 </style>
 
 <!-- Entrar / criar conta -->
 <div class="splash" id="splash" role="status" aria-live="polite" aria-label="Carregando">
   <img class="splash-bg" src="img/modelo.jpg" alt="" onerror="this.remove()">
-  <div class="splash-top"><img src="img/icone-192.png" alt="" width="52" height="52" onerror="this.remove()"><b>CK <em>Life</em></b></div>
-  <div class="splash-bot"><h1>Sua evolução,<br><em>todos os dias.</em></h1><div class="splash-bar"><i></i></div><p>Carregando sua evolução…</p></div>
+  <div class="splash-top"><img src="img/marca/ck-simbolo-claro.webp" alt="CK Life" width="64" height="52" onerror="this.remove()"><b>CK <em>Life</em></b></div>
+  <div class="splash-bot"><h1>Create. Keep.<br><em>Live.</em></h1><div class="splash-bar"><i></i></div><p>Carregando sua evolução…</p></div>
 </div>
 <section class="screen" id="v-login" hidden>
   <div class="panel">
     <div class="lhero"><img src="img/modelo.jpg" alt="" onerror="this.remove()">
       <div class="lhero-top"><span class="logo-slot"></span><div class="wordmark">CK <b>Life</b></div></div>
-      <div class="lhero-tx"><h1>Sua evolução, <em>todos os dias.</em></h1><p>Treinos em casa feitos para mulheres. No seu ritmo.</p></div>
+      <div class="lhero-tx"><h1>Sua vida. Seu ritmo. <em>Sua evolução.</em></h1><p>Treino, rotina, ciclo e comunidade feitos para mulheres. Create. Keep. Live.</p></div>
     </div>
     <div class="seg" role="group" aria-label="Entrar ou criar conta">
       <button id="tg-cad" aria-pressed="true" type="button">Criar conta</button>
@@ -1698,7 +1764,7 @@ ul.xp-lista:not(:has(svg)) li::before{content:"•";color:var(--accent);font-wei
 <!-- Painel admin -->
 <div id="v-admin" hidden>
   <header class="adm-top">
-    <div class="adm-brand"><span class="logo-slot"></span><div class="wordmark">CK <b>Life</b><small>Painel do administrador</small></div></div>
+    <div class="adm-brand"><span class="logo-slot"></span><div class="wordmark">CK <b>Life</b><small>Admin</small></div></div>
     <nav class="adm-tabs" id="adm-tabs" aria-label="Áreas do painel"></nav>
     <div class="adm-user"><span class="adm-av" id="adm-av"></span><span class="adm-me" id="adm-me"></span><button class="btn btn-line btn-sm" id="b-voltar-app" hidden>Ver app</button><button class="btn btn-line btn-sm" data-logout>Sair</button></div>
   </header>
@@ -3001,8 +3067,15 @@ const fotoP = (src, alt = "") => `<img class="ph" src="${src.replace(/^img\//, "
 const capa = (titulo, sub, extra = "", src = "img/modelo.jpg") => `<div class="capa"><img class="capa-foto" src="${src}" alt="" onerror="this.remove()"><div class="capa-tx">${extra}${titulo ? `<h1>${titulo}</h1>` : ""}${sub ? `<p>${sub}</p>` : ""}</div></div>`;
 const ic = (k, s = 22, sw = 2) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[k] || ""}</svg>`;
 let LOGON = 0;
-const LOGO = (s = 34, g = "ckg" + (++LOGON)) => `<svg width="${s}" height="${s}" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="${g}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0E3D32"/><stop offset=".55" stop-color="#2E7D5A"/><stop offset="1" stop-color="#7BA77A"/></linearGradient></defs><rect width="40" height="40" rx="12" fill="#2E7D5A"/><rect width="40" height="40" rx="12" fill="url(#${g})"/><path d="M18.5 9.6a10.4 10.4 0 1 0 0 20.8" stroke="#F5F8EF" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="23.6" cy="11.3" r="2.3" fill="#F5F8EF"/><path d="M23.1 14.9c-1.7 3-1.3 5.5.2 7.6 1.3 1.8.8 4.6-1 7.4" stroke="#F5F8EF" stroke-width="2.6" fill="none" stroke-linecap="round"/><path d="M23.4 22.3l5.6 6.9" stroke="#F5F8EF" stroke-width="2.6" stroke-linecap="round"/><path d="M23.3 19.4l7.4-6.4" stroke="#B9DDB2" stroke-width="2.6" stroke-linecap="round"/><path d="M26.5 12.6h4.4V17" stroke="#B9DDB2" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-document.querySelectorAll(".logo-slot").forEach(e => e.innerHTML = LOGO());
+/* ===== MARCA CK LIFE (um lugar só para nome, slogan e logos oficiais) ===== */
+const MARCA = {
+  nome: "CK Life", slogan: "Create. Keep. Live.", sloganPt: "Crie. Mantenha. Viva.", assinatura: "Sua vida. Seu ritmo. Sua evolução.",
+  conceito: [["Create", "Crie uma nova versão de você."], ["Keep", "Mantenha sua constância."], ["Live", "Viva sua evolução."]],
+  logo: { completa: "img/marca/ck-logo.webp", completaClara: "img/marca/ck-logo-claro.webp", simbolo: "img/marca/ck-simbolo.webp", simboloClaro: "img/marca/ck-simbolo-claro.webp", icone: "img/icone-192.png" }
+};
+window.MARCA = MARCA;
+const LOGO = (s = 34, claro) => `<img class="ck-simb" src="${claro ? MARCA.logo.simboloClaro : MARCA.logo.simbolo}" alt="CK Life" width="${Math.round(s * 1.24)}" height="${s}" draggable="false">`;
+document.querySelectorAll(".logo-slot").forEach(e => e.innerHTML = LOGO(e.closest(".adm-brand") ? 30 : 34, !!e.closest(".lhero,.adm-brand,.splash")));
 
 /* ---------- Voz do celular ---------- */
 const VOZ = { ok: "speechSynthesis" in window, v: null, lista: [] };
@@ -3211,7 +3284,7 @@ $("f-cad").addEventListener("submit", async e => {
 /* ---------- Entrada do painel do administrador (link separado: #admin) ---------- */
 function showAdminLogin(aviso){
   const temAdm = NU.ativo ? NU.existeAdmin : DB.users.some(u => u.admin && !u.exemplo);
-  $("admlogin").innerHTML = `<div class="brandrow"><span class="logo-slot">${LOGO()}</span><div class="wordmark">CK <b>Life</b><small>Painel do administrador</small></div></div>
+  $("admlogin").innerHTML = `<div class="brandrow"><span class="logo-slot">${LOGO(34)}</span><div class="wordmark">CK <b>Life</b><small>Admin</small></div></div>
     <h1 class="bigtitle" style="font-size:40px">${temAdm ? "Entrar no <em>painel</em>" : "Criar conta de <em>administrador</em>"}</h1>
     <p class="lead">${temAdm ? "Alunas, anúncios, parceiros, receitas e financeiro." : "Esta é a primeira vez. Crie a conta que vai administrar o app."}</p>
     ${aviso ? `<div class="msg msg-bad">${esc(aviso)}</div>` : ""}
@@ -3405,7 +3478,7 @@ function onboarding(){
   } else {
     const p = progById(OB.prog), m = metas({ ...ME, perfil: OB });
     const NIVN = { iniciante: "Iniciante", intermediario: "Intermediário", avancado: "Avançado" };
-    h = obHero("pronto", "", "", `Seu plano está pronto, ${esc(ME.nome.split(" ")[0])}!`, "Com base nas suas respostas, montamos um plano só seu.") + `
+    h = obHero("pronto", "", "", `Seu plano está pronto, ${esc(ME.nome.split(" ")[0])}!`, "Com base nas suas respostas, montamos um plano só seu. " + MARCA.sloganPt) + `
       <div class="card planlist"><h3>Seu plano</h3>
         <div>${ic("calendar", 18)}<span>${OB.dias} dias por semana</span></div>
         <div>${ic("inicio", 18)}<span>Em casa${OB.itens && OB.itens.length ? "" : ", sem equipamentos"}</span></div>
@@ -3471,10 +3544,10 @@ const CM = {
     if(!CM.nuvem()){ const x = CM.local().find(y => y.id === p.id); if(x){ x.curtidas = (x.curtidas || []).filter(u => u !== ME.id); if(on) x.curtidas.push(ME.id); save(); } return; }
     const r = on ? await NU.sb.from("curtidas").insert({ post_id: p.id, user_id: NU.uid }) : await NU.sb.from("curtidas").delete().eq("post_id", p.id).eq("user_id", NU.uid); if(r.error && !/duplicate/i.test(r.error.message || "")) throw r.error;
   },
-  async comentar(p, texto){
-    const c = { id: novoId(), user: ME.id, nome: ME.nome, foto: await miniFoto(ME.foto, 64), texto, criado: new Date().toISOString() };
+  async comentar(p, texto, figurinha){
+    const c = { id: novoId(), user: ME.id, nome: ME.nome, foto: await miniFoto(ME.foto, 64), texto: texto || "", figurinha: figurinha || null, criado: new Date().toISOString() };
     if(!CM.nuvem()){ const x = CM.local().find(y => y.id === p.id); x.coments = x.coments || []; x.coments.push(c); save(); return c; }
-    const r = await NU.sb.from("comentarios").insert({ id: c.id, post_id: p.id, user_id: NU.uid, nome: c.nome, foto: c.foto, texto }); if(r.error) throw r.error; return c;
+    const r = await NU.sb.from("comentarios").insert({ id: c.id, post_id: p.id, user_id: NU.uid, nome: c.nome, foto: c.foto, texto: c.texto, ...(figurinha ? { figurinha } : {}) }); if(r.error) throw r.error; return c;
   },
   async apagaPost(p){ if(!CM.nuvem()){ DB.posts = CM.local().filter(x => x.id !== p.id); save(); return; } const r = await NU.sb.from("posts").delete().eq("id", p.id); if(r.error) throw r.error; },
   async apagaComent(p, c){ if(!CM.nuvem()){ const x = CM.local().find(y => y.id === p.id); if(x) x.coments = (x.coments || []).filter(k => k.id !== c.id); save(); return; } const r = await NU.sb.from("comentarios").delete().eq("id", c.id); if(r.error) throw r.error; },
@@ -4278,6 +4351,10 @@ async function urls(paths, segs = 600){
   return paths.map(p => (MID.get(p) || {}).u || "");
 }
 // se a URL temporária ainda vale, usa direto (sem piscar ao redesenhar)
+/* figurinha do catálogo por id (arquivo público; se foi desativada, mostra mesmo assim nos posts antigos) */
+const figImg = (id, cls) => { const f = (FCAT.L || []).find(x => x.id === id); return `<img class="${cls}" ${f ? `src="${esc(f.arquivo)}"` : `data-figid="${esc(id)}"`} alt="${esc(f ? f.nome : "Figurinha")}" loading="lazy" draggable="false">`; };
+document.addEventListener("DOMContentLoaded", () => {});
+new MutationObserver(() => { const L = document.querySelectorAll("img[data-figid]"); if(!L.length) return; catalogo().then(C => L.forEach(i => { const f = C.find(x => x.id === i.dataset.figid); if(f){ i.src = f.arquivo; i.removeAttribute("data-figid"); } })); }).observe(document.documentElement, { childList: true, subtree: true });
 const eVideo = p => /\.(mp4|webm|mov)$/i.test(p || "");
 const midiaPronta = path => { const m = MID.get(path); return m && m.t > Date.now() ? `src="${esc(m.u)}" data-m="${esc(path)}" data-mok="1"` : `data-m="${esc(path)}"`; };
 function ligaMidia(root, segs){
@@ -4562,8 +4639,8 @@ async function completaPosts(rows){
   if(ids.length){ [cu, co, sv] = await Promise.all([q(SB().from("curtidas").select("post_id,user_id").in("post_id", ids)), q(SB().from("comentarios").select("*").in("post_id", ids).order("criado", { ascending: true })), q(SB().from("salvos").select("post_id").eq("user_id", NU.uid).in("post_id", ids)).catch(() => [])]); }
   sv.forEach(s => SALVOS.add(s.post_id));
   await carregaPerfis([...rows.map(p => p.user_id), ...co.map(c => c.user_id)]);
-  return rows.map(p => ({ id: p.id, user: p.user_id, nome: p.nome, foto: p.foto, texto: p.texto, img: p.img, midia: p.midia, conquista: p.conquista, criado: p.criado, oculto: p.oculto, grupo: p.grupo_id || null,
-    curtidas: cu.filter(c => c.post_id === p.id).map(c => c.user_id), coments: co.filter(c => c.post_id === p.id).map(c => ({ id: c.id, user: c.user_id, nome: c.nome, foto: c.foto, texto: c.texto, criado: c.criado })) }));
+  return rows.map(p => ({ id: p.id, user: p.user_id, nome: p.nome, foto: p.foto, texto: p.texto, img: p.img, midia: p.midia, conquista: p.conquista, criado: p.criado, oculto: p.oculto, grupo: p.grupo_id || null, figurinha: p.figurinha || null,
+    curtidas: cu.filter(c => c.post_id === p.id).map(c => c.user_id), coments: co.filter(c => c.post_id === p.id).map(c => ({ id: c.id, user: c.user_id, nome: c.nome, foto: c.foto, texto: c.texto, figurinha: c.figurinha || null, criado: c.criado })) }));
 }
 async function feedBusca(ids){ if(!ids.length || !SO.on()) return []; const rows = await q(SB().from("posts").select("*").in("id", ids)); const L = await completaPosts(rows); return ids.map(i => L.find(p => p.id === i)).filter(Boolean); }
 async function feedPagina(){
@@ -4582,7 +4659,7 @@ function postHtml(p){
   return `<article class="post" data-id="${p.id}">
     <header>${avU(p.user, p.nome, p.foto)}<div class="pmeta"><b>${esc(nomeP(p.user, p.nome))}</b><small>${us ? "@" + esc(us) + " · " : ""}${tempoAtras(p.criado)}${p.oculto ? " · oculto pela moderação" : ""}${p.grupo && GRP.get(p.grupo) ? ` · <button class="so-gtag" data-grupo="${p.grupo}">${esc(GRP.get(p.grupo).emoji || "")} ${esc(GRP.get(p.grupo).nome)}</button>` : ""}</small></div><button class="iconbtn sm" data-mais aria-label="Opções">${ic("dots", 18)}</button></header>
     ${p.texto ? `<p class="ptx ${p.texto.length > 260 ? "so-trunc" : ""}">${rico(p.texto)}</p>${p.texto.length > 260 ? `<button class="link so-vermais" data-vermais>ver mais</button>` : ""}` : ""}${cq}
-    ${p.midia && eVideo(p.midia) ? `<div class="pimg pvid priv"><video data-m="${esc(p.midia)}" playsinline muted loop preload="metadata" controls controlslist="nodownload noplaybackrate" disablepictureinpicture></video></div>` : p.midia ? `<div class="pimg priv" data-abre><img ${midiaPronta(p.midia)} alt="" loading="lazy" draggable="false"><i class="pheart">${ic("heart", 70)}</i></div>` : p.img ? `<div class="pimg priv" data-abre><img src="${esc(p.img)}" alt="" loading="lazy" draggable="false"><i class="pheart">${ic("heart", 70)}</i></div>` : ""}
+    ${p.figurinha && !p.midia && !p.img ? `<div class="pfig">${figImg(p.figurinha, "pfig-img")}</div>` : ""}${p.midia && eVideo(p.midia) ? `<div class="pimg pvid priv"><video data-m="${esc(p.midia)}" playsinline muted loop preload="metadata" controls controlslist="nodownload noplaybackrate" disablepictureinpicture></video></div>` : p.midia ? `<div class="pimg priv" data-abre><img ${midiaPronta(p.midia)} alt="" loading="lazy" draggable="false"><i class="pheart">${ic("heart", 70)}</i></div>` : p.img ? `<div class="pimg priv" data-abre><img src="${esc(p.img)}" alt="" loading="lazy" draggable="false"><i class="pheart">${ic("heart", 70)}</i></div>` : ""}
     <div class="pacts"><button class="pl ${liked ? "on" : ""}" data-like aria-label="Curtir">${ic("heart", 22)}<span>${nl || ""}</span></button><button data-abre aria-label="Comentar">${ic("chat", 21)}<span>${nc || ""}</span></button>${SO.on() ? `<button data-share aria-label="Compartilhar">${ic("send", 20)}</button><button class="so-save ${salvo ? "on" : ""}" data-save aria-label="Salvar">${ic("bookmark", 20)}</button>` : ""}
       ${nl ? `<small class="pquem" data-quem role="button">${liked ? (nl === 1 ? "Você curtiu" : `Você e mais ${nl - 1}`) : `${nl} ${nl === 1 ? "curtida" : "curtidas"}`}</small>` : ""}</div>
     ${(p.coments || []).slice(-2).map(c => `<p class="pc"><b>${esc(nomeP(c.user, c.nome).split(" ")[0])}</b> ${rico(c.texto)}</p>`).join("")}
@@ -4616,16 +4693,20 @@ function ligaPost(el, p, detalhe){
   ligaMidia(el);
 }
 function abrePost(p, foca){
-  const lista = () => (p.coments || []).map(c => `<div class="cmt">${avU(c.user, c.nome, c.foto)}<div><p><b>${esc(nomeP(c.user, c.nome))}</b> ${rico(c.texto)}</p><small>${tempoAtras(c.criado)}${SO.on() && c.user !== ME.id && userP(c.user) ? ` · <button class="link cdel" data-resp="${esc(userP(c.user))}">Responder</button>` : ""}${c.user === ME.id ? ` · <button class="link cdel" data-cdel="${c.id}">Excluir</button>` : SO.on() ? ` · <button class="link cdel" data-cden="${c.id}">Denunciar</button>` : ""}</small></div></div>`).join("") || `<p class="hint" style="margin:0">Seja a primeira a comentar 💚</p>`;
+  const lista = () => (p.coments || []).map(c => `<div class="cmt">${avU(c.user, c.nome, c.foto)}<div><p><b>${esc(nomeP(c.user, c.nome))}</b> ${rico(c.texto)}</p>${c.figurinha ? figImg(c.figurinha, "cmt-fig") : ""}<small>${tempoAtras(c.criado)}${SO.on() && c.user !== ME.id && userP(c.user) ? ` · <button class="link cdel" data-resp="${esc(userP(c.user))}">Responder</button>` : ""}${c.user === ME.id ? ` · <button class="link cdel" data-cdel="${c.id}">Excluir</button>` : SO.on() ? ` · <button class="link cdel" data-cden="${c.id}">Denunciar</button>` : ""}</small></div></div>`).join("") || `<p class="hint" style="margin:0">Seja a primeira a comentar 💚</p>`;
   sheet("Publicação", `<div class="post post-full" data-id="${p.id}">${postHtml(p).replace(/^<article[^>]*>|<\/article>$/g, "")}</div><div class="cmts" id="cmts">${lista()}</div>
-    <div class="cbar"><input class="input" id="cm-txt" maxlength="500" placeholder="Escreva um comentário…" autocomplete="off"><button class="btn btn-accent" id="cm-env" aria-label="Enviar">${ic("send", 18)}</button></div>`, () => { if(TAB === "juntas") desenhaFeed(); });
+    <div class="cbar"><div class="cm-reac" id="cm-reac"></div><button class="iconbtn" id="cm-fig" aria-label="Figurinhas"><span style="font-size:20px">✨</span></button><input class="input" id="cm-txt" maxlength="500" placeholder="Escreva um comentário…" autocomplete="off"><button class="btn btn-accent" id="cm-env" aria-label="Enviar">${ic("send", 18)}</button></div>`, () => { if(TAB === "juntas") desenhaFeed(); });
   const el = $("sheet-body").querySelector(".post-full"); el.querySelectorAll(".pcin,.pver,.pc").forEach(x => x.remove()); ligaPost(el, p, true);
   const ligaDel = () => { $("cmts").querySelectorAll("[data-cdel]").forEach(b => b.onclick = () => { const c = p.coments.find(x => x.id === b.dataset.cdel); CM.apagaComent(p, c).then(() => { p.coments = p.coments.filter(x => x !== c); $("cmts").innerHTML = lista(); ligaDel(); }).catch(() => toast("Não deu para excluir agora")); });
     $("cmts").querySelectorAll("[data-cden]").forEach(b => b.onclick = () => denunciar("comentario", b.dataset.cden, () => abrePost(p)));
     $("cmts").querySelectorAll("[data-resp]").forEach(b => b.onclick = () => { const t = $("cm-txt"); t.value = `@${b.dataset.resp} `; t.focus(); t.setSelectionRange(t.value.length, t.value.length); }); };
   ligaDel();
-  const env = async () => { const t = $("cm-txt").value.trim(); if(!t) return; $("cm-env").disabled = true; try{ const c = await CM.comentar(p, t); p.coments = p.coments || []; if(!p.coments.some(x => x.id === c.id)) p.coments.push(c); $("cm-txt").value = ""; $("cmts").innerHTML = lista(); ligaDel(); SOM.check(); const sp = el.querySelector("[data-abre] span"); if(sp) sp.textContent = p.coments.length; const ul = $("cmts").lastElementChild; if(ul) ul.scrollIntoView({ behavior: "smooth", block: "nearest" }); }catch(e){ toast(ERR_MSG(e)); } $("cm-env").disabled = false; };
+  let figC = null;
+  const env = async () => { const t = $("cm-txt").value.trim(); if(!t && !figC) return; $("cm-env").disabled = true; try{ const fg = figC; figC = null; const c = await CM.comentar(p, t, fg && fg.id); if(fg) figUsada(fg, "comentario"); const fb = $("cm-fig"); if(fb) fb.innerHTML = `<span style="font-size:20px">✨</span>`; p.coments = p.coments || []; if(!p.coments.some(x => x.id === c.id)) p.coments.push(c); $("cm-txt").value = ""; $("cmts").innerHTML = lista(); ligaDel(); SOM.check(); const sp = el.querySelector("[data-abre] span"); if(sp) sp.textContent = p.coments.length; const ul = $("cmts").lastElementChild; if(ul) ul.scrollIntoView({ behavior: "smooth", block: "nearest" }); }catch(e){ toast(ERR_MSG(e)); } $("cm-env").disabled = false; };
   $("cm-env").onclick = env; $("cm-txt").onkeydown = e => { if(e.key === "Enter") env(); };
+  $("cm-fig").onclick = async () => { const f = await escolheFigurinha("comentario", "comentario"); if(!f) return; figC = f; const t = $("cm-txt").value.trim(); if(!t) env(); else { $("cm-fig").innerHTML = `<img src="${esc(figMini(f))}" alt="" style="width:30px;height:30px">`; toast("Figurinha junto com o texto. Toque em enviar."); } };
+  if(SO.on()) figsPara("reacao").then(L => { const r = $("cm-reac"); if(!r) return; const V = L.slice(0, 10); r.innerHTML = V.map(f => `<button data-rq="${f.id}" aria-label="${esc(f.nome)}"><img src="${esc(figMini(f))}" alt="" loading="lazy"></button>`).join("");
+    r.querySelectorAll("[data-rq]").forEach(b => b.onclick = () => { const f = V.find(x => x.id === b.dataset.rq); b.classList.add("pop"); vibra(8); figC = f; if(!$("cm-txt").value.trim()) env(); else toast("Figurinha junto com o texto. Toque em enviar."); }); });
   if(foca) setTimeout(() => $("cm-txt").focus(), 250);
 }
 function abreComposer(texto0, blob0, extra){
@@ -4635,15 +4716,20 @@ function abreComposer(texto0, blob0, extra){
     ${!texto0 && !cq ? `<div class="chips scroll so-temas">${[["💪","Treino de hoje","Treino de hoje concluído! "],["🥗","Receita","Fiz uma receita do app hoje: "],["✨","Motivação","Lembrete do dia: "],["👋","Me apresentar","Oi, meninas! Sou "],["🙋","Pergunta","Alguém tem dica de "]].map(([e, n, t]) => `<button class="chip" data-tema="${esc(t)}">${e} ${n}</button>`).join("")}</div>` : ""}
     <textarea class="input cmp-tx" id="cp-t" maxlength="1000" placeholder="O que você quer compartilhar hoje? 💚">${esc(texto0 || "")}</textarea><small class="so-cont" id="cp-n">0/1000</small>
     <div id="cp-prev" class="cp-prev"></div>
-    ${extra && extra.grupo ? `<p class="so-cp-grupo">${esc(extra.grupo.emoji || "")} Publicando em <b>${esc(extra.grupo.nome)}</b></p>` : ""}<div class="toolbar"><button class="btn btn-line" id="cp-foto">${ic("camera", 18)} Foto</button><button class="btn btn-line" id="cp-video">${ic("play", 18)} Vídeo</button><span class="hint">Compartilhe só o que você quiser. Seu peso, medidas e ciclo nunca são postados.</span></div>
+    ${extra && extra.grupo ? `<p class="so-cp-grupo">${esc(extra.grupo.emoji || "")} Publicando em <b>${esc(extra.grupo.nome)}</b></p>` : ""}<div class="toolbar"><button class="btn btn-line" id="cp-foto">${ic("camera", 18)} Foto</button><button class="btn btn-line" id="cp-video">${ic("play", 18)} Vídeo</button><button class="btn btn-line" id="cp-fig">✨ Figurinha</button><span class="hint">Compartilhe só o que você quiser. Seu peso, medidas e ciclo nunca são postados.</span></div>
     <button class="btn btn-accent btn-block btn-lg" id="cp-ok">Publicar</button>`);
   const cont = () => { const n = $("cp-t").value.length; $("cp-n").textContent = `${n}/1000`; }; $("cp-t").oninput = cont; cont();
   $("sheet-body").querySelectorAll("[data-tema]").forEach(b => b.onclick = () => { const t = $("cp-t"); t.value = b.dataset.tema + t.value; t.focus(); t.setSelectionRange(t.value.length, t.value.length); cont(); SOM.tap(); });
   const prev = async () => { if(prev.u){ URL.revokeObjectURL(prev.u); prev.u = null; } $("cp-prev").innerHTML = blob && /^video\//.test(blob.type || "") ? `<video src="${prev.u = URL.createObjectURL(blob)}" playsinline muted loop autoplay controls></video><button class="iconbtn sm" id="cp-x" aria-label="Tirar vídeo">${ic("close", 16)}</button>` : blob ? `<img src="${await blobParaURL(blob)}" alt=""><button class="iconbtn sm" id="cp-x" aria-label="Tirar foto">${ic("close", 16)}</button>` : ""; const x = $("cp-x"); if(x) x.onclick = () => { blob = null; prev(); }; };
   prev();
+  let figP = (extra && extra.figurinha) || null;
+  const mostraFig = () => { let e = $("cp-figp"); if(!e){ $("cp-prev").insertAdjacentHTML("afterend", `<div id="cp-figp" class="cp-figp"></div>`); e = $("cp-figp"); } e.innerHTML = figP ? `${figImg(figP.id || figP, "pfig-img")}<button class="iconbtn sm" id="cp-figx" aria-label="Tirar figurinha">${ic("close", 14)}</button>` : ""; const x = $("cp-figx"); if(x) x.onclick = () => { figP = null; mostraFig(); }; };
+  if(figP) mostraFig();
+  $("cp-fig").onclick = async () => { const f = await escolheFigurinha("comunidade", "comunidade"); if(f){ figP = f; mostraFig(); } };
+  extra = extra || {}; Object.defineProperty(extra, "figurinha", { get: () => figP, configurable: true, enumerable: true });
   const cv = $("cp-video"); if(cv) cv.onclick = async () => { const f = await escolheArquivo("video/*"); const v = await videoValido(f); if(v){ blob = v; prev(); } };
   $("cp-foto").onclick = async () => { const f = await escolheArquivo("image/*"); let b = await imagemValida(f, 1440); if(b) b = await escolheFiltro(b); if(b){ blob = b; prev(); } };
-  $("cp-ok").onclick = async () => { const t = $("cp-t").value.trim(); if(!t && !blob && !cq) return toast("Escreva algo ou escolha uma foto"); if(ME.bloqueado) return toast("Sua conta está bloqueada");
+  $("cp-ok").onclick = async () => { const t = $("cp-t").value.trim(); if(!t && !blob && !cq && !figP) return toast("Escreva algo, escolha uma foto ou uma figurinha"); if(ME.bloqueado) return toast("Sua conta está bloqueada");
     const b = $("cp-ok"); b.classList.add("carregando"); b.disabled = true;
     try{ await CM.publicar(t, blob, extra); SOM.done ? SOM.done() : SOM.check(); fecharSheet(); toast("Publicado no CK Life 💚"); window.scrollTo({ top: 0, behavior: "smooth" }); NOVO_POST = true; FD = { ...FD, cursor: null, fim: false }; if(TAB !== "juntas") tab("juntas"); else rJuntas(); }
     catch(e){ console.warn(e); toast(ERR_MSG(e)); b.classList.remove("carregando"); b.disabled = false; } };
@@ -4655,7 +4741,8 @@ CM.publicar = async (texto, blob, extra) => {
   await garantePerfil();
   const id = novoId(); let midia = null;
   if(blob){ const v = /^video\//.test(blob.type || ""); const ext = !v ? "jpg" : /quicktime/.test(blob.type) ? "mov" : /webm/.test(blob.type) ? "webm" : "mp4"; midia = await sobe("post", NU.uid, blob, ext, v ? (blob.type || "video/mp4") : "image/jpeg"); }
-  const r = await SB().from("posts").insert({ id, user_id: NU.uid, nome: EU.nome || ME.nome, foto: EU.foto_mini || await miniFoto(ME.foto), texto, midia, conquista: (extra && extra.conquista) || null, ...(extra && extra.grupo ? { grupo_id: extra.grupo.id } : {}) });
+  const r = await SB().from("posts").insert({ id, user_id: NU.uid, nome: EU.nome || ME.nome, foto: EU.foto_mini || await miniFoto(ME.foto), texto, midia, conquista: (extra && extra.conquista) || null, ...(extra && extra.grupo ? { grupo_id: extra.grupo.id } : {}), ...(extra && extra.figurinha ? { figurinha: extra.figurinha.id || extra.figurinha } : {}) });
+  if(extra && extra.figurinha && extra.figurinha.id) figUsada(extra.figurinha, "comunidade");
   if(r.error) throw r.error;
 };
 // o painel (moderação) também enxerga fotos privadas de posts via URL temporária
@@ -4933,7 +5020,7 @@ function desenhaMsgs(rolarFim){
   const perto = box.scrollHeight - box.scrollTop - box.clientHeight < 120;
   box.innerHTML = (CHAT.fim ? `<p class="xp-chat-aviso hint">${ic("shield", 13)} Conversa privada. Seja gentil e nunca envie senhas ou dados de cartão.</p>` : `<button class="link so-antigas" id="cv-ant">Ver mensagens anteriores</button>`) +
     (L.length ? L.map((m, i) => { const eu = m.autor === NU.uid, prox = L[i + 1], ultimaDela = !eu && (!prox || prox.autor !== m.autor), dia = i === 0 || L[i - 1].criado.slice(0, 10) !== m.criado.slice(0, 10);
-      return `${dia ? `<div class="so-dia">${new Date(m.criado).toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "short" })}</div>` : ""}<div class="xp-msgrow ${eu ? "eu" : ""}" data-mid="${m.id}">${!eu ? (ultimaDela ? avU(o) : `<span style="width:28px;flex:0 0 28px"></span>`) : ""}<div class="xp-msg ${eu ? "eu" : ""} ${m.tipo !== "texto" ? "midia" : ""}${m.tipo === "foto" && !m.texto && (m.fig || /\.png$/.test(m.midia || "")) ? " fig" : ""}">${msgCorpo(m)}<small>${new Date(m.criado).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}${eu ? " " + stIcone(m) : ""}</small></div><button class="so-mop" data-op="${m.id}" aria-label="Opções da mensagem">${ic("dots", 14)}</button></div>${eu && m === ultMinha ? `<div class="so-sttxt">${stTexto(m)}</div>` : ""}`; }).join("")
+      return `${dia ? `<div class="so-dia">${new Date(m.criado).toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "short" })}</div>` : ""}<div class="xp-msgrow ${eu ? "eu" : ""}" data-mid="${m.id}">${!eu ? (ultimaDela ? avU(o) : `<span style="width:28px;flex:0 0 28px"></span>`) : ""}<div class="xp-msg ${eu ? "eu" : ""} ${m.tipo !== "texto" ? "midia" : ""}${m.tipo === "foto" && !m.texto && (m.fig || /\.(png|webp)$/.test(m.midia || "")) ? " fig" : ""}">${msgCorpo(m)}<small>${new Date(m.criado).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}${eu ? " " + stIcone(m) : ""}</small></div><button class="so-mop" data-op="${m.id}" aria-label="Opções da mensagem">${ic("dots", 14)}</button></div>${eu && m === ultMinha ? `<div class="so-sttxt">${stTexto(m)}</div>` : ""}`; }).join("")
     : `<p class="empty">Comece a conversa com ${esc(nomeP(o).split(" ")[0])} 💚</p>`);
   ligaMidia(box, 600);
   const an = $("cv-ant"); if(an) an.onclick = () => carregaMsgs(L[0] && L[0].criado);
@@ -4962,13 +5049,13 @@ function fecharSheetSilencioso(){ const p = $("so-pop"); if(p) p.hidden = true; 
 function desenhaResp(){ const box = $("cv-resp"); if(!box) return; const r = CHAT && CHAT.resp; box.innerHTML = r ? `<div class="so-quote so-quote-in"><b>Respondendo ${r.autor === NU.uid ? "a você" : esc(nomeP(r.autor).split(" ")[0])}</b><span>${esc(r.tipo === "foto" ? "📷 Foto" : r.tipo === "audio" ? "🎤 Áudio" : (r.texto || "").slice(0, 80))}</span><button class="iconbtn sm" id="cv-rx" aria-label="Cancelar resposta">${ic("close", 13)}</button></div>` : ""; const x = $("cv-rx"); if(x) x.onclick = () => { CHAT.resp = null; desenhaResp(); }; }
 async function enviaMsg(c, d){
   if(ME.bloqueado) throw new Error("Sua conta está bloqueada");
-  const id = novoId(), base = { id, conversa_id: c.id, autor: NU.uid, tipo: d.tipo || "texto", texto: d.texto || null, criado: new Date().toISOString(), pend: true, previa: d.blob ? URL.createObjectURL(d.blob) : null, resposta_id: d.resposta_id || null, story_id: d.story_id || null, post_id: d.post_id || null, duracao: d.duracao || null, fig: d.mime === "image/png" };
+  const id = novoId(), base = { id, conversa_id: c.id, autor: NU.uid, tipo: d.tipo || "texto", texto: d.texto || null, criado: new Date().toISOString(), pend: true, previa: d.blob ? URL.createObjectURL(d.blob) : null, resposta_id: d.resposta_id || null, story_id: d.story_id || null, post_id: d.post_id || null, duracao: d.duracao || null, fig: /png|webp/.test(d.mime || "") };
   const aberto = CHAT && CHAT.c.id === c.id;
   if(aberto){ CHAT.msgs.push(base); desenhaMsgs(true); }
   try{
     let midia = null;
-    if(d.blob){ const ext = d.tipo === "audio" ? (/mp4|m4a|aac/.test(d.mime) ? "m4a" : /ogg/.test(d.mime) ? "ogg" : "webm") : d.mime === "image/png" ? "png" : "jpg";
-      const tipo = d.tipo === "audio" ? (ext === "m4a" ? "audio/mp4" : ext === "ogg" ? "audio/ogg" : "audio/webm") : ext === "png" ? "image/png" : "image/jpeg";
+    if(d.blob){ const ext = d.tipo === "audio" ? (/mp4|m4a|aac/.test(d.mime) ? "m4a" : /ogg/.test(d.mime) ? "ogg" : "webm") : d.mime === "image/png" ? "png" : d.mime === "image/webp" ? "webp" : "jpg";
+      const tipo = d.tipo === "audio" ? (ext === "m4a" ? "audio/mp4" : ext === "ogg" ? "audio/ogg" : "audio/webm") : ext === "png" ? "image/png" : ext === "webp" ? "image/webp" : "image/jpeg";
       midia = await sobe("chat", c.id, d.blob, ext, tipo); }
     const row = { id, conversa_id: c.id, autor: NU.uid, tipo: base.tipo, texto: base.texto, midia, duracao: base.duracao, resposta_id: base.resposta_id, story_id: base.story_id, post_id: base.post_id };
     const r = await q(SB().from("mensagens").insert(row).select());
@@ -5224,6 +5311,223 @@ async function iniciaSocial(){
 }
 
 
+/* ===================== FIGURINHAS CK LIFE (catálogo único) =====================
+   Fonte: cartelas oficiais da pasta fotos-ck-life, recortadas (img/figurinhas). Um catálogo para Stories, chat,
+   comentários, comunidade e reações. O admin ativa/desativa e cadastra novas sem mexer no código.
+   Favoritas e recentes ficam na conta da aluna (ME.figFav / ME.figRec) e valem em todos os lugares. */
+const FCAT = { L: null, cats: [], t: 0, prom: null };
+async function catalogo(){
+  if(FCAT.L && Date.now() - FCAT.t < 600000) return FCAT.L;
+  if(FCAT.prom) return FCAT.prom;
+  FCAT.prom = (async () => {
+    let L = null, cats = [];
+    try{ const j = await (await fetch("img/figurinhas/catalogo.json", { cache: "force-cache" })).json(); L = j.figurinhas; cats = j.categorias; }catch(e){ L = []; }
+    if(NU.ativo && NU.sb){ try{ const r = await NU.sb.from("figurinhas_catalogo").select("*").order("ordem"); if(!r.error && r.data && r.data.length) L = r.data; }catch(e){} }
+    FCAT.L = (L || []).filter(f => f.ativa !== false); FCAT.cats = cats.length ? cats : FCAT.cats; FCAT.t = Date.now(); FCAT.prom = null; return FCAT.L;
+  })();
+  return FCAT.prom;
+}
+const FIG_CATS = [["motivacao", "Motivação"], ["treino", "Treino"], ["conquistas", "Conquistas"], ["constancia", "Constância"], ["humor", "Humor"], ["reacoes", "Reações"], ["comunidade", "Comunidade"], ["autocuidado", "Autocuidado"], ["ciclo", "Ciclo e bem-estar"], ["ck", "CK Life"]];
+const figUrl = f => /^https?:/.test(f.arquivo) ? f.arquivo : f.arquivo;
+const figMini = f => f.mini || f.arquivo;
+/* figurinhas com número só aparecem quando o número é verdade para ela (ex.: "7 dias de constância" com sequência >= 7) */
+const figVale = f => { const d = (f.tags || []).find(t => t.startsWith("dado:sequencia:")); return !d || streak() >= +d.split(":")[2]; };
+const ONDE = { story: "em_stories", chat: "em_chat", comentario: "em_comentarios", comunidade: "em_comunidade", reacao: "em_reacoes" };
+async function figsPara(onde){ return (await catalogo()).filter(f => f[ONDE[onde] || "em_stories"] !== false && figVale(f)); }
+const figFav = () => ME.figFav || [], figRec = () => ME.figRec || [];
+function figUsada(f, onde){
+  ME.figRec = [f.id, ...figRec().filter(x => x !== f.id)].slice(0, 24); save();
+  if(NU.ativo && NU.sb) NU.sb.rpc("registra_figurinha", { p_id: f.id, p_onde: onde }).then(() => {}, () => {});
+}
+function figFavorita(id){ const on = !figFav().includes(id); ME.figFav = on ? [id, ...figFav()] : figFav().filter(x => x !== id); save(); vibra(10); toast(on ? "Favoritada ♥" : "Removida das favoritas"); return on; }
+/* ordem por contexto (sem IA): o que faz sentido primeiro */
+const CTX = {
+  posTreino: { abas: ["voce", "conquistas", "treino", "constancia", "ck", "humor"], tag: "pos-treino" },
+  story: { abas: ["voce", "recentes", "favoritas", "motivacao", "humor", "ck", "treino", "conquistas", "constancia", "comunidade", "autocuidado", "ciclo", "reacoes"] },
+  chat: { abas: ["recentes", "favoritas", "reacoes", "humor", "comunidade", "motivacao", "treino", "ck", "autocuidado"] },
+  comentario: { abas: ["recentes", "favoritas", "apoio", "reacoes", "humor", "conquistas", "comunidade", "motivacao"], tag: "apoio" },
+  comunidade: { abas: ["voce", "recentes", "favoritas", "treino", "conquistas", "motivacao", "humor", "comunidade", "ck"] },
+  ciclo: { abas: ["autocuidado", "ciclo", "recentes", "favoritas"], tag: "acolhimento" }
+};
+const NOME_ABA = { voce: "Para você", recentes: "Recentes", favoritas: "Favoritas", apoio: "Apoio", ...Object.fromEntries(FIG_CATS) };
+function filtraAba(L, aba, ctx){
+  const por = ids => ids.map(id => L.find(f => f.id === id)).filter(Boolean);
+  if(aba === "recentes") return por(figRec());
+  if(aba === "favoritas") return por(figFav());
+  if(aba === "apoio") return L.filter(f => (f.tags || []).includes("apoio") || f.categoria === "comunidade");
+  if(aba === "voce"){ const tg = (CTX[ctx] || {}).tag; const base = tg ? L.filter(f => (f.tags || []).includes(tg)) : L.filter(f => f.destaque);
+    return [...new Map([...por(figFav()), ...base, ...por(figRec())].map(f => [f.id, f])).values()].slice(0, 40); }
+  return L.filter(f => f.categoria === aba || (f.tags || []).includes(aba));
+}
+/* seletor (bottom sheet próprio, por cima do que estiver aberto) */
+async function escolheFigurinha(onde, ctx){
+  const L = await figsPara(onde);
+  return new Promise(fim => {
+    let box = $("fg-sel"); if(!box){ box = document.createElement("div"); box.id = "fg-sel"; box.className = "fg-sel"; document.body.appendChild(box); }
+    const abas = (CTX[ctx || onde] || CTX.story).abas.filter(a => ["voce", "recentes", "favoritas"].includes(a) || filtraAba(L, a, ctx).length);
+    let aba = abas.find(a => filtraAba(L, a, ctx || onde).length) || abas[0], busca = "";
+    box.innerHTML = `<div class="fg-sel-in" role="dialog" aria-label="Figurinhas"><div class="fg-sel-top"><b>Figurinhas</b><button class="iconbtn sm" id="fs-x" aria-label="Fechar">${ic("close", 16)}</button></div>
+      <div class="search fg-busca">${ic("search", 16)}<input class="input" id="fs-q" placeholder="Buscar figurinha" autocomplete="off"></div>
+      <div class="chips scroll" id="fs-abas"></div><div class="fg-sel-grid" id="fs-g"></div><p class="hint fg-dica">Toque para usar · segure para favoritar ♥</p></div>`;
+    box.hidden = false;
+    const sai = v => { box.hidden = true; box.innerHTML = ""; fim(v); };
+    const desenha = () => {
+      $("fs-abas").innerHTML = busca ? "" : abas.map(a => `<button class="chip" data-ab="${a}" aria-pressed="${a === aba}">${a === "favoritas" ? "♥ " : ""}${NOME_ABA[a] || a}</button>`).join("");
+      const n = s => unicodedata(s);
+      const V = busca ? L.filter(f => n(f.nome + " " + (f.tags || []).join(" ") + " " + f.categoria).includes(n(busca))) : filtraAba(L, aba, ctx || onde);
+      $("fs-g").innerHTML = V.length ? V.map(f => `<button class="fg-it ${figFav().includes(f.id) ? "fav" : ""}" data-f="${f.id}" aria-label="${esc(f.nome)}"><img src="${esc(figMini(f))}" alt="${esc(f.nome)}" loading="lazy" draggable="false"></button>`).join("")
+        : `<p class="hint fg-vazio">${aba === "favoritas" ? "Segure uma figurinha para favoritar ♥" : aba === "recentes" ? "As figurinhas que você usar aparecem aqui." : "Nada encontrado."}</p>`;
+      $("fs-abas").querySelectorAll("[data-ab]").forEach(b => b.onclick = () => { aba = b.dataset.ab; desenha(); });
+      $("fs-g").querySelectorAll("[data-f]").forEach(b => { const f = L.find(x => x.id === b.dataset.f); let tm, longo = false;
+        b.onpointerdown = () => { longo = false; tm = setTimeout(() => { longo = true; const on = figFavorita(f.id); b.classList.toggle("fav", on); }, 520); };
+        b.onpointerup = b.onpointerleave = () => clearTimeout(tm);
+        b.oncontextmenu = e => e.preventDefault();
+        b.onclick = () => { if(longo) return; b.classList.add("pop"); vibra(8); sai(f); }; });
+    };
+    $("fs-x").onclick = () => sai(null); box.onclick = e => { if(e.target === box) sai(null); };
+    let tq; $("fs-q").oninput = e => { clearTimeout(tq); tq = setTimeout(() => { busca = e.target.value.trim(); desenha(); }, 150); };
+    desenha();
+  });
+}
+const unicodedata = s => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+const figCarrega = src => new Promise((ok, no) => { const i = new Image(); i.crossOrigin = "anonymous"; i.onload = () => ok(i); i.onerror = no; i.src = src; });
+
+/* ---------- selos com dados reais (só números verdadeiros da aluna) ---------- */
+function selosReais(extra){
+  const s = streak(), n = (ME.treinos || []).length, sem = semanaAtualDias(), feitos = diasTreino(), nSem = sem.filter(d => feitos.has(d)).length, meta = (ME.perfil && ME.perfil.dias) || 3, L = [];
+  if(extra && extra.treino) L.push(["🔥", "Treino concluído", `${extra.treino.nome} · ${extra.treino.min} min`]);
+  if(s >= 2) L.push(["🔥", `${s} dias de sequência`, "Constância on"]);
+  if(n >= 1) L.push(["💪", `${n} ${n === 1 ? "treino" : "treinos"}`, "no CK Life"]);
+  if(nSem >= 2) L.push(["📅", `${nSem} treinos essa semana`, nSem >= meta ? "Meta da semana concluída" : `Meta: ${meta}`]);
+  return L;
+}
+function seloCanvas([emo, tit, sub]){
+  const S = 640, c = document.createElement("canvas"); c.width = S; c.height = 300; const x = c.getContext("2d");
+  x.shadowColor = "rgba(0,0,0,.22)"; x.shadowBlur = 18; x.shadowOffsetY = 4;
+  x.fillStyle = "#fff"; x.beginPath(); x.roundRect ? x.roundRect(14, 14, S - 28, 272, 46) : x.rect(14, 14, S - 28, 272); x.fill(); x.shadowBlur = 0; x.shadowOffsetY = 0;
+  const g = x.createLinearGradient(0, 0, S, 300); g.addColorStop(0, "#0E3D32"); g.addColorStop(1, "#2E7D5A"); x.fillStyle = g;
+  x.beginPath(); x.roundRect ? x.roundRect(26, 26, S - 52, 248, 38) : x.rect(26, 26, S - 52, 248); x.fill();
+  x.textAlign = "center"; x.font = "64px system-ui"; x.fillText(emo, S / 2, 100);
+  x.fillStyle = "#fff"; x.font = "800 50px 'Bricolage Grotesque',system-ui"; x.fillText(tit, S / 2, 172, S - 90);
+  x.fillStyle = "#B9DDB2"; x.font = "600 30px Figtree,system-ui"; x.fillText(sub, S / 2, 222, S - 90);
+  return c.toDataURL("image/png");
+}
+
+/* ===================== EDITOR DE STORY ===================== */
+async function editorStory(base, opt){
+  opt = opt || {};
+  let box = $("st-ed"); if(!box){ box = document.createElement("div"); box.id = "st-ed"; box.className = "st-ed priv"; document.body.appendChild(box); }
+  const fundoU = base ? URL.createObjectURL(base) : null;
+  const camadas = []; let sel = null;
+  box.innerHTML = `<div class="st-top"><button class="iconbtn" id="se-x" aria-label="Cancelar">${ic("close", 20)}</button><span class="st-acoes" id="se-acoes" hidden><button class="iconbtn" id="se-frente" aria-label="Trazer para frente">${ic("plus", 18)}</button><button class="iconbtn" id="se-dup" aria-label="Duplicar">⧉</button><button class="iconbtn st-lixo" id="se-del" aria-label="Excluir">${ic("trash", 18)}</button></span></div>
+    <div class="st-palco" id="se-p">${fundoU ? `<img class="st-fundo" src="${fundoU}" alt="" draggable="false">` : `<div class="st-fundo st-grad"></div>`}<div class="st-camadas" id="se-c"></div><span class="st-ass">CK <b>Life</b></span></div>
+    <div class="st-barra"><button id="se-fig"><i>✨</i><small>Figurinhas</small></button><button id="se-txt"><i>Aa</i><small>Texto</small></button>${selosReais(opt.dados).length ? `<button id="se-dad"><i>🔥</i><small>Meus dados</small></button>` : ""}<button id="se-pub" class="st-pub"><b>Publicar</b></button></div>`;
+  box.hidden = false; document.body.style.overflow = "hidden";
+  const palco = $("se-p"), cam = $("se-c");
+  const fecha = () => { box.hidden = true; box.innerHTML = ""; document.body.style.overflow = ""; if(fundoU) URL.revokeObjectURL(fundoU); };
+  const aplica = l => { l.el.style.transform = `translate(-50%,-50%) translate(${l.x * palco.clientWidth}px,${l.y * palco.clientHeight}px) rotate(${l.r}rad) scale(${l.s})`; };
+  const seleciona = l => { sel = l; camadas.forEach(k => k.el.classList.toggle("sel", k === l)); $("se-acoes").hidden = !l; };
+  const adiciona = (tipo, conteudo, extra) => {
+    const el = document.createElement("div"); el.className = "st-cam st-" + tipo;
+    if(tipo === "fig") el.innerHTML = `<img src="${esc(conteudo)}" alt="" draggable="false">`; else { el.textContent = conteudo; el.style.background = extra.cor; }
+    cam.appendChild(el);
+    const l = { tipo, conteudo, el, x: .5 + (Math.random() - .5) * .12, y: .42 + (Math.random() - .5) * .12, s: 1, r: (Math.random() - .5) * .18, cor: extra && extra.cor, fig: extra && extra.fig };
+    camadas.push(l); aplica(l); seleciona(l); gestos(l); vibra(8); return l;
+  };
+  function gestos(l){
+    const P = new Map(); let ini = null;
+    const estado = () => { const v = [...P.values()]; if(v.length === 1) return { cx: v[0].x, cy: v[0].y, d: 0, a: 0 }; const [a, b] = v; return { cx: (a.x + b.x) / 2, cy: (a.y + b.y) / 2, d: Math.hypot(b.x - a.x, b.y - a.y), a: Math.atan2(b.y - a.y, b.x - a.x) }; };
+    const reinicia = () => { ini = { e: estado(), x: l.x, y: l.y, s: l.s, r: l.r }; };
+    l.el.addEventListener("pointerdown", e => { e.stopPropagation(); l.el.setPointerCapture(e.pointerId); P.set(e.pointerId, { x: e.clientX, y: e.clientY }); seleciona(l); reinicia(); });
+    l.el.addEventListener("pointermove", e => { if(!P.has(e.pointerId)) return; P.set(e.pointerId, { x: e.clientX, y: e.clientY }); const e2 = estado(), W = palco.clientWidth, H = palco.clientHeight;
+      l.x = Math.min(1.1, Math.max(-.1, ini.x + (e2.cx - ini.e.cx) / W)); l.y = Math.min(1.1, Math.max(-.1, ini.y + (e2.cy - ini.e.cy) / H));
+      if(P.size >= 2 && ini.e.d){ l.s = Math.min(5, Math.max(.25, ini.s * e2.d / ini.e.d)); l.r = ini.r + (e2.a - ini.e.a); }
+      aplica(l); });
+    const solta = e => { P.delete(e.pointerId); if(P.size) reinicia(); };
+    l.el.addEventListener("pointerup", solta); l.el.addEventListener("pointercancel", solta);
+    l.el.addEventListener("wheel", e => { e.preventDefault(); l.s = Math.min(5, Math.max(.25, l.s * (e.deltaY < 0 ? 1.08 : .92))); aplica(l); }, { passive: false });
+  }
+  palco.addEventListener("pointerdown", e => { if(e.target === palco || e.target.classList.contains("st-fundo") || e.target === cam) seleciona(null); });
+  $("se-x").onclick = () => { if(camadas.length && !confirm("Descartar este Story?")) return; fecha(); };
+  $("se-del").onclick = () => { if(!sel) return; sel.el.remove(); camadas.splice(camadas.indexOf(sel), 1); seleciona(null); vibra(12); };
+  $("se-dup").onclick = () => { if(!sel) return; const l = adiciona(sel.tipo, sel.conteudo, { cor: sel.cor, fig: sel.fig }); Object.assign(l, { s: sel.s, r: sel.r, x: sel.x + .05, y: sel.y + .05 }); aplica(l); };
+  $("se-frente").onclick = () => { if(!sel) return; cam.appendChild(sel.el); camadas.push(camadas.splice(camadas.indexOf(sel), 1)[0]); };
+  $("se-fig").onclick = async () => { const f = await escolheFigurinha("story", opt.contexto || "story"); if(!f) return; const l = adiciona("fig", figUrl(f), { fig: f }); l.s = .9; aplica(l); };
+  const dd = $("se-dad"); if(dd) dd.onclick = () => { const L = selosReais(opt.dados);
+    menuLeve(L.map(s => ["star", `${s[0]} ${s[1]}`, () => { const l = adiciona("fig", seloCanvas(s), {}); l.s = 1.15; l.y = .8; aplica(l); }])); };
+  $("se-txt").onclick = () => {
+    const cores = CORES_ST; let cor = cores[0];
+    const t = document.createElement("div"); t.className = "st-txt-ed"; t.innerHTML = `<input class="input" maxlength="80" placeholder="Escreva aqui" id="se-ti"><div class="so-cores">${cores.map(c => `<button style="background:${c}" data-c="${c}" aria-label="Cor"></button>`).join("")}</div><button class="btn btn-accent" id="se-tok">Pronto</button>`;
+    box.appendChild(t); $("se-ti").focus();
+    t.querySelectorAll("[data-c]").forEach(b => b.onclick = () => { cor = b.dataset.c; t.querySelectorAll("[data-c]").forEach(y => y.setAttribute("aria-pressed", y === b)); });
+    const ok = () => { const v = $("se-ti").value.trim(); t.remove(); if(v) adiciona("txt", v, { cor }); };
+    $("se-tok").onclick = ok; $("se-ti").onkeydown = e => { if(e.key === "Enter") ok(); };
+  };
+  if(opt.inicial) for(const f of opt.inicial){ const l = adiciona("fig", figUrl(f), { fig: f }); l.s = .8; l.y = .3; aplica(l); }
+  seleciona(null);
+  $("se-pub").onclick = async () => {
+    const bt = $("se-pub"); bt.disabled = true; bt.classList.add("carregando");
+    try{
+      const final = await renderStory(base, camadas, palco);
+      if(!SO.on()) throw Object.assign(new Error("Entre na comunidade para publicar Stories"), { nosso: true });
+      await garantePerfil(); const midia = await sobe("story", NU.uid, final, "jpg", "image/jpeg");
+      await q(SB().from("stories").insert({ user_id: NU.uid, midia, texto: null, cor: CORES_ST[0] }));
+      camadas.filter(l => l.fig && l.fig.id).forEach(l => figUsada(l.fig, "story"));
+      SOM.done ? SOM.done() : SOM.check(); vibra([30, 40, 30]); fecha(); carregaStories();
+      posPublicar(final);
+    }catch(e){ console.warn(e); toast(e.nosso ? e.message : ERR_MSG(e)); bt.disabled = false; bt.classList.remove("carregando"); }
+  };
+}
+async function renderStory(base, camadas, palco){
+  const W = 1080, H = 1920, c = document.createElement("canvas"); c.width = W; c.height = H; const x = c.getContext("2d");
+  if(base){ const im = await figCarrega(URL.createObjectURL(base)); const k = Math.max(W / im.width, H / im.height); x.drawImage(im, (W - im.width * k) / 2, (H - im.height * k) / 2, im.width * k, im.height * k); }
+  else { const g = x.createLinearGradient(0, 0, W * .4, H); g.addColorStop(0, "#0B2A22"); g.addColorStop(.55, "#1F5C46"); g.addColorStop(1, "#6E9E6D"); x.fillStyle = g; x.fillRect(0, 0, W, H); }
+  const k = W / palco.clientWidth;
+  for(const l of camadas){
+    x.save(); x.translate(l.x * W, l.y * H); x.rotate(l.r); x.scale(l.s, l.s);
+    const r = l.el.getBoundingClientRect(), w0 = l.el.offsetWidth * k, h0 = l.el.offsetHeight * k; void r;
+    if(l.tipo === "fig"){ try{ const im = await figCarrega(l.conteudo); x.drawImage(im, -w0 / 2, -h0 / 2, w0, h0); }catch(e){} }
+    else { x.fillStyle = l.cor; x.beginPath(); x.roundRect ? x.roundRect(-w0 / 2, -h0 / 2, w0, h0, 18 * k) : x.rect(-w0 / 2, -h0 / 2, w0, h0); x.fill();
+      x.fillStyle = "#fff"; x.textAlign = "center"; x.textBaseline = "middle"; x.font = `800 ${Math.round(parseFloat(getComputedStyle(l.el).fontSize) * k)}px 'Bricolage Grotesque',system-ui`; x.fillText(l.conteudo, 0, 2 * k, w0 - 20 * k); }
+    x.restore();
+  }
+  // assinatura discreta
+  x.font = "800 34px 'Bricolage Grotesque',system-ui"; x.textAlign = "right"; x.shadowColor = "rgba(0,0,0,.35)"; x.shadowBlur = 8;
+  x.fillStyle = "rgba(255,255,255,.92)"; const w1 = x.measureText("Life").width; x.fillText("Life", W - 44, H - 60); x.fillStyle = "rgba(255,255,255,.92)"; x.fillText("CK ", W - 44 - w1, H - 60);
+  return new Promise(ok => c.toBlob(ok, "image/jpeg", .9));
+}
+function posPublicar(blob){
+  if(!$("play").hidden) fimPlay();   // saiu do treino concluído: fecha o treino e mostra o resultado
+  const u = URL.createObjectURL(blob);
+  sheet("Story publicado 💚", `<div class="xe-st-prev"><img src="${u}" alt="Seu Story"></div><p class="hint" style="text-align:center">Fica no ar por 24 horas no CK Life.</p>
+    ${navigator.share ? `<button class="btn btn-accent btn-block btn-lg" id="pp-sh">${ic("share", 18)} Compartilhar no Instagram, WhatsApp…</button>` : `<button class="btn btn-accent btn-block btn-lg" id="pp-dl">Salvar imagem</button>`}
+    <button class="btn btn-line btn-block" id="pp-ok">Concluir</button>`, () => URL.revokeObjectURL(u));
+  const sh = $("pp-sh"); if(sh) sh.onclick = async () => { const file = new File([blob], "ck-life-story.jpg", { type: "image/jpeg" });
+    try{ if(navigator.canShare && navigator.canShare({ files: [file] })) await navigator.share({ files: [file], text: "Create. Keep. Live. 💚 #CKLife" }); else await navigator.share({ text: "Create. Keep. Live. 💚 " + location.origin }); }catch(e){} };
+  const dl = $("pp-dl"); if(dl) dl.onclick = () => { const a = document.createElement("a"); a.href = u; a.download = "ck-life-story.jpg"; document.body.appendChild(a); a.click(); a.remove(); };
+  $("pp-ok").onclick = fecharSheet;
+}
+/* Story pelo botão "+" passa a abrir o editor (fotos); vídeo continua no fluxo de vídeo */
+const criarStoryE = criarStory;
+criarStory = async function(){
+  if(ME.bloqueado) return toast("Sua conta está bloqueada");
+  const f = await escolheArquivo("image/*,video/*"); if(!f) return;
+  if(/^video\//.test(f.type || "")) return storyVideo(f);
+  let b = await imagemValida(f, 1920); if(!b) return; b = await escolheFiltro(b); if(!b) return;
+  editorStory(b, { contexto: "story" });
+};
+void criarStoryE;
+/* ---------- depois do treino: compartilhar minha conquista ---------- */
+async function compartilharConquista(t){
+  const dados = { treino: t };
+  const inicial = async () => { const L = await figsPara("story"); return ["hoje-teve", "create-keep-live"].map(id => L.find(f => f.id === id)).filter(Boolean).slice(0, 1); };
+  menuLeve([["camera", "Tirar uma selfie", async () => { const f = await escolheArquivo("image/*", "user"); if(!f) return; let b = await imagemValida(f, 1920); if(!b) return; b = await escolheFiltro(b); if(b) editorStory(b, { contexto: "posTreino", dados, inicial: await inicial() }); }],
+    ["image", "Escolher uma foto", async () => { const f = await escolheArquivo("image/*"); if(!f) return; let b = await imagemValida(f, 1920); if(!b) return; b = await escolheFiltro(b); if(b) editorStory(b, { contexto: "posTreino", dados, inicial: await inicial() }); }],
+    ["star", "Sem foto (fundo CK Life)", async () => editorStory(null, { contexto: "posTreino", dados, inicial: await inicial() })]]);
+}
+setTimeout(() => { catalogo().catch(() => {}); }, 4000);
+
+
 /* ===================== PRIVACIDADE E MEUS DADOS (aluna) =====================
    Documentos, consentimentos, baixar meus dados, pedidos LGPD com protocolo e sair de todos os aparelhos.
    Tudo validado no banco (seguranca.sql). Se o banco ainda não tiver o módulo, os itens somem sem erro. */
@@ -5309,6 +5613,8 @@ const mdNoApp = () => { const app = $("v-app"); return !!(app && app.offsetParen
    "Meu dia" no Início (check-in, Meu Ritmo, sequência, contexto), momentos especiais com Story automático,
    desafios pessoais, Minha Jornada e coleção de conquistas. Tudo pessoal: nada de ranking de corpo, peso ou ciclo. */
 const XMARCOS = [3, 7, 15, 30, 50, 100];
+const FIM_TIT = ["Treino concluído.", "Hoje teve!", "Constância construída.", "Mais um check ✓"];
+const FIM_MSG = ["Você apareceu por você hoje.", "Mais um passo na sua evolução.", "Você está construindo sua melhor versão.", "Cada treino conta. Esse contou muito.", "Seu ritmo, sua evolução."];
 const XHUMOR = [["1", "😴", "Cansada"], ["2", "😌", "Tranquila"], ["3", "🙂", "Bem"], ["4", "🔥", "Animada"]];
 const XENERGIA = [["baixa", "Pouca energia"], ["ok", "Normal"], ["alta", "Muita energia"]];
 const HUM = { get(){ try{ return JSON.parse(localStorage.getItem("ck_hum_" + ME.id) || "{}"); }catch(e){ return {}; } }, set(v){ try{ localStorage.setItem("ck_hum_" + ME.id, JSON.stringify(v)); }catch(e){} } };   // fica só no aparelho
@@ -5428,14 +5734,20 @@ async function publicarMomento(emoji, titulo, sub){
 const celebrar0 = celebrar;
 celebrar = async function(c){ await celebrar0(c); vibra([40, 60, 120]);
   const sh = $("ce-share"); if(sh && SO.on()){ sh.insertAdjacentHTML("beforebegin", `<button class="btn btn-share btn-block" id="ce-story">${ic("plus", 18)} Adicionar aos Stories</button>`);
-    $("ce-story").onclick = () => { const bx = $("celebra"); if(bx){ bx.hidden = true; bx.innerHTML = ""; } publicarMomento(c[3], c[4], c[5]); }; }
+    $("ce-story").onclick = () => { const bx = $("celebra"); if(bx){ bx.hidden = true; bx.innerHTML = ""; } compartilharConquista((ME.treinos || []).slice(-1)[0] && (ME.treinos || []).slice(-1)[0].d === today() ? (ME.treinos || []).slice(-1)[0] : null); }; }
   const em = document.querySelector("#celebra .so-cel-in"); if(em && !em.querySelector(".xe-moment")) em.insertAdjacentHTML("afterbegin", `<span class="xe-moment">CK Moment</span>`);
 };
 const fimTreino0 = fimTreino;
 fimTreino = function(parcial){ fimTreino0.apply(this, arguments);
   const sh = $("fim-share"), t = (ME.treinos || []).slice(-1)[0];
-  if(sh && !parcial && SO.on() && t){ sh.insertAdjacentHTML("beforebegin", `<button class="btn btn-share btn-block" id="fim-story">${ic("plus", 18)} Adicionar aos Stories</button>`);
-    $("fim-story").onclick = () => { const ok = $("fim-ok"); if(ok) ok.click(); setTimeout(() => publicarMomento("🔥", "TREINO CONCLUÍDO", `${t.nome} · ${t.min} min`), 400); }; }
+  if(!parcial && t){
+    // momento CK Life: mensagem variada + Create · Keep · Live
+    const h = document.querySelector("#play .done-hero h2"), pp = h && h.nextElementSibling;
+    if(h) h.textContent = FIM_TIT[Math.floor(Math.random() * FIM_TIT.length)];
+    if(pp && pp.tagName === "P") pp.textContent = FIM_MSG[Math.floor(Math.random() * FIM_MSG.length)];
+    if(h) h.insertAdjacentHTML("beforebegin", `<div class="ckl-mom" aria-label="${MARCA.slogan}"><span>CREATE <i>✓</i></span><span>KEEP <i>✓</i></span><span>LIVE <i>♥</i></span></div>`);
+    const ok = $("fim-ok"); if(ok){ ok.insertAdjacentHTML("beforebegin", `<button class="btn btn-accent btn-lg btn-block" id="fim-conq">${ic("share", 18)} Compartilhar minha conquista</button>`); ok.classList.remove("btn-accent"); ok.classList.add("btn-share");
+      $("fim-conq").onclick = () => { if(!SO.on()) return toast("Entre na comunidade para publicar Stories"); compartilharConquista(t); }; } }
   verificaDesafio();
 };
 /* aniversário de jornada: uma vez por ano */
@@ -5494,12 +5806,6 @@ const EMO = [
   ["🌸", "🌸🌺🌻🌼🌷🌹🥀💐🌿🍀🍃🌱🌵🌴🌳🌲🍂🍁🌾🌊🌈☀️🌤️⛅🌥️🌦️🌧️⛈️🌩️❄️☃️⛄🌙🌛🌜🌚🌝🌞⭐🪐🌍🦋🐝🐞🐢🐶🐱🐰🦊🐻🐼🐨🐯🦁🐮🐷🐸🐵🐔🐧🐦🦄🐴🐬🐳🐠🦩🦚"],
   ["🏋️", "🏋️‍♀️🤸‍♀️🧘‍♀️🏃‍♀️🚴‍♀️🏊‍♀️⛹️‍♀️🥊🥋🎽👟👙👗👚👖🩱🩳🧢👜🎒🕶️💄💍🪞🧴🧼🪥🛁🛌⏰⏱️⌛📅📆📍🗺️🏠🏡🏢🏖️⛰️🚗✈️🎧🎵🎶📸📱💻📚✏️💡🧸🪴🕯️🎀🛍️💸💰🩺💊🩹🌡️"]
 ];
-const FIG = [
-  ["Treino", [["💪", "Treinei!", "#2E7D5A"], ["🍑", "Glúteo em construção", "#C2577B"], ["🫠", "Pós-treino: destruída", "#6C5FB5"], ["💅", "Tô morta, mas tô linda", "#C2577B"], ["🙃", "Agachamento? Nunca vi", "#D08A2E"], ["💧", "Água, mana!", "#2B7BB9"], ["✨", "Foco, força e fé", "#0E3D32"], ["🏃‍♀️", "Bora treinar?", "#2E7D5A"]]],
-  ["Humor", [["😅", "Hoje não, amanhã eu juro", "#D08A2E"], ["😴", "Só mais 5 minutinhos", "#6C5FB5"], ["🙈", "Cadê minha motivação?", "#C2577B"], ["🌪️", "Modo TPM: ativado", "#8E3B5C"], ["🍫", "Chocolate é self-care", "#7A4A2A"], ["😩", "Dia de cabelo ruim", "#6C5FB5"], ["😭", "Hoje eu choro", "#2B7BB9"], ["😌", "Plena", "#2E7D5A"], ["☕", "Café primeiro", "#7A4A2A"], ["😬", "Ansiosa", "#D08A2E"]]],
-  ["Amigas", [["💚", "Bora juntas?", "#2E7D5A"], ["🥹", "Orgulho de você!", "#C2577B"], ["👏", "Arrasou, amiga!", "#D08A2E"], ["🥰", "Saudade de você!", "#C2577B"], ["🙏", "Muito obrigada!", "#0E3D32"], ["🤣", "Kkkkkkk", "#D08A2E"], ["🫶", "Tamo junto", "#6C5FB5"], ["🌙", "Boa noite!", "#17211D"]]]
-];
-const FIGC = new Map();
 function rotulo(x, txt, cx, y, cor, maxW){
   x.font = "800 66px 'Bricolage Grotesque','Avenir Next',system-ui,sans-serif"; x.textAlign = "center"; x.textBaseline = "middle";
   const pal = txt.split(" "), L = []; let l = ""; pal.forEach(p => { const t = l ? l + " " + p : p; if(x.measureText(t).width > maxW){ L.push(l); l = p; } else l = t; }); L.push(l);
@@ -5508,25 +5814,24 @@ function rotulo(x, txt, cx, y, cor, maxW){
   x.fillStyle = cor; x.beginPath(); x.roundRect ? x.roundRect(cx - w / 2, y0, w, h, 24) : x.rect(cx - w / 2, y0, w, h); x.fill();
   x.fillStyle = "#fff"; L.forEach((t, i) => x.fillText(t, cx, y0 + 13 + lh / 2 + i * lh));
 }
-async function figurinha(e, txt, cor){
-  const k = e + txt; if(FIGC.has(k)) return FIGC.get(k);
-  try{ await document.fonts.load("800 50px 'Bricolage Grotesque'"); }catch(er){}
-  const S = 512, c = document.createElement("canvas"); c.width = c.height = S; const x = c.getContext("2d");
-  x.textAlign = "center"; x.textBaseline = "middle"; x.font = `200px system-ui,"Apple Color Emoji","Segoe UI Emoji",sans-serif`;
-  x.shadowColor = "rgba(0,0,0,.18)"; x.shadowBlur = 18; x.fillText(e, S / 2, 150); x.shadowBlur = 0;
-  rotulo(x, txt, S / 2, 375, cor, 460);
-  const u = c.toDataURL("image/png"); FIGC.set(k, u); return u;
-}
 const MINHAS = { get(){ try{ return JSON.parse(localStorage.getItem("ck_fig_" + ME.id) || "[]"); }catch(e){ return []; } }, set(L){ try{ localStorage.setItem("ck_fig_" + ME.id, JSON.stringify(L.slice(0, 16))); }catch(e){ toast("Sem espaço para guardar mais figurinhas"); } } };
 const RECENTES = { get(){ try{ return JSON.parse(localStorage.getItem("ck_emo") || "[]"); }catch(e){ return []; } }, add(e){ const L = [e, ...RECENTES.get().filter(x => x !== e)].slice(0, 24); try{ localStorage.setItem("ck_emo", JSON.stringify(L)); }catch(er){} } };
 const dataBlob = u => fetch(u).then(r => r.blob());
 const separa = s => window.Intl && Intl.Segmenter ? [...new Intl.Segmenter("pt", { granularity: "grapheme" }).segment(s)].map(x => x.segment) : Array.from(s);
-let PAN = { aba: "emo", cat: 0 };
+let PAN = { aba: "emo", cat: 0, fcat: null };
 function ligaEmoji(c){
   const cin = document.querySelector("#cv-bar .so-cin"); if(!cin || $("cv-emo")) return;
   $("cv-foto").insertAdjacentHTML("afterend", `<button class="iconbtn" id="cv-emo" aria-label="Emojis e figurinhas"><span style="font-size:20px;line-height:1">😊</span></button>`);
-  $("cv-emo").onclick = () => { const p = $("fg-pan"); if(p){ p.remove(); return; } $("cv-bar").insertAdjacentHTML("afterbegin", `<div class="fg-pan" id="fg-pan"></div>`); desenhaPainel(c); };
+  $("cv-emo").onclick = e => { e.preventDefault(); const p = $("fg-pan"); if(p){ p.remove(); return; }
+    const t = $("cv-t"); if(t) t.blur();   // painel no lugar do teclado, nunca os dois juntos
+    $("cv-bar").insertAdjacentHTML("afterbegin", `<div class="fg-pan" id="fg-pan"></div>`); desenhaPainel(c); rolaFim(); };
+  const t = $("cv-t"); if(t && !t.dataset.tec){ t.dataset.tec = 1; t.addEventListener("focus", () => { const p = $("fg-pan"); if(p) p.remove(); setTimeout(rolaFim, 350); }); }
+  const m = $("cv-m"); if(m && !m.dataset.tec){ m.dataset.tec = 1; m.addEventListener("pointerdown", fechaTeclado); }
+  const h = document.querySelector("#sheet .xp-chathead"); if(h && !h.dataset.tec){ h.dataset.tec = 1; h.addEventListener("pointerdown", fechaTeclado); }
 }
+/* tocar ou arrastar na conversa esconde o teclado e o painel de emojis */
+function fechaTeclado(){ const t = $("cv-t"); if(t && document.activeElement === t) t.blur(); const p = $("fg-pan"); if(p) p.remove(); }
+function rolaFim(){ const m = $("cv-m"); if(m) requestAnimationFrame(() => { m.scrollTop = m.scrollHeight; }); }
 async function desenhaPainel(c){
   const p = $("fg-pan"); if(!p) return;
   const abas = `<div class="fg-abas"><button data-ab="emo" aria-pressed="${PAN.aba === "emo"}">😊 Emojis</button><button data-ab="fig" aria-pressed="${PAN.aba === "fig"}">✨ Figurinhas</button><button data-ab="minhas" aria-pressed="${PAN.aba === "minhas"}">📸 Minhas</button></div>`;
@@ -5534,18 +5839,22 @@ async function desenhaPainel(c){
   if(PAN.aba === "emo"){ const rec = RECENTES.get(), cats = [["🕘", rec.join("")], ...EMO];
     if(!rec.length && PAN.cat === 0) PAN.cat = 1;
     corpo = `<div class="fg-cats">${cats.map(([i], k) => `<button data-ct="${k}" aria-pressed="${PAN.cat === k}" ${k === 0 && !rec.length ? "hidden" : ""}>${i}</button>`).join("")}</div><div class="fg-emos">${separa(cats[PAN.cat][1]).map(e => `<button data-e="${e}">${e}</button>`).join("")}</div>`; }
-  else if(PAN.aba === "fig"){ corpo = `<div class="fg-figs">${(await Promise.all(FIG.map(async ([g, L]) => `<p class="fg-g">${g}</p>` + (await Promise.all(L.map(async ([e, t, cor], i) => `<button data-fg="${esc(g)}|${i}"><img src="${await figurinha(e, t, cor)}" alt="${esc(t)}"></button>`))).join("")))).join("")}</div>`; }
+  else if(PAN.aba === "fig"){ const L = await figsPara("chat"), abas2 = CTX.chat.abas.filter(a => ["recentes","favoritas"].includes(a) || filtraAba(L, a, "chat").length); if(!abas2.includes(PAN.fcat)) PAN.fcat = filtraAba(L, "recentes", "chat").length ? "recentes" : "reacoes";
+    const V = filtraAba(L, PAN.fcat, "chat"); corpo = `<div class="fg-cats fg-fcats">${abas2.map(a => `<button data-fc="${a}" aria-pressed="${PAN.fcat === a}">${a === "favoritas" ? "♥" : ""}${NOME_ABA[a]}</button>`).join("")}</div><div class="fg-figs">${V.map(f => `<button data-fg="${f.id}" class="${figFav().includes(f.id) ? "fav" : ""}"><img src="${esc(figMini(f))}" alt="${esc(f.nome)}" loading="lazy" draggable="false"></button>`).join("") || `<p class="hint" style="grid-column:1/-1">${PAN.fcat === "favoritas" ? "Segure uma figurinha para favoritar ♥" : "As figurinhas que você usar aparecem aqui."}</p>`}</div>`; PAN.figL = L; }
   else { const L = MINHAS.get(); corpo = `<div class="fg-figs"><button class="fg-nova" id="fg-nova">${ic("camera", 26)}<small>Criar com foto</small></button>${L.map((u, i) => `<button data-mi="${i}"><img src="${u}" alt="Minha figurinha"></button>`).join("")}</div>${L.length ? `<p class="hint" style="margin:6px 4px 0;font-size:12px">Segure uma figurinha para apagar.</p>` : ""}`; }
   if(!$("fg-pan")) return; p.innerHTML = abas + corpo;
   p.querySelectorAll("[data-ab]").forEach(b => b.onclick = () => { PAN.aba = b.dataset.ab; desenhaPainel(c); });
   p.querySelectorAll("[data-ct]").forEach(b => b.onclick = () => { PAN.cat = +b.dataset.ct; desenhaPainel(c); });
   p.querySelectorAll("[data-e]").forEach(b => b.onclick = () => { const t = $("cv-t"); const i = t.selectionStart ?? t.value.length; t.value = t.value.slice(0, i) + b.dataset.e + t.value.slice(t.selectionEnd ?? i); t.oninput && t.oninput(); RECENTES.add(b.dataset.e); vibra(6); });
-  p.querySelectorAll("[data-fg]").forEach(b => b.onclick = async () => { const [g, i] = b.dataset.fg.split("|"), f = FIG.find(x => x[0] === g)[1][+i]; b.classList.add("pop"); vibra(10); mandaFig(c, await figurinha(...f)); });
+  p.querySelectorAll("[data-fc]").forEach(b => b.onclick = () => { PAN.fcat = b.dataset.fc; desenhaPainel(c); });
+  p.querySelectorAll("[data-fg]").forEach(b => { const f = (PAN.figL || []).find(x => x.id === b.dataset.fg); let tm, longo = false;
+    b.onpointerdown = () => { longo = false; tm = setTimeout(() => { longo = true; b.classList.toggle("fav", figFavorita(f.id)); }, 520); }; b.onpointerup = b.onpointerleave = () => clearTimeout(tm); b.oncontextmenu = e => e.preventDefault();
+    b.onclick = () => { if(longo) return; b.classList.add("pop"); vibra(10); figUsada(f, "chat"); mandaFig(c, figUrl(f)); }; });
   p.querySelectorAll("[data-mi]").forEach(b => { b.onclick = () => { b.classList.add("pop"); vibra(10); mandaFig(c, MINHAS.get()[+b.dataset.mi]); };
     let tm; b.onpointerdown = () => { tm = setTimeout(() => { if(confirm("Apagar esta figurinha?")){ const L = MINHAS.get(); L.splice(+b.dataset.mi, 1); MINHAS.set(L); desenhaPainel(c); } }, 650); }; b.onpointerup = b.onpointerleave = () => clearTimeout(tm); });
   const nv = $("fg-nova"); if(nv) nv.onclick = () => criarFigurinha(c);
 }
-async function mandaFig(c, u){ const p = $("fg-pan"); if(p) p.remove(); enviaMsg(c, { tipo: "foto", blob: await dataBlob(u), mime: "image/png" }).catch(() => {}); }
+async function mandaFig(c, u){ const p = $("fg-pan"); if(p) p.remove(); const t = $("cv-t"); if(t) t.blur(); setTimeout(rolaFim, 60); const b = await dataBlob(u); enviaMsg(c, { tipo: "foto", blob: b, mime: /webp/.test(b.type) ? "image/webp" : "image/png" }).catch(() => {}); }
 async function criarFigurinha(c){
   const f = await escolheArquivo("image/*"); if(!f) return; let b = await imagemValida(f, 1200); if(!b) return;
   b = await escolheFiltro(b, "Escolha um filtro"); if(!b) return;
@@ -5802,6 +6111,68 @@ desenhaPainel = async function(c){ await desenhaPainelN.apply(this, arguments); 
 setTimeout(async () => { if(!NV_OK() || !ME.desafio || ME.desafio.fim) return;
   try{ const L = await q(SB().from("desafio_participantes").select("id").eq("user_id", NU.uid).is("fim", null).eq("saiu", false)); if(!L.length) desafioSync.entrar(ME.desafio.id, ME.desafio.ini); }catch(e){} }, 10000);
 
+
+/* ===================== NAVEGAÇÃO (voltar e gestos) =====================
+   - Botão voltar do celular/navegador fecha a janela aberta (não sai do app).
+   - Fora do Início, o voltar leva para o Início antes de sair.
+   - Arrastar da borda esquerda para a direita fecha a janela (como apps de iPhone). */
+const CAMADAS = [
+  ["#so-pop", () => { $("so-pop").hidden = true; }],
+  ["#celebra", () => { const b = $("ce-ok"); if(b) b.click(); else $("celebra").hidden = true; }],
+  ["#so-filtro", () => { const b = $("fl-x"); if(b) b.click(); else $("so-filtro").hidden = true; }],
+  ["#so-prev", () => { const b = document.querySelector("#so-prev .so-prev-top .iconbtn"); if(b) b.click(); else $("so-prev").hidden = true; }],
+  ["#so-foto", () => { const b = $("sf-x"); if(b) b.click(); else $("so-foto").hidden = true; }],
+  ["#story", () => fechaStory()],
+  ["#modal", () => { const b = document.querySelector("#mbox [data-close]"); if(b) b.click(); else $("modal").hidden = true; }],
+  ["#sheet", () => fecharSheet()],
+  ["#cook", () => fechaCozinha()],
+  ["#play", () => sairTreino()]
+];
+const visivel = sel => { const e = document.querySelector(sel); return e && !e.hidden && e.isConnected; };
+const topo = () => CAMADAS.find(([s]) => visivel(s));
+let NAV_M = false, NAV_T = false, NAV_IGN = 0, NAV_TM = null;
+function navSinc(){ clearTimeout(NAV_TM); NAV_TM = setTimeout(() => {
+  const ab = !!topo();
+  if(ab && !NAV_M){ history.pushState({ ckm: 1 }, ""); NAV_M = true; }
+  else if(!ab && NAV_M){ NAV_M = false; NAV_IGN++; history.back(); }
+}, 30); }
+new MutationObserver(ms => { if(ms.some(m => m.type === "childList" ? [...m.addedNodes].some(n => n.nodeType === 1 && /^(so-|celebra|story)/.test(n.id || "")) : true)) navSinc(); })
+  .observe(document.body, { attributes: true, attributeFilter: ["hidden"], subtree: true, childList: true });
+window.addEventListener("popstate", () => {
+  if(NAV_IGN > 0){ NAV_IGN--; return; }
+  if(NAV_M){ NAV_M = false; const t = topo(); if(t) t[1](); navSinc(); return; }
+  if(NAV_T){ NAV_T = false; if(typeof TAB !== "undefined" && TAB !== "inicio" && !$("v-app").hidden) tab("inicio"); }
+});
+const tabNav = tab;
+tab = function(t){ const r = tabNav.apply(this, arguments);
+  if(!$("v-app") || $("v-app").hidden) return r;
+  if(t !== "inicio" && !NAV_T && !NAV_M){ history.pushState({ ckt: 1 }, ""); NAV_T = true; }
+  else if(t === "inicio" && NAV_T && !NAV_M){ NAV_T = false; NAV_IGN++; history.back(); }
+  return r; };
+
+/* ---------- arrastar da borda esquerda para voltar ---------- */
+const ARRASTA = ["#sheet", "#so-prev", "#so-foto", "#so-filtro", "#cook"];
+let G = null;
+document.addEventListener("touchstart", e => {
+  const t = e.touches[0]; if(!t || e.touches.length > 1 || t.clientX > 26) return;
+  const c = topo(); if(!c || !ARRASTA.includes(c[0])) return;
+  const el = document.querySelector(c[0]); G = { el, x0: t.clientX, y0: t.clientY, t0: Date.now(), dx: 0, ativo: false, fecha: c[1] };
+}, { passive: true });
+document.addEventListener("touchmove", e => {
+  if(!G) return; const t = e.touches[0], dx = t.clientX - G.x0, dy = t.clientY - G.y0;
+  if(!G.ativo){ if(Math.abs(dy) > 14 && Math.abs(dy) > dx){ G = null; return; } if(dx > 10){ G.ativo = true; G.el.style.transition = "none"; G.el.classList.add("nav-arrasta"); } }
+  if(G.ativo){ G.dx = Math.max(0, dx); G.el.style.transform = `translateX(${G.dx}px)`; G.el.style.boxShadow = "-12px 0 30px rgba(0,0,0,.18)"; if(e.cancelable) e.preventDefault(); }
+}, { passive: false });
+document.addEventListener("touchend", () => {
+  if(!G) return; const g = G; G = null; if(!g.ativo) return;
+  const vel = g.dx / Math.max(1, Date.now() - g.t0), sai = g.dx > innerWidth * .33 || (g.dx > 60 && vel > .45);
+  g.el.style.transition = "transform .22s cubic-bezier(.2,.8,.2,1)";
+  if(sai){ g.el.style.transform = "translateX(100%)"; vibra(8);
+    setTimeout(() => { g.fecha(); g.el.style.transition = "none"; g.el.style.transform = ""; g.el.style.boxShadow = ""; g.el.classList.remove("nav-arrasta"); }, 210); }
+  else { g.el.style.transform = ""; setTimeout(() => { g.el.style.boxShadow = ""; g.el.classList.remove("nav-arrasta"); }, 230); }
+});
+document.addEventListener("touchcancel", () => { if(G && G.ativo){ G.el.style.transition = "transform .2s"; G.el.style.transform = ""; } G = null; });
+
 const TABS = [["inicio","Início"],["treinar","Treinos"],["dieta","Nutrição"],["juntas","Comunidade"],["explorar","Explorar"],["perfil","Perfil"],["evolucao","Evolução"]];
 const NAV = TABS.slice(0, 6), NAV_DE = { evolucao: "perfil" };
 let TAB = "inicio";
@@ -6000,7 +6371,7 @@ function rInicio(){
     <div class="dica-dia">${ic("leaf", 20)}<div><b>Dica do dia</b><p>${esc(doDia(DICAS_DIA))}</p></div></div>
     <div class="card"><div class="sec-title"><h3>Cupons de desconto</h3><span class="muted num">${L.length % (DB.config.treinosParaCupom || 8)}/${DB.config.treinosParaCupom || 8}</span></div>
       <p class="hint" style="margin:6px 0 10px">A cada ${DB.config.treinosParaCupom || 8} treinos você ganha um cupom numa loja parceira.</p><div class="prog"><i style="width:${100 * (L.length % (DB.config.treinosParaCupom || 8)) / (DB.config.treinosParaCupom || 8)}%"></i></div></div>
-    <p class="slogan">CK <b>Life</b> · Sua evolução, todos os dias.</p>`;
+    <p class="slogan"><b>${MARCA.slogan}</b><br>${MARCA.assinatura}</p>`;
   const go = $("h-go"); if(go) go.onclick = () => iniciaTreino(T);
   const ex = $("h-extra"); if(ex) ex.onclick = () => { TV = "rapidos"; tab("treinar"); };
   $("h-av").onclick = () => tab("perfil");
@@ -6330,7 +6701,7 @@ function fimTreino(parcial){
     ${novas.map(m => `<div class="nx" style="max-width:none">${`<span class="exn" style="background:radial-gradient(circle at 30% 30%,#FFE08A,#FFB23F);color:#3a2200;width:56px;height:56px;border-radius:50%">${ic(m.ic, 26)}</span>`}<span><b>Nova conquista: ${esc(m.nome)}</b><small>${esc(m.desc)}</small></span></div>`).join("")}
     ${ganhou ? `<div class="coupon" style="width:100%;border-color:#3DDC6E"><b>Você ganhou um cupom!</b><span>${ganhou.desconto}% na ${esc(ganhou.loja)}</span><span class="code">${ganhou.codigo}</span></div>` : ""}
     ${parcial ? "" : `<p style="color:#cfd6d2;margin:10px 0 0;font-weight:600">Como foi o treino?</p><div class="rate"><button data-r="-1">Fácil</button><button data-r="0" aria-pressed="true">Na medida</button><button data-r="1">Difícil</button></div>`}
-    <button class="btn btn-accent btn-lg btn-block" id="fim-ok" style="margin-top:8px">Ver minha evolução</button><button class="btn btn-share btn-block" id="fim-share">${ic("share", 18)} Compartilhar conquista</button><button class="btn btn-share btn-block" id="fim-post">${ic("juntas", 18)} Postar na comunidade</button><button class="btn btn-line btn-block" id="fim-out">Fazer outro treino</button>
+    <button class="btn btn-accent btn-lg btn-block" id="fim-ok" style="margin-top:8px">Ver minha evolução</button><button class="btn btn-share btn-block" id="fim-share">${ic("share", 18)} Enviar cartão (WhatsApp, Instagram)</button><button class="btn btn-share btn-block" id="fim-post">${ic("juntas", 18)} Postar na comunidade</button><button class="btn btn-line btn-block" id="fim-out">Fazer outro treino</button>
   </div></div>`;
   if(!parcial) confete($("play"));
   let rate = 0;
@@ -8464,6 +8835,69 @@ async function vGrupos(){
   $("gp-b").querySelectorAll("[data-gp]").forEach(b => b.onclick = () => form(L.find(g => g.id === b.dataset.gp)));
 }
 VIEWS.grupos = vGrupos;
+
+/* ---------- Figurinhas (catálogo único: Stories, chat, comentários, comunidade, reações) ---------- */
+AIC.figurinhas = '<path d="M14 3H6a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h8l7-7V6a3 3 0 0 0-3-3h-4z"/><path d="M14 21v-4a3 3 0 0 1 3-3h4"/><path d="M8.5 10.5h.01M13.5 10.5h.01M8.5 14c1.5 1.4 3.5 1.4 5 0"/>';
+SECOES.push(["figurinhas", "Figurinhas"]);
+GRUPOS.forEach(g => { if(g[0] === "Conteúdo" && !g[1].includes("figurinhas")) g[1].push("figurinhas"); });
+const FCATS_ADM = [["motivacao","Motivação"],["treino","Treino"],["conquistas","Conquistas"],["constancia","Constância"],["humor","Humor"],["reacoes","Reações"],["comunidade","Comunidade"],["autocuidado","Autocuidado"],["ciclo","Ciclo e bem-estar"],["ck","CK Life"]];
+const FLAGS = [["em_stories","Stories"],["em_chat","Chat"],["em_comentarios","Comentários"],["em_comunidade","Comunidade"],["em_reacoes","Reação rápida"]];
+let FGA = { q: "", cat: "", st: "" };
+async function vFigurinhas(){
+  $("adm-main").innerHTML = `<div class="head"><div><h1>Figurinhas</h1><p class="muted">Um catálogo só para Stories, chat, comentários e comunidade. Desativar aqui tira a figurinha de todos os lugares.</p></div><button class="btn btn-accent needs-edit" id="fa-novo">+ Nova figurinha</button></div>
+    <div class="toolbar"><input class="input" id="fa-q" placeholder="Buscar por nome ou tag" value="${esc(FGA.q)}" style="max-width:260px"><select class="input" id="fa-c" style="max-width:190px"><option value="">Todas as categorias</option>${FCATS_ADM.map(([k, n]) => `<option value="${k}" ${FGA.cat === k ? "selected" : ""}>${n}</option>`).join("")}</select><select class="input" id="fa-s" style="max-width:150px"><option value="">Todas</option><option value="on" ${FGA.st === "on" ? "selected" : ""}>Ativas</option><option value="off" ${FGA.st === "off" ? "selected" : ""}>Desativadas</option><option value="dest" ${FGA.st === "dest" ? "selected" : ""}>Em destaque</option></select></div>
+    <div id="fa-b"><div class="card">Carregando…</div></div>`;
+  if(!SB2()) return $("fa-b").innerHTML = `<div class="card">Funciona no app oficial, com o banco conectado.</div>`;
+  let L, uso = {};
+  try{ L = await sq(SB2().from("figurinhas_catalogo").select("*").order("ordem")); }catch(e){ return $("fa-b").innerHTML = semBanco(e).replace("seguranca.sql", "figurinhas.sql"); }
+  try{ (await sq(SB2().from("figurinha_uso").select("figurinha_id,n").gte("dia", addD(today(), -30)))).forEach(u => uso[u.figurinha_id] = (uso[u.figurinha_id] || 0) + u.n); }catch(e){}
+  if(!L.length) return $("fa-b").innerHTML = `<div class="card">Nenhuma figurinha no banco. Rode o <b>figurinhas.sql</b> no Supabase para importar as 100 figurinhas oficiais.</div>`;
+  const n = s => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  const V = L.filter(f => (!FGA.cat || f.categoria === FGA.cat) && (!FGA.st || (FGA.st === "on" ? f.ativa : FGA.st === "off" ? !f.ativa : f.destaque)) && (!FGA.q || n(f.nome + " " + (f.tags || []).join(" ")).includes(n(FGA.q))));
+  const top = Object.entries(uso).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([id, k]) => { const f = L.find(x => x.id === id); return f ? `<span class="fa-top"><img src="${esc(f.mini || f.arquivo)}" alt="">${int(k)}</span>` : ""; }).join("");
+  $("fa-b").innerHTML = `<div class="grid g4">${kpi("Figurinhas", int(L.length), `${int(L.filter(f => f.ativa).length)} ativas`, "figurinhas", 1)}${kpi("Em destaque", int(L.filter(f => f.destaque).length))}${kpi("Usos (30 dias)", int(Object.values(uso).reduce((a, b) => a + b, 0)))}<div class="kpi"><span>Mais usadas</span><div class="fa-tops">${top || "<small class='muted'>Sem dados ainda</small>"}</div></div></div>
+    <p class="muted" style="font-size:13px">${V.length} figurinha(s). Toque para editar.</p>
+    <div class="fa-grade">${V.map(f => `<button class="fa-it ${f.ativa ? "" : "off"}" data-fa="${esc(f.id)}"><img src="${esc(f.mini || f.arquivo)}" alt="" loading="lazy"><b>${esc(f.nome)}</b><small>${esc((FCATS_ADM.find(c => c[0] === f.categoria) || [, f.categoria])[1])}${f.destaque ? " · ★" : ""}${uso[f.id] ? " · " + int(uso[f.id]) + " usos" : ""}</small>${f.ativa ? "" : `<em>Desativada</em>`}</button>`).join("")}</div>`;
+  let tq; $("fa-q").oninput = e => { clearTimeout(tq); tq = setTimeout(() => { FGA.q = e.target.value; vFigurinhas(); }, 350); };
+  $("fa-c").onchange = e => { FGA.cat = e.target.value; vFigurinhas(); }; $("fa-s").onchange = e => { FGA.st = e.target.value; vFigurinhas(); };
+  $("fa-b").querySelectorAll("[data-fa]").forEach(b => b.onclick = () => formFig(L.find(f => f.id === b.dataset.fa), L));
+  const nv = $("fa-novo"); if(nv) nv.onclick = () => formFig(null, L);
+}
+function formFig(f, L){
+  const x = f || { categoria: "motivacao", tags: [], ativa: true, destaque: false, ordem: ((L || []).reduce((m, k) => Math.max(m, k.ordem || 0), 0) + 10), em_stories: true, em_chat: true, em_comentarios: true, em_comunidade: true, em_reacoes: false };
+  let arquivo = null;
+  modal(f ? "Editar figurinha" : "Nova figurinha", `<div class="fa-prev">${f ? `<img src="${esc(f.arquivo)}" alt="">` : `<span class="muted">PNG ou WEBP com fundo transparente</span>`}</div>
+    ${f ? "" : `<input type="file" accept="image/png,image/webp" id="ff-a" class="input">`}
+    <div class="formgrid"><div class="field"><label for="ff-n">Nome (a frase da figurinha)</label><input class="input" id="ff-n" value="${esc(x.nome || "")}" maxlength="80"></div>
+      <div class="field"><label for="ff-c">Categoria</label><select class="input" id="ff-c">${FCATS_ADM.map(([k, n]) => `<option value="${k}" ${x.categoria === k ? "selected" : ""}>${n}</option>`).join("")}</select></div>
+      <div class="field full"><label for="ff-t">Tags (separe por vírgula)</label><input class="input" id="ff-t" value="${esc((x.tags || []).join(", "))}" placeholder="pos-treino, apoio, chat"></div>
+      <div class="field"><label for="ff-o">Ordem</label><input class="input num" id="ff-o" value="${esc(x.ordem)}"></div>
+      <label class="field xf-chk"><input type="checkbox" id="ff-at" ${x.ativa ? "checked" : ""}> Ativa</label><label class="field xf-chk"><input type="checkbox" id="ff-de" ${x.destaque ? "checked" : ""}> Em destaque</label>
+      ${FLAGS.map(([k, n]) => `<label class="field xf-chk"><input type="checkbox" data-fl="${k}" ${x[k] ? "checked" : ""}> ${n}</label>`).join("")}</div>
+    <p class="muted" style="font-size:12.5px">Tag <b>pos-treino</b> aparece primeiro depois do treino; <b>apoio</b> nos comentários; <b>dado:sequencia:7</b> só aparece para quem tem 7+ dias de sequência (nunca mostra número falso).</p>
+    <button class="btn btn-accent needs-edit" id="ff-ok">Salvar</button>`);
+  const fa = $("ff-a"); if(fa) fa.onchange = async () => { const fl = fa.files[0]; if(!fl) return; if(!/png|webp/.test(fl.type)) return toast("Use PNG ou WEBP transparente");
+    arquivo = fl; $("mbox").querySelector(".fa-prev").innerHTML = `<img src="${URL.createObjectURL(fl)}" alt="">`; if(!val("ff-n")) $("ff-n").value = fl.name.replace(/\.\w+$/, "").replace(/[-_]+/g, " "); };
+  $("ff-ok").onclick = async () => {
+    const nome = val("ff-n"); if(!nome) return toast("Informe o nome");
+    const d = { nome, categoria: val("ff-c"), tags: val("ff-t").split(",").map(t => t.trim().toLowerCase()).filter(Boolean), ordem: +val("ff-o") || 1000, ativa: $("ff-at").checked, destaque: $("ff-de").checked };
+    $("mbox").querySelectorAll("[data-fl]").forEach(c => d[c.dataset.fl] = c.checked);
+    const bt = $("ff-ok"); bt.disabled = true;
+    try{
+      if(!f){ if(!arquivo) throw new Error("Escolha o arquivo da figurinha");
+        const id = nome.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 44) + "-" + Math.random().toString(36).slice(2, 5);
+        const reduz = (max, tipo) => new Promise(ok => { const im = new Image(); im.onload = () => { const k = Math.min(1, max / Math.max(im.width, im.height)), c = document.createElement("canvas"); c.width = Math.round(im.width * k); c.height = Math.round(im.height * k); c.getContext("2d").drawImage(im, 0, 0, c.width, c.height); c.toBlob(ok, tipo, .88); }; im.src = URL.createObjectURL(arquivo); });
+        const tipo = "image/webp", app = await reduz(512, tipo), mini = await reduz(168, tipo);
+        const sobeF = async (b, nomeArq) => { const path = `figurinhas/${nomeArq}`; const r = await SB2().storage.from("catalogo").upload(path, b, { contentType: b.type || tipo, upsert: true }); if(r.error) throw r.error; return SB2().storage.from("catalogo").getPublicUrl(path).data.publicUrl; };
+        d.id = id; d.arquivo = await sobeF(app, id + ".webp"); d.mini = await sobeF(mini, id + "-mini.webp");
+        await sq(SB2().from("figurinhas_catalogo").insert(d)); }
+      else await sq(SB2().from("figurinhas_catalogo").update(d).eq("id", f.id));
+      F.nuvem.sb.rpc("auditar", { p_acao: f ? "figurinha_alterada" : "figurinha_criada", p_recurso: "figurinhas", p_alvo: nome });
+      fechar(); toast("Figurinha salva"); vFigurinhas();
+    }catch(e){ bt.disabled = false; toast(e.message && /Escolha/.test(e.message) ? e.message : "Sem permissão ou arquivo não aceito"); }
+  };
+}
+VIEWS.figurinhas = vFigurinhas;
 
 window.ADMIN = { abrir };
 })();

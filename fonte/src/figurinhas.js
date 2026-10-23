@@ -10,12 +10,6 @@ const EMO = [
   ["🌸", "🌸🌺🌻🌼🌷🌹🥀💐🌿🍀🍃🌱🌵🌴🌳🌲🍂🍁🌾🌊🌈☀️🌤️⛅🌥️🌦️🌧️⛈️🌩️❄️☃️⛄🌙🌛🌜🌚🌝🌞⭐🪐🌍🦋🐝🐞🐢🐶🐱🐰🦊🐻🐼🐨🐯🦁🐮🐷🐸🐵🐔🐧🐦🦄🐴🐬🐳🐠🦩🦚"],
   ["🏋️", "🏋️‍♀️🤸‍♀️🧘‍♀️🏃‍♀️🚴‍♀️🏊‍♀️⛹️‍♀️🥊🥋🎽👟👙👗👚👖🩱🩳🧢👜🎒🕶️💄💍🪞🧴🧼🪥🛁🛌⏰⏱️⌛📅📆📍🗺️🏠🏡🏢🏖️⛰️🚗✈️🎧🎵🎶📸📱💻📚✏️💡🧸🪴🕯️🎀🛍️💸💰🩺💊🩹🌡️"]
 ];
-const FIG = [
-  ["Treino", [["💪", "Treinei!", "#2E7D5A"], ["🍑", "Glúteo em construção", "#C2577B"], ["🫠", "Pós-treino: destruída", "#6C5FB5"], ["💅", "Tô morta, mas tô linda", "#C2577B"], ["🙃", "Agachamento? Nunca vi", "#D08A2E"], ["💧", "Água, mana!", "#2B7BB9"], ["✨", "Foco, força e fé", "#0E3D32"], ["🏃‍♀️", "Bora treinar?", "#2E7D5A"]]],
-  ["Humor", [["😅", "Hoje não, amanhã eu juro", "#D08A2E"], ["😴", "Só mais 5 minutinhos", "#6C5FB5"], ["🙈", "Cadê minha motivação?", "#C2577B"], ["🌪️", "Modo TPM: ativado", "#8E3B5C"], ["🍫", "Chocolate é self-care", "#7A4A2A"], ["😩", "Dia de cabelo ruim", "#6C5FB5"], ["😭", "Hoje eu choro", "#2B7BB9"], ["😌", "Plena", "#2E7D5A"], ["☕", "Café primeiro", "#7A4A2A"], ["😬", "Ansiosa", "#D08A2E"]]],
-  ["Amigas", [["💚", "Bora juntas?", "#2E7D5A"], ["🥹", "Orgulho de você!", "#C2577B"], ["👏", "Arrasou, amiga!", "#D08A2E"], ["🥰", "Saudade de você!", "#C2577B"], ["🙏", "Muito obrigada!", "#0E3D32"], ["🤣", "Kkkkkkk", "#D08A2E"], ["🫶", "Tamo junto", "#6C5FB5"], ["🌙", "Boa noite!", "#17211D"]]]
-];
-const FIGC = new Map();
 function rotulo(x, txt, cx, y, cor, maxW){
   x.font = "800 66px 'Bricolage Grotesque','Avenir Next',system-ui,sans-serif"; x.textAlign = "center"; x.textBaseline = "middle";
   const pal = txt.split(" "), L = []; let l = ""; pal.forEach(p => { const t = l ? l + " " + p : p; if(x.measureText(t).width > maxW){ L.push(l); l = p; } else l = t; }); L.push(l);
@@ -24,25 +18,24 @@ function rotulo(x, txt, cx, y, cor, maxW){
   x.fillStyle = cor; x.beginPath(); x.roundRect ? x.roundRect(cx - w / 2, y0, w, h, 24) : x.rect(cx - w / 2, y0, w, h); x.fill();
   x.fillStyle = "#fff"; L.forEach((t, i) => x.fillText(t, cx, y0 + 13 + lh / 2 + i * lh));
 }
-async function figurinha(e, txt, cor){
-  const k = e + txt; if(FIGC.has(k)) return FIGC.get(k);
-  try{ await document.fonts.load("800 50px 'Bricolage Grotesque'"); }catch(er){}
-  const S = 512, c = document.createElement("canvas"); c.width = c.height = S; const x = c.getContext("2d");
-  x.textAlign = "center"; x.textBaseline = "middle"; x.font = `200px system-ui,"Apple Color Emoji","Segoe UI Emoji",sans-serif`;
-  x.shadowColor = "rgba(0,0,0,.18)"; x.shadowBlur = 18; x.fillText(e, S / 2, 150); x.shadowBlur = 0;
-  rotulo(x, txt, S / 2, 375, cor, 460);
-  const u = c.toDataURL("image/png"); FIGC.set(k, u); return u;
-}
 const MINHAS = { get(){ try{ return JSON.parse(localStorage.getItem("ck_fig_" + ME.id) || "[]"); }catch(e){ return []; } }, set(L){ try{ localStorage.setItem("ck_fig_" + ME.id, JSON.stringify(L.slice(0, 16))); }catch(e){ toast("Sem espaço para guardar mais figurinhas"); } } };
 const RECENTES = { get(){ try{ return JSON.parse(localStorage.getItem("ck_emo") || "[]"); }catch(e){ return []; } }, add(e){ const L = [e, ...RECENTES.get().filter(x => x !== e)].slice(0, 24); try{ localStorage.setItem("ck_emo", JSON.stringify(L)); }catch(er){} } };
 const dataBlob = u => fetch(u).then(r => r.blob());
 const separa = s => window.Intl && Intl.Segmenter ? [...new Intl.Segmenter("pt", { granularity: "grapheme" }).segment(s)].map(x => x.segment) : Array.from(s);
-let PAN = { aba: "emo", cat: 0 };
+let PAN = { aba: "emo", cat: 0, fcat: null };
 function ligaEmoji(c){
   const cin = document.querySelector("#cv-bar .so-cin"); if(!cin || $("cv-emo")) return;
   $("cv-foto").insertAdjacentHTML("afterend", `<button class="iconbtn" id="cv-emo" aria-label="Emojis e figurinhas"><span style="font-size:20px;line-height:1">😊</span></button>`);
-  $("cv-emo").onclick = () => { const p = $("fg-pan"); if(p){ p.remove(); return; } $("cv-bar").insertAdjacentHTML("afterbegin", `<div class="fg-pan" id="fg-pan"></div>`); desenhaPainel(c); };
+  $("cv-emo").onclick = e => { e.preventDefault(); const p = $("fg-pan"); if(p){ p.remove(); return; }
+    const t = $("cv-t"); if(t) t.blur();   // painel no lugar do teclado, nunca os dois juntos
+    $("cv-bar").insertAdjacentHTML("afterbegin", `<div class="fg-pan" id="fg-pan"></div>`); desenhaPainel(c); rolaFim(); };
+  const t = $("cv-t"); if(t && !t.dataset.tec){ t.dataset.tec = 1; t.addEventListener("focus", () => { const p = $("fg-pan"); if(p) p.remove(); setTimeout(rolaFim, 350); }); }
+  const m = $("cv-m"); if(m && !m.dataset.tec){ m.dataset.tec = 1; m.addEventListener("pointerdown", fechaTeclado); }
+  const h = document.querySelector("#sheet .xp-chathead"); if(h && !h.dataset.tec){ h.dataset.tec = 1; h.addEventListener("pointerdown", fechaTeclado); }
 }
+/* tocar ou arrastar na conversa esconde o teclado e o painel de emojis */
+function fechaTeclado(){ const t = $("cv-t"); if(t && document.activeElement === t) t.blur(); const p = $("fg-pan"); if(p) p.remove(); }
+function rolaFim(){ const m = $("cv-m"); if(m) requestAnimationFrame(() => { m.scrollTop = m.scrollHeight; }); }
 async function desenhaPainel(c){
   const p = $("fg-pan"); if(!p) return;
   const abas = `<div class="fg-abas"><button data-ab="emo" aria-pressed="${PAN.aba === "emo"}">😊 Emojis</button><button data-ab="fig" aria-pressed="${PAN.aba === "fig"}">✨ Figurinhas</button><button data-ab="minhas" aria-pressed="${PAN.aba === "minhas"}">📸 Minhas</button></div>`;
@@ -50,18 +43,22 @@ async function desenhaPainel(c){
   if(PAN.aba === "emo"){ const rec = RECENTES.get(), cats = [["🕘", rec.join("")], ...EMO];
     if(!rec.length && PAN.cat === 0) PAN.cat = 1;
     corpo = `<div class="fg-cats">${cats.map(([i], k) => `<button data-ct="${k}" aria-pressed="${PAN.cat === k}" ${k === 0 && !rec.length ? "hidden" : ""}>${i}</button>`).join("")}</div><div class="fg-emos">${separa(cats[PAN.cat][1]).map(e => `<button data-e="${e}">${e}</button>`).join("")}</div>`; }
-  else if(PAN.aba === "fig"){ corpo = `<div class="fg-figs">${(await Promise.all(FIG.map(async ([g, L]) => `<p class="fg-g">${g}</p>` + (await Promise.all(L.map(async ([e, t, cor], i) => `<button data-fg="${esc(g)}|${i}"><img src="${await figurinha(e, t, cor)}" alt="${esc(t)}"></button>`))).join("")))).join("")}</div>`; }
+  else if(PAN.aba === "fig"){ const L = await figsPara("chat"), abas2 = CTX.chat.abas.filter(a => ["recentes","favoritas"].includes(a) || filtraAba(L, a, "chat").length); if(!abas2.includes(PAN.fcat)) PAN.fcat = filtraAba(L, "recentes", "chat").length ? "recentes" : "reacoes";
+    const V = filtraAba(L, PAN.fcat, "chat"); corpo = `<div class="fg-cats fg-fcats">${abas2.map(a => `<button data-fc="${a}" aria-pressed="${PAN.fcat === a}">${a === "favoritas" ? "♥" : ""}${NOME_ABA[a]}</button>`).join("")}</div><div class="fg-figs">${V.map(f => `<button data-fg="${f.id}" class="${figFav().includes(f.id) ? "fav" : ""}"><img src="${esc(figMini(f))}" alt="${esc(f.nome)}" loading="lazy" draggable="false"></button>`).join("") || `<p class="hint" style="grid-column:1/-1">${PAN.fcat === "favoritas" ? "Segure uma figurinha para favoritar ♥" : "As figurinhas que você usar aparecem aqui."}</p>`}</div>`; PAN.figL = L; }
   else { const L = MINHAS.get(); corpo = `<div class="fg-figs"><button class="fg-nova" id="fg-nova">${ic("camera", 26)}<small>Criar com foto</small></button>${L.map((u, i) => `<button data-mi="${i}"><img src="${u}" alt="Minha figurinha"></button>`).join("")}</div>${L.length ? `<p class="hint" style="margin:6px 4px 0;font-size:12px">Segure uma figurinha para apagar.</p>` : ""}`; }
   if(!$("fg-pan")) return; p.innerHTML = abas + corpo;
   p.querySelectorAll("[data-ab]").forEach(b => b.onclick = () => { PAN.aba = b.dataset.ab; desenhaPainel(c); });
   p.querySelectorAll("[data-ct]").forEach(b => b.onclick = () => { PAN.cat = +b.dataset.ct; desenhaPainel(c); });
   p.querySelectorAll("[data-e]").forEach(b => b.onclick = () => { const t = $("cv-t"); const i = t.selectionStart ?? t.value.length; t.value = t.value.slice(0, i) + b.dataset.e + t.value.slice(t.selectionEnd ?? i); t.oninput && t.oninput(); RECENTES.add(b.dataset.e); vibra(6); });
-  p.querySelectorAll("[data-fg]").forEach(b => b.onclick = async () => { const [g, i] = b.dataset.fg.split("|"), f = FIG.find(x => x[0] === g)[1][+i]; b.classList.add("pop"); vibra(10); mandaFig(c, await figurinha(...f)); });
+  p.querySelectorAll("[data-fc]").forEach(b => b.onclick = () => { PAN.fcat = b.dataset.fc; desenhaPainel(c); });
+  p.querySelectorAll("[data-fg]").forEach(b => { const f = (PAN.figL || []).find(x => x.id === b.dataset.fg); let tm, longo = false;
+    b.onpointerdown = () => { longo = false; tm = setTimeout(() => { longo = true; b.classList.toggle("fav", figFavorita(f.id)); }, 520); }; b.onpointerup = b.onpointerleave = () => clearTimeout(tm); b.oncontextmenu = e => e.preventDefault();
+    b.onclick = () => { if(longo) return; b.classList.add("pop"); vibra(10); figUsada(f, "chat"); mandaFig(c, figUrl(f)); }; });
   p.querySelectorAll("[data-mi]").forEach(b => { b.onclick = () => { b.classList.add("pop"); vibra(10); mandaFig(c, MINHAS.get()[+b.dataset.mi]); };
     let tm; b.onpointerdown = () => { tm = setTimeout(() => { if(confirm("Apagar esta figurinha?")){ const L = MINHAS.get(); L.splice(+b.dataset.mi, 1); MINHAS.set(L); desenhaPainel(c); } }, 650); }; b.onpointerup = b.onpointerleave = () => clearTimeout(tm); });
   const nv = $("fg-nova"); if(nv) nv.onclick = () => criarFigurinha(c);
 }
-async function mandaFig(c, u){ const p = $("fg-pan"); if(p) p.remove(); enviaMsg(c, { tipo: "foto", blob: await dataBlob(u), mime: "image/png" }).catch(() => {}); }
+async function mandaFig(c, u){ const p = $("fg-pan"); if(p) p.remove(); const t = $("cv-t"); if(t) t.blur(); setTimeout(rolaFim, 60); const b = await dataBlob(u); enviaMsg(c, { tipo: "foto", blob: b, mime: /webp/.test(b.type) ? "image/webp" : "image/png" }).catch(() => {}); }
 async function criarFigurinha(c){
   const f = await escolheArquivo("image/*"); if(!f) return; let b = await imagemValida(f, 1200); if(!b) return;
   b = await escolheFiltro(b, "Escolha um filtro"); if(!b) return;

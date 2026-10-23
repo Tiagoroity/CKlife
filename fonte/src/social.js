@@ -37,6 +37,10 @@ async function urls(paths, segs = 600){
   return paths.map(p => (MID.get(p) || {}).u || "");
 }
 // se a URL temporária ainda vale, usa direto (sem piscar ao redesenhar)
+/* figurinha do catálogo por id (arquivo público; se foi desativada, mostra mesmo assim nos posts antigos) */
+const figImg = (id, cls) => { const f = (FCAT.L || []).find(x => x.id === id); return `<img class="${cls}" ${f ? `src="${esc(f.arquivo)}"` : `data-figid="${esc(id)}"`} alt="${esc(f ? f.nome : "Figurinha")}" loading="lazy" draggable="false">`; };
+document.addEventListener("DOMContentLoaded", () => {});
+new MutationObserver(() => { const L = document.querySelectorAll("img[data-figid]"); if(!L.length) return; catalogo().then(C => L.forEach(i => { const f = C.find(x => x.id === i.dataset.figid); if(f){ i.src = f.arquivo; i.removeAttribute("data-figid"); } })); }).observe(document.documentElement, { childList: true, subtree: true });
 const eVideo = p => /\.(mp4|webm|mov)$/i.test(p || "");
 const midiaPronta = path => { const m = MID.get(path); return m && m.t > Date.now() ? `src="${esc(m.u)}" data-m="${esc(path)}" data-mok="1"` : `data-m="${esc(path)}"`; };
 function ligaMidia(root, segs){
@@ -321,8 +325,8 @@ async function completaPosts(rows){
   if(ids.length){ [cu, co, sv] = await Promise.all([q(SB().from("curtidas").select("post_id,user_id").in("post_id", ids)), q(SB().from("comentarios").select("*").in("post_id", ids).order("criado", { ascending: true })), q(SB().from("salvos").select("post_id").eq("user_id", NU.uid).in("post_id", ids)).catch(() => [])]); }
   sv.forEach(s => SALVOS.add(s.post_id));
   await carregaPerfis([...rows.map(p => p.user_id), ...co.map(c => c.user_id)]);
-  return rows.map(p => ({ id: p.id, user: p.user_id, nome: p.nome, foto: p.foto, texto: p.texto, img: p.img, midia: p.midia, conquista: p.conquista, criado: p.criado, oculto: p.oculto, grupo: p.grupo_id || null,
-    curtidas: cu.filter(c => c.post_id === p.id).map(c => c.user_id), coments: co.filter(c => c.post_id === p.id).map(c => ({ id: c.id, user: c.user_id, nome: c.nome, foto: c.foto, texto: c.texto, criado: c.criado })) }));
+  return rows.map(p => ({ id: p.id, user: p.user_id, nome: p.nome, foto: p.foto, texto: p.texto, img: p.img, midia: p.midia, conquista: p.conquista, criado: p.criado, oculto: p.oculto, grupo: p.grupo_id || null, figurinha: p.figurinha || null,
+    curtidas: cu.filter(c => c.post_id === p.id).map(c => c.user_id), coments: co.filter(c => c.post_id === p.id).map(c => ({ id: c.id, user: c.user_id, nome: c.nome, foto: c.foto, texto: c.texto, figurinha: c.figurinha || null, criado: c.criado })) }));
 }
 async function feedBusca(ids){ if(!ids.length || !SO.on()) return []; const rows = await q(SB().from("posts").select("*").in("id", ids)); const L = await completaPosts(rows); return ids.map(i => L.find(p => p.id === i)).filter(Boolean); }
 async function feedPagina(){
@@ -341,7 +345,7 @@ function postHtml(p){
   return `<article class="post" data-id="${p.id}">
     <header>${avU(p.user, p.nome, p.foto)}<div class="pmeta"><b>${esc(nomeP(p.user, p.nome))}</b><small>${us ? "@" + esc(us) + " · " : ""}${tempoAtras(p.criado)}${p.oculto ? " · oculto pela moderação" : ""}${p.grupo && GRP.get(p.grupo) ? ` · <button class="so-gtag" data-grupo="${p.grupo}">${esc(GRP.get(p.grupo).emoji || "")} ${esc(GRP.get(p.grupo).nome)}</button>` : ""}</small></div><button class="iconbtn sm" data-mais aria-label="Opções">${ic("dots", 18)}</button></header>
     ${p.texto ? `<p class="ptx ${p.texto.length > 260 ? "so-trunc" : ""}">${rico(p.texto)}</p>${p.texto.length > 260 ? `<button class="link so-vermais" data-vermais>ver mais</button>` : ""}` : ""}${cq}
-    ${p.midia && eVideo(p.midia) ? `<div class="pimg pvid priv"><video data-m="${esc(p.midia)}" playsinline muted loop preload="metadata" controls controlslist="nodownload noplaybackrate" disablepictureinpicture></video></div>` : p.midia ? `<div class="pimg priv" data-abre><img ${midiaPronta(p.midia)} alt="" loading="lazy" draggable="false"><i class="pheart">${ic("heart", 70)}</i></div>` : p.img ? `<div class="pimg priv" data-abre><img src="${esc(p.img)}" alt="" loading="lazy" draggable="false"><i class="pheart">${ic("heart", 70)}</i></div>` : ""}
+    ${p.figurinha && !p.midia && !p.img ? `<div class="pfig">${figImg(p.figurinha, "pfig-img")}</div>` : ""}${p.midia && eVideo(p.midia) ? `<div class="pimg pvid priv"><video data-m="${esc(p.midia)}" playsinline muted loop preload="metadata" controls controlslist="nodownload noplaybackrate" disablepictureinpicture></video></div>` : p.midia ? `<div class="pimg priv" data-abre><img ${midiaPronta(p.midia)} alt="" loading="lazy" draggable="false"><i class="pheart">${ic("heart", 70)}</i></div>` : p.img ? `<div class="pimg priv" data-abre><img src="${esc(p.img)}" alt="" loading="lazy" draggable="false"><i class="pheart">${ic("heart", 70)}</i></div>` : ""}
     <div class="pacts"><button class="pl ${liked ? "on" : ""}" data-like aria-label="Curtir">${ic("heart", 22)}<span>${nl || ""}</span></button><button data-abre aria-label="Comentar">${ic("chat", 21)}<span>${nc || ""}</span></button>${SO.on() ? `<button data-share aria-label="Compartilhar">${ic("send", 20)}</button><button class="so-save ${salvo ? "on" : ""}" data-save aria-label="Salvar">${ic("bookmark", 20)}</button>` : ""}
       ${nl ? `<small class="pquem" data-quem role="button">${liked ? (nl === 1 ? "Você curtiu" : `Você e mais ${nl - 1}`) : `${nl} ${nl === 1 ? "curtida" : "curtidas"}`}</small>` : ""}</div>
     ${(p.coments || []).slice(-2).map(c => `<p class="pc"><b>${esc(nomeP(c.user, c.nome).split(" ")[0])}</b> ${rico(c.texto)}</p>`).join("")}
@@ -375,16 +379,20 @@ function ligaPost(el, p, detalhe){
   ligaMidia(el);
 }
 function abrePost(p, foca){
-  const lista = () => (p.coments || []).map(c => `<div class="cmt">${avU(c.user, c.nome, c.foto)}<div><p><b>${esc(nomeP(c.user, c.nome))}</b> ${rico(c.texto)}</p><small>${tempoAtras(c.criado)}${SO.on() && c.user !== ME.id && userP(c.user) ? ` · <button class="link cdel" data-resp="${esc(userP(c.user))}">Responder</button>` : ""}${c.user === ME.id ? ` · <button class="link cdel" data-cdel="${c.id}">Excluir</button>` : SO.on() ? ` · <button class="link cdel" data-cden="${c.id}">Denunciar</button>` : ""}</small></div></div>`).join("") || `<p class="hint" style="margin:0">Seja a primeira a comentar 💚</p>`;
+  const lista = () => (p.coments || []).map(c => `<div class="cmt">${avU(c.user, c.nome, c.foto)}<div><p><b>${esc(nomeP(c.user, c.nome))}</b> ${rico(c.texto)}</p>${c.figurinha ? figImg(c.figurinha, "cmt-fig") : ""}<small>${tempoAtras(c.criado)}${SO.on() && c.user !== ME.id && userP(c.user) ? ` · <button class="link cdel" data-resp="${esc(userP(c.user))}">Responder</button>` : ""}${c.user === ME.id ? ` · <button class="link cdel" data-cdel="${c.id}">Excluir</button>` : SO.on() ? ` · <button class="link cdel" data-cden="${c.id}">Denunciar</button>` : ""}</small></div></div>`).join("") || `<p class="hint" style="margin:0">Seja a primeira a comentar 💚</p>`;
   sheet("Publicação", `<div class="post post-full" data-id="${p.id}">${postHtml(p).replace(/^<article[^>]*>|<\/article>$/g, "")}</div><div class="cmts" id="cmts">${lista()}</div>
-    <div class="cbar"><input class="input" id="cm-txt" maxlength="500" placeholder="Escreva um comentário…" autocomplete="off"><button class="btn btn-accent" id="cm-env" aria-label="Enviar">${ic("send", 18)}</button></div>`, () => { if(TAB === "juntas") desenhaFeed(); });
+    <div class="cbar"><div class="cm-reac" id="cm-reac"></div><button class="iconbtn" id="cm-fig" aria-label="Figurinhas"><span style="font-size:20px">✨</span></button><input class="input" id="cm-txt" maxlength="500" placeholder="Escreva um comentário…" autocomplete="off"><button class="btn btn-accent" id="cm-env" aria-label="Enviar">${ic("send", 18)}</button></div>`, () => { if(TAB === "juntas") desenhaFeed(); });
   const el = $("sheet-body").querySelector(".post-full"); el.querySelectorAll(".pcin,.pver,.pc").forEach(x => x.remove()); ligaPost(el, p, true);
   const ligaDel = () => { $("cmts").querySelectorAll("[data-cdel]").forEach(b => b.onclick = () => { const c = p.coments.find(x => x.id === b.dataset.cdel); CM.apagaComent(p, c).then(() => { p.coments = p.coments.filter(x => x !== c); $("cmts").innerHTML = lista(); ligaDel(); }).catch(() => toast("Não deu para excluir agora")); });
     $("cmts").querySelectorAll("[data-cden]").forEach(b => b.onclick = () => denunciar("comentario", b.dataset.cden, () => abrePost(p)));
     $("cmts").querySelectorAll("[data-resp]").forEach(b => b.onclick = () => { const t = $("cm-txt"); t.value = `@${b.dataset.resp} `; t.focus(); t.setSelectionRange(t.value.length, t.value.length); }); };
   ligaDel();
-  const env = async () => { const t = $("cm-txt").value.trim(); if(!t) return; $("cm-env").disabled = true; try{ const c = await CM.comentar(p, t); p.coments = p.coments || []; if(!p.coments.some(x => x.id === c.id)) p.coments.push(c); $("cm-txt").value = ""; $("cmts").innerHTML = lista(); ligaDel(); SOM.check(); const sp = el.querySelector("[data-abre] span"); if(sp) sp.textContent = p.coments.length; const ul = $("cmts").lastElementChild; if(ul) ul.scrollIntoView({ behavior: "smooth", block: "nearest" }); }catch(e){ toast(ERR_MSG(e)); } $("cm-env").disabled = false; };
+  let figC = null;
+  const env = async () => { const t = $("cm-txt").value.trim(); if(!t && !figC) return; $("cm-env").disabled = true; try{ const fg = figC; figC = null; const c = await CM.comentar(p, t, fg && fg.id); if(fg) figUsada(fg, "comentario"); const fb = $("cm-fig"); if(fb) fb.innerHTML = `<span style="font-size:20px">✨</span>`; p.coments = p.coments || []; if(!p.coments.some(x => x.id === c.id)) p.coments.push(c); $("cm-txt").value = ""; $("cmts").innerHTML = lista(); ligaDel(); SOM.check(); const sp = el.querySelector("[data-abre] span"); if(sp) sp.textContent = p.coments.length; const ul = $("cmts").lastElementChild; if(ul) ul.scrollIntoView({ behavior: "smooth", block: "nearest" }); }catch(e){ toast(ERR_MSG(e)); } $("cm-env").disabled = false; };
   $("cm-env").onclick = env; $("cm-txt").onkeydown = e => { if(e.key === "Enter") env(); };
+  $("cm-fig").onclick = async () => { const f = await escolheFigurinha("comentario", "comentario"); if(!f) return; figC = f; const t = $("cm-txt").value.trim(); if(!t) env(); else { $("cm-fig").innerHTML = `<img src="${esc(figMini(f))}" alt="" style="width:30px;height:30px">`; toast("Figurinha junto com o texto. Toque em enviar."); } };
+  if(SO.on()) figsPara("reacao").then(L => { const r = $("cm-reac"); if(!r) return; const V = L.slice(0, 10); r.innerHTML = V.map(f => `<button data-rq="${f.id}" aria-label="${esc(f.nome)}"><img src="${esc(figMini(f))}" alt="" loading="lazy"></button>`).join("");
+    r.querySelectorAll("[data-rq]").forEach(b => b.onclick = () => { const f = V.find(x => x.id === b.dataset.rq); b.classList.add("pop"); vibra(8); figC = f; if(!$("cm-txt").value.trim()) env(); else toast("Figurinha junto com o texto. Toque em enviar."); }); });
   if(foca) setTimeout(() => $("cm-txt").focus(), 250);
 }
 function abreComposer(texto0, blob0, extra){
@@ -394,15 +402,20 @@ function abreComposer(texto0, blob0, extra){
     ${!texto0 && !cq ? `<div class="chips scroll so-temas">${[["💪","Treino de hoje","Treino de hoje concluído! "],["🥗","Receita","Fiz uma receita do app hoje: "],["✨","Motivação","Lembrete do dia: "],["👋","Me apresentar","Oi, meninas! Sou "],["🙋","Pergunta","Alguém tem dica de "]].map(([e, n, t]) => `<button class="chip" data-tema="${esc(t)}">${e} ${n}</button>`).join("")}</div>` : ""}
     <textarea class="input cmp-tx" id="cp-t" maxlength="1000" placeholder="O que você quer compartilhar hoje? 💚">${esc(texto0 || "")}</textarea><small class="so-cont" id="cp-n">0/1000</small>
     <div id="cp-prev" class="cp-prev"></div>
-    ${extra && extra.grupo ? `<p class="so-cp-grupo">${esc(extra.grupo.emoji || "")} Publicando em <b>${esc(extra.grupo.nome)}</b></p>` : ""}<div class="toolbar"><button class="btn btn-line" id="cp-foto">${ic("camera", 18)} Foto</button><button class="btn btn-line" id="cp-video">${ic("play", 18)} Vídeo</button><span class="hint">Compartilhe só o que você quiser. Seu peso, medidas e ciclo nunca são postados.</span></div>
+    ${extra && extra.grupo ? `<p class="so-cp-grupo">${esc(extra.grupo.emoji || "")} Publicando em <b>${esc(extra.grupo.nome)}</b></p>` : ""}<div class="toolbar"><button class="btn btn-line" id="cp-foto">${ic("camera", 18)} Foto</button><button class="btn btn-line" id="cp-video">${ic("play", 18)} Vídeo</button><button class="btn btn-line" id="cp-fig">✨ Figurinha</button><span class="hint">Compartilhe só o que você quiser. Seu peso, medidas e ciclo nunca são postados.</span></div>
     <button class="btn btn-accent btn-block btn-lg" id="cp-ok">Publicar</button>`);
   const cont = () => { const n = $("cp-t").value.length; $("cp-n").textContent = `${n}/1000`; }; $("cp-t").oninput = cont; cont();
   $("sheet-body").querySelectorAll("[data-tema]").forEach(b => b.onclick = () => { const t = $("cp-t"); t.value = b.dataset.tema + t.value; t.focus(); t.setSelectionRange(t.value.length, t.value.length); cont(); SOM.tap(); });
   const prev = async () => { if(prev.u){ URL.revokeObjectURL(prev.u); prev.u = null; } $("cp-prev").innerHTML = blob && /^video\//.test(blob.type || "") ? `<video src="${prev.u = URL.createObjectURL(blob)}" playsinline muted loop autoplay controls></video><button class="iconbtn sm" id="cp-x" aria-label="Tirar vídeo">${ic("close", 16)}</button>` : blob ? `<img src="${await blobParaURL(blob)}" alt=""><button class="iconbtn sm" id="cp-x" aria-label="Tirar foto">${ic("close", 16)}</button>` : ""; const x = $("cp-x"); if(x) x.onclick = () => { blob = null; prev(); }; };
   prev();
+  let figP = (extra && extra.figurinha) || null;
+  const mostraFig = () => { let e = $("cp-figp"); if(!e){ $("cp-prev").insertAdjacentHTML("afterend", `<div id="cp-figp" class="cp-figp"></div>`); e = $("cp-figp"); } e.innerHTML = figP ? `${figImg(figP.id || figP, "pfig-img")}<button class="iconbtn sm" id="cp-figx" aria-label="Tirar figurinha">${ic("close", 14)}</button>` : ""; const x = $("cp-figx"); if(x) x.onclick = () => { figP = null; mostraFig(); }; };
+  if(figP) mostraFig();
+  $("cp-fig").onclick = async () => { const f = await escolheFigurinha("comunidade", "comunidade"); if(f){ figP = f; mostraFig(); } };
+  extra = extra || {}; Object.defineProperty(extra, "figurinha", { get: () => figP, configurable: true, enumerable: true });
   const cv = $("cp-video"); if(cv) cv.onclick = async () => { const f = await escolheArquivo("video/*"); const v = await videoValido(f); if(v){ blob = v; prev(); } };
   $("cp-foto").onclick = async () => { const f = await escolheArquivo("image/*"); let b = await imagemValida(f, 1440); if(b) b = await escolheFiltro(b); if(b){ blob = b; prev(); } };
-  $("cp-ok").onclick = async () => { const t = $("cp-t").value.trim(); if(!t && !blob && !cq) return toast("Escreva algo ou escolha uma foto"); if(ME.bloqueado) return toast("Sua conta está bloqueada");
+  $("cp-ok").onclick = async () => { const t = $("cp-t").value.trim(); if(!t && !blob && !cq && !figP) return toast("Escreva algo, escolha uma foto ou uma figurinha"); if(ME.bloqueado) return toast("Sua conta está bloqueada");
     const b = $("cp-ok"); b.classList.add("carregando"); b.disabled = true;
     try{ await CM.publicar(t, blob, extra); SOM.done ? SOM.done() : SOM.check(); fecharSheet(); toast("Publicado no CK Life 💚"); window.scrollTo({ top: 0, behavior: "smooth" }); NOVO_POST = true; FD = { ...FD, cursor: null, fim: false }; if(TAB !== "juntas") tab("juntas"); else rJuntas(); }
     catch(e){ console.warn(e); toast(ERR_MSG(e)); b.classList.remove("carregando"); b.disabled = false; } };
@@ -414,7 +427,8 @@ CM.publicar = async (texto, blob, extra) => {
   await garantePerfil();
   const id = novoId(); let midia = null;
   if(blob){ const v = /^video\//.test(blob.type || ""); const ext = !v ? "jpg" : /quicktime/.test(blob.type) ? "mov" : /webm/.test(blob.type) ? "webm" : "mp4"; midia = await sobe("post", NU.uid, blob, ext, v ? (blob.type || "video/mp4") : "image/jpeg"); }
-  const r = await SB().from("posts").insert({ id, user_id: NU.uid, nome: EU.nome || ME.nome, foto: EU.foto_mini || await miniFoto(ME.foto), texto, midia, conquista: (extra && extra.conquista) || null, ...(extra && extra.grupo ? { grupo_id: extra.grupo.id } : {}) });
+  const r = await SB().from("posts").insert({ id, user_id: NU.uid, nome: EU.nome || ME.nome, foto: EU.foto_mini || await miniFoto(ME.foto), texto, midia, conquista: (extra && extra.conquista) || null, ...(extra && extra.grupo ? { grupo_id: extra.grupo.id } : {}), ...(extra && extra.figurinha ? { figurinha: extra.figurinha.id || extra.figurinha } : {}) });
+  if(extra && extra.figurinha && extra.figurinha.id) figUsada(extra.figurinha, "comunidade");
   if(r.error) throw r.error;
 };
 // o painel (moderação) também enxerga fotos privadas de posts via URL temporária
@@ -692,7 +706,7 @@ function desenhaMsgs(rolarFim){
   const perto = box.scrollHeight - box.scrollTop - box.clientHeight < 120;
   box.innerHTML = (CHAT.fim ? `<p class="xp-chat-aviso hint">${ic("shield", 13)} Conversa privada. Seja gentil e nunca envie senhas ou dados de cartão.</p>` : `<button class="link so-antigas" id="cv-ant">Ver mensagens anteriores</button>`) +
     (L.length ? L.map((m, i) => { const eu = m.autor === NU.uid, prox = L[i + 1], ultimaDela = !eu && (!prox || prox.autor !== m.autor), dia = i === 0 || L[i - 1].criado.slice(0, 10) !== m.criado.slice(0, 10);
-      return `${dia ? `<div class="so-dia">${new Date(m.criado).toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "short" })}</div>` : ""}<div class="xp-msgrow ${eu ? "eu" : ""}" data-mid="${m.id}">${!eu ? (ultimaDela ? avU(o) : `<span style="width:28px;flex:0 0 28px"></span>`) : ""}<div class="xp-msg ${eu ? "eu" : ""} ${m.tipo !== "texto" ? "midia" : ""}${m.tipo === "foto" && !m.texto && (m.fig || /\.png$/.test(m.midia || "")) ? " fig" : ""}">${msgCorpo(m)}<small>${new Date(m.criado).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}${eu ? " " + stIcone(m) : ""}</small></div><button class="so-mop" data-op="${m.id}" aria-label="Opções da mensagem">${ic("dots", 14)}</button></div>${eu && m === ultMinha ? `<div class="so-sttxt">${stTexto(m)}</div>` : ""}`; }).join("")
+      return `${dia ? `<div class="so-dia">${new Date(m.criado).toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "short" })}</div>` : ""}<div class="xp-msgrow ${eu ? "eu" : ""}" data-mid="${m.id}">${!eu ? (ultimaDela ? avU(o) : `<span style="width:28px;flex:0 0 28px"></span>`) : ""}<div class="xp-msg ${eu ? "eu" : ""} ${m.tipo !== "texto" ? "midia" : ""}${m.tipo === "foto" && !m.texto && (m.fig || /\.(png|webp)$/.test(m.midia || "")) ? " fig" : ""}">${msgCorpo(m)}<small>${new Date(m.criado).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}${eu ? " " + stIcone(m) : ""}</small></div><button class="so-mop" data-op="${m.id}" aria-label="Opções da mensagem">${ic("dots", 14)}</button></div>${eu && m === ultMinha ? `<div class="so-sttxt">${stTexto(m)}</div>` : ""}`; }).join("")
     : `<p class="empty">Comece a conversa com ${esc(nomeP(o).split(" ")[0])} 💚</p>`);
   ligaMidia(box, 600);
   const an = $("cv-ant"); if(an) an.onclick = () => carregaMsgs(L[0] && L[0].criado);
@@ -721,13 +735,13 @@ function fecharSheetSilencioso(){ const p = $("so-pop"); if(p) p.hidden = true; 
 function desenhaResp(){ const box = $("cv-resp"); if(!box) return; const r = CHAT && CHAT.resp; box.innerHTML = r ? `<div class="so-quote so-quote-in"><b>Respondendo ${r.autor === NU.uid ? "a você" : esc(nomeP(r.autor).split(" ")[0])}</b><span>${esc(r.tipo === "foto" ? "📷 Foto" : r.tipo === "audio" ? "🎤 Áudio" : (r.texto || "").slice(0, 80))}</span><button class="iconbtn sm" id="cv-rx" aria-label="Cancelar resposta">${ic("close", 13)}</button></div>` : ""; const x = $("cv-rx"); if(x) x.onclick = () => { CHAT.resp = null; desenhaResp(); }; }
 async function enviaMsg(c, d){
   if(ME.bloqueado) throw new Error("Sua conta está bloqueada");
-  const id = novoId(), base = { id, conversa_id: c.id, autor: NU.uid, tipo: d.tipo || "texto", texto: d.texto || null, criado: new Date().toISOString(), pend: true, previa: d.blob ? URL.createObjectURL(d.blob) : null, resposta_id: d.resposta_id || null, story_id: d.story_id || null, post_id: d.post_id || null, duracao: d.duracao || null, fig: d.mime === "image/png" };
+  const id = novoId(), base = { id, conversa_id: c.id, autor: NU.uid, tipo: d.tipo || "texto", texto: d.texto || null, criado: new Date().toISOString(), pend: true, previa: d.blob ? URL.createObjectURL(d.blob) : null, resposta_id: d.resposta_id || null, story_id: d.story_id || null, post_id: d.post_id || null, duracao: d.duracao || null, fig: /png|webp/.test(d.mime || "") };
   const aberto = CHAT && CHAT.c.id === c.id;
   if(aberto){ CHAT.msgs.push(base); desenhaMsgs(true); }
   try{
     let midia = null;
-    if(d.blob){ const ext = d.tipo === "audio" ? (/mp4|m4a|aac/.test(d.mime) ? "m4a" : /ogg/.test(d.mime) ? "ogg" : "webm") : d.mime === "image/png" ? "png" : "jpg";
-      const tipo = d.tipo === "audio" ? (ext === "m4a" ? "audio/mp4" : ext === "ogg" ? "audio/ogg" : "audio/webm") : ext === "png" ? "image/png" : "image/jpeg";
+    if(d.blob){ const ext = d.tipo === "audio" ? (/mp4|m4a|aac/.test(d.mime) ? "m4a" : /ogg/.test(d.mime) ? "ogg" : "webm") : d.mime === "image/png" ? "png" : d.mime === "image/webp" ? "webp" : "jpg";
+      const tipo = d.tipo === "audio" ? (ext === "m4a" ? "audio/mp4" : ext === "ogg" ? "audio/ogg" : "audio/webm") : ext === "png" ? "image/png" : ext === "webp" ? "image/webp" : "image/jpeg";
       midia = await sobe("chat", c.id, d.blob, ext, tipo); }
     const row = { id, conversa_id: c.id, autor: NU.uid, tipo: base.tipo, texto: base.texto, midia, duracao: base.duracao, resposta_id: base.resposta_id, story_id: base.story_id, post_id: base.post_id };
     const r = await q(SB().from("mensagens").insert(row).select());

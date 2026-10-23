@@ -591,3 +591,12 @@ Você vai continuar o desenvolvimento do CK Life, meu app de treino em casa para
 - App: src/novidades.js (grupos na Comunidade, vídeo em posts/Stories, avisos no celular em Perfil, contagem real dos desafios, figurinhas e humor sincronizados). Maquiagem virtual (batom/blush) em src/figurinhas.js com MediaPipe Face Landmarker carregado do jsDelivr na hora (a foto não sai do aparelho).
 - Correção da foto de perfil: seletor de arquivo agora fica no documento (iPhone perdia a foto); recorte prioriza o rosto; perfis de outras alunas atualizam a cada 3 min.
 - Admin: seção Grupos (Social e moderação).
+
+## IDENTIDADE CK LIFE + FIGURINHAS (23/10/2026)
+- Marca central: const MARCA em src/app.js (nome, slogan Create. Keep. Live., Crie. Mantenha. Viva., Sua vida. Seu ritmo. Sua evolução., caminhos das logos). NUNCA "CK Live".
+- Logo oficial: fotos-ck-life/CK_Life_Logo_Transparente_2048_v2.png e CK_Life_App_Icon_1024.png. Versões em img/marca (ck-logo, ck-logo-claro, ck-simbolo, ck-simbolo-claro, favicon-16/32/48, og-ck-life.jpg) geradas por ck-life/marca/gera_marca.py (sem redesenhar; versão clara = mesma forma em tons claros).
+- Figurinhas: 5 cartelas (Imagem do ChatGPT 23 de out 14_15_33..36) → 100 figurinhas individuais. Recorte: ck-life/figurinhas/recorta_cartelas.py; catálogo único: ck-life/figurinhas/gera_figurinhas.py (lista com frase, categoria, tags) → img/figurinhas/app (512 webp), mini (168 webp), catalogo.json, figurinhas.sql. Masters PNG em fonte/figurinhas-master.
+- Banco: figurinhas_catalogo (admin_pode('figurinhas')), figurinha_uso (só contagem por dia/lugar), comentarios.figurinha, posts.figurinha. Testes: testes_figurinhas.sql (185 OK total).
+- App: src/stickers.js (catálogo, seletor com Para você/Recentes/Favoritas/categorias/busca, favoritas e recentes em ME.figFav/ME.figRec, editor de Story com camadas: arrastar, pinça, girar, duplicar, frente, excluir, texto, selos com dados reais; publica e oferece compartilhamento nativo). Pós-treino: "Compartilhar minha conquista" → selfie/foto/sem foto → editor com figurinhas de pós-treino.
+- Chat, comentários (só figurinha ou texto+figurinha, reações rápidas) e publicações usam o mesmo catálogo. Admin: seção Figurinhas (Conteúdo).
+- Navegação: src/navegacao.js (voltar do celular fecha janelas; fora do Início volta ao Início; arrastar da borda esquerda fecha).
