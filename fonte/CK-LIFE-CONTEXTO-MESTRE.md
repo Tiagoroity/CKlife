@@ -554,3 +554,21 @@ Você vai continuar o desenvolvimento do CK Life, meu app de treino em casa para
 **Limitações (sem promessa falsa):** PWA no navegador não bloqueia nem detecta print/gravação de tela — não implementado; vídeo em Stories fica para depois; fotos antigas da comunidade seguem no bucket público `posts`; arquivos de Stories vencidos ficam inacessíveis pelo banco mas não são apagados automaticamente.
 
 **Próximos passos:** (1) Tiago roda as 5 partes; (2) testar no site real com duas contas; (3) migrar fotos antigas do bucket `posts` para o privado; (4) limpeza automática de mídia de Stories vencidos; (5) vídeo em Stories.
+
+## SEGURANÇA & PRIVACIDADE (23/10/2026)
+- Banco: `fonte/sql/seguranca.sql` (ou partes 1–5, rodar na ordem). Só adiciona; pode rodar mais de uma vez.
+  - seguranca_config (idade_minima 18, idade_validada, mfa_admin_obrigatorio, prazo_lgpd_dias 15, prazo_anpd_dias_uteis 3, encarregado, plataforma).
+  - auditoria só-inserção via auditar(); trigger impede editar/apagar. Mudanças de admins auditadas; nunca remove o último acesso total.
+  - alunas.situacao (ativa/suspensa/bloqueada/em_exclusao/excluida); idade mínima conferida no cadastro (autodeclaração).
+  - documentos versionados (publicado é imutável; publicar arquiva a anterior; novo_aceite pede aceite no app).
+  - consentimentos só-inserção + view consentimentos_atuais.
+  - solicitacoes LGPD (protocolo CK-AAAAMMDD-XXXXXX, prazo, histórico) + exportar_meus_dados() + executar_eliminacao() (apaga/anonimiza; falta apagar o login no Supabase manualmente).
+  - incidentes (INC-…, nunca apagados, avaliação de comunicação ANPD com prazo em dias úteis).
+  - retencao / inventario / ripd com "VALIDAÇÃO JURÍDICA NECESSÁRIA".
+  - denúncias com prioridade automática e acesso ao conteúdo registrado; limites contra abuso (posts, comentários, mensagens, curtidas, seguir).
+  - admin_pode() exige 2 etapas (aal2) quando mfa_admin_obrigatorio = true.
+- Testes: testes-banco/testes_seguranca.sql (papéis A, B, C, ADMIN, MODERADOR, SUPORTE, PRIVACIDADE). 142 OK, 0 falhas.
+- Painel: src/admin-seg.js → seção "Segurança & Privacidade" (18 sub-abas). Papéis prontos: Super Admin, Administrador, Operador, Moderador, Suporte, Privacidade/LGPD.
+- App: src/meus-dados.js → Perfil › Privacidade › "Privacidade e meus dados" (documentos, baixar meus dados, pedidos com protocolo, autorizações, sair de todos os aparelhos). Meu Ciclo registra consentimento.
+- Limites reais: PWA não bloqueia nem detecta print; lista de aparelhos e falhas de login só nos logs do Supabase; limpeza de arquivos órfãos precisa da chave de serviço.
+- Pendências jurídicas: idade mínima, prazos de retenção, bases legais, textos de Termos/Privacidade, decisão sobre comunicação de incidentes.
