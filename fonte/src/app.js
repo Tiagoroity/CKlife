@@ -15,7 +15,7 @@ const yt = q => "https://www.youtube.com/results?search_query=" + encodeURICompo
 const norm = s => String(s).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 const DIAS_CURTO = ["D","S","T","Q","Q","S","S"];
 let toastT;
-function toast(m){ const t = $("toast"); t.innerHTML = `<span class="tk">✓</span><span></span>`; t.lastChild.textContent = m; t.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("show"), 2600); }
+function toast(m){ const t = $("toast"), ruim = /^(não|erro|falh|sem permissão)/i.test(String(m || "")); t.classList.toggle("ruim", ruim); t.innerHTML = `<span class="tk">${ruim ? "!" : "✓"}</span><span></span>`; t.lastChild.textContent = m; t.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("show"), 2600); }
 function copyText(txt, ok){
   const done = () => toast(ok || "Copiado");
   const fb = () => { const a = document.createElement("textarea"); a.value = txt; a.setAttribute("readonly",""); a.style.position = "fixed"; a.style.opacity = "0"; document.body.appendChild(a); a.select(); try{ document.execCommand("copy"); done(); }catch(e){ toast("Não deu para copiar"); } a.remove(); };

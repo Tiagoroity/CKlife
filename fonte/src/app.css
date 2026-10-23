@@ -1882,3 +1882,5 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
 .nf-img{display:block;width:100%;aspect-ratio:2/1;object-fit:cover;border-radius:10px;margin-top:8px}
 @media (min-width:600px){.adx{max-width:520px;margin-inline:auto}}
 @media (min-width:1024px){.adm-top{overflow:hidden}.adm-tabs{min-height:0;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.15) transparent}.adm-user{background:#082820}}
+
+.toast.ruim .tk{background:#C8463C;color:#fff}

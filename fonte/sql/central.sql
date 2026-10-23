@@ -165,7 +165,7 @@ begin
   perform set_config('ck.sistema', '1', true);
   update notif_campanhas set status = 'enviando' where id = c.id;
   create temp table if not exists _alvo_tmp (uid uuid primary key) on commit drop;
-  delete from _alvo_tmp;
+  delete from _alvo_tmp where true;   -- o Supabase exige WHERE em todo DELETE
   insert into _alvo_tmp select distinct uid from _notif_alvos(c.publico);
   select count(*) into n_alvo from _alvo_tmp;
   -- aparece também na lista de notificações dentro do app
