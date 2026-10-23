@@ -1682,6 +1682,55 @@ ul.xp-lista:not(:has(svg)) li::before{content:"•";color:var(--accent);font-wei
 .fa-prev{display:grid;place-items:center;min-height:140px;background:repeating-conic-gradient(#eee 0 25%,#fff 0 50%) 0 0/20px 20px;border-radius:14px;margin-bottom:10px}.fa-prev img{max-height:180px}
 .cbar{grid-template-columns:auto minmax(0,1fr) auto!important;align-items:center}.cbar #cm-fig img{border-radius:8px}
 .cbar .cm-reac{grid-column:1/-1;margin:-4px 0 0}
+/* ===== Treino: explicação por voz ===== */
+.pexpl{position:absolute;inset:0;display:flex;flex-direction:column;background:#0B1310;color:#fff;overflow-y:auto}
+.pexpl .phd{position:sticky;top:0;z-index:2;background:linear-gradient(#0B1310,rgba(11,19,16,.85))}
+.pex-top{height:min(36vh,300px);flex:none;position:relative}.pex-top .stage{position:absolute;inset:0}
+.pex-c{padding:12px 18px calc(20px + env(safe-area-inset-bottom,0px));display:grid;gap:8px}
+.pex-c h2{font-size:30px;color:#fff;margin:0}.pex-c .eyebrow{color:#B9DDB2}.pex-c .psub{color:#cfd6d2}
+.ex-st{margin:4px 0 0;font-weight:800;font-size:15px;color:#B9DDB2;display:flex;align-items:center;gap:8px}.ex-st.falhou{color:#FFD08A;font-weight:600}.ex-st.ok{color:#3DDC6E}
+.ex-onda{display:inline-flex;gap:3px;align-items:flex-end;height:16px}.ex-onda b{width:4px;background:#3DDC6E;border-radius:2px;animation:eq .9s ease-in-out infinite}.ex-onda b:nth-child(2){animation-delay:.15s}.ex-onda b:nth-child(3){animation-delay:.3s}
+.ex-txt{background:rgba(255,255,255,.06);border-radius:16px;padding:12px 14px;font-size:14.5px;line-height:1.5;color:#E6EFE4}
+.ex-txt ol{margin:0 0 6px;padding-left:20px}.ex-txt p{margin:6px 0 0}.ex-seg{color:#FFD08A}
+.ex-bt{display:grid;grid-template-columns:1fr 1.4fr;gap:10px;margin-top:6px}.ex-bt .btn-line{color:#fff;border-color:rgba(255,255,255,.35);background:transparent}.ex-bt #pl-ja{grid-column:1/-1}
+.ex-pula{color:#8B9690;justify-self:center}
+.pcont{position:absolute;inset:0;display:grid;place-items:center;align-content:center;gap:10px;z-index:2;color:#fff;text-align:center}
+.pcont small{font-size:16px;font-weight:700;color:#E6EFE4}.pcont b{font-family:var(--display);font-size:120px;line-height:1;text-shadow:0 4px 30px rgba(0,0,0,.5)}
+.pulso{animation:pop .5s ease-out}
+/* ===== Free / Pro ===== */
+.pw{position:fixed;inset:0;z-index:140;background:rgba(5,12,9,.55);display:flex;align-items:flex-end;justify-content:center}.pw[hidden]{display:none}
+.pw-in{position:relative;width:100%;max-width:520px;max-height:92vh;overflow-y:auto;background:var(--bg);border-radius:26px 26px 0 0;padding:20px 18px calc(18px + env(safe-area-inset-bottom,0px));display:grid;gap:10px;animation:sobe .25s ease-out}
+.pw-x{position:absolute;top:12px;right:12px}.pw-in h2{font-size:26px;margin:0}.pw-sub{margin:0;color:var(--muted)}
+.pw-prev{display:grid;justify-items:center;gap:4px;padding:12px;border-radius:18px;background:var(--surface-2);text-align:center}.pw-prev img{max-width:160px;max-height:160px;object-fit:contain}
+.pw-tempo{margin:0;font-weight:800;color:var(--accent)}
+.pw-ben{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;font-size:13.5px;font-weight:600}.pw-ben i{font-style:normal;margin-right:6px}
+.pw-plans{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pw-plan{position:relative;display:grid;gap:3px;text-align:left;padding:16px 12px 12px;border-radius:18px;border:2px solid var(--line);background:var(--surface);font:inherit;color:var(--ink)}
+.pw-plan[aria-pressed=true]{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.pw-plan em{position:absolute;top:-10px;left:10px;font-style:normal;font-size:10.5px;font-weight:800;letter-spacing:.06em;background:var(--accent);color:#fff;padding:3px 8px;border-radius:99px}
+.pw-plan strong{font-family:var(--display);font-size:19px}.pw-plan s{color:var(--muted);font-size:12.5px}.pw-plan small{color:var(--muted);font-size:12px}
+.pw-nota{font-size:12px;margin:0}
+.pw-mini{display:grid;gap:2px;width:100%;margin-top:8px;padding:12px;border:1px solid rgba(255,255,255,.2);border-radius:16px;background:rgba(255,255,255,.06);color:#fff;font:inherit;text-align:center}.pw-mini small{color:#B9DDB2}
+.pl-bloco{display:grid;gap:8px}
+.pl-chip{justify-self:start;border:0;border-radius:999px;padding:8px 14px;background:linear-gradient(90deg,#0E3D32,#2E7D5A);color:#fff;font:inherit;font-size:13.5px;font-weight:800}
+.pl-oculto{display:none}
+.pl-oferta{display:grid;gap:3px;text-align:left;padding:14px 16px;border-radius:var(--r);border:0;background:linear-gradient(135deg,#0E3D32,#2E7D5A);color:#fff;font:inherit}
+.pl-oferta .eyebrow{color:#B9DDB2}.pl-oferta b{font-family:var(--display);font-size:18px}.pl-oferta small{color:#E6EFE4}.pl-oferta em{font-style:normal;font-weight:800;color:#FFD08A;font-size:13px}
+.pl-ultimo{padding:14px 16px;border-radius:var(--r);background:var(--accent-soft);display:grid;gap:6px}.pl-ultimo p{margin:0;font-size:13.5px}.pl-ultimo .btn{justify-self:start}
+.pl-card{padding:18px;border-radius:var(--r);background:var(--surface);box-shadow:var(--shadow-sm);display:grid;gap:6px}.pl-card.on{background:linear-gradient(150deg,#0E3D32,#2E7D5A);color:#fff}.pl-card.on .eyebrow{color:#B9DDB2}
+.pl-card h2{font-size:22px;margin:0}.pl-card p{margin:0;font-size:14px;opacity:.85}.pl-card .btn{justify-self:start;margin-top:6px}
+.pro-lock{position:relative}.pro-cr{position:absolute;top:6px;right:6px;z-index:2;font-size:14px;line-height:1;background:rgba(255,255,255,.92);border-radius:99px;padding:3px 5px;box-shadow:0 1px 4px rgba(0,0,0,.15)}
+.fg-it.pro-lock img,#fg-pan .pro-lock img,#cm-reac .pro-lock img{opacity:.55}
+.pro-tela{display:grid;justify-items:center;text-align:center;gap:6px;padding:26px 18px}.pro-tela span{font-size:40px}
+.pro-blur{filter:blur(6px);opacity:.6;pointer-events:none}.pro-graf{margin-top:8px}
+.sel-ver{font-style:normal;display:inline-grid;place-items:center;width:15px;height:15px;margin-left:4px;border-radius:50%;background:#1D9BF0;color:#fff;font-size:10px;font-weight:900;vertical-align:1px}
+.sel-pro{font-style:normal;margin-left:3px;font-size:12px}
+.ad-card{display:grid;gap:3px;padding:14px 16px;border-radius:var(--r);background:var(--surface);border:1px dashed var(--line);color:var(--ink);text-decoration:none;margin:10px 0}
+.ad-tag{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}.ad-card small{color:var(--muted)}.ad-card em{font-style:normal;font-weight:800;color:var(--accent)}
+.vf-cod{text-align:center}.vf-cod b{display:block;font-family:var(--display);font-size:40px;letter-spacing:.2em;margin-top:6px}
+.vf-grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}.vf-it{display:grid;gap:6px}
+.vf-foto{aspect-ratio:3/4;border-radius:14px;overflow:hidden;background:var(--surface-2);display:grid;place-items:center}.vf-foto img{width:100%;height:100%;object-fit:cover}
+.pexpl{overflow-x:hidden}.pex-top{overflow:hidden;width:100%}.pex-top img{max-width:100%}.pex-c{min-width:0;max-width:100%;box-sizing:border-box}.ex-txt{overflow-wrap:anywhere;min-width:0}.ex-bt{grid-template-columns:minmax(0,1fr) minmax(0,1.4fr)}
 </style>
 
 <!-- Entrar / criar conta -->
@@ -2015,13 +2064,13 @@ window.R4 = [
 window.EX = [
 ["agacho","Agachamento livre","Pernas","Peso do corpo ou barra","Pés na largura dos ombros, pontas levemente para fora.|Peito aberto e olhar à frente.|Desça levando o quadril para trás, como se fosse sentar.|Desça até as coxas ficarem paralelas ao chão.|Suba empurrando o chão com o calcanhar.","Joelhos caindo para dentro.|Tirar o calcanhar do chão.|Curvar a coluna na descida.","Puxe o ar na descida e solte na subida."],
 ["afundo","Afundo (passada)","Pernas","Halteres ou peso do corpo","Fique em pé com um pé à frente e outro atrás.|Desça até os dois joelhos formarem 90 graus.|O joelho de trás quase encosta no chão.|Suba empurrando com o pé da frente.","Joelho da frente passando muito da ponta do pé.|Tronco inclinado para frente.|Passo curto demais.","Puxe o ar na descida e solte na subida."],
-["leg45","Leg press 45°","Pernas","Máquina","Sente com as costas e o quadril bem apoiados.|Pés no meio da plataforma, na largura dos ombros.|Destrave e desça até os joelhos chegarem perto do peito.|Empurre sem travar os joelhos no final.","Tirar o quadril do banco.|Travar os joelhos esticados.|Descer pouco."],
+["leg45","Leg press 45°","Pernas","Máquina","Sente com as costas e o quadril bem apoiados.|Pés no meio da plataforma, na largura dos ombros.|Destrave e desça até os joelhos chegarem perto do peito.|Empurre sem travar os joelhos no final.","Tirar o quadril do banco.|Travar os joelhos esticados.|Descer pouco.","Solte o ar ao empurrar a plataforma e puxe o ar ao descer."],
 ["cadeiraext","Cadeira extensora","Pernas","Máquina","Ajuste o encosto para o joelho ficar alinhado ao eixo da máquina.|Apoio do rolo logo acima do tornozelo.|Estique as pernas por completo.|Volte devagar, em 2 a 3 segundos.","Dar tranco para subir o peso.|Tirar o quadril do banco.","Solte o ar ao estender e puxe ao voltar."],
 ["mesaflex","Mesa flexora","Posterior de coxa","Máquina","Deite de bruços com o joelho logo após a ponta do banco.|Rolo acima do calcanhar.|Dobre os joelhos trazendo o rolo em direção ao glúteo.|Volte devagar.","Levantar o quadril do banco.|Movimento curto.","Solte o ar ao flexionar."],
 ["stiff","Stiff com halteres","Posterior de coxa","Halteres ou barra","Pés na largura do quadril, joelhos levemente dobrados.|Leve o quadril para trás com a coluna reta.|Desça os pesos rente às pernas até sentir alongar atrás da coxa.|Suba contraindo o glúteo.","Arredondar as costas.|Dobrar muito os joelhos e virar agachamento.","Puxe o ar na descida e solte na subida."],
 ["elevpelv","Elevação pélvica","Glúteos","Banco e barra ou peso do corpo","Apoie a parte de cima das costas num banco.|Pés no chão, joelhos dobrados.|Suba o quadril até alinhar tronco e coxas.|Aperte o glúteo 1 segundo no topo e desça.","Arquear a lombar no topo.|Empurrar com a ponta dos pés.","Solte o ar ao subir."],
 ["panturrilha","Panturrilha em pé","Panturrilha","Degrau ou máquina","Apoie a ponta dos pés num degrau.|Desça o calcanhar o máximo possível.|Suba na ponta dos pés e segure 1 segundo.|Desça devagar.","Fazer rápido demais sem amplitude.|Dobrar os joelhos.","Respire de forma contínua."],
-["abdutora","Cadeira abdutora","Glúteos","Máquina","Sente com as costas apoiadas.|Apoios na parte de fora dos joelhos.|Abra as pernas até o máximo confortável.|Volte devagar sem bater o peso.","Usar impulso.|Voltar rápido."],
+["abdutora","Cadeira abdutora","Glúteos","Máquina","Sente com as costas apoiadas.|Apoios na parte de fora dos joelhos.|Abra as pernas até o máximo confortável.|Volte devagar sem bater o peso.","Usar impulso.|Voltar rápido.","Solte o ar ao abrir as pernas e puxe o ar ao voltar."],
 ["sumo","Agachamento sumô","Pernas","Halter ou kettlebell","Pés bem afastados, pontas viradas para fora.|Segure o peso entre as pernas.|Desça mantendo o tronco reto.|Suba apertando glúteos.","Joelhos para dentro.|Inclinar o tronco à frente.","Puxe o ar na descida e solte na subida."],
 ["bulgaro","Agachamento búlgaro","Pernas","Banco e halteres","Apoie o peito do pé de trás num banco.|Pé da frente bem à frente.|Desça até a coxa da frente ficar paralela ao chão.|Suba empurrando com o calcanhar da frente.","Pé da frente muito perto do banco.|Perder o equilíbrio por pressa.","Puxe o ar na descida e solte na subida."],
 ["supino","Supino reto","Peito","Barra ou halteres e banco","Deite com os olhos abaixo da barra.|Mãos um pouco mais abertas que os ombros.|Junte as escápulas e mantenha os pés firmes.|Desça a barra até a linha do peito.|Empurre de volta até estender os braços.","Quicar a barra no peito.|Tirar o quadril do banco.|Abrir demais os cotovelos.","Puxe o ar na descida e solte ao empurrar."],
@@ -2045,18 +2094,18 @@ window.EX = [
 ["prancha","Prancha","Abdômen","Peso do corpo","Apoie antebraços e pontas dos pés no chão.|Cotovelos abaixo dos ombros.|Corpo reto, glúteo e abdômen contraídos.|Segure pelo tempo indicado.","Quadril caído.|Quadril alto demais.|Prender a respiração.","Respire curto e contínuo."],
 ["abdsupra","Abdominal supra","Abdômen","Colchonete","Deite com joelhos dobrados e pés no chão.|Mãos atrás da cabeça sem puxar o pescoço.|Suba só até as escápulas saírem do chão.|Desça devagar.","Puxar a cabeça com as mãos.|Subir o tronco inteiro.","Solte o ar ao subir."],
 ["abdinfra","Abdominal infra","Abdômen","Colchonete","Deite com as mãos sob o quadril.|Pernas esticadas ou dobradas.|Eleve as pernas até 90 graus.|Desça sem encostar no chão.","Arquear a lombar.|Usar impulso.","Solte o ar ao subir as pernas."],
-["bicicleta","Abdominal bicicleta","Abdômen","Colchonete","Deite com as mãos atrás da cabeça.|Leve o cotovelo direito ao joelho esquerdo.|Troque o lado como se pedalasse.|Mantenha ritmo controlado.","Puxar o pescoço.|Fazer rápido sem girar o tronco."],
-["pranchalat","Prancha lateral","Abdômen","Peso do corpo","Deite de lado apoiado no antebraço.|Eleve o quadril alinhando o corpo.|Segure o tempo indicado e troque o lado.","Quadril caído."],
+["bicicleta","Abdominal bicicleta","Abdômen","Colchonete","Deite com as mãos atrás da cabeça.|Leve o cotovelo direito ao joelho esquerdo.|Troque o lado como se pedalasse.|Mantenha ritmo controlado.","Puxar o pescoço.|Fazer rápido sem girar o tronco.","Respire de forma contínua, soltando o ar a cada rotação do tronco."],
+["pranchalat","Prancha lateral","Abdômen","Peso do corpo","Deite de lado apoiado no antebraço.|Eleve o quadril alinhando o corpo.|Segure o tempo indicado e troque o lado.","Quadril caído.","Respire de forma contínua, sem prender o ar."],
 ["polichinelo","Polichinelo","Cardio","Peso do corpo","Em pé, braços ao lado do corpo.|Salte abrindo pernas e braços acima da cabeça.|Salte de volta à posição inicial.|Mantenha o ritmo.","Cair com os calcanhares.|Braços pela metade.","Respire de forma contínua."],
-["burpee","Burpee","Cardio","Peso do corpo","Agache e apoie as mãos no chão.|Jogue as pernas para trás em prancha.|Faça uma flexão (opcional).|Volte os pés e salte com os braços para cima.","Quadril caído na prancha.|Aterrissar com os joelhos travados."],
-["escalador","Escalador (mountain climber)","Cardio","Peso do corpo","Fique em posição de prancha alta.|Leve um joelho em direção ao peito.|Troque rapidamente as pernas.|Mantenha o quadril baixo.","Quadril alto.|Mãos fora da linha dos ombros."],
-["corrida","Corrida estacionária","Cardio","Peso do corpo","Corra no lugar elevando os joelhos.|Braços acompanhando o movimento.|Mantenha o abdômen firme.","Aterrissar com o calcanhar."],
-["pularcorda","Pular corda","Cardio","Corda","Segure a corda com os cotovelos perto do corpo.|Gire a corda com os punhos.|Salte baixo, na ponta dos pés.","Saltos altos demais.|Girar com os braços inteiros."],
-["agachsalto","Agachamento com salto","Cardio","Peso do corpo","Faça um agachamento.|Suba explosivo e salte.|Aterrisse suave já descendo para o próximo.","Aterrissar com joelhos para dentro."],
+["burpee","Burpee","Cardio","Peso do corpo","Agache e apoie as mãos no chão.|Jogue as pernas para trás em prancha.|Faça uma flexão (opcional).|Volte os pés e salte com os braços para cima.","Quadril caído na prancha.|Aterrissar com os joelhos travados.","Solte o ar ao subir e no salto; puxe o ar na descida."],
+["escalador","Escalador (mountain climber)","Cardio","Peso do corpo","Fique em posição de prancha alta.|Leve um joelho em direção ao peito.|Troque rapidamente as pernas.|Mantenha o quadril baixo.","Quadril alto.|Mãos fora da linha dos ombros.","Mantenha a respiração ritmada, sem prender o ar."],
+["corrida","Corrida estacionária","Cardio","Peso do corpo","Corra no lugar elevando os joelhos.|Braços acompanhando o movimento.|Mantenha o abdômen firme.","Aterrissar com o calcanhar.","Respire de forma ritmada, sem prender o ar."],
+["pularcorda","Pular corda","Cardio","Corda","Segure a corda com os cotovelos perto do corpo.|Gire a corda com os punhos.|Salte baixo, na ponta dos pés.","Saltos altos demais.|Girar com os braços inteiros.","Respire de forma ritmada e mantenha os ombros relaxados."],
+["agachsalto","Agachamento com salto","Cardio","Peso do corpo","Faça um agachamento.|Suba explosivo e salte.|Aterrisse suave já descendo para o próximo.","Aterrissar com joelhos para dentro.","Puxe o ar na descida e solte no salto."],
 ["levterra","Levantamento terra","Costas e pernas","Barra","Barra sobre o meio do pé.|Pegue a barra com o quadril para trás e coluna reta.|Suba empurrando o chão e estendendo quadril e joelhos juntos.|Desça a barra rente às pernas.","Arredondar a lombar.|Afastar a barra do corpo.","Puxe o ar antes de subir e segure o abdômen firme."],
-["goodmorning","Bom dia com bastão","Posterior de coxa","Bastão ou barra leve","Bastão apoiado atrás dos ombros.|Joelhos levemente dobrados.|Incline o tronco à frente levando o quadril para trás.|Volte contraindo glúteo.","Arredondar as costas."],
-["supermann","Super-homem","Lombar","Colchonete","Deite de bruços com braços esticados à frente.|Eleve braços e pernas ao mesmo tempo.|Segure 2 segundos e desça.","Forçar o pescoço para cima."],
-["along","Alongamento de posterior","Mobilidade","Colchonete","Sente com as pernas esticadas.|Incline o tronco à frente com a coluna longa.|Segure 30 segundos sem balançar.","Forçar com dor."]
+["goodmorning","Bom dia com bastão","Posterior de coxa","Bastão ou barra leve","Bastão apoiado atrás dos ombros.|Joelhos levemente dobrados.|Incline o tronco à frente levando o quadril para trás.|Volte contraindo glúteo.","Arredondar as costas.","Puxe o ar ao inclinar o tronco e solte ao voltar."],
+["supermann","Super-homem","Lombar","Colchonete","Deite de bruços com braços esticados à frente.|Eleve braços e pernas ao mesmo tempo.|Segure 2 segundos e desça.","Forçar o pescoço para cima.","Solte o ar ao elevar braços e pernas e puxe o ar ao descer."],
+["along","Alongamento de posterior","Mobilidade","Colchonete","Sente com as pernas esticadas.|Incline o tronco à frente com a coluna longa.|Segure 30 segundos sem balançar.","Forçar com dor.","Respire devagar e profundamente durante o alongamento."]
 ];
 // Planos: [id, nome, nível, objetivo, dias por semana, descrição, [ [nome do dia, [ [exId, séries, reps, descanso seg] ] ] ] ]
 window.PLANOS = [
@@ -2116,9 +2165,9 @@ window.EX.push(
 ["russo","Abdominal russo","Abdômen","Bola, garrafa de água ou só as mãos","Sente no tapete com os joelhos dobrados e os pés no chão.|Incline o tronco um pouco para trás, com a coluna reta.|Segure a bola (ou uma garrafa) na frente do peito.|Gire o tronco levando a bola para um lado e depois para o outro.|Para dificultar, tire os pés do chão.","Curvar as costas.|Mexer só os braços, sem girar o tronco.|Fazer rápido demais.","Solte o ar a cada giro."],
 ["hollow","Canoa (hollow)","Abdômen","Peso do corpo","Deite de barriga para cima.|Tire ombros e pernas do chão, braços esticados acima da cabeça.|Lombar colada no chão.|Segure pelo tempo indicado.","Lombar sai do chão.|Prender a respiração.","Respire curto e contínuo."],
 ["vup","Abdominal canivete","Abdômen","Peso do corpo","Deite com braços acima da cabeça e pernas esticadas.|Suba tronco e pernas ao mesmo tempo, tentando tocar os pés.|Desça devagar sem relaxar no chão.","Usar impulso.|Dobrar muito os joelhos.","Solte o ar ao subir."],
-["skater","Patinador","Cardio","Peso do corpo","Salte para o lado caindo sobre uma perna.|A outra perna cruza atrás.|Salte para o outro lado.|Mantenha o ritmo.","Cair com o joelho para dentro.|Saltos muito curtos."],
-["crianca","Postura da criança","Mobilidade","Colchonete","Ajoelhe e sente sobre os calcanhares.|Leve o tronco à frente com os braços esticados no chão.|Relaxe a testa no chão.|Respire fundo pelo tempo indicado.","Forçar com dor."],
-["alongquad","Alongamento de quadríceps","Mobilidade","Peso do corpo","Em pé, dobre um joelho e segure o pé atrás.|Joelhos juntos e quadril encaixado.|Segure e troque de perna.","Inclinar o tronco.|Afastar os joelhos."]
+["skater","Patinador","Cardio","Peso do corpo","Salte para o lado caindo sobre uma perna.|A outra perna cruza atrás.|Salte para o outro lado.|Mantenha o ritmo.","Cair com o joelho para dentro.|Saltos muito curtos.","Mantenha a respiração ritmada, soltando o ar a cada salto."],
+["crianca","Postura da criança","Mobilidade","Colchonete","Ajoelhe e sente sobre os calcanhares.|Leve o tronco à frente com os braços esticados no chão.|Relaxe a testa no chão.|Respire fundo pelo tempo indicado.","Forçar com dor.","Respire profundamente, deixando as costas se expandirem a cada inspiração."],
+["alongquad","Alongamento de quadríceps","Mobilidade","Peso do corpo","Em pé, dobre um joelho e segure o pé atrás.|Joelhos juntos e quadril encaixado.|Segure e troque de perna.","Inclinar o tronco.|Afastar os joelhos.","Respire devagar e profundamente, sem forçar o alongamento."]
 );
 
 /* Informações extras: equipamento, modo padrão e gasto (MET) */
@@ -2213,15 +2262,15 @@ N.sb = sb;
 const pad = n => String(n).padStart(2, "0");
 const hoje = () => { const d = new Date(); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; };
 const menosDias = n => { const d = new Date(); d.setDate(d.getDate() - n); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; };
-const LISTAS = ["cidades","segmentos","anunciantes","campanhas","parceiros","profissionais","avisos","receitasExtras","exercExtras","pagamentos","cupons","empresas","servicos","produtos","banners","categorias"];
-const UNICOS = ["config","freq","receitasOcultas"];
+const LISTAS = ["cidades","segmentos","anunciantes","campanhas","parceiros","profissionais","avisos","receitasExtras","exercExtras","pagamentos","cupons","empresas","servicos","produtos","banners","categorias","exercAjustes"];
+const UNICOS = ["config","freq","receitasOcultas","receitasPlano"];
 const COLS_USER = ["id","email","nome","whats","nasc","cidade","criado","ultimo","bloqueado","premium"];
 const FORA = new Set(["senha","admin","perms","adminDesde","exemplo","genero", ...COLS_USER]);
 const J = x => JSON.stringify(x === undefined ? null : x);
 async function q(p){ const r = await p; if(r.error) throw r.error; return r.data; }
 
 N.vazio = () => ({ versao: 1, nuvem: true, criado: hoje(), config: { nomeApp: "CK Life", checkout: C.KIWIFY_URL || "", suporte: C.SUPORTE || "", treinosParaCupom: 8, premiumPreco: 19.9 }, freq: { cliques: 25, minutos: 4, intervalo: 3, maxDia: 6 },
-  users: [], eventos: [], acessos: {}, cidades: [], segmentos: [], anunciantes: [], campanhas: [], pagamentos: [], profissionais: [], parceiros: [], cupons: [], avisos: [], receitasExtras: [], receitasOcultas: [], exercExtras: [], empresas: [], servicos: [], produtos: [], banners: [], categorias: [] });
+  users: [], eventos: [], acessos: {}, cidades: [], segmentos: [], anunciantes: [], campanhas: [], pagamentos: [], profissionais: [], parceiros: [], cupons: [], avisos: [], receitasExtras: [], receitasOcultas: [], exercExtras: [], empresas: [], servicos: [], produtos: [], banners: [], categorias: [], exercAjustes: [], receitasPlano: {} });
 
 /* linha da tabela <-> pessoa no app */
 function paraUser(r, adm){
@@ -3137,7 +3186,7 @@ const toRec = (r, i, extra) => ({ id: extra ? r.id : "r" + i, nome: r[0] ?? r.no
 const BASE_REC = [...window.R1, ...window.R2, ...window.R3, ...window.R4].map((r, i) => toRec(r, i));
 function receitas(){ const oc = new Set(DB.receitasOcultas || []); return [...BASE_REC, ...(DB.receitasExtras || []).map(r => toRec(r, 0, true))].filter(r => !oc.has(r.id)); }
 const toEx = e => Array.isArray(e) ? { id: e[0], nome: e[1], grupo: e[2], equip: e[3], passos: e[4].split("|"), erros: (e[5] || "").split("|").filter(Boolean), resp: e[6] || "Respire de forma contínua, sem prender o ar." } : e;
-function exercicios(){ return [...window.EX.map(toEx), ...(DB.exercExtras || [])]; }
+function exercicios(){ const aj = new Map((DB.exercAjustes || []).map(a => [a.id, a])); return [...window.EX.map(toEx), ...(DB.exercExtras || [])].map(e => aj.has(e.id) ? { ...e, ...aj.get(e.id) } : e); }
 const exById = id => exercicios().find(e => e.id === id) || { id, nome: id, grupo: "", equip: "", passos: [], erros: [], resp: "" };
 const META = window.EXMETA, PROGS = window.PROGRAMAS.filter(p => p.local === "casa"), EQN = window.EQ_NOMES;
 const emCasa = id => !!META[id];
@@ -3155,7 +3204,7 @@ function semente(){
     cidades: [ {id:1,nome:"Cuiabá",uf:"MT",ativa:true}, {id:2,nome:"Várzea Grande",uf:"MT",ativa:true}, {id:3,nome:"Rondonópolis",uf:"MT",ativa:true}, {id:4,nome:"Sinop",uf:"MT",ativa:true}, {id:5,nome:"Outra cidade",uf:"",ativa:true} ],
     segmentos: [ {id:1,nome:"Academia",ativo:true}, {id:2,nome:"Suplementos",ativo:true}, {id:3,nome:"Restaurante saudável",ativo:true}, {id:4,nome:"Moda fitness",ativo:true}, {id:5,nome:"Clínica e estética",ativo:true} ],
     anunciantes: [], campanhas: [], pagamentos: [], profissionais: [], parceiros: [], cupons: [], avisos: [],
-    receitasExtras: [], receitasOcultas: [], exercExtras: []
+    receitasExtras: [], receitasOcultas: [], exercExtras: [], exercAjustes: [], receitasPlano: {}
   };
   db.anunciantes = [
     { id:"an1", nome:"Academia Força Total", seg:1, cidade:1, plano:"exclusivo", valor:450, contato:"Marcos", tel:"(65) 99811-2201", obs:"", ativo:true, exemplo:true },
@@ -3333,7 +3382,8 @@ function showAdminLogin(aviso){
 
 /* ---------- Plano: recomendação e progressão ---------- */
 const progById = id => PROGS.find(p => p.id === id) || PROGS[0];
-const progAtual = () => progById(ME.prog && ME.prog.id);
+/* Free usa o programa básico do objetivo; os dados do programa Pro ficam guardados e voltam quando ela volta ao Pro */
+const progAtual = () => { const id = ME.prog && ME.prog.id; return typeof progLiberado === "function" && !progLiberado(id) ? progById(objById((ME.perfil && ME.perfil.objetivo) || "emagrecer")[4][0]) : progById(id); };
 function recomenda(p){
   const o = { perder: "emagrecer", forca: "massa", gluteos: "definir", disposicao: "condicionamento" }[p.objetivo] || p.objetivo, ini = p.nivel === "iniciante";
   if(o === "mobilidade") return "mobilidade";
@@ -3406,7 +3456,8 @@ function streak(){
   const set = diasTreino(); Object.entries(ME.diario || {}).forEach(([d, x]) => { if(REFS.some(([k]) => (x[k] || []).length)) set.add(d); });
   let d = today(); if(!set.has(d)) d = addD(d, -1); let n = 0; while(set.has(d)){ n++; d = addD(d, -1); } return n;
 }
-const isPremium = u => !!(u.premium && (u.premium.tipo === "vitalicio" || u.premium.ate >= today()));
+// Premium da aluna logada vem do servidor (entitlement CK_LIFE_PRO); o campo antigo vale para o painel e como reserva
+const isPremium = u => (u && typeof ME !== "undefined" && ME && u.id === ME.id && window.__ENT && window.__ENT.d) ? !!window.__ENT.d.pro : !!(u && u.premium && (u.premium.tipo === "vitalicio" || u.premium.ate >= today()));
 function migra(u){
   if(u.perfil){ u.perfil.local = u.perfil.local || "casa"; u.perfil.itens = u.perfil.itens || ["cadeira"]; u.perfil.dias = u.perfil.dias || 3; u.perfil.tempo = u.perfil.tempo || 20;
     u.perfil.local = "casa"; u.perfil.objetivo = { perder: "emagrecer", forca: "massa", ganhar: "massa", gluteos: "definir", disposicao: "condicionamento", manter: "definir" }[u.perfil.objetivo] || u.perfil.objetivo; }
@@ -4401,9 +4452,11 @@ async function garantePerfil(){
   PERFIS.set(EU.user_id, EU); migraBloqueios(); return EU;
 }
 function migraBloqueios(){ const L = ME.chatBloq || []; if(!L.length) return; SB().from("bloqueios").insert(L.map(b => ({ quem: NU.uid, bloqueado: b.id }))).then(() => { ME.chatBloq = []; save(); }); }
+let PERF_COLS = "user_id,username,nome,foto_mini,privado,verificada,pro_ate";
+async function perfisLote(ids){ const r = await SB().from("perfis").select(PERF_COLS).in("user_id", ids); if(r.error && /verificada|pro_ate/.test(r.error.message || "")){ PERF_COLS = "user_id,username,nome,foto_mini,privado"; return q(SB().from("perfis").select(PERF_COLS).in("user_id", ids)); } if(r.error) throw r.error; return r.data; }
 async function carregaPerfis(ids){
   const falta = [...new Set(ids.filter(i => i && (!PERFIS.has(i) || (i !== NU.uid && Date.now() - (PERFIS.get(i)._t || 0) > 180000))))]; if(!falta.length || !SO.on()) return;
-  for(let i = 0; i < falta.length; i += 80){ try{ (await q(SB().from("perfis").select("user_id,username,nome,foto_mini,privado").in("user_id", falta.slice(i, i + 80)))).forEach(p => { p._t = Date.now(); PERFIS.set(p.user_id, { ...(PERFIS.get(p.user_id) || {}), ...p }); }); }catch(e){} }
+  for(let i = 0; i < falta.length; i += 80){ try{ (await perfisLote(falta.slice(i, i + 80))).forEach(p => { p._t = Date.now(); PERFIS.set(p.user_id, { ...(PERFIS.get(p.user_id) || {}), ...p }); }); }catch(e){} }
 }
 async function sincFotoPerfil(){ // chamada quando a aluna troca a foto pelo Perfil antigo
   await detectaSocial(); if(!SO.on()) return; try{ await garantePerfil(); const foto = ME.foto ? await sobe("perfil", NU.uid, await (await fetch(ME.foto)).blob(), "jpg", "image/jpeg") : null;
@@ -4472,7 +4525,7 @@ async function abrirPerfil(u){
   sheet(meu ? "Meu perfil" : "Perfil", `<div class="so-perfil">
     <div class="so-capa priv" ${p.capa ? `data-m="${esc(p.capa)}"` : ""}></div>
     <div class="so-ph"><span class="so-av priv" ${p.foto ? `data-m="${esc(p.foto)}"` : ""}>${p.foto_mini ? `<img src="${esc(p.foto_mini)}" alt="" draggable="false">` : esc((p.nome || "?")[0].toUpperCase())}</span></div>
-    <div class="so-id"><h2>${esc(p.nome)}</h2><p class="muted">@${esc(p.username)}${p.privado ? ` · ${ic("lock", 13)} privado` : ""}${c && c.me_segue && !meu ? ` · <span class="so-segue">segue você</span>` : ""}</p>
+    <div class="so-id"><h2>${esc(p.nome)}${selosP(p.user_id)}</h2><p class="muted">@${esc(p.username)}${p.privado ? ` · ${ic("lock", 13)} privado` : ""}${c && c.me_segue && !meu ? ` · <span class="so-segue">segue você</span>` : ""}</p>
       ${p.bio ? `<p class="so-bio">${esc(p.bio)}</p>` : ""}
       <div class="xp-tags" style="justify-content:center">${cid ? `<i class="xp-tag">${ic("pin", 12)} ${esc(cid)}</i>` : ""}${p.mostrar_objetivo && p.objetivo ? `<i class="xp-tag ok">${esc(p.objetivo)}</i>` : ""}${(p.interesses || []).slice(0, 6).map(i => `<i class="xp-tag">${esc(i)}</i>`).join("")}</div></div>
     <div class="so-acts">${meu ? `<button class="btn btn-accent" id="pf-ed">${ic("edit", 16)} Editar perfil</button>` : btSeg + `<button class="btn btn-line" id="pf-msg">${ic("chat", 16)} Mensagem</button>`}<button class="iconbtn" id="pf-mais" aria-label="Mais opções">${ic(meu ? "share" : "dots", 18)}</button></div>
@@ -4657,7 +4710,7 @@ function postHtml(p){
   const meu = p.user === ME.id, liked = (p.curtidas || []).includes(ME.id), nc = (p.coments || []).length, nl = (p.curtidas || []).length, us = userP(p.user), salvo = SALVOS.has(p.id);
   const cq = p.conquista ? `<div class="so-pconq"><i>${esc(p.conquista.emoji || "🏆")}</i><div><b>${esc(p.conquista.titulo || "Conquista")}</b><small>${esc(p.conquista.frase || "")}</small></div></div>` : "";
   return `<article class="post" data-id="${p.id}">
-    <header>${avU(p.user, p.nome, p.foto)}<div class="pmeta"><b>${esc(nomeP(p.user, p.nome))}</b><small>${us ? "@" + esc(us) + " · " : ""}${tempoAtras(p.criado)}${p.oculto ? " · oculto pela moderação" : ""}${p.grupo && GRP.get(p.grupo) ? ` · <button class="so-gtag" data-grupo="${p.grupo}">${esc(GRP.get(p.grupo).emoji || "")} ${esc(GRP.get(p.grupo).nome)}</button>` : ""}</small></div><button class="iconbtn sm" data-mais aria-label="Opções">${ic("dots", 18)}</button></header>
+    <header>${avU(p.user, p.nome, p.foto)}<div class="pmeta"><b>${esc(nomeP(p.user, p.nome))}${selosP(p.user)}</b><small>${us ? "@" + esc(us) + " · " : ""}${tempoAtras(p.criado)}${p.oculto ? " · oculto pela moderação" : ""}${p.grupo && GRP.get(p.grupo) ? ` · <button class="so-gtag" data-grupo="${p.grupo}">${esc(GRP.get(p.grupo).emoji || "")} ${esc(GRP.get(p.grupo).nome)}</button>` : ""}</small></div><button class="iconbtn sm" data-mais aria-label="Opções">${ic("dots", 18)}</button></header>
     ${p.texto ? `<p class="ptx ${p.texto.length > 260 ? "so-trunc" : ""}">${rico(p.texto)}</p>${p.texto.length > 260 ? `<button class="link so-vermais" data-vermais>ver mais</button>` : ""}` : ""}${cq}
     ${p.figurinha && !p.midia && !p.img ? `<div class="pfig">${figImg(p.figurinha, "pfig-img")}</div>` : ""}${p.midia && eVideo(p.midia) ? `<div class="pimg pvid priv"><video data-m="${esc(p.midia)}" playsinline muted loop preload="metadata" controls controlslist="nodownload noplaybackrate" disablepictureinpicture></video></div>` : p.midia ? `<div class="pimg priv" data-abre><img ${midiaPronta(p.midia)} alt="" loading="lazy" draggable="false"><i class="pheart">${ic("heart", 70)}</i></div>` : p.img ? `<div class="pimg priv" data-abre><img src="${esc(p.img)}" alt="" loading="lazy" draggable="false"><i class="pheart">${ic("heart", 70)}</i></div>` : ""}
     <div class="pacts"><button class="pl ${liked ? "on" : ""}" data-like aria-label="Curtir">${ic("heart", 22)}<span>${nl || ""}</span></button><button data-abre aria-label="Comentar">${ic("chat", 21)}<span>${nc || ""}</span></button>${SO.on() ? `<button data-share aria-label="Compartilhar">${ic("send", 20)}</button><button class="so-save ${salvo ? "on" : ""}" data-save aria-label="Salvar">${ic("bookmark", 20)}</button>` : ""}
@@ -4693,7 +4746,7 @@ function ligaPost(el, p, detalhe){
   ligaMidia(el);
 }
 function abrePost(p, foca){
-  const lista = () => (p.coments || []).map(c => `<div class="cmt">${avU(c.user, c.nome, c.foto)}<div><p><b>${esc(nomeP(c.user, c.nome))}</b> ${rico(c.texto)}</p>${c.figurinha ? figImg(c.figurinha, "cmt-fig") : ""}<small>${tempoAtras(c.criado)}${SO.on() && c.user !== ME.id && userP(c.user) ? ` · <button class="link cdel" data-resp="${esc(userP(c.user))}">Responder</button>` : ""}${c.user === ME.id ? ` · <button class="link cdel" data-cdel="${c.id}">Excluir</button>` : SO.on() ? ` · <button class="link cdel" data-cden="${c.id}">Denunciar</button>` : ""}</small></div></div>`).join("") || `<p class="hint" style="margin:0">Seja a primeira a comentar 💚</p>`;
+  const lista = () => (p.coments || []).map(c => `<div class="cmt">${avU(c.user, c.nome, c.foto)}<div><p><b>${esc(nomeP(c.user, c.nome))}${selosP(c.user)}</b> ${rico(c.texto)}</p>${c.figurinha ? figImg(c.figurinha, "cmt-fig") : ""}<small>${tempoAtras(c.criado)}${SO.on() && c.user !== ME.id && userP(c.user) ? ` · <button class="link cdel" data-resp="${esc(userP(c.user))}">Responder</button>` : ""}${c.user === ME.id ? ` · <button class="link cdel" data-cdel="${c.id}">Excluir</button>` : SO.on() ? ` · <button class="link cdel" data-cden="${c.id}">Denunciar</button>` : ""}</small></div></div>`).join("") || `<p class="hint" style="margin:0">Seja a primeira a comentar 💚</p>`;
   sheet("Publicação", `<div class="post post-full" data-id="${p.id}">${postHtml(p).replace(/^<article[^>]*>|<\/article>$/g, "")}</div><div class="cmts" id="cmts">${lista()}</div>
     <div class="cbar"><div class="cm-reac" id="cm-reac"></div><button class="iconbtn" id="cm-fig" aria-label="Figurinhas"><span style="font-size:20px">✨</span></button><input class="input" id="cm-txt" maxlength="500" placeholder="Escreva um comentário…" autocomplete="off"><button class="btn btn-accent" id="cm-env" aria-label="Enviar">${ic("send", 18)}</button></div>`, () => { if(TAB === "juntas") desenhaFeed(); });
   const el = $("sheet-body").querySelector(".post-full"); el.querySelectorAll(".pcin,.pver,.pc").forEach(x => x.remove()); ligaPost(el, p, true);
@@ -4975,7 +5028,7 @@ async function contaNaoLidas(){ try{ const r = await q(SB().rpc("nao_lidas")); N
 async function abreConversa(c){
   if(!c) return; const o = outroDe(c); await carregaPerfis([o]);
   CHAT = { c, msgs: [], fim: false, resp: null, rec: null };
-  sheet("Conversa", `<button class="xp-chathead" id="cv-perfil">${avU(o, c.a === NU.uid ? c.nome_b : c.nome_a, c.a === NU.uid ? c.foto_b : c.foto_a)}<span><b>${esc(nomeP(o))}</b><small>${userP(o) ? "@" + esc(userP(o)) + " · " : ""}ver perfil</small></span></button>
+  sheet("Conversa", `<button class="xp-chathead" id="cv-perfil">${avU(o, c.a === NU.uid ? c.nome_b : c.nome_a, c.a === NU.uid ? c.foto_b : c.foto_a)}<span><b>${esc(nomeP(o))}${selosP(o)}</b><small>${userP(o) ? "@" + esc(userP(o)) + " · " : ""}ver perfil</small></span></button>
     <div class="xp-msgs priv" id="cv-m"><div class="post skel" style="height:60px"></div></div>
     <div class="so-cbar" id="cv-bar"><div id="cv-resp"></div><div class="so-cin"><button class="iconbtn" id="cv-foto" aria-label="Enviar foto">${ic("image", 20)}</button><input class="input" id="cv-t" maxlength="2000" placeholder="Mensagem" autocomplete="off"><button class="iconbtn so-mic" id="cv-mic" aria-label="Gravar áudio">${ic("mic", 20)}</button><button class="btn btn-accent so-env" id="cv-env" aria-label="Enviar" hidden>${ic("send", 18)}</button></div></div>`,
     () => { if(CHAT && CHAT.rec) CHAT.rec.cancelar(); CHAT = null; atualizaBadges(); }, `<button class="iconbtn sm" id="cv-op" aria-label="Opções">${ic("dots", 18)}</button>`);
@@ -6112,6 +6165,324 @@ setTimeout(async () => { if(!NV_OK() || !ME.desafio || ME.desafio.fim) return;
   try{ const L = await q(SB().from("desafio_participantes").select("id").eq("user_id", NU.uid).is("fim", null).eq("saiu", false)); if(!L.length) desafioSync.entrar(ME.desafio.id, ME.desafio.ini); }catch(e){} }, 10000);
 
 
+/* ===================== CK LIFE FREE / PRO (camada central) =====================
+   O app pergunta UMA coisa: "ela tem CK_LIFE_PRO agora?" — a resposta vem do servidor (meu_plano), com o relógio do servidor.
+   Toda checagem de recurso passa por pode(recurso). Esconder botão é só conforto: o banco valida o que é importante.
+   Nunca bloqueados: privacidade, termos, exportar dados, excluir conta, denunciar, bloquear, segurança, sair. */
+const ENT = { d: null, t: 0, skew: 0, planos: null, cfgVoz: null };
+window.__ENT = ENT;
+const agoraServ = () => Date.now() + ENT.skew;
+async function carregaPlano(forca){
+  if(!NU.ativo || !NU.sb || !NU.uid) return null;
+  if(!forca && ENT.d && Date.now() - ENT.t < 300000) return ENT.d;
+  try{ const r = await NU.sb.rpc("meu_plano"); if(!r.error && r.data){ ENT.d = r.data; ENT.t = Date.now(); ENT.skew = new Date(r.data.agora).getTime() - Date.now(); } }catch(e){}
+  return ENT.d;
+}
+async function carregaPlanos(){
+  if(ENT.planos) return ENT.planos;
+  try{ const r = await NU.sb.from("planos").select("*").eq("ativo", true).order("ordem"); if(!r.error) ENT.planos = r.data; }catch(e){}
+  return ENT.planos || [{ id: "pro_mensal", nome: "CK Life Pro Mensal", periodo: "mes", preco: 19.99 }, { id: "pro_anual", nome: "CK Life Pro Anual", periodo: "ano", preco: 155.88, parcelas: 12, parcela_valor: 12.99 }];
+}
+const souPro = () => ENT.d ? !!ENT.d.pro : !!(ME && ME.premium && (ME.premium.tipo === "vitalicio" || ME.premium.ate >= today()));
+const emTrial = () => !!(ENT.d && ENT.d.trial);
+function pode(f){ if(ENT.d && ENT.d.recursos && f in ENT.d.recursos) return !!ENT.d.recursos[f]; return souPro(); }
+function limite(f, padrao){ const l = ENT.d && ENT.d.limites ? ENT.d.limites[f] : undefined; return l == null ? padrao : l; }
+function registraEvento(nome, props){ if(NU.ativo && NU.sb && NU.uid) NU.sb.rpc("registra_evento", { p_nome: nome, p_props: props || null }).then(() => {}, () => {}); }
+const brlP = v => "R$ " + Number(v || 0).toFixed(2).replace(".", ",");
+/* regras de conteúdo (sem número espalhado: limites vêm de recursos) */
+const PROG_FREE_PADRAO = ["comecando", "hiit", "gluteos", "mobilidade"];
+const progGratis = id => (DB.config.programasFree || PROG_FREE_PADRAO).includes(id);
+function progLiberado(id){ return !id || progGratis(id) || pode("programas_completos"); }
+function receitaLivre(id){ const pl = (DB.receitasPlano || {})[id]; if(pl) return pl === "free" || pode("receitas_todas"); if(pode("receitas_todas")) return true; const L = BASE_REC; const i = L.findIndex(r => r.id === id); return i < 0 || i % 3 === 0; }
+const FIG_FREE = new Set(["hoje-teve","a-gata-foi","constancia-linda","ck-girl","create-keep-live","voce-apareceu-por-voce","bora-juntas","treino-concluido","orgulho-de-voce","amei","concluido","mais-um-check","missao-cumprida","que-tudooo","to-com-voce","voce-inspira","isso-ai-mulher","bom-diaaa","partiu","voce-consegue","vai-com-tudo","um-passo-de-cada-vez","sobrevivi-ao-treino","treino-pago","to-feliz"]);
+const figPro = f => f && (f.pro != null ? !!f.pro : !FIG_FREE.has(f.id));
+const filtroLivre = k => pode("filtros_todos") || (DB.config.filtrosFree || ["original", "natural", "glow", "vivo"]).includes(k);
+
+/* ---------- paywall (camada própria, por cima de qualquer tela) ---------- */
+const BENEF = [["👑", "Programas e treinos completos"], ["🥗", "Nutrição completa"], ["🌸", "Ciclo inteligente"], ["📊", "Evolução avançada"], ["✨", "Stickers e recursos criativos"], ["🎁", "Clube CK Pro"], ["✓", "Direito a pedir verificação"], ["🚫", "Sem anúncios"]];
+async function paywall(contexto, preview){
+  registraEvento("paywall_viewed", { contexto: contexto || "geral" });
+  if(!souPro() || emTrial()){ try{ const o = await NU.sb.rpc("oferta_ativar", { p_contexto: contexto || "paywall" }); if(o && !o.error && o.data) { ENT.d = { ...(ENT.d || {}), oferta: o.data }; } }catch(e){} }
+  const P = await carregaPlanos(), of = ENT.d && ENT.d.oferta, men = P.find(p => p.id === "pro_mensal") || {}, anu = P.find(p => p.id === "pro_anual") || {};
+  let box = $("pw"); if(!box){ box = document.createElement("div"); box.id = "pw"; box.className = "pw"; document.body.appendChild(box); }
+  const parc = (n, v, ok) => ok && n && v ? `<small>ou ${n}x de ${brlP(v)}</small>` : "";
+  const cardP = (k, p, promo) => `<button class="pw-plan ${k === "anual" ? "dest" : ""}" data-pl="${k}">${k === "anual" ? `<em>MAIS VANTAJOSO</em>` : ""}<b>${k === "anual" ? "Anual" : "Mensal"}</b>
+    ${promo ? `<s>${brlP(p.preco)}${k === "anual" ? "/ano" : "/mês"}</s><strong>${brlP(promo.v)}${k === "anual" ? "/ano" : "/mês"}</strong>${promo.n ? parc(promo.n, promo.pv, anu.parcelamento) : ""}<small>${promo.txt}</small>`
+      : `<strong>${brlP(p.preco)}${k === "anual" ? "/ano" : "/mês"}</strong>${parc(p.parcelas, p.parcela_valor, p.parcelamento)}`}</button>`;
+  const promoM = of && of.preco_mensal_promo ? { v: of.preco_mensal_promo, txt: `por ${of.meses_promo || 12} meses, depois ${brlP(men.preco)}/mês` } : null;
+  const promoA = of && of.preco_anual_promo ? { v: of.preco_anual_promo, n: of.parcelas_anual, pv: of.parcela_anual_valor, txt: `no primeiro ano, depois ${brlP(anu.preco)}/ano` } : null;
+  box.innerHTML = `<div class="pw-in" role="dialog" aria-label="CK Life Pro"><button class="iconbtn sm pw-x" id="pw-x" aria-label="Fechar">${ic("close", 16)}</button>
+    ${preview ? `<div class="pw-prev">${preview}</div>` : ""}
+    <span class="eyebrow">👑 CK LIFE PRO</span><h2>${of ? esc(of.titulo) : "Sua experiência completa"}</h2><p class="pw-sub">${of ? esc(of.subtitulo || "") : "Mais personalização, profundidade e conveniência."}</p>
+    ${of ? `<p class="pw-tempo" id="pw-tempo"></p>` : ""}
+    <ul class="pw-ben">${BENEF.map(([i, t]) => `<li><i>${i}</i>${t}</li>`).join("")}</ul>
+    <div class="pw-plans">${cardP("anual", anu, promoA)}${cardP("mensal", men, promoM)}</div>
+    <button class="btn btn-accent btn-block btn-lg" id="pw-go">Continuar</button>
+    <p class="hint pw-nota">Sem fidelidade escondida: você cancela quando quiser e continua Pro até o fim do período pago. Na compra, use o e-mail <b>${esc(ME.email || "da sua conta")}</b> para liberar automaticamente.</p></div>`;
+  box.hidden = false;
+  let esc0 = "anual";
+  const marca = () => box.querySelectorAll("[data-pl]").forEach(b => b.setAttribute("aria-pressed", b.dataset.pl === esc0)); marca();
+  box.querySelectorAll("[data-pl]").forEach(b => b.onclick = () => { esc0 = b.dataset.pl; marca(); vibra(6); });
+  const fecha = () => { box.hidden = true; box.innerHTML = ""; clearInterval(box._t); };
+  $("pw-x").onclick = fecha; box.onclick = e => { if(e.target === box) fecha(); };
+  if(of){ if(NU.sb) NU.sb.rpc("oferta_evento", { p_id: of.id, p_tipo: "impressao" }).then(() => {}, () => {}); const tick = () => { const e = $("pw-tempo"); if(!e) return clearInterval(box._t); e.textContent = "Condição especial termina em " + tempoRest(of.expira); }; tick(); box._t = setInterval(tick, 1000); }
+  $("pw-go").onclick = () => {
+    const url = of ? (esc0 === "anual" ? of.checkout_anual_url : of.checkout_mensal_url) : (esc0 === "anual" ? anu.checkout_url : men.checkout_url);
+    registraEvento("checkout_started", { plano: esc0, oferta: of ? of.campanha : null }); if(of && NU.sb) NU.sb.rpc("oferta_evento", { p_id: of.id, p_tipo: "checkout" }).then(() => {}, () => {});
+    if(!url) return toast("A assinatura será liberada em breve. Fique de olho! 💚");
+    ENT.voltouDoCheckout = true; window.open(url, "_blank", "noopener"); };
+}
+function tempoRest(fim){ const s = Math.max(0, Math.floor((new Date(fim).getTime() - agoraServ()) / 1000)); const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), ss = s % 60; return `${h}h ${String(m).padStart(2, "0")}min ${String(ss).padStart(2, "0")}s`; }
+document.addEventListener("visibilitychange", async () => { if(document.visibilityState !== "visible" || !ME) return; const antes = souPro(); await carregaPlano(true); if(ENT.voltouDoCheckout && !antes && souPro()){ ENT.voltouDoCheckout = false; toast("Bem-vinda ao CK Life Pro 👑"); rerender(); } });
+function exigePro(f, contexto, preview){ if(pode(f)) return true; registraEvento("pro_feature_clicked", { recurso: f }); paywall(contexto || "recurso_pro", preview); return false; }
+
+/* ---------- 👑 no conteúdo Pro: aparece, mas ao tocar mostra prévia + paywall ---------- */
+function decoraPro(root){
+  if(!ME) return;
+  (root || document).querySelectorAll("[data-prog]:not([data-pz])").forEach(b => { b.dataset.pz = 1; if(!progLiberado(b.dataset.prog)) trava(b, "programas_completos", "programa_pro"); });
+  (root || document).querySelectorAll("[data-q]:not([data-pz])").forEach(b => { b.dataset.pz = 1; const i = QUICK.findIndex(q => q.id === b.dataset.q); if(i >= limite("treinos_rapidos_todos", 3) && !pode("treinos_rapidos_todos")) trava(b, "treinos_rapidos_todos", "programa_pro"); });
+  (root || document).querySelectorAll("[data-rec]:not([data-pz]),[data-r]:not([data-pz])").forEach(b => { b.dataset.pz = 1; const id = b.dataset.rec || b.dataset.r; if(id && !receitaLivre(id)) trava(b, "receitas_todas", "recurso_pro"); });
+  (root || document).querySelectorAll("[data-parc]:not([data-pz])").forEach(b => { b.dataset.pz = 1; const p = (DB.parceiros || []).find(x => x.id === b.dataset.parc); if(p && p.pro && !pode("clube_pro")) trava(b, "clube_pro", "recurso_pro"); });
+  (root || document).querySelectorAll(".fg-it[data-f]:not([data-pz]),#fg-pan [data-fg]:not([data-pz]),#cm-reac [data-rq]:not([data-pz])").forEach(b => { b.dataset.pz = 1; const id = b.dataset.f || b.dataset.fg || b.dataset.rq, f = (FCAT.L || []).find(x => x.id === id); if(f && figPro(f) && !pode("stickers_todos")) trava(b, "stickers_todos", "sticker_pro"); });
+  (root || document).querySelectorAll("[data-fl]:not([data-pz])").forEach(b => { b.dataset.pz = 1; if(!filtroLivre(b.dataset.fl)) trava(b, "filtros_todos", "recurso_pro"); });
+  [["#fl-mk", "maquiagem"], ["#se-dad", "selos_dados"]].forEach(([s, f]) => { const b = (root || document).querySelector(s + ":not([data-pz])"); if(b){ b.dataset.pz = 1; if(!pode(f)) trava(b, f, "recurso_pro"); } });
+  (root || document).querySelectorAll("[data-des]:not([data-pz])").forEach(b => { b.dataset.pz = 1; if(b.dataset.des !== "d7" && !pode("desafios_longos")) trava(b, "desafios_longos", "programa_pro"); });
+}
+function trava(b, f, ctx){ b.classList.add("pro-lock"); b.dataset.exige = f; b.dataset.ctx = ctx; if(!b.querySelector(".pro-cr")) b.insertAdjacentHTML("beforeend", `<span class="pro-cr" aria-label="CK Life Pro">👑</span>`); }
+new MutationObserver(() => { clearTimeout(decoraPro._t); decoraPro._t = setTimeout(() => decoraPro(), 60); }).observe(document.body, { childList: true, subtree: true });
+document.addEventListener("click", e => { const b = e.target.closest && e.target.closest(".pro-lock[data-exige]"); if(!b || pode(b.dataset.exige)) return; e.preventDefault(); e.stopImmediatePropagation();
+  const img = b.querySelector("img"), nome = ([...b.querySelectorAll("h4,b,strong")].map(x => x.textContent.trim()).find(Boolean) || "").replace("👑", "").trim().slice(0, 60); registraEvento("pro_feature_clicked", { recurso: b.dataset.exige }); paywall(b.dataset.ctx, `${img && /figurinhas|fg-it/.test(img.src + b.className) ? `<img src="${esc(img.currentSrc || img.src)}" alt="">` : ""}${nome ? `<b>👑 ${esc(nome)}</b>` : ""}<small>Disponível no CK Life Pro.</small>`); }, true);
+
+/* ---------- recursos Pro com verificação na hora de usar ---------- */
+const rCardapioP = rCardapio; rCardapio = function(){ if(pode("cardapio")) return rCardapioP.apply(this, arguments);
+  const b = $("d-body"); if(b){ b.innerHTML = `<div class="card pro-tela"><span>🗓️</span><b>👑 Cardápio semanal</b><p class="hint">Um cardápio para a semana toda, montado para a sua meta, com trocas de receitas em um toque.</p><button class="btn btn-accent" data-pw="1">Conhecer o CK Life Pro</button></div>`; b.querySelector("[data-pw]").onclick = () => exigePro("cardapio", "recurso_pro"); } };
+const abrirCozinhaP = abrirCozinha; abrirCozinha = function(){ if(!exigePro("modo_cozinha", "recurso_pro")) return; return abrirCozinhaP.apply(this, arguments); };
+const abrirReceitaP = abrirReceita; abrirReceita = function(id){ if(!receitaLivre(id)){ const r = receitas().find(x => x.id === id); registraEvento("pro_feature_clicked", { recurso: "receitas_todas" }); return paywall("recurso_pro", r ? `<b>👑 ${esc(r.nome)}</b>` : ""); } return abrirReceitaP.apply(this, arguments); };
+const abrirProgramaP = abrirPrograma; abrirPrograma = function(id){ if(!progLiberado(id)){ const p = progById(id); registraEvento("pro_feature_clicked", { recurso: "programas_completos" }); return paywall("programa_pro", p ? `<b>👑 ${esc(p.nome)}</b><small>${p.semanas} semanas · ${esc(p.nivel)}</small>` : ""); } return abrirProgramaP.apply(this, arguments); };
+const checkinP = checkin; checkin = function(){ if(!exigePro("ciclo_avancado", "recurso_pro", "<b>🌸 Ciclo inteligente</b><small>Sintomas, insights e treino adaptado à fase</small>")) return; return checkinP.apply(this, arguments); };
+const adaptarTreinoP = adaptarTreino; adaptarTreino = function(){ if(!exigePro("ciclo_avancado", "recurso_pro", "<b>🌸 Treino adaptado ao ciclo</b>")) return; return adaptarTreinoP.apply(this, arguments); };
+const criarFigurinhaP = criarFigurinha; criarFigurinha = function(){ if(!exigePro("figurinha_propria", "sticker_pro")) return; return criarFigurinhaP.apply(this, arguments); };
+const videoValidoP = videoValido; videoValido = function(f, maxSeg){ const lim = limite("video_longo", souPro() ? 60 : 15); return videoValidoP.call(this, f, Math.min(maxSeg || 60, lim)); };
+const rEvolucaoP = rEvolucao; rEvolucao = function(){ rEvolucaoP.apply(this, arguments); if(pode("graficos_avancados")) return;
+  const cards = [...document.querySelectorAll("#t-evolucao .card")].filter(c => c.querySelector("#ev-peso")); cards.forEach(c => { const g = c.querySelector("svg"); if(g){ g.classList.add("pro-blur"); g.insertAdjacentHTML("afterend", `<button class="btn btn-soft btn-sm pro-graf" data-pw="graficos_avancados">👑 Ver evolução completa</button>`); } });
+  document.querySelectorAll("#t-evolucao [data-pw]").forEach(b => b.onclick = () => exigePro("graficos_avancados", "grafico_pro")); };
+/* fim do treino (Free): pode aparecer uma condição, nunca no meio do treino */
+const fimTreinoPl = fimTreino; fimTreino = function(parcial){ fimTreinoPl.apply(this, arguments); registraEvento("exercise_completed", { treino: PL && PL.T ? PL.T.nome : null });
+  if(parcial || souPro() || !NU.sb) return;
+  NU.sb.rpc("oferta_ativar", { p_contexto: "treino_concluido" }).then(r => { const o = r && r.data; if(!o) return; ENT.d = { ...(ENT.d || {}), oferta: o }; const ok = $("fim-ok"); if(!ok || $("pw-fim")) return;
+    ok.insertAdjacentHTML("afterend", `<button class="pw-mini" id="pw-fim"><span>👑 ${esc(o.titulo)}</span><small>${esc(o.subtitulo || "Ver condição especial")}</small></button>`); $("pw-fim").onclick = () => { NU.sb.rpc("oferta_evento", { p_id: o.id, p_tipo: "clique" }); registraEvento("offer_clicked", { campanha: o.campanha }); paywall("treino_concluido"); }; }, () => {}); };
+
+/* ---------- Início e Perfil: teste, último dia, oferta ---------- */
+function blocoPlano(onde){
+  const d = ENT.d; if(!d) return "";
+  const of = d.oferta, dias = d.dias_restantes;
+  let h = "";
+  if(d.trial && dias != null) h += dias <= 1 ? `<div class="pl-ultimo"><b>Seu último dia de CK Life Pro 💚</b><p>Amanhã você continua usando o CK Life gratuitamente. Você <b>não perde</b> conta, amigas, mensagens, posts, Stories, conquistas, histórico, medidas, progresso, fotos e registros. Só os recursos Pro ficam bloqueados.</p><button class="btn btn-accent btn-sm" data-pw="1">Continuar com o Pro</button></div>`
+    : `<button class="pl-chip" data-pw="1">👑 Pro grátis · ${dias} ${dias === 1 ? "dia restante" : "dias restantes"}</button>`;
+  if(of){ const falta = new Date(of.expira).getTime() - agoraServ();
+    h += `<button class="pl-oferta" data-pw="1"><span class="eyebrow">CONDIÇÃO ESPECIAL</span><b>${esc(of.titulo)}</b><small>${esc(of.subtitulo || "")}</small><em class="pl-cont" data-fim="${esc(of.expira)}">${falta < 864e5 * 2 && falta > 864e5 ? "Sua condição especial termina amanhã." : "Termina em " + tempoRest(of.expira)}</em></button>`;
+    if(onde === "inicio" && !blocoPlano.visto){ blocoPlano.visto = 1; NU.sb && NU.sb.rpc("oferta_evento", { p_id: of.id, p_tipo: "impressao" }).then(() => {}, () => {}); } }
+  return h ? `<div class="pl-bloco">${h}</div>` : "";
+}
+setInterval(() => document.querySelectorAll(".pl-cont[data-fim]").forEach(e => { const f = new Date(e.dataset.fim).getTime() - agoraServ(); e.textContent = f <= 0 ? "Condição encerrada" : f > 864e5 && f < 864e5 * 2 ? "Sua condição especial termina amanhã." : "Termina em " + tempoRest(e.dataset.fim); }), 1000);
+const rInicioPl = rInicio; rInicio = function(){ rInicioPl.apply(this, arguments); const b = blocoPlano("inicio"), alvo = document.querySelector("#t-inicio .xe-dia"); if(b && alvo) alvo.insertAdjacentHTML("afterbegin", b);
+  document.querySelectorAll("#t-inicio [data-pw]").forEach(x => x.onclick = () => paywall("paywall"));
+  const rec = document.querySelector("#t-inicio .xe-rec"); if(rec && !pode("sugestoes_energia")){ const bt = rec.querySelector("button"); if(bt){ bt.innerHTML = "👑 Treino adaptado à sua energia"; bt.onclick = e => { e.stopPropagation(); exigePro("sugestoes_energia", "recurso_pro"); }; } }
+  anunciosInicio(); };
+const rPerfilPl = rPerfil; rPerfil = function(){ rPerfilPl.apply(this, arguments); const el = $("t-perfil"); if(!el || !ENT.d) return;
+  const card = [...el.querySelectorAll(".today")].find(c => /Premium|anúncios/i.test(c.textContent)), d = ENT.d;
+  const html = `<div class="pl-card ${d.pro ? "on" : ""}"><span class="eyebrow">${d.pro ? (d.trial ? "👑 CK Life Pro · teste grátis" : "👑 CK Life Pro") : "CK Life Free"}</span>
+    <h2>${d.pro ? (d.trial ? `${d.dias_restantes} ${d.dias_restantes === 1 ? "dia" : "dias"} de Pro grátis` : d.fim ? `Pro até ${brD(String(d.fim).slice(0, 10))}` : "Pro ativo") : "Treino, comunidade e conquistas grátis"}</h2>
+    <p>${d.pro ? (d.status === "canceled" ? "Assinatura cancelada: você continua Pro até o fim do período." : "Programas completos, nutrição, ciclo inteligente e sem anúncios.") : "Conheça o Pro: programas completos, nutrição, ciclo inteligente e sem anúncios."}</p>
+    ${!d.pro || d.trial ? `<button class="btn btn-accent" data-pw="1">${d.oferta ? "Ver condição especial" : "Conhecer o CK Life Pro"}</button>` : ""}</div>${blocoPlano("perfil").replace(/pl-chip/g, "pl-chip pl-oculto")}`;
+  if(card) card.outerHTML = html; else el.insertAdjacentHTML("afterbegin", html);
+  el.querySelectorAll("[data-pw]").forEach(x => x.onclick = () => paywall("paywall"));
+  const lem = $("p-lemb"); if(lem && !$("p-verif")){ const v = d.verificacao, txt = { not_requested: d.pro ? "Peça o selo azul de perfil real" : "Assinantes Pro podem pedir", pending: "Em análise", verified: "Perfil verificado ✓", rejected: "Não aprovado · veja o motivo", needs_review: "Precisamos de uma nova foto", revoked: "Selo removido" }[v] || "";
+    lem.insertAdjacentHTML("beforebegin", setRow("p-verif", "shield", "Verificação de perfil (selo azul)", txt)); $("p-verif").onclick = abreVerificacao; } };
+
+/* ---------- Verificação de perfil (selo azul = pessoa real; pagamento NÃO dá selo) ---------- */
+async function abreVerificacao(){
+  let L = []; try{ L = await q(SB().from("verificacoes").select("*").eq("user_id", NU.uid).order("criado", { ascending: false }).limit(1)); }catch(e){}
+  const v = L[0];
+  if(v && v.status === "pending" && !v.selfie) return pedeSelfie(v);
+  if(v && ["pending", "verified"].includes(v.status)) return sheet("Verificação de perfil", `<div class="card"><b>${v.status === "verified" ? "✓ Seu perfil é verificado" : "⏳ Seu pedido está em análise"}</b><p class="hint" style="margin:6px 0 0">${v.status === "verified" ? "O selo azul mostra que você é uma pessoa real. Ele continua mesmo se o Pro acabar." : "Nossa equipe vai conferir sua foto. Você recebe um aviso quando terminar."}</p></div>`);
+  if(!exigePro("verificacao", "recurso_pro", "<b>✓ Selo azul de perfil real</b>")) return;
+  sheet("Verificação de perfil", `<div class="card"><b>✓ Selo azul = pessoa real</b><p class="hint" style="margin:6px 0 0">O selo não é comprado: ele mostra que uma pessoa da equipe confirmou que o perfil é seu. Você vai tirar uma selfie segurando um papel com um código. A foto fica privada e só a equipe de verificação vê. Nada disso aparece no seu perfil, só o ✓.</p></div>
+    ${v && v.motivo ? `<div class="card"><b>Última análise</b><p class="hint" style="margin:6px 0 0">${esc(v.motivo)}</p></div>` : ""}<button class="btn btn-accent btn-block btn-lg" id="vf-ok">Começar</button>`);
+  $("vf-ok").onclick = async () => { try{ const r = await q(SB().from("verificacoes").insert({ user_id: NU.uid }).select()); registraEvento("verification_requested"); pedeSelfie(r[0]); }catch(e){ toast(ERR_MSG(e)); } };
+}
+function pedeSelfie(v){
+  sheet("Sua selfie de verificação", `<div class="card vf-cod"><small>Escreva este código num papel e segure perto do rosto:</small><b class="num">${esc(v.codigo || "")}</b></div><button class="btn btn-accent btn-block btn-lg" id="vf-foto">${ic("camera", 18)} Tirar a selfie</button>`);
+  $("vf-foto").onclick = async () => { const f = await escolheArquivo("image/*", "user"); if(!f) return; const b = await imagemValida(f, 1280); if(!b) return;
+    try{ const path = await sobe("verificacao", NU.uid, b, "jpg", "image/jpeg"); await q(SB().rpc("verificacao_selfie", { p_id: v.id, p_selfie: path })); fecharSheet(); toast("Recebemos! Seu pedido está em análise ✓"); carregaPlano(true); }
+    catch(e){ toast(ERR_MSG(e)); } };
+}
+
+/* ---------- Selos ✓ e 👑 ao lado do nome (só o ✓ e a 👑; nada de dado pessoal) ---------- */
+const selosP = u => { const p = PERFIS.get(u) || (EU && EU.user_id === u ? EU : {}); return `${p.verificada ? `<i class="sel-ver" title="Perfil verificado">✓</i>` : ""}${p.pro_ate && new Date(p.pro_ate) > new Date() ? `<i class="sel-pro" title="CK Life Pro">👑</i>` : ""}`; };
+
+/* ---------- Publicidade: só Free depois do 30º dia, só em espaços naturais (Feed e Explorar) ---------- */
+function anuncioHtml(local){
+  if(!ENT.d || !ENT.d.anuncios) return "";
+  const L = campanhasPara(ME); if(!L.length) return "";
+  const c = L[(anuncioHtml.n = (anuncioHtml.n || 0) + 1) % L.length], an = DB.anunciantes.find(a => a.id === c.anunc); if(!an) return "";
+  return `<a class="ad-card" href="${esc(linkCamp(c))}" target="_blank" rel="noopener sponsored" data-ad="${c.id}" data-local="${local}"><span class="ad-tag">Patrocinado · ${esc(an.nome)}</span><b>${esc(c.titulo)}</b>${c.texto ? `<small>${esc(c.texto)}</small>` : ""}<em>${esc(c.botao || "Saiba mais")}</em></a>`;
+}
+new MutationObserver(() => document.querySelectorAll(".ad-card:not([data-vis])").forEach(a => { a.dataset.vis = 1; DB.eventos.push({ t: "imp", c: a.dataset.ad, u: ME.id, d: today() }); save(); registraEvento("ad_impression", { campanha: a.dataset.ad, local: a.dataset.local });
+  a.onclick = () => { DB.eventos.push({ t: "clk", c: a.dataset.ad, u: ME.id, d: today() }); save(); registraEvento("ad_click", { campanha: a.dataset.ad, local: a.dataset.local }); }; })).observe(document.body, { childList: true, subtree: true });
+function anunciosInicio(){}
+const desenhaFeedPl = desenhaFeed; desenhaFeed = function(){ const r = desenhaFeedPl.apply(this, arguments); const ps = document.querySelectorAll("#feed > .post"); if(ps.length >= 6 && !document.querySelector("#t-juntas .ad-card")){ const h = anuncioHtml("feed"); if(h) ps[5].insertAdjacentHTML("afterend", h); } return r; };
+const rExplorarPl = rExplorar; rExplorar = function(){ rExplorarPl.apply(this, arguments); const b = $("xp-body"); if(b && !document.querySelector("#t-explorar .ad-card")){ const h = anuncioHtml("explorar"); if(h) b.insertAdjacentHTML("beforebegin", h); } };
+
+/* ---------- carga inicial ---------- */
+{ let n = 0; const t = setInterval(async () => { if(!(NU.ativo && NU.sb && NU.uid)){ if(++n > 60) clearInterval(t); return; } clearInterval(t);
+  await carregaPlano(true); if(emTrial() && NU.sb){ try{ const r = await NU.sb.rpc("oferta_ativar", { p_contexto: null }); if(r && r.data) ENT.d.oferta = r.data; }catch(e){} }
+  try{ const r = await NU.sb.from("app_config").select("chave,valor").in("chave", ["treino_voz"]); (r.data || []).forEach(c => { if(c.chave === "treino_voz") ENT.cfgVoz = c.valor; }); }catch(e){}
+  if(ENT.d && !$("v-app").hidden) rerender(); }, 1500); }
+
+
+/* ===================== TREINO: EXPLICAÇÃO POR VOZ ANTES DE CADA EXERCÍCIO =====================
+   Fluxo: EXERCÍCIO → explicação (voz + texto) → REPETIR ou INICIAR → 3, 2, 1, VAI! → execução → descanso → próximo exercício → nova explicação.
+   Nenhum cronômetro, contagem ou repetição começa antes de ela tocar em Iniciar (no modo "Sempre explicar").
+   O texto vem do catálogo do exercício (passos, respiração, erros comuns, segurança) ou do texto revisado no Admin — nunca de IA. */
+const CFGV = () => Object.assign({ ativo: true, idioma: "pt-BR", velocidade: 1, modo: "sempre", contagem: 3, permitir_pular: true }, DB.config.treinoVoz || {}, ENT.cfgVoz || {});
+const modoExpl = () => (ME && ME.vozExpl) || CFGV().modo || "sempre";
+const minuscula = t => t ? t.charAt(0).toLowerCase() + t.slice(1) : "";
+const ponto = t => String(t || "").trim().replace(/[.!?]?$/, ".");
+function textoExplicacao(e){
+  if(e.voz && String(e.voz).trim()) return String(e.voz).trim();
+  const partes = [ponto(e.nome), (e.passos || []).map(ponto).join(" ")];
+  if(e.resp) partes.push(ponto(e.resp));
+  if((e.erros || []).length) partes.push("Evite: " + e.erros.map(x => minuscula(x).replace(/\.$/, "")).join("; ") + ".");
+  partes.push(ponto(e.seguranca || "Se sentir dor aguda, interrompa o exercício"));
+  return partes.filter(Boolean).join(" ");
+}
+function precisaExplicar(e){
+  const m = modoExpl(); if(m === "off") return false;
+  if(m === "primeira") return !(ME.exVistos || []).includes(e.id);
+  return true;
+}
+function entraExercicio(i){
+  if(!PL) return;
+  calar(); PL.i = i; PL.token = (PL.token || 0) + 1;
+  const e = exById(PL.T.steps[i].id);
+  if(!precisaExplicar(e)) return contagem();
+  PL.fase = "expl"; PL.rem = 0; PL.expl = { estado: "falando", rep: 0 };
+  desenhaPlay(); explica(false);
+}
+function explica(repetir){
+  if(!PL || PL.fase !== "expl") return;
+  const e = exById(PL.T.steps[PL.i].id), tk = PL.token, txt = textoExplicacao(e);
+  registraEvento(repetir ? "exercise_explanation_repeated" : "exercise_explanation_started", { exercicio: e.id });
+  PL.expl = { estado: "falando", rep: (PL.expl.rep || 0) + (repetir ? 1 : 0) }; atualizaExpl();
+  const vozOk = VOZ.ok && ME.voz !== false && CFGV().ativo !== false;
+  if(!vozOk){ PL.expl.estado = ME.voz === false || CFGV().ativo === false ? "texto" : "falhou"; return atualizaExpl(); }
+  if(!ME.vozVel) ME.vozVel = CFGV().velocidade || 1;
+  let comecou = false;
+  const fim = () => { if(!PL || PL.token !== tk || PL.fase !== "expl") return; PL.expl.estado = "ok"; ME.exVistos = [...new Set([...(ME.exVistos || []), e.id])].slice(-200); save(); registraEvento("exercise_explanation_completed", { exercicio: e.id }); atualizaExpl(); };
+  falar(txt, fim);
+  setTimeout(() => { try{ comecou = speechSynthesis.speaking || speechSynthesis.pending; }catch(er){} if(!comecou && PL && PL.token === tk && PL.fase === "expl" && PL.expl.estado === "falando"){ calar(); PL.expl.estado = "falhou"; atualizaExpl(); } }, 2500);
+}
+function contagem(){
+  if(!PL) return; calar();
+  PL.fase = "cont"; PL.rem = Math.max(1, +CFGV().contagem || 3); PL.token = (PL.token || 0) + 1;
+  desenhaPlay(); SOM.tick && SOM.tick(); falar(String(PL.rem));
+}
+/* tela de explicação */
+function atualizaExpl(){
+  const st = $("pl-ex-st"), bt = $("pl-ex-bt"); if(!st || !bt || !PL || PL.fase !== "expl") return;
+  const s = PL.expl.estado, pular = CFGV().permitir_pular !== false;
+  st.className = "ex-st " + s;
+  st.innerHTML = s === "falando" ? `<i class="ex-onda"><b></b><b></b><b></b></i> Explicando…` : s === "ok" ? "✓ Explicação concluída" : s === "texto" ? "Leia como fazer" : "Não conseguimos reproduzir a explicação por voz. Leia abaixo.";
+  bt.innerHTML = s === "falando" ? (pular ? `<button class="btn btn-line btn-block" id="pl-ja">Já sei fazer — iniciar</button>` : "")
+    : `<button class="btn btn-line" id="pl-rep">🔊 ${s === "falhou" ? "Tentar novamente" : "Repetir explicação"}</button><button class="btn btn-accent btn-lg" id="pl-ini">Iniciar exercício</button>`;
+  const ja = $("pl-ja"); if(ja) ja.onclick = () => { calar(); contagem(); };
+  const rp = $("pl-rep"); if(rp) rp.onclick = () => { calar(); explica(true); };
+  const ini = $("pl-ini"); if(ini) ini.onclick = () => { calar(); vibra(20); contagem(); };
+}
+const desenhaPlayV = desenhaPlay;
+desenhaPlay = function(){
+  if(!PL || (PL.fase !== "expl" && PL.fase !== "cont")){ desenhaPlayV.apply(this, arguments); const pv = $("pl-prev"); if(pv && PL) pv.onclick = () => { if(PL.i > 0) entraExercicio(PL.i - 1); }; return; }
+  const T = PL.T, s = T.steps[PL.i], e = exById(s.id);
+  window.BONECO.stop();
+  const head = `<div class="phd"><button class="iconbtn" id="pl-x" aria-label="Sair do treino">${ic("close", 20)}</button>${segsHtml()}<span class="num pcount"><span id="pl-tt">${mmss(Math.round((Date.now() - PL.ini) / 1000))}</span> · ${PL.i + 1}/${T.steps.length}</span></div>`;
+  const meta = `${s.series > 1 ? s.series + " x " : ""}${s.modo === "t" ? s.val + " segundos" : s.val + " repetições"}`;
+  if(PL.fase === "cont"){
+    $("play").innerHTML = `<div class="pfull"><div class="stage" id="pl-stage"></div><div class="pgrad"></div>${head}<div class="pcont"><small>${esc(e.nome)} · ${meta}</small><b class="num" id="pl-cnum">${PL.rem}</b></div></div>`;
+    window.BONECO.mount($("pl-stage"), e, { paused: true });
+  } else {
+    $("play").innerHTML = `<div class="pexpl">${head}<div class="pex-top"><div class="stage" id="pl-stage"></div></div>
+      <div class="pex-c"><span class="eyebrow">${PL.i === 0 ? "Primeiro exercício" : "Próximo exercício"} · Veja como fazer</span><h2>${esc(e.nome)}</h2><small class="psub">${meta}${e.grupo ? " · " + esc(e.grupo) : ""}</small>
+        <p class="ex-st" id="pl-ex-st"></p>
+        <div class="ex-txt"><ol>${(e.passos || []).map(p => `<li>${esc(p)}</li>`).join("")}</ol>
+          ${e.resp ? `<p><b>Respiração:</b> ${esc(e.resp)}</p>` : ""}${(e.erros || []).length ? `<p><b>Evite:</b> ${e.erros.map(esc).join(" · ")}</p>` : ""}<p class="ex-seg">⚠️ ${esc(e.seguranca || "Se sentir dor aguda, interrompa o exercício.")}</p></div>
+        <div class="ex-bt" id="pl-ex-bt"></div><button class="link ex-pula" id="pl-skip">Pular este exercício</button></div></div>`;
+    window.BONECO.mount($("pl-stage"), e, {});
+    $("pl-skip").onclick = () => { calar(); if(PL.i >= PL.T.steps.length - 1) return fimTreino(); entraExercicio(PL.i + 1); };
+    atualizaExpl();
+  }
+  $("pl-x").onclick = sairTreino;
+};
+/* o relógio NÃO anda durante a explicação; a contagem 3-2-1 só depois de Iniciar */
+relogio = function(){
+  clearInterval(PL.int);
+  PL.int = setInterval(() => {
+    if(!PL || PL.pausa) return;
+    if(PL.relogioParado){ PL.ini = Date.now(); } // o tempo de treino só conta a partir do primeiro "Iniciar"
+    const tt = $("pl-tt"); if(tt) tt.textContent = mmss(Math.round((Date.now() - PL.ini) / 1000));
+    if(PL.fase === "expl" || PL.fase === "fim") return;
+    if(PL.fase === "cont"){ PL.rem--; const n = $("pl-cnum");
+      if(PL.rem <= 0){ if(n) n.textContent = "VAI!"; falar("Vai!"); vibra(80); clearInterval(PL.int); setTimeout(() => { if(PL && PL.fase === "cont"){ relogio(); comecaExercicio(); } }, 700); return; }
+      if(n){ n.textContent = PL.rem; n.classList.remove("pulso"); void n.offsetWidth; n.classList.add("pulso"); } SOM.tick && SOM.tick(); falar(String(PL.rem)); return; }
+    const s = PL.T.steps[PL.i];
+    if(PL.fase === "ex"){ PL.ativo++; PL.kcal += kcalDe(s, 1); }
+    if(PL.fase === "ex" && s.modo === "r"){ atualizaPlay(); return; }
+    PL.rem--;
+    if(PL.rem <= 3 && PL.rem > 0){ SOM.tick(); if(PL.fase !== "ex") vibra(40); }
+    if(PL.fase === "ex" && s.modo === "t" && PL.rem === Math.floor(s.val / 2) && s.val >= 30) falar("Metade. Continue!");
+    if(PL.fase === "ex" && s.modo === "t" && PL.rem === 10 && s.val >= 25) falar("Faltam 10 segundos!");
+    if(PL.rem <= 0){ proximaFase(); return; }
+    atualizaPlay();
+  }, 1000);
+};
+const comecaExercicioV = comecaExercicio;
+comecaExercicio = function(){ if(PL.relogioParado){ PL.relogioParado = false; PL.ini = Date.now(); } registraEvento("exercise_started", { exercicio: PL.T.steps[PL.i].id }); return comecaExercicioV.apply(this, arguments); };
+proximaFase = function(){
+  if(!PL) return;
+  if(PL.fase === "ex"){
+    PL.feitos.add(PL.i); SOM.check();
+    const s = PL.T.steps[PL.i];
+    if(PL.i >= PL.T.steps.length - 1){ fimTreino(); return; }
+    if(s.desc > 0){ PL.fase = "rest"; PL.rem = s.desc; const nx = PL.T.steps[PL.i + 1]; SOM.restStart(); falar(`Descanse. Próximo: ${exById(nx.id).nome}.`); desenhaPlay(); }
+    else entraExercicio(PL.i + 1);
+    return;
+  }
+  if(PL.fase === "rest" || PL.fase === "prep") entraExercicio(PL.fase === "prep" ? PL.i : PL.i + 1);
+};
+iniciaTreino = function(T){
+  if(!T || !T.steps.length) return;
+  window.BONECO.stop(); calar();
+  PL = { T, i: 0, fase: "expl", rem: 0, ini: Date.now(), relogioParado: true, pausa: false, kcal: 0, ativo: 0, feitos: new Set(), int: null, token: 0, expl: { estado: "falando", rep: 0 } };
+  $("play").hidden = false; document.body.style.overflow = "hidden"; telaAcesa(true);
+  relogio(); entraExercicio(0);
+};
+/* saiu do app durante a explicação: para a voz e espera ela voltar (nunca começa sozinho) */
+document.addEventListener("visibilitychange", () => { if(document.visibilityState === "hidden" && PL && PL.fase === "expl" && PL.expl && PL.expl.estado === "falando"){ calar(); PL.token++; PL.expl.estado = "ok"; atualizaExpl(); }
+  if(document.visibilityState === "hidden" && PL && PL.fase === "cont"){ PL.fase = "expl"; PL.expl = { estado: "ok", rep: 0 }; calar(); desenhaPlay(); } });
+/* configurações: explicação e velocidade */
+const editaVozV = editaVoz;
+editaVoz = function(){ editaVozV.apply(this, arguments); const b = $("sheet-body"); if(!b) return;
+  const m = modoExpl(), v = ME.vozVel || CFGV().velocidade || 1;
+  b.insertAdjacentHTML("afterbegin", `<div><h3 style="font-size:18px;margin-bottom:10px">Explicação antes dos exercícios</h3><div class="seg">${[["sempre", "Sempre"], ["primeira", "Só na 1ª vez"], ["off", "Desativada"]].map(([k, n]) => `<button data-xm="${k}" aria-pressed="${m === k}">${n}</button>`).join("")}</div>
+    <p class="hint" style="margin:8px 0 0">A explicação também aparece escrita. Com "Desativada", o exercício começa direto com 3, 2, 1.</p></div>
+    <div><h3 style="font-size:18px;margin-bottom:10px">Velocidade da voz</h3><div class="seg">${[[.8, "0,8x"], [1, "1x"], [1.2, "1,2x"]].map(([k, n]) => `<button data-xv="${k}" aria-pressed="${Math.abs(v - k) < .06}">${n}</button>`).join("")}</div></div>`);
+  b.querySelectorAll("[data-xm]").forEach(x => x.onclick = () => { ME.vozExpl = x.dataset.xm; save(); b.querySelectorAll("[data-xm]").forEach(y => y.setAttribute("aria-pressed", y === x)); SOM.tap(); });
+  b.querySelectorAll("[data-xv]").forEach(x => x.onclick = () => { ME.vozVel = +x.dataset.xv; save(); b.querySelectorAll("[data-xv]").forEach(y => y.setAttribute("aria-pressed", y === x)); falar("Assim fica a velocidade da voz."); });
+  const velAntiga = b.querySelectorAll("[data-vel]"); if(velAntiga.length) velAntiga[0].closest("div").parentElement.remove();
+};
+window.CKVOZ = { texto: textoExplicacao };
+
+
 /* ===================== NAVEGAÇÃO (voltar e gestos) =====================
    - Botão voltar do celular/navegador fecha a janela aberta (não sai do app).
    - Fora do Início, o voltar leva para o Início antes de sair.
@@ -6707,7 +7078,7 @@ function fimTreino(parcial){
   let rate = 0;
   $("play").querySelectorAll("[data-r]").forEach(b => b.onclick = () => { rate = +b.dataset.r; $("play").querySelectorAll("[data-r]").forEach(x => x.setAttribute("aria-pressed", x === b)); });
   const sai = dest => {
-    if(ME.prog && T.prog === ME.prog.id && rate){ ME.prog.fator = Math.max(-.3, Math.min(.5, (ME.prog.fator || 0) + (rate < 0 ? .1 : -.1))); save(); toast(rate < 0 ? "Vamos aumentar um pouco no próximo treino" : "Vamos pegar mais leve no próximo treino"); }
+    if(ME.prog && T.prog === ME.prog.id && rate && pode("adaptacao_treino")){ ME.prog.fator = Math.max(-.3, Math.min(.5, (ME.prog.fator || 0) + (rate < 0 ? .1 : -.1))); save(); toast(rate < 0 ? "Vamos aumentar um pouco no próximo treino" : "Vamos pegar mais leve no próximo treino"); }
     fimPlay(); tab(dest);
   };
   $("fim-ok").onclick = () => sai(parcial ? "inicio" : "evolucao");
@@ -7175,8 +7546,7 @@ function stopTimer(){ clearInterval(TM); TM = null; $("timer").hidden = true; }
 /* ---------- Anúncios em tela cheia (só para quem não é Premium) ---------- */
 const AD = { cliques: 0, ultimo: Date.now(), hoje: 0, dia: today() };
 const ocupado = () => !$("play").hidden || !$("cook").hidden;
-document.addEventListener("click", e => { if(!ME || $("v-app").hidden || isPremium(ME) || !$("ad").hidden || ocupado() || e.target.closest("#ad")) return; AD.cliques++; tentarAnuncio(); }, true);
-setInterval(() => { if(ME && !$("v-app").hidden && !isPremium(ME) && !ocupado()) tentarAnuncio(); }, 30000);
+// anúncios em tela cheia foram desligados: publicidade só em espaços naturais (Feed e Explorar), ver plano.js
 function campanhasPara(u){
   const id = idade(u.nasc), d = today();
   return (DB.campanhas || []).filter(c => { const an = DB.anunciantes.find(a => a.id === c.anunc); return c.ativa && an && an.ativo && c.inicio <= d && (!c.fim || c.fim >= d) && (c.genero === "todos" || c.genero === u.genero) && (!c.cidade || +c.cidade === +u.cidade) && (id == null || ((!c.idMin || id >= c.idMin) && (!c.idMax || id <= c.idMax))); });
@@ -8898,6 +9268,223 @@ function formFig(f, L){
   };
 }
 VIEWS.figurinhas = vFigurinhas;
+
+
+/* ===================== Painel · MONETIZAÇÃO, VERIFICAÇÕES, EXERCÍCIOS (voz), CIDADES ===================== */
+AIC.monetizacao = '<path d="M12 2v20M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>';
+AIC.verificacoes = '<circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9.5"/>';
+SECOES.push(["monetizacao", "Monetização"], ["verificacoes", "Verificações"]);
+GRUPOS.splice(1, 0, ["Monetização", ["monetizacao"]]);
+GRUPOS.forEach(g => { if(g[0] === "Social e moderação" && !g[1].includes("verificacoes")) g[1].push("verificacoes"); });
+const MON_SUB = [["geral","Visão geral"],["planos","Planos"],["assinaturas","Assinaturas"],["trials","Trials"],["ofertas","Ofertas"],["recursos","Recursos Free/Pro"],["receitas","Receitas Free/Pro"],["webhooks","Pagamentos/Webhooks"],["config","Configurações"]];
+let MONA = "geral";
+const ST_ASS = { trialing: "Teste", active: "Ativa", past_due: "Pagamento pendente", grace_period: "Carência", canceled: "Cancelada (até o fim)", expired: "Expirada", refunded: "Reembolsada", chargeback: "Chargeback" };
+const PROV = { trial: "Teste", kiwify: "Kiwify", apple: "Apple", google: "Google", manual: "Manual", promocao: "Promoção", legado: "Legado" };
+const brlA = v => "R$ " + Number(v || 0).toFixed(2).replace(".", ",");
+function vMonetizacao(){
+  $("adm-main").innerHTML = `<div class="head"><div><h1>Monetização</h1><p class="muted">CK Life Free, teste de 7 dias e CK Life Pro. O acesso Pro é decidido no servidor (nunca pelo app).</p></div></div>
+    <div class="chips scroll seg-sub">${MON_SUB.map(([k, n]) => `<button class="chip" data-mo="${k}" aria-pressed="${MONA === k}">${n}</button>`).join("")}</div><div id="mo-b"><div class="card">Carregando…</div></div>`;
+  $("adm-main").querySelectorAll("[data-mo]").forEach(b => b.onclick = () => { MONA = b.dataset.mo; vMonetizacao(); });
+  if(!SB2()) return $("mo-b").innerHTML = `<div class="card">Funciona no app oficial, com o banco conectado.</div>`;
+  ({ geral: moGeral, planos: moPlanos, assinaturas: moAssin, trials: moTrials, ofertas: moOfertas, recursos: moRecursos, receitas: moReceitas, webhooks: moWebhooks, config: moConfig })[MONA]().catch(e => { const b = $("mo-b"); if(b) b.innerHTML = semBanco(e).replace("seguranca.sql", "monetizacao.sql"); });
+}
+const MB = () => $("mo-b");
+async function moGeral(){
+  const r = await sq(SB2().rpc("admin_monetizacao_resumo")); if(!r) return MB().innerHTML = `<div class="card">Seu acesso não inclui Monetização.</div>`;
+  const conv = r.trials_30d ? Math.round(100 * r.trial_convertidos / Math.max(1, r.trials_30d + r.trial_convertidos)) : 0;
+  MB().innerHTML = `<div class="grid g4">${kpi("Free", int(r.free), "", "alunos", 1)}${kpi("Em teste", int(r.trial), `${int(r.trial_termina_hoje)} terminam hoje · ${int(r.trial_termina_48h)} em 48h`)}${kpi("Pro", int(r.pro), `${int(r.mensais)} mensais · ${int(r.anuais)} anuais`)}${kpi("Teste → Pro", conv + "%", `${int(r.trial_convertidos)} converteram`)}</div>
+    <div class="grid g4">${kpi("Receita bruta (30 dias)", brlA(r.receita_bruta_30d), "valor cobrado pela Kiwify, antes de taxas (não é lucro)", "financeiro")}${kpi("Cancelamentos (30d)", int(r.cancelamentos_30d))}${kpi("Pagamento pendente", int(r.past_due))}${kpi("Reembolsos · chargebacks", `${int(r.reembolsos_30d)} · ${int(r.chargebacks_30d)}`)}</div>
+    <div class="grid g2"><div class="card"><h3>Ofertas</h3><div class="tbl"><table><thead><tr><th>Campanha</th><th>Ofertas</th><th>Impressões</th><th>Cliques</th><th>Checkout</th><th>Conversões</th></tr></thead><tbody>${(r.ofertas || []).map(o => `<tr><td>${esc(o.campanha)}</td><td class="num">${int(o.ofertas)}</td><td class="num">${int(o.impressoes)}</td><td class="num">${int(o.cliques)}</td><td class="num">${int(o.checkouts)}</td><td class="num">${int(o.conversoes)}</td></tr>`).join("") || `<tr><td colspan="6" class="empty">Sem ofertas ainda.</td></tr>`}</tbody></table></div></div>
+    <div class="card"><h3>Pro por cidade</h3>${Object.entries(r.pro_por_cidade || {}).map(([c, n]) => `<p style="margin:4px 0">${esc((DB().cidades.find(x => String(x.id) === c) || {}).nome || "Sem cidade")} · <b>${int(n)}</b></p>`).join("") || `<p class="muted">Sem assinantes ainda.</p>`}</div></div>`;
+}
+async function moPlanos(){
+  const L = await sq(SB2().from("planos").select("*").order("ordem"));
+  MB().innerHTML = `<p class="muted" style="font-size:13px">Preço, produto e link de checkout num lugar só. O "12x" só aparece quando você marcar que o checkout realmente permite o parcelamento sem mudar o valor.</p>
+    <div class="tbl"><table><thead><tr><th>Plano</th><th>Preço</th><th>Parcelas</th><th>Provider</th><th>Produto</th><th>Checkout</th><th>Ativo</th><th></th></tr></thead><tbody>${L.map(p => `<tr><td><b>${esc(p.nome)}</b><br><small class="muted">${esc(p.id)}</small></td><td class="num">${brlA(p.preco)}${p.periodo === "ano" ? "/ano" : p.periodo === "mes" ? "/mês" : ""}</td><td>${p.parcelas ? `${p.parcelas}x ${brlA(p.parcela_valor)} ${p.parcelamento ? "✓" : "(oculto)"}` : "-"}</td><td>${esc(PROV[p.provider] || p.provider)}</td><td><small>${esc(p.product_id || "—")}</small></td><td>${p.checkout_url ? `<span class="st ok">configurado</span>` : p.periodo === "gratis" ? "-" : `<span class="st warn">falta</span>`}</td><td>${p.ativo ? "sim" : "não"}</td><td><button class="btn btn-line btn-sm needs-edit" data-pp="${p.id}">Editar</button></td></tr>`).join("")}</tbody></table></div>`;
+  MB().querySelectorAll("[data-pp]").forEach(b => b.onclick = () => { const p = L.find(x => x.id === b.dataset.pp);
+    modal("Plano · " + p.nome, `<div class="formgrid"><div class="field"><label for="pp-n">Nome</label><input class="input" id="pp-n" value="${esc(p.nome)}"></div><div class="field"><label for="pp-v">Preço (R$)</label><input class="input num" id="pp-v" value="${esc(p.preco)}"></div>
+      <div class="field"><label for="pp-pa">Parcelas</label><input class="input num" id="pp-pa" value="${esc(p.parcelas || "")}"></div><div class="field"><label for="pp-pv">Valor da parcela</label><input class="input num" id="pp-pv" value="${esc(p.parcela_valor || "")}"></div>
+      <label class="field xf-chk"><input type="checkbox" id="pp-pc" ${p.parcelamento ? "checked" : ""}> O checkout permite esse parcelamento</label><label class="field xf-chk"><input type="checkbox" id="pp-at" ${p.ativo ? "checked" : ""}> Ativo</label>
+      <div class="field"><label for="pp-pr">Provider</label><select class="input" id="pp-pr">${Object.entries(PROV).filter(([k]) => ["kiwify","apple","google","manual"].includes(k)).map(([k, n]) => `<option value="${k}" ${p.provider === k ? "selected" : ""}>${n}</option>`).join("")}</select></div>
+      <div class="field"><label for="pp-id">ID do produto no provider</label><input class="input" id="pp-id" value="${esc(p.product_id || "")}"></div>
+      <div class="field full"><label for="pp-u">Link do checkout</label><input class="input" id="pp-u" value="${esc(p.checkout_url || "")}" placeholder="https://pay.kiwify.com.br/..."></div>
+      <div class="field full"><label for="pp-b">Benefícios (um por linha)</label><textarea class="input" id="pp-b">${esc((p.beneficios || []).join("\n"))}</textarea></div></div><button class="btn btn-accent" id="pp-ok">Salvar</button>`);
+    $("pp-ok").onclick = async () => { const n = s => s === "" ? null : +String(s).replace(",", ".");
+      const d = { nome: val("pp-n"), preco: n(val("pp-v")) || 0, parcelas: n(val("pp-pa")), parcela_valor: n(val("pp-pv")), parcelamento: $("pp-pc").checked, ativo: $("pp-at").checked, provider: val("pp-pr"), product_id: val("pp-id") || null, checkout_url: val("pp-u") || null, beneficios: val("pp-b").split("\n").map(x => x.trim()).filter(Boolean), atualizado: new Date().toISOString() };
+      if(d.checkout_url && !/^https:\/\//.test(d.checkout_url)) return toast("O checkout precisa começar com https://");
+      try{ await sq(SB2().from("planos").update(d).eq("id", p.id)); fechar(); toast("Plano salvo (registrado na auditoria)"); moPlanos(); }catch(e){ toast("Sem permissão"); } }; });
+}
+let MOQ = "";
+async function moAssin(){
+  const L = await sq(SB2().from("assinaturas").select("*").order("atualizado", { ascending: false }).limit(300));
+  const nomes = {}; DB().users.forEach(u => nomes[u.id] = u);
+  const V = MOQ ? L.filter(a => ((nomes[a.user_id] || {}).nome + " " + (a.email || "") + " " + (a.external_id || "")).toLowerCase().includes(MOQ.toLowerCase())) : L;
+  MB().innerHTML = `<div class="toolbar"><input class="input" id="ma-q" placeholder="Buscar nome, e-mail ou ID externo" value="${esc(MOQ)}" style="max-width:320px"><button class="btn btn-accent btn-sm needs-edit" id="ma-dar">+ Conceder Pro</button></div>
+    <div class="tbl"><table><thead><tr><th>Usuária</th><th>Plano</th><th>Status</th><th>Provider</th><th>Início</th><th>Fim / renovação</th><th>Campanha</th><th>ID externo</th><th></th></tr></thead><tbody>
+    ${V.map(a => `<tr><td><b>${esc((nomes[a.user_id] || {}).nome || "—")}</b><br><small class="muted">${esc(a.email || "")}</small></td><td>${esc(a.plano)}</td><td><span class="st ${["active","trialing"].includes(a.status) ? "ok" : "warn"}">${ST_ASS[a.status] || a.status}</span></td><td>${PROV[a.provider] || a.provider}</td><td>${brD(String(a.inicio).slice(0, 10))}</td><td>${a.fim ? brD(String(a.fim).slice(0, 10)) : "-"}</td><td><small>${esc(a.campanha || "")}</small></td><td><small>${esc(a.external_id || "")}</small></td><td>${new Date(a.fim) > new Date() && a.status !== "trialing" ? `<button class="btn btn-line btn-sm needs-edit" data-rm="${a.id}">Remover</button>` : ""}</td></tr>`).join("") || `<tr><td colspan="9" class="empty">Nenhuma assinatura.</td></tr>`}</tbody></table></div>`;
+  let tq; $("ma-q").oninput = e => { clearTimeout(tq); tq = setTimeout(() => { MOQ = e.target.value; moAssin(); }, 350); };
+  const dar = $("ma-dar"); if(dar) dar.onclick = () => {
+    modal("Conceder CK Life Pro", `<div class="formgrid"><div class="field full"><label for="cp-u">Usuária (e-mail)</label><input class="input" id="cp-u" list="cp-ul"><datalist id="cp-ul">${DB().users.filter(u => !u.exemplo).map(u => `<option value="${esc(u.email)}">${esc(u.nome)}</option>`).join("")}</datalist></div>
+      <div class="field"><label for="cp-d">Período</label><select class="input" id="cp-d">${[[7,"7 dias"],[30,"30 dias"],[90,"90 dias"],[365,"1 ano"],[0,"Personalizado"]].map(([v, n]) => `<option value="${v}">${n}</option>`).join("")}</select></div><div class="field"><label for="cp-x">Dias (personalizado)</label><input class="input num" id="cp-x"></div>
+      <div class="field full"><label for="cp-m">Motivo (obrigatório, fica na auditoria)</label><input class="input" id="cp-m" maxlength="200"></div></div><button class="btn btn-accent" id="cp-ok">Conceder</button>`);
+    $("cp-ok").onclick = async () => { const u = DB().users.find(x => (x.email || "").toLowerCase() === val("cp-u").toLowerCase()); if(!u) return toast("Usuária não encontrada"); const dias = +val("cp-d") || +val("cp-x"); if(!dias) return toast("Informe o período"); if(!val("cp-m")) return toast("Informe o motivo");
+      try{ await sq(SB2().rpc("admin_conceder_pro", { p_user: u.id, p_dias: dias, p_motivo: val("cp-m") })); fechar(); toast(`Pro concedido por ${dias} dias`); moAssin(); }catch(e){ toast(e.message || "Sem permissão"); } }; };
+  MB().querySelectorAll("[data-rm]").forEach(b => b.onclick = async () => { const m = prompt("Motivo para remover o Pro (fica na auditoria):"); if(!m) return; try{ await sq(SB2().rpc("admin_remover_pro", { p_assinatura: b.dataset.rm, p_motivo: m })); toast("Pro removido"); moAssin(); }catch(e){ toast("Sem permissão"); } });
+}
+async function moTrials(){
+  const L = await sq(SB2().from("assinaturas").select("*").in("provider", ["trial","promocao"]).order("fim", { ascending: true }).limit(300));
+  const nomes = {}; DB().users.forEach(u => nomes[u.id] = u), ag = Date.now();
+  MB().innerHTML = `<div class="card"><b>Teste automático: 7 dias de Pro para toda NOVA usuária</b><p class="muted" style="margin:6px 0 0;font-size:13px">Sem cartão. Controlado pelo servidor. Usuárias antigas não ganham teste automático; para uma campanha, use o botão abaixo.</p>
+    <button class="btn btn-line btn-sm needs-edit" id="mt-ex" style="margin-top:10px">Conceder 7 dias Pro para usuárias existentes…</button></div>
+    <div class="tbl"><table><thead><tr><th>Usuária</th><th>Tipo</th><th>Começou</th><th>Termina</th><th>Situação</th></tr></thead><tbody>${L.map(a => { const f = new Date(a.fim).getTime(); return `<tr><td>${esc((nomes[a.user_id] || {}).nome || a.email || "")}</td><td>${PROV[a.provider]}</td><td>${brD(String(a.inicio).slice(0, 10))}</td><td>${brD(String(a.fim).slice(0, 10))}</td><td>${f < ag ? `<span class="st off">terminou</span>` : f - ag < 864e5 ? `<span class="st warn">termina hoje</span>` : f - ag < 1728e5 ? `<span class="st warn">termina em 48h</span>` : `<span class="st ok">ativo</span>`}</td></tr>`; }).join("") || `<tr><td colspan="5" class="empty">Nenhum teste ainda.</td></tr>`}</tbody></table></div>`;
+  const ex = $("mt-ex"); if(ex) ex.onclick = async () => { const m = prompt("Motivo da campanha (fica na auditoria):"); if(!m) return; if(!confirm("Dar 7 dias de Pro para todas as usuárias que hoje não têm Pro?")) return;
+    try{ const n = await sq(SB2().rpc("admin_trial_existentes", { p_dias: 7, p_motivo: m })); toast(`${n} usuárias receberam 7 dias de Pro`); moTrials(); }catch(e){ toast("Sem permissão"); } };
+}
+async function moOfertas(){
+  const L = await sq(SB2().from("campanhas_oferta").select("*").order("prioridade", { ascending: false }));
+  MB().innerHTML = `<div class="toolbar"><button class="btn btn-accent btn-sm needs-edit" id="mf-novo">+ Nova campanha</button></div><p class="muted" style="font-size:13px">Teste: oferta no dia 5, por 48 horas reais. Free: oferta só em momentos naturais (treino concluído, recurso Pro…), com intervalo de ${esc("15")} dias e limite por período (Configurações). Campanhas se alternam para não parecer promoção eterna.</p>
+    <div class="tbl"><table><thead><tr><th>Campanha</th><th>Público</th><th>Mensal promo</th><th>Anual promo</th><th>Duração</th><th>Checkout</th><th>Ativa</th><th></th></tr></thead><tbody>${L.map(c => `<tr><td><b>${esc(c.titulo)}</b><br><small class="muted">${esc(c.id)}</small></td><td>${c.publico}</td><td>${c.preco_mensal_promo ? brlA(c.preco_mensal_promo) + ` × ${c.meses_promo || 12} meses` : "-"}</td><td>${c.preco_anual_promo ? brlA(c.preco_anual_promo) : "-"}</td><td>${c.duracao_horas}h</td><td>${c.checkout_mensal_url && c.checkout_anual_url ? `<span class="st ok">ok</span>` : `<span class="st warn">falta</span>`}</td><td>${c.ativo ? "sim" : "não"}</td><td><button class="btn btn-line btn-sm needs-edit" data-mf="${esc(c.id)}">Editar</button></td></tr>`).join("")}</tbody></table></div>`;
+  const form = c => { const x = c || { publico: "free", duracao_horas: 48, ativo: true, prioridade: 10, max_impressoes: 6, provider: "kiwify", meses_promo: 12 };
+    const F2 = [["titulo","Título"],["subtitulo","Subtítulo"],["mensagem","Mensagem"],["preco_mensal_promo","Mensal promocional (R$)"],["meses_promo","Meses no preço promocional"],["preco_anual_promo","Anual promocional (R$)"],["parcelas_anual","Parcelas do anual"],["parcela_anual_valor","Valor da parcela anual"],["duracao_horas","Duração (horas)"],["prioridade","Prioridade"],["max_impressoes","Máximo de impressões"],["product_mensal","Produto mensal (provider)"],["product_anual","Produto anual (provider)"],["checkout_mensal_url","Checkout mensal"],["checkout_anual_url","Checkout anual"]];
+    modal(c ? "Editar campanha" : "Nova campanha", `<div class="formgrid">${c ? "" : `<div class="field"><label for="mf-id">ID (sem espaço)</label><input class="input" id="mf-id"></div>`}<div class="field"><label for="mf-pub">Público</label><select class="input" id="mf-pub">${[["trial","Em teste (dia 5)"],["free","Free"],["todos","Todos sem Pro"]].map(([k, n]) => `<option value="${k}" ${x.publico === k ? "selected" : ""}>${n}</option>`).join("")}</select></div>
+      ${F2.map(([k, n]) => `<div class="field ${/url|mensagem|titulo/.test(k) ? "full" : ""}"><label for="mf-${k}">${n}</label><input class="input" id="mf-${k}" value="${esc(x[k] == null ? "" : x[k])}"></div>`).join("")}
+      <label class="field xf-chk"><input type="checkbox" id="mf-at" ${x.ativo ? "checked" : ""}> Ativa</label></div><button class="btn btn-accent" id="mf-ok">Salvar</button>`);
+    $("mf-ok").onclick = async () => { const d = { publico: val("mf-pub"), ativo: $("mf-at").checked, provider: "kiwify" }; F2.forEach(([k]) => { const v = val("mf-" + k); d[k] = v === "" ? null : /preco|valor/.test(k) ? +v.replace(",", ".") : /meses|parcelas|horas|prioridade|impressoes/.test(k) ? parseInt(v) : v; });
+      if(!d.titulo) return toast("Informe o título"); if(!d.duracao_horas) d.duracao_horas = 48;
+      try{ if(c) await sq(SB2().from("campanhas_oferta").update(d).eq("id", c.id)); else { const id = val("mf-id").toLowerCase().replace(/[^a-z0-9-]+/g, "-"); if(!id) return toast("Informe o ID"); await sq(SB2().from("campanhas_oferta").insert({ id, nome: d.titulo, ...d })); } fechar(); toast("Campanha salva"); moOfertas(); }catch(e){ toast("Sem permissão ou dados inválidos"); } }; };
+  const nv = $("mf-novo"); if(nv) nv.onclick = () => form();
+  MB().querySelectorAll("[data-mf]").forEach(b => b.onclick = () => form(L.find(c => c.id === b.dataset.mf)));
+}
+async function moRecursos(){
+  const L = await sq(SB2().from("recursos").select("*").order("ordem"));
+  MB().innerHTML = `<p class="muted" style="font-size:13px">Defina o que é Free e o que é Pro. O app e o banco usam esta mesma tabela. Nunca são bloqueados: privacidade, termos, exportar dados, excluir conta, denunciar, bloquear, segurança e sair.</p>
+    <div class="tbl"><table><thead><tr><th>Recurso</th><th>Free</th><th>Teste</th><th>Pro</th><th>Limite Free</th><th>Limite Pro</th><th>Ativo</th></tr></thead><tbody>${L.map(r => `<tr><td><b>${esc(r.nome)}</b><br><small class="muted">${esc(r.descricao || r.id)}</small></td>${["free","trial","pro"].map(k => `<td><input type="checkbox" class="needs-edit" data-rc="${r.id}" data-k="${k}" ${r[k] ? "checked" : ""}></td>`).join("")}<td><input class="input num needs-edit" style="width:70px" data-rl="${r.id}" data-k="limite_free" value="${r.limite_free ?? ""}"></td><td><input class="input num needs-edit" style="width:70px" data-rl="${r.id}" data-k="limite_pro" value="${r.limite_pro ?? ""}"></td><td><input type="checkbox" class="needs-edit" data-rc="${r.id}" data-k="ativo" ${r.ativo ? "checked" : ""}></td></tr>`).join("")}</tbody></table></div>`;
+  MB().querySelectorAll("[data-rc]").forEach(c => c.onchange = async () => { try{ await sq(SB2().from("recursos").update({ [c.dataset.k]: c.checked }).eq("id", c.dataset.rc)); toast("Salvo"); }catch(e){ c.checked = !c.checked; toast("Sem permissão"); } });
+  MB().querySelectorAll("[data-rl]").forEach(c => c.onchange = async () => { try{ await sq(SB2().from("recursos").update({ [c.dataset.k]: c.value === "" ? null : parseInt(c.value) }).eq("id", c.dataset.rl)); toast("Salvo"); }catch(e){ toast("Sem permissão"); } });
+}
+let MRQ = "";
+async function moReceitas(){
+  const R = F.receitas(), pl = DB().receitasPlano || (DB().receitasPlano = {});
+  const efetivo = (r, i) => pl[r.id] || (i % 3 === 0 ? "free" : "pro");
+  const V = R.map((r, i) => ({ r, i })).filter(x => !MRQ || x.r.nome.toLowerCase().includes(MRQ.toLowerCase()));
+  MB().innerHTML = `<div class="toolbar"><input class="input" id="mr-q" placeholder="Buscar receita" value="${esc(MRQ)}" style="max-width:260px"><span class="muted" style="font-size:13px">${R.filter((r, i) => efetivo(r, i) === "free").length} grátis · ${R.filter((r, i) => efetivo(r, i) === "pro").length} Pro</span></div>
+    <div class="tbl"><table><thead><tr><th>Receita</th><th>Plano</th></tr></thead><tbody>${V.slice(0, 250).map(({ r, i }) => `<tr><td>${esc(r.nome)}</td><td><select class="input needs-edit" data-rp="${esc(r.id)}" style="max-width:120px"><option value="free" ${efetivo(r, i) === "free" ? "selected" : ""}>Free</option><option value="pro" ${efetivo(r, i) === "pro" ? "selected" : ""}>👑 Pro</option></select></td></tr>`).join("")}</tbody></table></div>`;
+  let tq; $("mr-q").oninput = e => { clearTimeout(tq); tq = setTimeout(() => { MRQ = e.target.value; moReceitas(); }, 300); };
+  MB().querySelectorAll("[data-rp]").forEach(s => s.onchange = () => { pl[s.dataset.rp] = s.value; save(); toast("Salvo"); });
+}
+async function moWebhooks(){
+  const L = await sq(SB2().from("webhook_eventos").select("id,provider,evento,order_id,external_id,email,status,erro,valor,criado,processado").order("criado", { ascending: false }).limit(150));
+  let cfg = null; try{ cfg = await (await fetch("/api/kiwify-webhook")).json(); }catch(e){}
+  MB().innerHTML = `<div class="card"><b>Endpoint Kiwify:</b> <code>${esc(location.origin)}/api/kiwify-webhook</code> · ${cfg ? (cfg.configurado ? `<span class="st ok">configurado</span>` : `<span class="st warn">faltam variáveis na Vercel (KIWIFY_TOKEN e SUPABASE_SERVICE_ROLE_KEY)</span>`) : "-"}
+    <p class="muted" style="font-size:13px;margin:6px 0 0">Assinatura HMAC-SHA1 conferida em cada evento; eventos repetidos são ignorados (idempotência). Nenhum segredo é mostrado aqui. Para conferir uma venda, use o painel da Kiwify (Ver logs → reenviar).</p></div>
+    <div class="tbl"><table><thead><tr><th>Quando</th><th>Provider</th><th>Evento</th><th>Pedido</th><th>Assinatura</th><th>Valor</th><th>Status</th><th>Erro</th></tr></thead><tbody>${L.map(w => `<tr><td class="num">${new Date(w.criado).toLocaleString("pt-BR")}</td><td>${esc(w.provider)}</td><td><b>${esc(w.evento)}</b></td><td><small>${esc(w.order_id)}</small></td><td><small>${esc(w.external_id || "")}</small></td><td>${w.valor ? brlA(w.valor) : "-"}</td><td><span class="st ${w.status === "processado" ? "ok" : w.status === "erro" ? "bad" : "off"}">${w.status}</span></td><td class="wrapcell"><small>${esc(w.erro || "")}</small></td></tr>`).join("") || `<tr><td colspan="8" class="empty">Nenhum evento recebido ainda.</td></tr>`}</tbody></table></div>`;
+}
+async function moConfig(){
+  const L = await sq(SB2().from("app_config").select("*").order("chave"));
+  const ff = DB().config.filtrosFree || ["original", "natural", "glow", "vivo"];
+  MB().innerHTML = `<div class="tbl"><table><thead><tr><th>Configuração</th><th>Valor</th><th></th></tr></thead><tbody>${L.map(c => `<tr><td><b>${esc(c.chave)}</b><br><small class="muted">${{ monetizacao: "Teste, anúncios, ofertas", treino_voz: "Explicação por voz dos exercícios", video: "Limites de vídeo" }[c.chave] || ""}</small></td><td><code style="white-space:pre-wrap;font-size:12px">${esc(JSON.stringify(c.valor, null, 1))}</code></td><td><button class="btn btn-line btn-sm needs-edit" data-ac="${esc(c.chave)}">Editar</button></td></tr>`).join("")}</tbody></table></div>
+    <div class="card"><h3>Programas grátis</h3><p class="muted" style="font-size:13px">Os demais programas ficam no Pro. Quem estava num programa Pro e voltou ao Free usa o programa grátis do seu objetivo; o progresso fica guardado.</p><div class="chips">${F.PLANOS.map(p => `<label class="chip"><input type="checkbox" data-pg="${p.id}" ${(DB().config.programasFree || ["comecando","hiit","gluteos","mobilidade"]).includes(p.id) ? "checked" : ""}> ${esc(p.nome)}</label>`).join("")}</div></div>
+    <div class="card"><h3>Filtros grátis</h3><p class="muted" style="font-size:13px">Os outros filtros e a maquiagem ficam no Pro.</p><div class="chips">${["original","natural","glow","rosado","dourado","suave","vivo","pb"].map(k => `<label class="chip"><input type="checkbox" data-ff="${k}" ${ff.includes(k) ? "checked" : ""}> ${k}</label>`).join("")}</div></div>`;
+  MB().querySelectorAll("[data-pg]").forEach(c => c.onchange = () => { const s = new Set(DB().config.programasFree || ["comecando","hiit","gluteos","mobilidade"]); c.checked ? s.add(c.dataset.pg) : s.delete(c.dataset.pg); DB().config.programasFree = [...s]; save(); toast("Salvo"); });
+  MB().querySelectorAll("[data-ff]").forEach(c => c.onchange = () => { const s = new Set(DB().config.filtrosFree || ff); c.checked ? s.add(c.dataset.ff) : s.delete(c.dataset.ff); DB().config.filtrosFree = [...s]; save(); toast("Salvo"); });
+  MB().querySelectorAll("[data-ac]").forEach(b => b.onclick = () => { const c = L.find(x => x.chave === b.dataset.ac);
+    modal("Configuração · " + c.chave, `<textarea class="input" id="ac-v" style="font-family:monospace;min-height:220px">${esc(JSON.stringify(c.valor, null, 2))}</textarea><button class="btn btn-accent" id="ac-ok" style="margin-top:10px">Salvar</button>`);
+    $("ac-ok").onclick = async () => { let v; try{ v = JSON.parse(val("ac-v")); }catch(e){ return toast("JSON inválido"); } try{ await sq(SB2().from("app_config").update({ valor: v, atualizado: new Date().toISOString() }).eq("chave", c.chave)); if(c.chave === "treino_voz"){ DB().config.treinoVoz = v; save(); } fechar(); toast("Salvo e registrado"); moConfig(); }catch(e){ toast("Sem permissão"); } }; });
+}
+
+/* ---------- Verificações (selo azul) ---------- */
+let VFA = "pending";
+async function vVerificacoes(){
+  $("adm-main").innerHTML = `<div class="head"><div><h1>Verificações</h1><p class="muted">Selo azul = pessoa real verificada. Pagamento NÃO dá selo. A selfie é privada e nunca aparece no perfil.</p></div></div>
+    <div class="chips">${[["pending","Pendentes"],["needs_review","Nova análise"],["verified","Aprovadas"],["rejected","Recusadas"],["revoked","Revogadas"]].map(([k, n]) => `<button class="chip" data-vf="${k}" aria-pressed="${VFA === k}">${n}</button>`).join("")}</div><div id="vf-b"><div class="card">Carregando…</div></div>`;
+  $("adm-main").querySelectorAll("[data-vf]").forEach(b => b.onclick = () => { VFA = b.dataset.vf; vVerificacoes(); });
+  if(!SB2()) return;
+  let L; try{ L = await sq(SB2().from("verificacoes").select("*").eq("status", VFA).order("criado", { ascending: false }).limit(200)); }catch(e){ return $("vf-b").innerHTML = semBanco(e).replace("seguranca.sql", "monetizacao.sql"); }
+  const nomes = {}; DB().users.forEach(u => nomes[u.id] = u);
+  const urls = await Promise.all(L.map(v => v.selfie ? SB2().storage.from("social").createSignedUrl(v.selfie, 300).then(r => r.data && r.data.signedUrl, () => null) : null));
+  $("vf-b").innerHTML = L.length ? `<div class="vf-grade">${L.map((v, i) => `<div class="card vf-it"><div class="vf-foto">${urls[i] ? `<img src="${esc(urls[i])}" alt="Selfie de verificação">` : `<span class="muted">Sem selfie ainda</span>`}</div><b>${esc((nomes[v.user_id] || {}).nome || "")}</b><small class="muted">Código esperado na foto: <b>${esc(v.codigo || "")}</b> · ${new Date(v.criado).toLocaleDateString("pt-BR")}</small>${v.motivo ? `<small>Motivo: ${esc(v.motivo)}</small>` : ""}
+    <div class="acts needs-edit">${v.status !== "verified" ? `<button class="btn btn-accent btn-sm" data-dv="${v.id}" data-s="verified">Aprovar</button>` : `<button class="btn btn-bad btn-sm" data-dv="${v.id}" data-s="revoked">Revogar</button>`}${v.status === "pending" || v.status === "needs_review" ? `<button class="btn btn-line btn-sm" data-dv="${v.id}" data-s="needs_review">Pedir nova foto</button><button class="btn btn-bad btn-sm" data-dv="${v.id}" data-s="rejected">Recusar</button>` : ""}</div></div>`).join("")}</div>` : `<div class="card empty">Nada aqui.</div>`;
+  $("vf-b").querySelectorAll("[data-dv]").forEach(b => b.onclick = async () => { const s = b.dataset.s; const m = s === "verified" ? null : prompt("Motivo (obrigatório):"); if(s !== "verified" && !m) return;
+    try{ await sq(SB2().rpc("verificacao_decidir", { p_id: b.dataset.dv, p_status: s, p_motivo: m })); toast("Feito e registrado"); vVerificacoes(); }catch(e){ toast(e.message || "Sem permissão"); } });
+}
+
+/* ---------- Exercícios: explicação por voz, status e teste de áudio ---------- */
+const ST_EX = { rascunho: "Rascunho", revisar: "Revisar", publicado: "Publicado" };
+const falaAdmin = t => { try{ speechSynthesis.cancel(); const v = speechSynthesis.getVoices().filter(x => /pt-BR|pt_BR/i.test(x.lang)), pref = ["luciana","francisca","fernanda","vitória","thalita","camila","google português do brasil","maria"].map(n => v.find(x => x.name.toLowerCase().includes(n))).find(Boolean) || v[0];
+  const u = new SpeechSynthesisUtterance(t); u.lang = "pt-BR"; if(pref) u.voice = pref; u.rate = ((DB().config.treinoVoz || {}).velocidade) || 1; speechSynthesis.speak(u); return true; }catch(e){ return false; } };
+function vExerciciosVoz(){
+  const L = F.exercicios(), extras = new Set((DB().exercExtras || []).map(x => x.id));
+  const valido = e => (e.passos || []).length >= 1;
+  $("adm-main").innerHTML = `<div class="head"><div><h1>Exercícios</h1><p class="muted">${L.length} exercícios. Antes de cada exercício o app explica por voz e por escrito como fazer, usando exatamente o texto daqui.</p></div><button class="btn btn-accent needs-edit" id="ex-new">+ Novo exercício</button></div>
+    ${L.some(e => !valido(e)) ? `<div class="card" style="background:var(--warn-soft)"><b>⚠️ ${L.filter(e => !valido(e)).length} exercício(s) sem instrução válida</b></div>` : ""}
+    <div class="tbl"><table><thead><tr><th></th><th>Exercício</th><th>Grupo</th><th>Explicação</th><th>Status</th><th></th></tr></thead><tbody>${L.map(e => `<tr><td><span class="exn th" style="width:44px;height:44px;display:block">${window.BONECO.thumb(e, "f")}</span></td><td><b>${esc(e.nome)}</b><br><small class="muted">${extras.has(e.id) ? "Criado no painel" : "Catálogo CK Life"}</small></td><td>${esc(e.grupo)}</td><td>${valido(e) ? (e.voz ? `<span class="st ok">revisada</span>` : `<span class="st ok">automática do passo a passo</span>`) : `<span class="st bad">falta instrução</span>`}</td><td><span class="st ${(e.status || "publicado") === "publicado" ? "ok" : "warn"}">${ST_EX[e.status || "publicado"]}</span></td><td><button class="btn btn-line btn-sm" data-xo="${esc(e.id)}">🔊</button> <button class="btn btn-line btn-sm needs-edit" data-xe="${esc(e.id)}">Editar</button></td></tr>`).join("")}</tbody></table></div>`;
+  $("adm-main").querySelectorAll("[data-xo]").forEach(b => b.onclick = () => { const e = F.exercicios().find(x => x.id === b.dataset.xo); if(!falaAdmin(window.CKVOZ.texto(e))) toast("Este navegador não tem voz"); });
+  $("adm-main").querySelectorAll("[data-xe]").forEach(b => b.onclick = () => formExVoz(F.exercicios().find(x => x.id === b.dataset.xe)));
+  const n = $("ex-new"); if(n) n.onclick = () => formExVoz(null);
+}
+function formExVoz(e){
+  const extra = !e || (DB().exercExtras || []).some(x => x.id === e.id), x = e || { nome: "", grupo: "Pernas", equip: "", passos: [], erros: [], resp: "", status: "rascunho" };
+  const ta = (id, l, v, ph) => `<div class="field full"><label for="${id}">${l}</label><textarea class="input" id="${id}" ${ph ? `placeholder="${esc(ph)}"` : ""}>${esc(v || "")}</textarea></div>`;
+  modal(e ? "Editar exercício" : "Novo exercício", `<div class="formgrid"><div class="field full"><label for="xv-n">Nome</label><input class="input" id="xv-n" value="${esc(x.nome)}"></div>
+    ${ta("xv-d", "Descrição", x.descricao)}<div class="field"><label for="xv-g">Grupo muscular</label><input class="input" id="xv-g" value="${esc(x.grupo || "")}"></div><div class="field"><label for="xv-q">Equipamento</label><input class="input" id="xv-q" value="${esc(x.equip || "")}"></div>
+    <div class="field"><label for="xv-ni">Nível</label><select class="input" id="xv-ni">${["", "Iniciante", "Intermediário", "Avançado"].map(v => `<option ${x.nivel === v ? "selected" : ""}>${v}</option>`).join("")}</select></div><div class="field"><label for="xv-o">Objetivo</label><input class="input" id="xv-o" value="${esc(x.objetivo || "")}"></div>
+    ${ta("xv-p", "Instrução escrita: posição inicial e movimento (um passo por linha)", (x.passos || []).join("\n"))}
+    ${ta("xv-e", "Erros comuns (um por linha)", (x.erros || []).join("\n"))}
+    <div class="field full"><label for="xv-r">Respiração</label><input class="input" id="xv-r" value="${esc(x.resp || "")}"></div>
+    <div class="field full"><label for="xv-s">Aviso de segurança</label><input class="input" id="xv-s" value="${esc(x.seguranca || "")}" placeholder="Se sentir dor aguda, interrompa o exercício."></div>
+    ${ta("xv-v", "Texto da explicação por voz (deixe vazio para montar a partir dos campos acima)", x.voz, "")}
+    <div class="field"><label for="xv-st">Status</label><select class="input" id="xv-st">${Object.entries(ST_EX).map(([k, n]) => `<option value="${k}" ${(x.status || "publicado") === k ? "selected" : ""}>${n}</option>`).join("")}</select></div>
+    <p class="muted" style="font-size:12.5px;grid-column:1/-1">Repetições, tempo e descanso são definidos em cada programa. Use orientações proporcionais, sem promessas médicas.</p></div>
+    <div class="card" style="background:var(--surface-2)"><b>Prévia do que será falado</b><p id="xv-prev" style="margin:6px 0 0;font-size:14px"></p></div>
+    <div id="xv-msg"></div><div class="toolbar" style="justify-content:space-between"><button class="btn btn-line" id="xv-ouvir">🔊 Testar explicação</button><button class="btn btn-accent" id="xv-ok">Salvar</button></div>`);
+  const ls = id => val(id).split("\n").map(s => s.trim()).filter(Boolean);
+  const dados = () => ({ nome: val("xv-n"), descricao: val("xv-d") || undefined, grupo: val("xv-g") || "Outros", equip: val("xv-q"), nivel: val("xv-ni") || undefined, objetivo: val("xv-o") || undefined, passos: ls("xv-p"), erros: ls("xv-e"), resp: val("xv-r"), seguranca: val("xv-s") || undefined, voz: val("xv-v") || undefined, status: val("xv-st") });
+  const prev = () => { $("xv-prev").textContent = window.CKVOZ.texto({ ...x, ...dados() }); };
+  $("mbox").querySelectorAll("input,textarea,select").forEach(i => i.addEventListener("input", prev)); prev();
+  $("xv-ouvir").onclick = () => { if(!falaAdmin(window.CKVOZ.texto({ ...x, ...dados() }))) toast("Este navegador não tem voz"); };
+  $("xv-ok").onclick = () => { const d = dados();
+    if(!d.nome) return $("xv-msg").innerHTML = `<div class="msg msg-bad">Informe o nome.</div>`;
+    if(d.status === "publicado" && !d.passos.length) return $("xv-msg").innerHTML = `<div class="msg msg-bad">Para publicar, escreva pelo menos um passo de execução.</div>`;
+    if(/garantid|emagrece em|cura|100% seguro|seguro para todo/i.test([d.voz, d.descricao, d.seguranca].join(" "))) return $("xv-msg").innerHTML = `<div class="msg msg-bad">Evite promessas e afirmações médicas absolutas.</div>`;
+    Object.keys(d).forEach(k => d[k] === undefined && delete d[k]);
+    if(extra){ if(e) Object.assign((DB().exercExtras || []).find(y => y.id === e.id), d); else DB().exercExtras.push({ id: "x" + F.uid(), ...d }); }
+    else { DB().exercAjustes = DB().exercAjustes || []; const a = DB().exercAjustes.find(y => y.id === e.id); if(a) Object.assign(a, d); else DB().exercAjustes.push({ id: e.id, ...d }); }
+    save(); speechSynthesis.cancel(); fechar(); toast("Exercício salvo"); vExerciciosVoz(); };
+}
+
+/* ---------- Cidades com dados oficiais (IBGE) ---------- */
+function vCidadesIBGE(){
+  const db = DB(), L = db.cidades.slice().sort((a, b) => (b.populacao || 0) - (a.populacao || 0));
+  $("adm-main").innerHTML = `<div class="head"><div><h1>Cidades e comunidades</h1><p class="muted">Cidades de MT com mais de 20 mil habitantes (IBGE) e "Outra cidade" para quem mora em município menor. O feed geral continua para todas.</p></div><button class="btn btn-accent needs-edit" id="cg-n">+ Nova cidade</button></div>
+    <div class="tbl"><table><thead><tr><th>Cidade</th><th>UF</th><th>População</th><th>IBGE</th><th>Usuárias</th><th>Parceiros</th><th>Status</th><th></th></tr></thead><tbody>${L.map(c => `<tr><td><b>${esc(c.nome)}</b>${c.destaque ? " ★" : ""}${c.fonte ? `<br><small class="muted">${esc(c.fonte)} ${c.ano_estimativa || ""}</small>` : ""}</td><td>${esc(c.uf || "")}</td><td class="num">${c.populacao ? int(c.populacao) : "-"}</td><td class="num">${esc(c.ibge || "-")}</td><td class="num">${db.users.filter(u => +u.cidade === +c.id).length}</td><td class="num">${(db.empresas || []).filter(e => +e.cidade === +c.id).length + (db.parceiros || []).filter(p => +p.cidade === +c.id).length}</td><td><span class="st ${c.ativa ? "ok" : "off"}">${c.ativa ? "Ativa" : "Oculta"}</span></td><td><button class="btn btn-line btn-sm needs-edit" data-cg="${c.id}">Editar</button></td></tr>`).join("")}</tbody></table></div>`;
+  const form = c => { const x = c || { ativa: true, uf: "MT" };
+    modal(c ? "Editar cidade" : "Nova cidade", `<div class="formgrid"><div class="field"><label for="cg-nm">Nome</label><input class="input" id="cg-nm" value="${esc(x.nome || "")}"></div><div class="field"><label for="cg-uf">UF</label><input class="input" id="cg-uf" maxlength="2" value="${esc(x.uf || "")}"></div>
+      <div class="field"><label for="cg-ib">Código IBGE</label><input class="input num" id="cg-ib" value="${esc(x.ibge || "")}"></div><div class="field"><label for="cg-po">População (fonte oficial)</label><input class="input num" id="cg-po" value="${esc(x.populacao || "")}"></div>
+      <div class="field"><label for="cg-an">Ano da estimativa</label><input class="input num" id="cg-an" value="${esc(x.ano_estimativa || "")}"></div><div class="field"><label for="cg-fo">Fonte</label><input class="input" id="cg-fo" value="${esc(x.fonte || "")}"></div>
+      <label class="field xf-chk"><input type="checkbox" id="cg-at" ${x.ativa ? "checked" : ""}> Ativa</label><label class="field xf-chk"><input type="checkbox" id="cg-de" ${x.destaque ? "checked" : ""}> Destaque</label></div>
+      <p class="muted" style="font-size:12.5px">Não invente população: use o número do IBGE e informe ano e fonte.</p><button class="btn btn-accent" id="cg-ok">Salvar</button>`);
+    $("cg-ok").onclick = () => { const d = { nome: val("cg-nm"), uf: val("cg-uf").toUpperCase(), ibge: val("cg-ib") || undefined, populacao: +val("cg-po") || undefined, ano_estimativa: +val("cg-an") || undefined, fonte: val("cg-fo") || undefined, ativa: $("cg-at").checked, destaque: $("cg-de").checked };
+      if(!d.nome) return toast("Informe o nome"); if(d.populacao && !d.fonte) return toast("Informe a fonte da população");
+      if(c){ const ant = c.nome; Object.assign(c, d); if(ant !== d.nome) F.nuvem.sb && F.nuvem.sb.rpc("auditar", { p_acao: "cidade_alterada", p_recurso: "cidades", p_alvo: ant + " → " + d.nome }); }
+      else db.cidades.push({ id: d.ibge ? +d.ibge : Math.max(100, ...db.cidades.map(y => +y.id)) + 1, ...d });
+      save(); fechar(); toast("Cidade salva"); vCidadesIBGE(); }; };
+  const n = $("cg-n"); if(n) n.onclick = () => form();
+  $("adm-main").querySelectorAll("[data-cg]").forEach(b => b.onclick = () => form(db.cidades.find(c => String(c.id) === b.dataset.cg)));
+}
+
+/* ---------- Clube CK Pro: marcar benefício como Pro, período e limite ---------- */
+const formParcPro = formParc;
+formParc = function(p){ formParcPro(p); const grid = $("mbox").querySelector(".formgrid"); if(!grid) return; const x = p || {};
+  grid.insertAdjacentHTML("beforeend", `<label class="field xf-chk"><input type="checkbox" id="pa-pro" ${x.pro ? "checked" : ""}> 👑 Benefício do Clube CK Pro</label><div class="field"><label for="pa-ini">Início</label><input class="input" type="date" id="pa-ini" value="${esc(x.inicio || "")}"></div><div class="field"><label for="pa-lim">Limite de cupons</label><input class="input num" id="pa-lim" value="${esc(x.limite || "")}"></div>`);
+  const ok = $("pa-ok"), s0 = ok.onclick; ok.onclick = () => { const extra = { pro: $("pa-pro").checked, inicio: val("pa-ini") || null, limite: +val("pa-lim") || null }; const antes = new Set(DB().parceiros.map(y => y.id)); s0(); const alvo = p || DB().parceiros.find(y => !antes.has(y.id)); if(alvo){ Object.assign(alvo, extra); save(); } }; };
+
+/* ---------- papéis prontos novos ---------- */
+const formPermMon = formPerm;
+formPerm = function(u){ formPermMon(u); const box = $("mbox").querySelector("[data-papel2]"); if(!box) return;
+  box.parentNode.insertAdjacentHTML("beforeend", `<button class="btn btn-line btn-sm" data-papel3="financeiro">Financeiro</button><button class="btn btn-line btn-sm" data-papel3="verificacao">Revisor de verificação</button><button class="btn btn-line btn-sm" data-papel3="conteudo">Conteúdo e exercícios</button>`);
+  const P3 = { financeiro: { monetizacao: "editar", metricas: "ver", financeiro: "ver" }, verificacao: { verificacoes: "editar" }, conteudo: { exercicios: "editar", receitas: "editar", figurinhas: "editar", avisos: "editar" } };
+  $("mbox").querySelectorAll("[data-papel3]").forEach(b => b.onclick = () => { const p = P3[b.dataset.papel3]; $("pm-t").checked = false; $("pm-t").onchange(); $("pm-g").querySelectorAll("select").forEach(s => s.value = p[s.dataset.k] || ""); toast("Papel aplicado. Clique em Salvar permissões."); }); };
+VIEWS.monetizacao = vMonetizacao; VIEWS.verificacoes = vVerificacoes; VIEWS.exercicios = vExerciciosVoz; VIEWS.cidades = vCidadesIBGE;
 
 window.ADMIN = { abrir };
 })();

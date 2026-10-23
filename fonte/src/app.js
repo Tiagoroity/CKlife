@@ -149,7 +149,7 @@ const toRec = (r, i, extra) => ({ id: extra ? r.id : "r" + i, nome: r[0] ?? r.no
 const BASE_REC = [...window.R1, ...window.R2, ...window.R3, ...window.R4].map((r, i) => toRec(r, i));
 function receitas(){ const oc = new Set(DB.receitasOcultas || []); return [...BASE_REC, ...(DB.receitasExtras || []).map(r => toRec(r, 0, true))].filter(r => !oc.has(r.id)); }
 const toEx = e => Array.isArray(e) ? { id: e[0], nome: e[1], grupo: e[2], equip: e[3], passos: e[4].split("|"), erros: (e[5] || "").split("|").filter(Boolean), resp: e[6] || "Respire de forma contínua, sem prender o ar." } : e;
-function exercicios(){ return [...window.EX.map(toEx), ...(DB.exercExtras || [])]; }
+function exercicios(){ const aj = new Map((DB.exercAjustes || []).map(a => [a.id, a])); return [...window.EX.map(toEx), ...(DB.exercExtras || [])].map(e => aj.has(e.id) ? { ...e, ...aj.get(e.id) } : e); }
 const exById = id => exercicios().find(e => e.id === id) || { id, nome: id, grupo: "", equip: "", passos: [], erros: [], resp: "" };
 const META = window.EXMETA, PROGS = window.PROGRAMAS.filter(p => p.local === "casa"), EQN = window.EQ_NOMES;
 const emCasa = id => !!META[id];
@@ -167,7 +167,7 @@ function semente(){
     cidades: [ {id:1,nome:"Cuiabá",uf:"MT",ativa:true}, {id:2,nome:"Várzea Grande",uf:"MT",ativa:true}, {id:3,nome:"Rondonópolis",uf:"MT",ativa:true}, {id:4,nome:"Sinop",uf:"MT",ativa:true}, {id:5,nome:"Outra cidade",uf:"",ativa:true} ],
     segmentos: [ {id:1,nome:"Academia",ativo:true}, {id:2,nome:"Suplementos",ativo:true}, {id:3,nome:"Restaurante saudável",ativo:true}, {id:4,nome:"Moda fitness",ativo:true}, {id:5,nome:"Clínica e estética",ativo:true} ],
     anunciantes: [], campanhas: [], pagamentos: [], profissionais: [], parceiros: [], cupons: [], avisos: [],
-    receitasExtras: [], receitasOcultas: [], exercExtras: []
+    receitasExtras: [], receitasOcultas: [], exercExtras: [], exercAjustes: [], receitasPlano: {}
   };
   db.anunciantes = [
     { id:"an1", nome:"Academia Força Total", seg:1, cidade:1, plano:"exclusivo", valor:450, contato:"Marcos", tel:"(65) 99811-2201", obs:"", ativo:true, exemplo:true },
@@ -345,7 +345,8 @@ function showAdminLogin(aviso){
 
 /* ---------- Plano: recomendação e progressão ---------- */
 const progById = id => PROGS.find(p => p.id === id) || PROGS[0];
-const progAtual = () => progById(ME.prog && ME.prog.id);
+/* Free usa o programa básico do objetivo; os dados do programa Pro ficam guardados e voltam quando ela volta ao Pro */
+const progAtual = () => { const id = ME.prog && ME.prog.id; return typeof progLiberado === "function" && !progLiberado(id) ? progById(objById((ME.perfil && ME.perfil.objetivo) || "emagrecer")[4][0]) : progById(id); };
 function recomenda(p){
   const o = { perder: "emagrecer", forca: "massa", gluteos: "definir", disposicao: "condicionamento" }[p.objetivo] || p.objetivo, ini = p.nivel === "iniciante";
   if(o === "mobilidade") return "mobilidade";
@@ -418,7 +419,8 @@ function streak(){
   const set = diasTreino(); Object.entries(ME.diario || {}).forEach(([d, x]) => { if(REFS.some(([k]) => (x[k] || []).length)) set.add(d); });
   let d = today(); if(!set.has(d)) d = addD(d, -1); let n = 0; while(set.has(d)){ n++; d = addD(d, -1); } return n;
 }
-const isPremium = u => !!(u.premium && (u.premium.tipo === "vitalicio" || u.premium.ate >= today()));
+// Premium da aluna logada vem do servidor (entitlement CK_LIFE_PRO); o campo antigo vale para o painel e como reserva
+const isPremium = u => (u && typeof ME !== "undefined" && ME && u.id === ME.id && window.__ENT && window.__ENT.d) ? !!window.__ENT.d.pro : !!(u && u.premium && (u.premium.tipo === "vitalicio" || u.premium.ate >= today()));
 function migra(u){
   if(u.perfil){ u.perfil.local = u.perfil.local || "casa"; u.perfil.itens = u.perfil.itens || ["cadeira"]; u.perfil.dias = u.perfil.dias || 3; u.perfil.tempo = u.perfil.tempo || 20;
     u.perfil.local = "casa"; u.perfil.objetivo = { perder: "emagrecer", forca: "massa", ganhar: "massa", gluteos: "definir", disposicao: "condicionamento", manter: "definir" }[u.perfil.objetivo] || u.perfil.objetivo; }
@@ -1106,7 +1108,7 @@ function fimTreino(parcial){
   let rate = 0;
   $("play").querySelectorAll("[data-r]").forEach(b => b.onclick = () => { rate = +b.dataset.r; $("play").querySelectorAll("[data-r]").forEach(x => x.setAttribute("aria-pressed", x === b)); });
   const sai = dest => {
-    if(ME.prog && T.prog === ME.prog.id && rate){ ME.prog.fator = Math.max(-.3, Math.min(.5, (ME.prog.fator || 0) + (rate < 0 ? .1 : -.1))); save(); toast(rate < 0 ? "Vamos aumentar um pouco no próximo treino" : "Vamos pegar mais leve no próximo treino"); }
+    if(ME.prog && T.prog === ME.prog.id && rate && pode("adaptacao_treino")){ ME.prog.fator = Math.max(-.3, Math.min(.5, (ME.prog.fator || 0) + (rate < 0 ? .1 : -.1))); save(); toast(rate < 0 ? "Vamos aumentar um pouco no próximo treino" : "Vamos pegar mais leve no próximo treino"); }
     fimPlay(); tab(dest);
   };
   $("fim-ok").onclick = () => sai(parcial ? "inicio" : "evolucao");
@@ -1574,8 +1576,7 @@ function stopTimer(){ clearInterval(TM); TM = null; $("timer").hidden = true; }
 /* ---------- Anúncios em tela cheia (só para quem não é Premium) ---------- */
 const AD = { cliques: 0, ultimo: Date.now(), hoje: 0, dia: today() };
 const ocupado = () => !$("play").hidden || !$("cook").hidden;
-document.addEventListener("click", e => { if(!ME || $("v-app").hidden || isPremium(ME) || !$("ad").hidden || ocupado() || e.target.closest("#ad")) return; AD.cliques++; tentarAnuncio(); }, true);
-setInterval(() => { if(ME && !$("v-app").hidden && !isPremium(ME) && !ocupado()) tentarAnuncio(); }, 30000);
+// anúncios em tela cheia foram desligados: publicidade só em espaços naturais (Feed e Explorar), ver plano.js
 function campanhasPara(u){
   const id = idade(u.nasc), d = today();
   return (DB.campanhas || []).filter(c => { const an = DB.anunciantes.find(a => a.id === c.anunc); return c.ativa && an && an.ativo && c.inicio <= d && (!c.fim || c.fim >= d) && (c.genero === "todos" || c.genero === u.genero) && (!c.cidade || +c.cidade === +u.cidade) && (id == null || ((!c.idMin || id >= c.idMin) && (!c.idMax || id <= c.idMax))); });

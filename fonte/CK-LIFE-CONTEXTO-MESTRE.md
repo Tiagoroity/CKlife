@@ -600,3 +600,11 @@ Você vai continuar o desenvolvimento do CK Life, meu app de treino em casa para
 - App: src/stickers.js (catálogo, seletor com Para você/Recentes/Favoritas/categorias/busca, favoritas e recentes em ME.figFav/ME.figRec, editor de Story com camadas: arrastar, pinça, girar, duplicar, frente, excluir, texto, selos com dados reais; publica e oferece compartilhamento nativo). Pós-treino: "Compartilhar minha conquista" → selfie/foto/sem foto → editor com figurinhas de pós-treino.
 - Chat, comentários (só figurinha ou texto+figurinha, reações rápidas) e publicações usam o mesmo catálogo. Admin: seção Figurinhas (Conteúdo).
 - Navegação: src/navegacao.js (voltar do celular fecha janelas; fora do Início volta ao Início; arrastar da borda esquerda fecha).
+
+## CK LIFE FREE / PRO + VOZ NOS EXERCÍCIOS (23/10/2026)
+- Banco: fonte/sql/monetizacao.sql (partes 1–6): app_config, planos, assinaturas, recursos (Free/Pro), campanhas_oferta + ofertas_usuario (48h reais, dia 5 do teste, Free a cada 15 dias em momentos naturais), eventos_app (analytics), webhook_eventos + kiwify_processa (só service_role), admin_conceder_pro/remover/trial_existentes/resumo, verificacoes (selo azul) + verificacao_decidir/selfie, perfis.verificada/pro_ate protegidos, figurinhas Pro validadas no servidor, validar_cupom com Clube Pro, 36 cidades de MT (IBGE 2026, SIDRA 6579). Testes: testes_monetizacao.sql (246 OK total).
+- Checkouts Kiwify: mensal 8aZsaN7 (19,99), anual izQCfTE (155,88), promo mensal Ukjfxn9 (11,99), promo anual FR31cUG (119,88). Sales Page não é usada.
+- Vercel: api/kiwify-webhook.js confere HMAC-SHA1 (?signature) e chama kiwify_processa. Variáveis: KIWIFY_TOKEN, SUPABASE_SERVICE_ROLE_KEY.
+- App: src/plano.js (ENT/meu_plano, pode(), paywall, chip do teste, oferta com contador do servidor, 👑 em conteúdo Pro, verificação, anúncios só Free dia 31+ no Feed/Explorar); src/treino-voz.js (explicação por voz + texto antes de cada exercício, Repetir/Iniciar, 3-2-1, fallback escrito, modos e velocidade).
+- Admin: src/admin-mon.js (Monetização com 9 abas, Verificações, Exercícios com voz/status/testar, Cidades IBGE, Clube Pro, papéis Financeiro/Verificação/Conteúdo).
+- Docs: docs/monetization/*.md e docs/training/*.md.

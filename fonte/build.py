@@ -7,8 +7,8 @@ def monta(config, supa):
     h = h.replace("/*CONFIG*/", config).replace("<!--SUPABASE-->", supa)
     for k, f in [("NUVEM","nuvem.js"),("SONS","sons.js"),("BONECO","boneco.js"),("FOTOS","fotos.js"),("APP","app.js"),("ADMIN","admin.js")]:
         txt = (s/f).read_text()
-        if f == "app.js": txt = txt.replace("/*EXPANSAO*/", (s/"expansao.js").read_text()).replace("/*SOCIAL*/", (s/"social.js").read_text() + "\n" + (s/"stickers.js").read_text() + "\n" + (s/"meus-dados.js").read_text() + "\n" + (s/"experiencia.js").read_text() + "\n" + (s/"figurinhas.js").read_text() + "\n" + (s/"novidades.js").read_text() + "\n" + (s/"navegacao.js").read_text())
-        if f == "admin.js": txt = txt.replace("/*ADMINXP*/", (s/"admin-xp.js").read_text() + "\n" + (s/"admin-seg.js").read_text())
+        if f == "app.js": txt = txt.replace("/*EXPANSAO*/", (s/"expansao.js").read_text()).replace("/*SOCIAL*/", (s/"social.js").read_text() + "\n" + (s/"stickers.js").read_text() + "\n" + (s/"meus-dados.js").read_text() + "\n" + (s/"experiencia.js").read_text() + "\n" + (s/"figurinhas.js").read_text() + "\n" + (s/"novidades.js").read_text() + "\n" + (s/"plano.js").read_text() + "\n" + (s/"treino-voz.js").read_text() + "\n" + (s/"navegacao.js").read_text())
+        if f == "admin.js": txt = txt.replace("/*ADMINXP*/", (s/"admin-xp.js").read_text() + "\n" + (s/"admin-seg.js").read_text() + "\n" + (s/"admin-mon.js").read_text())
         h = h.replace("/*%s*/" % k, txt)
     return h
 # 1) demonstração (Artifact): sem banco, dados no aparelho
