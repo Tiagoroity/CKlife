@@ -1,6 +1,6 @@
 # CK LIFE · DOCUMENTO MESTRE DO PROJETO
 
-> Atualizado em 23/10/2026. Este documento resume tudo o que foi construído até agora, para que qualquer pessoa ou agente continue o trabalho sem reler a conversa.
+> Atualizado em 23/10/2026, depois da GRANDE EXPANSÃO (commit 8b9235f). Este documento resume tudo o que foi construído até agora, para que qualquer pessoa ou agente continue o trabalho sem reler a conversa.
 > Legenda: ✅ pronto e no ar · 🟡 parcial · ⬜ não existe ainda.
 
 ---
@@ -36,127 +36,93 @@
 | Área | O que existe |
 |---|---|
 | Conta | Cadastro, login, esqueci a senha, nova senha, sessão que não cai, mostrar ou esconder senha, e-mail lembrado |
-| Primeiro acesso | Questionário de 7 passos (objetivo, itens de casa, nível, tempo, dias, medidas) que recomenda um programa |
-| Início | Saudação, treino de hoje, anel de calorias, água (+1 copo), checklist "primeiros passos", meta semanal, frase e dica do dia, receita do dia, card para instalar o app |
-| Treinos | Programas de várias semanas, treinos rápidos, biblioteca de exercícios com busca e filtro por músculo |
-| Player de treino | Foto do exercício, contagem regressiva, descanso, voz da treinadora, bipes e sino, "A seguir", tempo total, confete, recorde, cartão de conquista para compartilhar, postar na comunidade |
-| Nutrição | 197 receitas (café, almoço e jantar, saladas, sopas, lanches, sobremesas fit), cardápio automático, diário "Meu dia", metas de calorias e proteína, modo cozinha com voz e timer |
-| Evolução | Calendário de treinos, sequência de dias, recorde, "Este mês", medalhas, gráfico de peso, medidas |
-| Perfil | Foto de perfil, nível (Começando → Imparável), estatísticas, Premium, dados, plano, objetivo, treino em casa, metas, peso, lembrete, voz, sons, tema claro ou escuro, cupons, profissionais (lista simples), convidar amiga, suporte, sair |
-| Comunidade ("Juntas") | Feed com texto e foto, curtir (também com dois toques), comentários, apagar o que é seu, bolinha vermelha de novidade, atualização a cada 25 s |
-| Anúncios | Pop-up de campanhas segmentadas por cidade, idade e gênero, com frequência configurável. Quem é Premium não vê. Mede visualizações e cliques |
-| Cupons | A cada N treinos (padrão 8) a aluna ganha um cupom de loja parceira. A loja valida com PIN |
-| Lembretes | Arquivo de calendário (.ics) semanal com alarme, mais aviso do navegador enquanto o app está aberto |
-| Instalar | Funciona como app (PWA): manifest, ícones, instruções para iPhone e aviso para quem abriu pelo navegador do Instagram ou WhatsApp |
-| Computador | Layout próprio a partir de 1024 px, com menu lateral |
+| Primeiro acesso | Questionário de 7 passos que recomenda um programa |
+| Navegação | **5 áreas:** Início, Treinos (com seletor Treinos/Nutrição), Comunidade, Explorar, Perfil. Evolução virou "Meu progresso" no Perfil |
+| Início | Saudação, treino de hoje, anel de calorias, água, primeiros passos, meta semanal, frase e dica do dia, receita do dia, instalar o app. Também mostra card do Meu Ciclo (se ativo e não escondido), próximo agendamento e banners do local "Início" |
+| Treinos | Programas, treinos rápidos, biblioteca de exercícios, player com voz, sons, confete, cartão de conquista |
+| Nutrição | 197 receitas, cardápio, diário, metas, modo cozinha |
+| Evolução ("Meu progresso") | Calendário, sequência, recorde, medalhas, peso, medidas |
+| Perfil | Foto, nível, estatísticas, Premium, Meu progresso, Meu Ciclo, Meus agendamentos, Meus favoritos, Minha cidade, Privacidade, dados, plano, objetivo, metas, peso, lembrete, voz, sons, tema, cupons, profissionais (atalho p/ Explorar), convidar, compartilhar sequência, suporte, sair |
+| Comunidade | Feed com texto e foto, curtidas, comentários, moderação, **chat 1 a 1 entre alunas**, perfil público (nome, foto, publicações), bloquear aluna, compartilhar sequência (sempre por escolha da aluna) |
+| Explorar | Cidade ("Minha cidade" + ver outra cidade sem GPS), busca geral, Destaques, Academias/empresas, Profissionais (presencial/online), Serviços, Clube CK, Loja, banners, favoritos, avaliações, agendamento |
+| Agendamentos | Fluxo serviço → data → horário → revisão → confirmação. Status Solicitado, Confirmado, Concluído, Cancelado, Não compareceu. "Meus agendamentos" (Próximos/Concluídos/Cancelados) |
+| Avaliações | 1 a 5 estrelas + comentário, selo "Serviço realizado" quando há agendamento concluído, "Denunciar avaliação", moderação no painel |
+| Meu Ciclo | Opcional e privado: configuração, previsões em faixa (estimativa), atraso, motivos possíveis, check-in diário, adaptar treino de hoje, calendário, padrões, lembrete discreto, apagar dados |
+| Anúncios | Pop-up de campanhas segmentadas (não aparece para Premium) |
+| Cupons / Clube CK | Cupom a cada N treinos e cupom "livre" pego no Clube CK. Loja valida com PIN no servidor |
+| Lembretes | Arquivo .ics semanal + aviso com app aberto. Ciclo: lembrete discreto opcional (app aberto) |
 | Painel admin | Ver seção 15 |
-| Relatório PDF | Relatório do anunciante gerado dentro do painel, com logo, números e gráfico |
-| Premium (Kiwify) | O webhook já existe no código, mas falta configurar (seção 23) |
+| Relatório PDF | Relatório do anunciante |
+| Premium (Kiwify) | Webhook pronto, falta configurar (BLOQUEADO PELO USUÁRIO) |
 
 ---
 
 ## 3. Telas existentes
 
-### App da aluna
+### App da aluna (um `index.html` só)
 
-O app é um arquivo `index.html` só, com telas que aparecem e somem.
+- `#splash`, login/cadastro (`.lhero`), nova senha (`#type=recovery`), onboarding (`#v-onb`), bloqueada (`#v-bloq`).
+- `#v-app`:
+  - **Topo:** logo, chip de sequência, avatar `#top-av`, botão do painel (só admin).
+  - **Barra (5 abas):** `inicio` Início · `treinar` Treinos · `juntas` Comunidade · `explorar` Explorar · `perfil` Perfil.
+  - **Painéis que continuam existindo fora da barra:** `t-dieta` (Nutrição, aberto pelo seletor no topo de Treinos) e `t-evolucao` (Meu progresso, aberto pelo Perfil). Ao abrir, a aba destacada é Treinos ou Perfil (`NAV_DE`).
+  - **Folha `#sheet`:** detalhes (empresa, profissional, produto, Clube), agendamento em passos, Meus agendamentos, favoritos, cidade, privacidade, Meu Ciclo (todas as telas), conversas e chat, perfil público.
+  - `#play` (player), `#cook` (modo cozinha), `#ad` (anúncio).
 
-- `#splash`: tela de carregamento.
-- Login e cadastro: `.lhero`, com foto, abas Entrar e Criar conta, e esqueci a senha.
-- Nova senha: chega pelo link do e-mail, `#type=recovery`.
-- Onboarding: `#v-onb`, 7 perguntas.
-- Conta bloqueada: `#v-bloq`.
-- App: `#v-app`.
-  - **Topo:** logo, chip de sequência 🔥, avatar `#top-av` que abre o Perfil, e botão do painel (só admin).
-  - **Abas:** são 6 hoje.
+### Painel (`/admin` ou `#admin`)
 
-    | Código | Nome na tela |
-    |---|---|
-    | `inicio` | Início |
-    | `treinar` | Treinos |
-    | `juntas` | Juntas |
-    | `dieta` | Nutrição |
-    | `evolucao` | Evolução |
-    | `perfil` | Perfil |
-
-    O painel de cada aba é `<section id="t-...">`.
-  - **Folha:** `#sheet`, uma tela por cima usada para detalhes, formulários e comentários.
-  - **Player de treino:** `#play`.
-  - **Modo cozinha:** `#cook`.
-  - **Anúncio:** `#ad`.
-
-### Painel admin (`/admin` ou `#admin`)
-
-- Login de admin próprio. Se ainda não houver admin, existe o fluxo "virar primeiro admin".
-- Cabeçalho: `.adm-brand`, abas `#adm-tabs` agrupadas (menu lateral no computador) e `.adm-user`.
-- Conteúdo em `#adm-main`. Os formulários abrem em `#modal`.
+Grupos do menu (`GRUPOS`, redefinidos em `admin-xp.js`):
+- **Visão geral:** Resumo (com bloco Explorar), Métricas (anúncios), Métricas do Explorar.
+- **Explorar:** Empresas e academias, Profissionais, Serviços, Agendamentos, Avaliações, Destaques.
+- **Clube e loja:** Clube CK (= parceiros), Cupons, Loja e produtos, Banners.
+- **Anúncios:** Anunciantes, Campanhas, Financeiro.
+- **Conteúdo do app:** Alunas, Comunidade, Receitas, Exercícios, Avisos, Módulo Ciclo.
+- **Ajustes:** Cidades, Segmentos, Categorias, Admins, Configurações.
 
 ---
 
 ## 4. Estrutura e arquitetura
 
 ### Página única
-
-- HTML, CSS e JS puros, sem framework.
-- Tudo é montado em um único `index.html` pelo `build.py`.
+HTML, CSS e JS puros, sem framework. Tudo vira um `index.html` pelo `build.py`.
 
 ### Montagem (`build.py`)
-
-`src/shell.html` tem marcadores que são trocados pelos arquivos:
+`src/shell.html` tem marcadores trocados pelos arquivos:
 
 | Marcador | Arquivo |
 |---|---|
 | `/*CSS*/` | `app.css` |
 | `/*DATA*/` | `receitas1-4.js`, `treinos.js`, `casa.js` |
 | `/*CONFIG*/` | configuração (Supabase e Kiwify) |
-| `<!--SUPABASE-->` | script do supabase-js |
-| `/*NUVEM*/` | `nuvem.js` |
-| `/*SONS*/` | `sons.js` |
-| `/*BONECO*/` | `boneco.js` |
-| `/*FOTOS*/` | `fotos.js` |
-| `/*APP*/` | `app.js` |
-| `/*ADMIN*/` | `admin.js` |
+| `<!--SUPABASE-->` | supabase-js |
+| `/*NUVEM*/` `/*SONS*/` `/*BONECO*/` `/*FOTOS*/` | `nuvem.js`, `sons.js`, `boneco.js`, `fotos.js` |
+| `/*APP*/` | `app.js`, e **dentro dele** o marcador `/*EXPANSAO*/` (antes de `const TABS`) recebe `expansao.js` |
+| `/*ADMIN*/` | `admin.js`, e **dentro dele** o marcador `/*ADMINXP*/` (antes de `window.ADMIN = { abrir }`) recebe `admin-xp.js` |
 
-O `build.py` gera três arquivos:
-
-1. `fitverde.html` e `teste.html`: demonstração sem banco, usando localStorage.
-2. `ck-life/site/index.html`: o site de verdade, com Supabase, manifest e meta tags da Apple.
-3. Copia `ck-life/site/img` para `./img`, para a demonstração local.
+Gera: `fitverde.html` (demonstração, sem charset: o claude.ai coloca), `teste.html` (demonstração com charset, **use este para testar**), `ck-life/site/index.html` (site real).
 
 ### Organização do código
-
-- **`app.js`:** fica todo dentro de uma IIFE `(function(){ ... })();`.
-  - Termina com `window.FV = {...}`, que expõe funções para o painel, e com `iniciar()`.
-  - **Módulos novos precisam ficar DENTRO dessa IIFE**, por exemplo inseridos antes de `const TABS`.
-- **`admin.js`:** outra IIFE. Usa `window.FV` (abreviado como `F`) e expõe `window.ADMIN = { abrir }`.
+- `app.js` e `admin.js` são IIFEs. `expansao.js` e `admin-xp.js` ficam **dentro** delas (mesmo escopo), por isso usam direto `DB`, `ME`, `save`, `sheet`, `toast`, `ic`, `modal`, `crud` etc.
+- `window.FV` (app → painel) agora exporta também: `XP`, `xpGarante`, `XCAT`, `xcats`, `lkWhats`, `lkInsta`, `lkSite`, `lkMapa`, `brl`, `XERR`, `STAG`, `modoTxt`.
 
 ### Dados
+- `DB` ganhou as coleções `empresas`, `servicos`, `produtos`, `banners`, `categorias` (sincronizadas pelo `nuvem.js`, lista `LISTAS`; só o admin grava).
+- **Camada `XP` (`expansao.js`)** para as tabelas novas. Na nuvem usa `NU.sb.from(...)`; no modo demonstração guarda no localStorage (`cklife_db_v1_x_<nome>`):
+  - `XP.ag` agendamentos (listar, criar, status, apagar, ocupados → RPC `horarios_ocupados`).
+  - `XP.av` avaliações (todas, de, salvar, denunciar → RPC, moderar, apagar).
+  - `XP.ciclo` (ler, gravar, apagar, resumo → RPC `ciclo_resumo`). **Nunca grava em `ME`/`alunas.dados`.**
+  - `XP.chat` (conversas, abrir, mensagens, enviar, apagarMsg, lida).
+- Se uma tabela/função ainda não existe no banco, `XERR(e)` reconhece (PGRST205/PGRST202/42P01) e a tela mostra "Esta parte está sendo ativada. Volte daqui a pouco!" em vez de quebrar.
+- **Métricas do Explorar:** usam a tabela `eventos` que já existia: `t` = `imp` (visto) ou `clk` (clique) e `c` = `x:<tipo>:<id>:<ação>`. Tipos: `emp`, `prof`, `prod`, `parc`, `ban`. Ações: `ver`, `whats`, `insta`, `site`, `mapa`, `comprar`, `agendar`, `cupom`, `fav`, `clk`. As métricas de campanhas não são afetadas (filtram por id de campanha).
+- **Favoritos:** `ME.favx = ["emp:id", "prof:id", "prod:id", "parc:id"]` (receitas continuam em `ME.favs`).
+- **Chat bloqueadas:** `ME.chatBloq = [{id, nome}]`.
+- **Cidade temporária:** variável `XCID` (não salva); "Mudar para esta" grava `ME.cidade`.
+- **Imagens do catálogo:** o painel redimensiona e envia para o bucket `catalogo` (`N.subirImg`). Se o bucket ainda não existe, guarda a imagem em base64 no cadastro e avisa.
+- **Modo demonstração:** `xpSemente()` cria exemplos (3 empresas, 5 profissionais, 8 serviços, 3 produtos, 2 banners, Clube) uma vez (`DB.xpSemente`).
 
-- Objeto global `DB`, com `users`, `cidades`, `segmentos`, `anunciantes`, `campanhas`, `pagamentos`, `profissionais`, `parceiros`, `cupons`, `avisos`, `receitasExtras`, `receitasOcultas`, `exercExtras`, `eventos`, `acessos`, `config` e `freq`.
-- `ME` é a aluna logada, um item de `DB.users`.
-- `save()`:
-  - Na nuvem chama `NUVEM.salvar(DB)`, que espera 700 ms e grava só o que mudou.
-  - No modo demonstração grava em localStorage, na chave `cklife_db_v1`.
-- **Modo nuvem** (`window.NUVEM.ativo`):
-  - `nuvem.js` carrega do Supabase e converte linhas em objetos.
-  - Ao gravar, compara com uma "foto" do último estado e envia só as diferenças.
-  - Se a gravação falhar, tenta de novo em 4 s.
-  - Grava também ao fechar ou esconder a página.
-  - Ao abrir, tenta carregar até 3 vezes.
-- **Modo demonstração:** `semente()` cria dados de exemplo (24 alunas, campanhas, eventos etc.).
-
-### Helpers importantes em `app.js`
-
-- **Formatação e datas:** `$`, `esc`, `int`, `brD` (data BR), `today()`, `addD`, `uid()`, `norm`.
-- **Interface:** `toast`, `sheet(title, html)`, `fecharSheet`, `ic(nome, tamanho)` (ícones SVG do objeto `P`), `capa(titulo, sub, extra, foto)`, `setRow`, `sw`, `ring`.
-- **Sons e voz:** `SOM.*` (sons), `falar()` e `calar()` (voz).
-- **Treinos:** `treinoDoDia`, `montaTreino`, `treinoRapido`, `QUICK`, `abrirTreinoPreview`, `iniciaTreino`.
-- **Outros:**
-  - `streak()`, `diasTreino()`, `metas()`, `isPremium()`.
-  - `darCupom()`, `linkCamp()`, `mostrarAnuncio()`.
-  - `rInicio`, `rTreinar`, `rDieta`, `rEvolucao`, `rPerfil`, `rJuntas`.
-  - `tab(t)`, `rerender()`.
-- **Comunidade:** objeto `CM` com `carregar`, `publicar`, `curtir`, `comentar`, `apagaPost`, `apagaComent`, `ocultar` e `ultimo`.
+### Helpers importantes
+- App: ver seção anterior + `rExplorar`, `xpCorpo`, `abrirEmp`, `abrirProf`, `abrirProd`, `abrirParc`, `agendar`/`passoAg`, `meusAgendamentos`, `meusFavoritos`, `escolheCidade`, `blocoAvaliacoes`/`avaliar`, `abrirCiclo`/`cicloTela`/`cicloCalc`/`checkin`/`adaptarTreino`, `xpInicio`, `perfilXP`/`ligaPerfilXP`, `privacidade`, `listaConversas`/`abreConversa`/`perfilPublico`, `areaSw`.
+- Painel: `crud(cfg)` + `formX(cfg, item)` (construtor genérico de cadastro: campos text, area, num, money, sel, cid, chk, date, img, imgs, agenda, botão "Testar link"), `PROIBIDO` (bloqueia promessas de resultado garantido, cura, quilos em X dias, alegações médicas), `contaX(dias)` (métricas), `subirFoto`.
 
 ---
 
@@ -200,30 +166,17 @@ O `build.py` gera três arquivos:
   - O admin pode ocultar e apagar qualquer coisa.
 - **Storage:** bucket público `posts`, caminho `${uid}/${id}.jpg`. Cada uma só envia para a própria pasta.
 
-### `expansao.sql` 🟡 RASCUNHO (ainda NÃO foi rodado)
+### `expansao.sql` ✅ PRONTO · ⛔ BLOQUEADO PELO USUÁRIO (rodar no Supabase)
 
-Arquivo escrito para a grande expansão, salvo em `repo/fonte/expansao-RASCUNHO.sql`. Ele é só aditivo e contém:
-
-- Novas coleções liberadas na leitura: `empresas`, `servicos`, `produtos`, `banners`, `categorias`.
-- Tabela `agendamentos`: status `solicitado`, `confirmado`, `concluido`, `cancelado` ou `faltou`.
-  - O trigger `protege_agendamento` faz o seguinte:
-    - Na criação, a aluna só cria com status "solicitado".
-    - Depois disso, ela só pode mudar para "cancelado".
-    - O admin muda qualquer coisa.
-- Tabela `avaliacoes`: notas de 1 a 5, uma por aluna em cada alvo.
-  - Fica marcada como `verificada` quando existe um agendamento concluído.
-  - Tem campos `oculta` e `denuncias`, e a função `denunciar_avaliacao`.
-  - Empresa ou profissional não edita avaliação.
-- Tabela `ciclo`, com dados sensíveis:
-  - Só a dona lê e grava (`ciclo_dono`).
-  - O admin vê apenas números gerais, pela função `ciclo_resumo()`.
-- Tabelas `conversas` e `mensagens` (chat 1 a 1): só as duas participantes leem. O trigger `atualiza_conversa` guarda a última mensagem.
-
-**Antes de rodar, corrigir no rascunho:**
-
-1. Remover a linha `insert into public.colecoes ... 'Barra do Garças'`. Foi um exemplo e não deve ir para o banco.
-2. A tabela `cliques` pode sair. A ideia final é reaproveitar a tabela `eventos` já existente, com `t` = imp ou clk e `c` = `"x:<tipo>:<id>:<ação>"`, por exemplo `x:emp:abc:whats`. Isso evita tabela nova e as métricas das campanhas continuam iguais, porque os ids de campanha não começam com `x:`.
-3. Conferir que `pode_postar()` já existe (o rascunho recria igual, sem problema).
+Arquivo final (revisado, só adiciona, pode rodar mais de uma vez). Contém:
+- `admin_pode(area)` e `area_colecao(nome)`: permissão "editar" por área conferida no banco. Políticas de escrita de `colecoes`, `alunas`, `admins` e moderação de `posts` passam a usar isso (ler continua igual).
+- `colecoes_ler` liberando `empresas`, `servicos`, `produtos`, `banners`, `categorias` para quem está logada.
+- Bucket público `catalogo` (só admin envia/troca/apaga).
+- `agendamentos` (+ índices, trigger `protege_agendamento`: aluna cria só "solicitado" e só pode cancelar; `nota_adm`) e RPC `horarios_ocupados` (não mostra quem marcou).
+- `avaliacoes` (1 por aluna por alvo, `verificada` automática se há agendamento concluído, `oculta`, `denuncias`, trigger impede a aluna de mexer nesses campos) e RPC `denunciar_avaliacao`.
+- `ciclo` (RLS: só a dona) e RPC `ciclo_resumo` (só números gerais, só admin com acesso).
+- `conversas` e `mensagens` (só as duas participantes; trigger `atualiza_conversa`).
+- **Nenhum** `drop table`, `drop column`, `delete` ou `truncate`. Não insere cidade nem dado de exemplo.
 
 ### Relacionamentos
 
@@ -300,331 +253,167 @@ Arquivo escrito para a grande expansão, salvo em `repo/fonte/expansao-RASCUNHO.
 
 | Item | Status |
 |---|---|
-| Feed (aba "Juntas") com texto e foto (comprimida antes de enviar) | ✅ |
-| Curtir e descurtir, dois toques na foto, animação | ✅ |
-| Comentários (folha de comentários), apagar o próprio | ✅ |
-| Nome e foto de perfil da autora em posts e comentários | ✅ |
-| Apagar o próprio post | ✅ |
-| Moderação no painel (ocultar, mostrar, excluir post e comentário) | ✅ |
-| Aviso de novidade (bolinha na aba) e atualização a cada 25 s | ✅ |
-| Postar o cartão de conquista do treino | ✅ (a aluna escolhe postar) |
-| **Seguidores** | ⬜ não existe |
-| **Conversas / chat privado** | ⬜ não existe. Só o SQL do rascunho. A especificação dizia "não destruir o chat", mas ele nunca foi criado |
-| Perfil público da aluna | ⬜ |
-| Denunciar post | ⬜ (só a moderação do admin) |
-| Compartilhar sequência ou desafio | 🟡 o cartão de conquista existe, desafios não |
+| Feed, foto, curtida, comentário, apagar, moderação, novidade | ✅ |
+| **Chat 1 a 1** (botão "Conversas" no topo da Comunidade; tocar no nome/foto da autora → perfil público → Enviar mensagem) | ✅ código pronto · tabelas `conversas`/`mensagens` dependem do `expansao.sql` (BLOQUEADO PELO USUÁRIO) |
+| Perfil público (nome, foto, nº de publicações, fotos postadas) | ✅ sem dados de saúde |
+| Bloquear aluna (some do chat; lista em Perfil › Privacidade) | ✅ (bloqueio é do lado de quem bloqueia) |
+| Compartilhar sequência (abre o composer com o texto; a aluna decide postar) | ✅ |
+| Seguidores | ⬜ não existe |
+| Denunciar post/mensagem | ⬜ (moderação do admin existe; denúncia de avaliação existe) |
+| Desafios | ⬜ não existem |
 
-**Regra:** nunca compartilhar automaticamente ciclo, peso, sintomas ou dados de saúde. Nada de anúncios dentro da comunidade.
+Chat atualiza a cada 4 s com a conversa aberta e confere novas mensagens a cada 45 s (badge vermelho). Sem anúncios na Comunidade. Nada de ciclo/peso/saúde é compartilhado automaticamente.
 
 ---
 
-## 9. Ciclo menstrual ("Meu Ciclo") ⬜ NÃO IMPLEMENTADO
+## 9. Meu Ciclo ✅ (código pronto · tabela `ciclo` depende do `expansao.sql`)
 
-Só existe a tabela `ciclo` no rascunho SQL. Regras definidas pelo dono, que precisam ser seguidas:
-
-- **Ativação:**
-  - Opcional, a aluna precisa escolher ativar.
-  - Fica fora do menu principal (entrada pelo Perfil e por um card na Início que ela pode esconder).
-- **Configuração:** data da última menstruação, duração da menstruação, duração do ciclo e ciclo regular, irregular ou "não sei".
-- **Previsões:** sempre como **estimativa, com faixa de dias**, nunca como certeza.
-  - Próxima menstruação: último início + média do ciclo, ± 2 dias (regular), ± 3 (não sei) ou ± 5 (irregular).
-  - Ovulação: próxima menstruação − 14, ± 2.
-  - Janela fértil: ovulação − 5 até ovulação + 1.
-  - Fases: menstrual, folicular, ovulatória e lútea.
-  - Com 2 ou mais ciclos registrados, usar a média real.
-- **Atraso:** mostrar "Sua menstruação ainda não foi registrada. Está X dias além da previsão." com as ações:
-  - registrar menstruação;
-  - atualizar ciclo;
-  - entender possíveis motivos.
-  - **Nunca falar em diagnóstico de gravidez.**
-- **Aviso fixo:** "Não é método contraceptivo."
-- **Conteúdo educativo** por fase.
-- **Check-in diário "Como você está hoje?":** fluxo, sintomas, humor, energia, sono e anotações.
-- **Botão "ADAPTAR TREINO DE HOJE":**
-  - Opções: manter, mais leve, mobilidade, caminhada ou descanso.
-  - **A aluna decide.** Nada de regra simplista do tipo "menstruada = não treina".
-  - Pode usar os treinos rápidos existentes, por exemplo "Alongamento" como mobilidade.
-- **Notificações:** opcionais e discretas, sem palavras íntimas na notificação.
-- **Histórico e padrões:** só mostrar quando houver dados suficientes.
-- **Privacidade (obrigatória):**
-  - Dados só da própria aluna, na tabela `ciclo`, **nunca dentro de `alunas.dados`**, porque o admin lê essa tabela.
-  - Proibido usar para publicidade, marketplace, segmentação, afiliados ou parceiros.
-  - Nada vai para academias, empresas, profissionais, outras alunas ou anunciantes.
-  - O admin vê apenas números gerais.
-  - No modo demonstração, guardar em localStorage separado.
+- **Entrada:** Perfil › Meu Ciclo e card na Início (a aluna pode esconder). Fora do menu principal.
+- **Ativação opt-in** com tela explicando: opcional e privado, previsões são estimativas, quem decide o treino é ela, **não é contraceptivo nem diagnóstico**.
+- **Configuração:** primeiro dia da última menstruação, duração (1–12), ciclo (18–60, padrão 28), regular/irregular/não sei. "Ajustar meu ciclo" mantém o histórico.
+- **Cálculo (`cicloCalc`):** média real dos ciclos quando há 2+ intervalos (15–60 dias); margem ±2 (regular), ±3 (não sei), ±5 (irregular) ou pela variação real. Próxima menstruação em faixa; ovulação ≈ próxima − 14 (±2); janela fértil = ovulação −5 a +1. Fases: menstruação, folicular, janela fértil, ovulação, lútea, além da previsão.
+- **Atraso:** "Sua menstruação ainda não foi registrada. Está X dias além da previsão." + Registrar menstruação / Atualizar ciclo / Entender possíveis motivos (texto responsável, sem diagnóstico).
+- **Registros:** "Menstruação começou" (com data), "Menstruação terminou", histórico com exclusão.
+- **Check-in "Como você está hoje?":** fluxo, sintomas, humor, energia, sono, anotações. Tocar num dia passado do calendário abre o check-in daquele dia.
+- **ADAPTAR TREINO DE HOJE:** manter (treino do programa), mais leve (Bom dia 5 min), mobilidade (Alongamento), caminhada (registra minutos em `ME.treinos` com `rapido:"caminhada"`), descanso. Texto contextual pelo check-in, **sem regra automática** ("a escolha é sua").
+- **Padrões:** só com 2+ ciclos e/ou 7+ check-ins.
+- **Lembrete discreto** opcional: 2 dias antes da previsão, texto neutro ("Você tem um lembrete no seu acompanhamento"), só com o app aberto.
+- **Privacidade:** dados só na tabela `ciclo` (RLS dona). No demo: `localStorage cklife_db_v1_x_ciclo_<id>`. Painel vê só números gerais (`ciclo_resumo`). "Desativar e apagar meus dados" apaga tudo.
 
 ---
 
-## 10. Marketplace de profissionais 🟡
+## 10. Marketplace de profissionais ✅
 
-**Hoje:**
-
-- Coleção `profissionais` com os campos `nome`, `tipo`, `whats`, `valor`, `desc`, `ordem`, `ativo` e `foto`.
-- Tipos disponíveis no formulário: Personal trainer, Nutricionista, Fisioterapeuta, Educador físico.
-- Aparece no fim do Perfil como lista com botão de WhatsApp. O admin cadastra.
-
-**Pedido (ainda não feito):**
-
-- **Categorias:**
-  - Personal Trainer, Nutricionista, Fisioterapeuta, Psicólogo, Dermatologista, Esteticista.
-  - Massoterapeuta, Cabeleireiro, Manicure, Designer de sobrancelhas, Maquiador, Outros.
-  - Devem ser gerenciáveis no painel, não fixas no código.
-- **Atendimento:** presencial, online ou ambos.
-- **Dados do perfil:**
-  - cidade, endereço;
-  - registro profissional (CREF, CRN…);
-  - serviços com preço;
-  - selo "verificado", destaque;
-  - status: ativo, pendente ou suspenso.
-- **Botões:** AGENDAR, AGENDAR ONLINE, WHATSAPP, INSTAGRAM, SITE, COMO CHEGAR.
-- **Agenda:** horários (dias, início, fim, intervalo).
-- **Fluxo de agendamento:** profissional → serviço → data → horário → revisão → confirmação.
-- **Status do agendamento:** Solicitado, Confirmado, Concluído, Cancelado, Não compareceu.
-- **"Meus Agendamentos" no Perfil:** Próximos, Concluídos e Cancelados.
-- **Avaliações:** 1 a 5 estrelas e comentário.
-  - Selo "Serviço realizado" quando houver agendamento concluído.
-  - "Denunciar avaliação".
-  - O profissional não edita avaliação.
-- **Monetização:** sem cobrança agora, só preparar o terreno.
+- Mesma coleção `profissionais` (os cadastros antigos continuam valendo). Campos novos: `modo` (presencial/online/ambos), `cidade` (vazio = só online), `end`, `registro`, `insta`, `site`, `msg` (1ª mensagem do WhatsApp), `verificado`, `destaque`, `status` (ativo/pendente/suspenso), `agenda {dias, ini, fim, passo}`.
+- Categorias gerenciáveis (painel › Categorias); padrão: Personal Trainer, Nutricionista, Fisioterapeuta, Psicólogo, Dermatologista, Esteticista, Massoterapeuta, Cabeleireiro, Manicure, Designer de sobrancelhas, Maquiador, Outros.
+- Perfil no app: foto, selo verificado, registro, modalidade, cidade, avaliações, serviços com preço/promoção. Botões: AGENDAR (presencial, só se atende na cidade vista), AGENDAR ONLINE, WHATSAPP, INSTAGRAM, SITE, COMO CHEGAR.
+- Painel: aprovar, rejeitar (exclui), suspender, verificar/tirar selo, filtros (pendentes, suspensos, online, verificados), vistas/cliques.
+- **Quem confirma o agendamento é a equipe no painel** (profissionais ainda não têm login próprio — ver fila de espera).
 
 ---
 
-## 11. Academias, empresas e parceiros
+## 11. Academias, empresas e parceiros ✅
 
-- **Parceiros (lojas com cupom)** ✅: coleção `parceiros` com os campos `nome`, `cidade`, `tel`, `end`, `desconto` (%), `validade`, `pin`, `regras`, `ativo` e `logo`.
-- **Anunciantes** ✅: coleção `anunciantes`, com segmento, cidade, plano (comercial ou exclusivo) e valor. Financeiro em `pagamentos`.
-- **Academias e empresas** ⬜. O pedido inclui:
-  - logo, capa e galeria;
-  - endereço, mapa e "COMO CHEGAR";
-  - horário, modalidades e planos;
-  - WhatsApp (com primeira mensagem configurável, ex.: "Olá! Encontrei vocês pelo CK Life e gostaria de saber mais."), Instagram e site;
-  - benefício CK e avaliações;
-  - selos "parceira" e "destaque";
-  - filtros.
-  - A proposta é a coleção `empresas` com `tipo` (academia, estúdio, clínica, loja, outro).
+- Coleção `empresas`: logo, capa, galeria (até 12), nome, categoria (`tipo`), cidade, bairro, endereço (Como chegar), horário, modalidades, planos, WhatsApp + 1ª mensagem, Instagram, site, benefício CK, descrição, agenda, `parceira`, `destaque`, `ativo`, `ordem`.
+- App: aparece pela cidade (ou se marcada `online`), filtros por categoria, detalhe com benefício, serviços, avaliações e agendamento de visita/aula.
+- Anunciantes/campanhas/financeiro continuam iguais.
 
 ---
 
-## 12. Clube de vantagens
+## 12. Clube de vantagens (Clube CK) ✅
 
-- **Hoje** 🟡: cupons ganhos a cada 8 treinos, sorteados entre os parceiros ativos (de preferência da cidade da aluna).
-  - Ficam em Perfil → "Meus cupons".
-  - Na loja, o atendente digita o PIN e o servidor valida (`validar_cupom`).
-- **Pedido** ⬜: tela "Clube CK" no Explorar.
-  - Lista de benefícios dos parceiros, com regras e validade.
-  - Botão para pegar o cupom.
-  - A proposta é estender a coleção `parceiros` com `beneficio`, `cat`, `destaque`, `whats`, `insta`, `site` e `desc`.
+- Usa a coleção `parceiros` (mesmo cadastro, PIN separado em `pins`). Campos novos: `beneficio`, `cat`, `whats`, `insta`, `site`, `desc`, `livre`, `destaque`; cidade pode ficar vazia = todas as cidades.
+- **Cupom livre** (`livre: true`): a aluna toca "Pegar meu cupom" no Clube CK (1 ativo por parceiro). Sem `livre`, o benefício continua sendo prêmio a cada N treinos (regra antiga mantida).
+- Cupons do Clube têm `clube: true`. Validação na loja pelo PIN no servidor (`validar_cupom`), igual antes.
+- Painel › Cupons: lista, busca, filtros, marcar usado/reativar, excluir, planilha.
 
 ---
 
-## 13. Produtos, lojas e links externos ⬜
+## 13. Produtos, lojas e links externos ✅
 
-**Pedido:**
-
-- Loja nacional por categorias.
-- Tipos de produto: próprio, parceiro ou afiliado.
-- URL ou link de afiliado **mantendo os parâmetros de rastreio**.
-- Botões COMPRAR ou VER PRODUTO.
-- Contar visualizações e cliques.
-- **Sem checkout próprio e sem cobrança.**
-- A proposta é a coleção `produtos`.
-
-**Lógica de links pedida:**
-
-| Item | Para onde leva |
-|---|---|
-| endereço | mapa (Google Maps) |
-| WhatsApp | conversa, com mensagem pronta |
-| Instagram | perfil |
-| site | site |
-| produto | site de compra |
-| serviço | agendamento |
-| benefício | cupom |
-
-**No painel:** botão "TESTAR LINK".
-
-**Já existe:** `linkCamp(c)` monta os links de WhatsApp, Instagram e site das campanhas (pode ser reaproveitado).
+- Coleção `produtos`: foto, nome, marca, categoria, tipo (próprio/parceiro/afiliado), preço, promoção, link, botão (COMPRAR/VER PRODUTO), descrição, destaque.
+- **O link é aberto exatamente como foi colado** (mantém `?ref=`, `utm_` etc.). Aviso de afiliado no produto. **Sem checkout próprio, sem cobrança.**
+- Links: endereço → Google Maps (sem chave), WhatsApp → `wa.me` com mensagem pronta (padrão "Olá! Encontrei vocês pelo CK Life e gostaria de saber mais.", configurável por cadastro), Instagram → perfil, site → site, produto → link de compra, serviço → agendamento, benefício → cupom.
+- Painel: botão **Testar link** em todos os campos de link e na lista de produtos; colunas de vistas e cliques em comprar.
+- Banners (`banners`): imagem, título, texto, local (explorar/início/loja/clube), destino (site, WhatsApp, Clube, ou um item: empresa/profissional/produto/parceiro), cidade, datas, ordem. Nunca na Comunidade.
 
 ---
 
-## 14. Localização e mapas ⬜
+## 14. Localização e mapas ✅
 
-- **Hoje:** a aluna tem `cidade` (id da lista `cidades`, que o admin gerencia). É usada para anúncios e cupons.
-- **Cidades de exemplo** (só no modo demonstração): Cuiabá, Várzea Grande, Rondonópolis, Sinop, "Outra cidade".
-- **Pedido:**
-  - "Minha cidade: X [ALTERAR]" e busca temporária por outra cidade, **sem GPS obrigatório**.
-  - A cidade vale só para o que é presencial. Loja, produtos e profissionais online são nacionais.
-  - Mapa e "COMO CHEGAR": usar um link `https://www.google.com/maps/search/?api=1&query=<endereço>`, sem chave de API.
+- "Minha cidade: X [Alterar]" no Explorar: escolher outra cidade como **Só ver agora** (temporário) ou **Mudar para esta** (grava). Sem GPS.
+- Cidade vale para o presencial (empresas, profissionais presenciais, Clube, banners com cidade). Loja e atendimento online são nacionais.
+- Mapa: link do Google Maps com endereço + cidade, sem chave de API.
 
 ---
 
 ## 15. Painel administrativo ✅
 
-Seções (variável `SECOES` em `admin.js`), em grupos:
+Tudo que já existia continua (Resumo, Métricas, Anunciantes + PDF, Campanhas, Financeiro, Alunas, Comunidade, Receitas, Exercícios, Avisos, Cidades, Segmentos, Admins, Configurações). Novo:
 
-### Visão geral
+| Seção (id) | O que faz |
+|---|---|
+| Resumo (`resumo`) | + bloco Explorar: empresas ativas, profissionais ativos/pendentes, produtos, agendamentos aguardando |
+| Métricas do Explorar (`explorarm`) | Vistas, cliques, taxa, cliques por ação, top itens por tipo, 7/30/90 dias, planilha |
+| Empresas e academias (`empresas`) | CRUD completo + filtros + duplicar + vistas/cliques |
+| Profissionais (`profissionais`) | CRUD ampliado + aprovar/rejeitar/suspender/verificar |
+| Serviços (`servicos`) | CRUD ligado a profissional ou empresa, preço/promo/duração/modalidade |
+| Agendamentos (`agendamentos`) | Lista com filtros (período, status, presencial/**acompanhamentos online**, busca), mudar status, nota para a aluna, WhatsApp com mensagem pronta, planilha |
+| Avaliações (`avaliacoes`) | Denunciadas/ocultas/todas, ocultar/mostrar, manter (zera denúncias), excluir |
+| Destaques (`destaques`) | Marcar destaque e ordem de empresas, profissionais, produtos e Clube |
+| Clube CK (`parceiros`) | Cadastro antigo + benefício, categoria, contatos com Testar, cupom livre, destaque, "todas as cidades" |
+| Cupons (`cupons`) | Lista, filtros, marcar usado/reativar, excluir, planilha |
+| Loja e produtos (`produtos`) | CRUD + Testar link + métricas |
+| Banners (`banners`) | CRUD por local/destino/cidade/datas/ordem + métricas |
+| Categorias (`categorias`) | CRUD por grupo + "copiar padrão" |
+| Módulo Ciclo (`ciclo`) | Só números gerais (RPC), texto das regras de privacidade |
+| Admins | Papéis prontos: **Super Admin** (total), **Administrador** (edita tudo, só vê Admins/Config), **Operador** (edita agendamentos, avaliações, comunidade, cupons; vê o resto; sem financeiro/ciclo/admins/config) |
 
-- **Resumo:** saudação, indicadores (alunas, ativas, Premium, receita), gráficos.
-- **Métricas:**
-  - Visualizações, alcance, cliques e CTR.
-  - Filtros por dias, anunciante e cidade.
-  - Retenção, faixas de idade, "por objetivo".
-  - Exportar planilha.
-
-### Anúncios
-
-- **Anunciantes:** criar, editar, excluir, ativar ou pausar. Botão "Relatório" gera o PDF.
-- **Campanhas:** título, texto, botão e destino (WhatsApp com mensagem, Instagram ou site).
-  - Segmentação por gênero, idade e cidade.
-  - Datas de início e fim, ativar ou pausar.
-- **Parceiros:** lojas, desconto, validade, PIN, regras, logo. Contadores de cupons entregues e usados.
-- **Financeiro:** mensalidades dos anunciantes (pago, pendente, atrasado), por mês.
-
-### Conteúdo do app
-
-- **Alunas:**
-  - Busca e filtros (cidade, plano).
-  - Editar dados, bloquear ou desbloquear.
-  - Dar ou tirar Premium, excluir.
-- **Comunidade:** moderação de posts e comentários.
-- **Profissionais:** CRUD simples.
-- **Receitas:** criar, editar, ocultar receitas da base, foto.
-- **Exercícios:** criar e editar exercícios extras.
-- **Avisos:** avisos que aparecem para as alunas, com confirmação antes de excluir.
-
-### Ajustes
-
-- **Cidades:** adicionar, ativar ou desativar.
-- **Segmentos:** adicionar, ativar ou desativar.
-- **Admins:** adicionar por e-mail, permissões por área, remover.
-- **Configurações:**
-  - Nome do app, link do checkout, suporte, treinos para cupom, preço do Premium.
-  - Frequência dos anúncios.
-  - Backup (escondido no modo nuvem).
-
-### Ainda não existem no painel ⬜
-
-Empresas e academias, serviços, agendamentos, acompanhamentos online, loja e produtos, categorias, banners, cupons gerais, moderação de avaliações, destaques, métricas do Explorar, módulo ciclo (só números gerais), botão TESTAR LINK, papéis Super Admin, Administrador e Operador.
+Filtro de conteúdo (`PROIBIDO`) bloqueia ao salvar: resultado garantido, "perca X kg", "X kg em Y dias", cura/curar, 100% eficaz, sem efeitos colaterais, milagre, diagnóstico automático.
 
 ---
 
 ## 16. Notificações e lembretes 🟡
 
-- **Lembrete de treino** (Perfil → Lembrete):
-  - A aluna escolhe dias e hora.
-  - O app gera um arquivo `.ics` (evento semanal com alarme) que entra no calendário do celular. **Funciona com o app fechado.**
-  - Enquanto o app está aberto, também mostra um aviso do navegador no horário.
-- **Push de verdade** (com o app fechado, pelo servidor) ⬜: precisa de service worker, chaves VAPID e um servidor de envio. No iPhone só funciona com o app instalado na tela inicial (iOS 16.4+).
+- Lembrete de treino: .ics semanal (funciona com app fechado) + aviso com app aberto.
+- Meu Ciclo: lembrete discreto opcional, só com app aberto.
+- Chat: badge de novas mensagens no app.
+- **Push com app fechado** ⬜ (service worker + VAPID + servidor) — fila de espera.
 
 ---
 
 ## 17. Funcionalidades prontas ✅
 
-Login e cadastro, onboarding, Início, treinos e player, nutrição e modo cozinha, evolução, perfil com foto, comunidade (feed, foto, curtida, comentário), anúncios, cupons e parceiros, painel completo da seção 15, relatório PDF, PWA (instalar), layout de computador, modo escuro, sons e voz, lembretes .ics, cartão de conquista.
+Tudo da seção 2. As partes que dependem das tabelas novas (agendamentos, avaliações, Meu Ciclo, chat, leitura do catálogo pelas alunas, imagens no bucket, permissões por área no banco) **já estão no ar no código**, e passam a funcionar no site real assim que o `expansao.sql` for rodado. Até lá mostram "Esta parte está sendo ativada".
+
+**Testes feitos em 23/10 (demonstração e banco simulado com/sem tabelas):** agendar (4 passos), horário ocupado bloqueado, status pelo painel, avaliação com selo, denúncia, moderação, favoritos, cupom livre, links (WhatsApp, mapa, afiliado com utm preservado), busca, filtros, cidade, Meu Ciclo (ativar, atraso, registrar, check-in, adaptar, caminhada, ajustar sem perder histórico), chat, perfil público, CRUDs do painel (criar, validar, filtro de promessas, testar link, desativar, duplicar, excluir, aprovar, verificar), papéis. Regressão: login/cadastro na nuvem, treino completo, feed (post/curtida/comentário), receitas, perfil. Layout sem nada fora da tela em 320/375/1366 px; contraste ok no modo escuro.
 
 ## 18. Funcionalidades parciais 🟡
 
-- **Profissionais:** só lista com WhatsApp. Sem agendamento, categorias, avaliações ou presencial/online.
-- **Clube de vantagens:** existe como cupons por treino, sem tela "Clube CK".
-- **Premium e Kiwify:** o código do webhook existe, mas falta o link de checkout e as variáveis na Vercel.
-- **Fotos das receitas:** 93 prontas de 197. Detalhes na seção 24.
-- **Notificações:** só .ics e aviso com o app aberto.
-- **Permissões de admin:** por área só no painel. O servidor só checa se é admin.
-- **Rascunho `expansao.sql`:** escrito, não rodado, precisa das correções da seção 5.
+- **Banco da expansão:** `expansao.sql` pronto, revisado, só aditivo, **não rodado** (BLOQUEADO PELO USUÁRIO).
+- **Premium/Kiwify:** webhook pronto, falta link e variáveis (BLOQUEADO PELO USUÁRIO).
+- **Fotos das receitas:** 93 de 197 (BLOQUEADO PELO USUÁRIO).
+- **Catálogo real:** o site real começa vazio (exemplos só na demonstração). Cadastrar no painel.
+- **Notificações push** com app fechado: não existe.
 
-## 19. Funcionalidades a implementar ⬜ (grande expansão pedida em 23/10)
+## 19. Funcionalidades a implementar ⬜
 
-Ordem pedida pelo dono:
-
-1. Navegação com no máximo 5 áreas:
-   - INÍCIO, TREINOS, COMUNIDADE, EXPLORAR, PERFIL.
-   - Plano: Nutrição vira um seletor dentro de Treinos (ou um atalho na Início).
-   - Evolução vira "Meu progresso" no Perfil.
-   - Os painéis `t-dieta` e `t-evolucao` continuam existindo, só saem da barra.
-2. Explorar:
-   - Seções Academias, Profissionais, Serviços, Clube CK e Loja.
-   - Blocos "Perto de você" e "Atendimento online".
-   - Busca, banners e destaques.
-3. Cidade: "Minha cidade" mais busca temporária.
-4. Empresas e academias.
-5. Profissionais completos.
-6. Serviços: preço, promoção, duração e modalidade.
-7. Agendamentos, com "Meus Agendamentos".
-8. Atendimento online.
-9. Loja com links de afiliado.
-10. Avaliações.
-11. "Meus Favoritos" no Perfil. Plano: `ME.favx = ["emp:id", ...]`; `ME.favs` já é usado para receitas.
-12. Busca geral.
-13. Banners por local, destino, datas e ordem, mais cupons.
-14. Métricas de visualização e clique, usando `eventos` com o prefixo `x:`.
-15. Meu Ciclo (seção 9), com check-in e adaptação do treino.
-16. Card de contexto na Início.
-17. Notificações.
-18. Comunidade: chat 1 a 1 (ícone de conversa dentro da Comunidade), perfil público, compartilhar sequência e desafio (sempre por escolha da aluna).
-19. Perfil organizado:
-    - Meu perfil, progresso, ciclo, agendamentos, favoritos.
-    - Premium, cidade, histórico.
-    - Privacidade, notificações, configurações.
-20. Módulos do painel da seção 15 (sem duplicar o que já existe).
-21. Telas de vazio, erro e carregando em tudo, por exemplo "Ainda não temos academias parceiras nesta cidade."
-22. Carregamento sob demanda das imagens.
-23. Testes finais, confirmando que nada antigo quebrou.
-
-**Arquitetura planejada:**
-
-- **Coleções novas do painel em `colecoes`:**
-  - `empresas`, `servicos`, `produtos`, `banners`, `categorias`.
-  - Também é preciso adicionar esses nomes em `LISTAS` e `N.vazio()` no `nuvem.js`, e em `semente()` ou numa função de "completar DB" para quem já tem dados antigos no localStorage.
-- **Tabelas novas do rascunho SQL:**
-  - `agendamentos`, `avaliacoes`, `ciclo`, `conversas`, `mensagens`.
-  - Acesso direto por `NU.sb.from(...)` no modo nuvem, como já faz o `CM` da comunidade. No modo demonstração, guardar em localStorage.
-- **Onde fica o código novo:** um arquivo `src/explorar.js`, inserido DENTRO da IIFE do `app.js` por um marcador (ex.: `/*EXPANSAO*/` antes de `const TABS`), com o `build.py` trocando o marcador pelo arquivo.
-- **No painel:** um construtor genérico de cadastro (`crud(cfg)` com campos text, num, money, select, checkbox, área de texto, imagem, galeria, data, cidade, url, telefone) para não repetir código.
+- Login próprio para profissionais/empresas confirmarem a agenda e autocadastro (com aprovação) — hoje a equipe confirma pelo painel.
+- Pagamento de agendamentos/PIX/checkout — só com autorização.
+- Push com app fechado.
+- Seguidores, desafios, denúncia de post/mensagem, bloqueio no servidor (hoje é do lado de quem bloqueia).
+- Lista de espera/horários por profissional com várias agendas, fuso horário por cidade.
+- Paginação do catálogo quando crescer (hoje `colecoes` é lido inteiro ao abrir).
 
 ## 20. Bugs e limitações conhecidas
 
-- **Permissões por área do admin** não são checadas no servidor. Qualquer admin pode gravar em `colecoes` pelo banco.
-- **Push com o app fechado** não existe (seção 16).
-- **Navegadores dentro do Instagram ou WhatsApp** podem perder a sessão e não instalam o app. O app avisa e manda abrir no Safari ou Chrome.
-- **Demonstração no claude.ai:** downloads (PDF, .ics, cartão) não funcionam dentro do visualizador. No site de verdade funcionam.
-- **Fotos de perfil e logos** ficam em base64 dentro do jsonb (pesado se forem muitas). As fotos dos posts já vão para o Storage.
-- **Leitura de dados:** `colecoes` é carregada inteira ao abrir. Com catálogo grande, isso pode ficar lento (paginar no futuro).
-- **Mock de teste** (`mock-supabase.js`): não tem tabelas de posts, `order()` nem storage.
-- **Tabela `eventos`:** só aceita `t` = `imp` ou `clk`.
-- **Exercícios sem foto:** 8 dos 51 mostram um cartão com as iniciais.
-- **Premium:** a Kiwify ainda não está ligada. O Premium pago só funciona se o admin der manualmente.
-- **Arquivos antigos:** `app.old.js`, `app.old.css` e `boneco3d.js` estão no `src` e não são usados.
+- Até rodar `expansao.sql`: alunas não leem as coleções novas (Explorar aparece vazio com mensagens de "ainda não temos"), e agenda/avaliações/ciclo/chat mostram "sendo ativada". O admin já consegue cadastrar (a política antiga de escrita do admin permite).
+- Permissões por área: com o `expansao.sql`, o banco passa a conferir "editar" por área (`admin_pode`). Ler continua liberado para qualquer admin.
+- Agendamento: a regra "1 horário = 1 pessoa" é conferida na hora de escolher (RPC `horarios_ocupados`), não há trava no banco contra duas reservas simultâneas no mesmo segundo.
+- Chat: sem tempo real (consulta a cada 4 s); bloquear é só do lado de quem bloqueia.
+- Demonstração (`fitverde.html`) sem charset: para testar localmente use `teste.html` (senão os acentos dos exemplos ficam errados no localStorage).
+- Downloads não funcionam dentro do visualizador do claude.ai (no site real funcionam).
+- `app.old.js`, `app.old.css`, `boneco3d.js` não são usados.
 
 ## 21. Arquivos importantes
 
-**Pasta de trabalho desta sessão:** é temporária e apagada se a sessão for apagada. A cópia segura é o GitHub, em `repo/` e `repo/fonte/`.
+**Cópia segura:** GitHub `Tiagoroity/CKlife` (público). Site na raiz; código em `fonte/`.
 
 | Arquivo | Para que serve |
 |---|---|
-| `src/shell.html` | Esqueleto HTML com os marcadores e todas as telas |
-| `src/app.css` | Todo o visual: tema claro e escuro, computador (≥1024 px), painel, comunidade |
-| `src/app.js` | App da aluna inteiro (cerca de 1650 linhas) |
-| `src/admin.js` | Painel inteiro (cerca de 800 linhas) |
-| `src/nuvem.js` | Ligação com o Supabase: carregar, gravar diferenças, login, cadastro, senha, cupom. `LISTAS` e `UNICOS` |
-| `src/sons.js` | Sons gerados pelo navegador (`SOM.tap`, `bell`, `done`, `coupon`, `erro`…) |
-| `src/boneco.js` | Dados dos exercícios: músculos, animação, dicas |
-| `src/fotos.js` | Troca o boneco pelas fotos `img/ex-*.jpg` |
-| `src/treinos.js` | Lista de exercícios (`window.EX`) |
-| `src/casa.js` | Programas de treino em casa (`window.PROGRAMAS`, `EXMETA`) |
-| `src/receitas1-4.js` | 197 receitas (`R1` a `R4`) |
-| `build.py` | Monta a demonstração e o site |
-| `ck-life/site/` | Site publicado: `index.html`, `img/` (149 arquivos), `manifest.webmanifest`, `api/kiwify-webhook.js`, `vercel.json` (rewrite `/admin` → `index.html`), `package.json` |
-| `ck-life/banco-de-dados.sql`, `ck-life/comunidade.sql` | Banco (já rodados) |
-| `ck-life/expansao.sql` | Rascunho da expansão (não rodado) |
-| `repo/` | Cópia do GitHub `Tiagoroity/CKlife` (branch `main`). A Vercel publica dela automaticamente |
-| `repo/fonte/` | Cópia do código-fonte, SQLs, `build.py` e este documento. Fica fora do site por causa do `.vercelignore` |
-| `chk.sh` | Confere erros de sintaxe nos JS (JavaScriptCore do Mac) |
-| `audit.js` | Rodado no navegador: `AUD("rótulo")` lista textos e botões fora da tela |
-| `contraste.js` | Rodado no navegador: `CONTR()` lista contraste ruim (modo escuro) |
-| `mock-supabase.js`, `mk-teste-nuvem.py`, `teste-nuvem.html` | Testar o modo nuvem sem banco de verdade (`MOCKFALHA` simula erro) |
-| `.claude/launch.json` | Servidor local "fitverde" em `http://localhost:8765` |
-| `ordem-receitas.json` | Ordem das receitas para os lotes de fotos |
-| `~/Downloads/fotos-ck-life/PEDIDOS-RECEITAS.txt` | Pedidos (prompts) das fotos das receitas que faltam |
+| `src/shell.html` | Esqueleto e telas (inclui `#t-explorar`) |
+| `src/app.css` | Visual (bloco "Expansão" no fim: classes `xp-*` e `xf-*`) |
+| `src/app.js` | App da aluna (abas, `NAV`, ganchos `xpInicio`, `perfilXP`, `chatBotao`, autor clicável) |
+| `src/expansao.js` | **Novo.** Explorar, agenda, avaliações, favoritos, loja, Clube, cidade, Meu Ciclo, chat, camada `XP` |
+| `src/admin.js` | Painel original |
+| `src/admin-xp.js` | **Novo.** Construtor `crud`, módulos novos, papéis, Clube ampliado |
+| `src/nuvem.js` | Supabase (+ coleções novas em `LISTAS`, `N.subirImg`) |
+| `build.py` | Monta tudo (marcadores `/*EXPANSAO*/` e `/*ADMINXP*/`) |
+| `ck-life/banco-de-dados.sql`, `comunidade.sql` | Banco (já rodados) |
+| `ck-life/expansao.sql` (= `fonte/expansao.sql`) | **Banco da expansão, pronto para rodar** |
+| `mock-supabase.js` + `mk-teste-nuvem.py` → `teste-nuvem.html` | Testar a nuvem sem banco real. `localStorage.MOCKEXP="1"` simula o `expansao.sql` rodado; sem ele, simula as tabelas ausentes |
+| `chk.sh`, `audit.js`, `contraste.js` | Sintaxe, layout (`AUD`), contraste (`CONTR`) |
+| `ck-life/site/` | Site publicado (index, img, manifest, api/kiwify-webhook.js, vercel.json) |
 
 ## 22. Tecnologias e dependências
 
@@ -685,7 +474,7 @@ O Site URL e os Redirect URLs precisam incluir `https://cklife.vercel.app`.
 
 1. Editar `src/*`.
 2. Rodar `./chk.sh` (sintaxe) e `python3 build.py`.
-3. Testar no navegador em `http://localhost:8765/fitverde.html`. Rodar `AUD()` em 320, 375 e 1366 px, `CONTR()` no modo escuro, e testar o modo nuvem com `python3 mk-teste-nuvem.py` → `teste-nuvem.html`.
+3. Testar no navegador em `http://localhost:8765/teste.html` (não use `fitverde.html` localmente: sem charset, estraga os acentos). Rodar `AUD()` em 320, 375 e 1366 px, `CONTR()` no modo escuro, e testar o modo nuvem com `python3 mk-teste-nuvem.py` → `teste-nuvem.html`.
 4. Copiar `ck-life/site/index.html` (e o `manifest`, `img` novas se houver) para `repo/`. Copiar `src/`, `build.py` e os SQLs para `repo/fonte/`.
 5. `git -C repo add -A && git commit` com a mensagem terminando em `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`, depois `git push`.
 6. Esperar a Vercel: abrir https://cklife.vercel.app e conferir a mudança no ar.
@@ -706,32 +495,20 @@ Ver "Fila de espera" na seção 25.
 
 ## 25. Próximos passos recomendados
 
-### A. O agente pode fazer sozinho, nesta ordem
+### A. Tiago precisa fazer (PENDÊNCIAS QUE PRECISAM DO TIAGO)
+1. **Rodar `expansao.sql`** no Supabase (SQL Editor → New query → colar → Run). Arquivo: `fonte/expansao.sql` no GitHub.
+2. Cadastrar no painel as empresas, profissionais, serviços, produtos, banners e benefícios reais.
+3. Kiwify: link do checkout + 3 variáveis na Vercel + URL do webhook.
+4. Fotos das receitas, lotes 10 a 20 (107), e dos 8 exercícios sem foto.
+5. Decidir o preço do Premium (hoje R$ 19,90).
+6. Decidir se quer: login para profissionais, pagamento de agendamentos, push com app fechado (envolvem custo/decisão).
 
-1. Corrigir o rascunho `expansao.sql` (seção 5) e entregar o texto para o dono rodar no Supabase.
-2. Navegação em 5 áreas (seção 19, item 1), sem apagar telas.
-3. Explorar com cidade, empresas e academias, profissionais completos, serviços, Clube CK e Loja, com dados de exemplo no modo demonstração.
-4. Agendamentos, avaliações, favoritos, busca, banners e métricas.
-5. Módulos novos do painel, usando o construtor genérico.
-6. Meu Ciclo com check-in e "Adaptar treino de hoje" (seguindo à risca a seção 9).
-7. Chat 1 a 1 e perfil público na Comunidade.
-8. Testes completos (login, cadastro, feed, posts, treinos, perfil, Premium, admin) e publicar.
-9. Atualizar este documento.
-
-Dica: publicar ao fim de cada fase, para não perder nada se o uso acabar.
-
-### B. Fila de espera (precisa do dono ou de decisão)
-
-- [ ] Rodar o `expansao.sql` corrigido no Supabase.
-- [ ] Link do checkout da Kiwify e as 3 variáveis na Vercel, mais a URL do webhook na Kiwify.
-- [ ] Fotos das receitas, lotes 10 a 20.
-- [ ] Fotos dos 8 exercícios sem foto.
-- [ ] Cadastrar empresas, academias, profissionais, produtos e banners reais no painel (o agente deixa exemplos só na demonstração).
-- [ ] Decidir o preço final do Premium (R$ 19,90 hoje × R$ 79 desejado). Nenhuma cobrança nova sem autorização.
-- [ ] Push com o app fechado: precisa de service worker, VAPID e servidor (decidir se vale).
-- [ ] Cadastro próprio de profissionais e empresas (hoje só o admin cadastra), pagamento de agendamentos e PIX: só com autorização.
-- [ ] Permissões por área validadas no servidor (Super Admin, Administrador, Operador): criar função SQL `pode(area)` e regras por coleção.
-- [ ] Domínio próprio (opcional).
+### B. O agente pode fazer depois
+1. Depois do SQL rodado: testar no site real (criar 1 profissional, agendar, avaliar, ciclo, chat entre duas contas).
+2. Denúncia de post/mensagem, bloqueio no servidor, seguidores e desafios.
+3. Trava no banco contra reserva dupla do mesmo horário.
+4. Paginação do catálogo.
+5. Atualizar este documento a cada fase.
 
 ---
 
@@ -750,5 +527,5 @@ Você vai continuar o desenvolvimento do CK Life, meu app de treino em casa para
 
 4) Site: https://cklife.vercel.app (alunas) e /admin (painel). Banco: Supabase, projeto psxmyiudtuozasbqzvnu. Demonstração: atualizar o artifact https://claude.ai/artifact/FYyAokNvw9kzNDTprzkKPd com o fitverde.html.
 
-5) Continue de onde parou: seção 25-A do documento mestre (grande expansão: corrigir e me entregar o expansao.sql para eu rodar no Supabase, navegação em 5 áreas INÍCIO/TREINOS/COMUNIDADE/EXPLORAR/PERFIL, Explorar com cidade, academias, profissionais, serviços, agendamentos, avaliações, favoritos, Clube CK, Loja com links de afiliado, banners, métricas, módulos novos no painel, Meu Ciclo com as regras de privacidade e estimativas, chat entre alunas). Depois teste tudo (nada antigo pode quebrar), publique e atualize o documento mestre.
+5) A GRANDE EXPANSÃO já foi implementada e publicada (commit 8b9235f): navegação em 5 áreas, Explorar, agendamentos, avaliações, favoritos, Clube CK, loja, banners, métricas, Meu Ciclo, chat e módulos do painel. Primeiro me pergunte se eu já rodei o fonte/expansao.sql no Supabase. Se sim, teste no site real (criar um profissional no painel, agendar, avaliar, Meu Ciclo e chat entre duas contas) e corrija o que aparecer. Depois siga a seção 25-B do documento mestre e atualize o documento ao final de cada fase.
 ```
