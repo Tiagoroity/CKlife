@@ -10,7 +10,16 @@ Object.assign(P, {
   reply:'<path d="M9 7L4 12l5 5"/><path d="M4 12h10a6 6 0 0 1 6 6v1"/>', trash:'<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>', userplus:'<circle cx="9" cy="8" r="4"/><path d="M2 21c1-4 3.5-6 7-6s6 2 7 6M19 8v6M16 11h6"/>',
   stop:'<rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor" stroke="none"/>', ban:'<circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/>'
 });
-const SO = { on: () => !!(NU.ativo && NU.sb && NU.uid) };
+// a rede social só liga depois que o social.sql existir no banco; até lá a comunidade antiga continua funcionando
+let SO_PRONTO = null, SO_TESTE = null;
+const SO = { on: () => !!(NU.ativo && NU.sb && NU.uid && SO_PRONTO === true) };
+function detectaSocial(){
+  if(!(NU.ativo && NU.sb && NU.uid)) return Promise.resolve(false);
+  if(SO_TESTE) return SO_TESTE;
+  SO_TESTE = NU.sb.from("perfis").select("user_id").limit(1).then(r => { SO_PRONTO = !r.error || !XERR(r.error); if(r.error && !XERR(r.error)) SO_TESTE = null; return SO_PRONTO; }, () => { SO_TESTE = null; return false; });
+  return SO_TESTE;
+}
+const FORA = () => toast(NU.ativo ? "A rede social está sendo ativada. Volte daqui a pouco!" : "Esta parte funciona no app oficial (cklife.vercel.app).");
 const SB = () => NU.sb;
 async function q(p){ const r = await p; if(r.error) throw r.error; return r.data; }
 const ERR_MSG = e => XERR(e) ? "A rede social está sendo ativada. Volte daqui a pouco!" : /row-level|permission|42501/i.test(String(e && (e.message || e))) ? "Você não tem permissão para isso." : "Não deu certo agora. Confira a internet e tente de novo.";
@@ -72,7 +81,7 @@ async function carregaPerfis(ids){
   for(let i = 0; i < falta.length; i += 80){ try{ (await q(SB().from("perfis").select("user_id,username,nome,foto_mini,privado").in("user_id", falta.slice(i, i + 80)))).forEach(p => PERFIS.set(p.user_id, p)); }catch(e){} }
 }
 async function sincFotoPerfil(){ // chamada quando a aluna troca a foto pelo Perfil antigo
-  if(!SO.on()) return; try{ await garantePerfil(); const foto = ME.foto ? await sobe("perfil", NU.uid, await (await fetch(ME.foto)).blob(), "jpg", "image/jpeg") : null;
+  await detectaSocial(); if(!SO.on()) return; try{ await garantePerfil(); const foto = ME.foto ? await sobe("perfil", NU.uid, await (await fetch(ME.foto)).blob(), "jpg", "image/jpeg") : null;
     const mini = ME.foto ? await miniFoto(ME.foto, 96) : null; EU = (await q(SB().from("perfis").update({ foto, foto_mini: mini }).eq("user_id", NU.uid).select()))[0]; PERFIS.set(NU.uid, EU); }catch(e){ console.warn(e); }
 }
 const nomeP = (u, fb) => (PERFIS.get(u) || {}).nome || fb || "Aluna";
@@ -99,7 +108,7 @@ async function bloquear(u, nome){
 }
 const MOTIVOS = [["assedio","Assédio"],["improprio","Conteúdo impróprio"],["spam","Spam"],["ofensivo","Comportamento ofensivo"],["outro","Outro motivo"]];
 function denunciar(tipo, alvo, volta){
-  if(!SO.on()) return toast("Denúncias funcionam no app oficial.");
+  if(!SO.on()) return FORA();
   let motivo = "";
   sheet("Denunciar", `<p class="hint" style="margin:0">Sua denúncia é anônima para a outra pessoa. A equipe CK Life analisa com cuidado.</p>
     <div class="list">${MOTIVOS.map(([k, n]) => `<button class="card xp-opt" data-mt="${k}"><span><b>${n}</b></span></button>`).join("")}</div>
@@ -107,7 +116,7 @@ function denunciar(tipo, alvo, volta){
     <button class="btn btn-accent btn-block btn-lg" id="dn-ok" disabled>Enviar denúncia</button>`, volta || null);
   $("sheet-body").querySelectorAll("[data-mt]").forEach(b => b.onclick = () => { motivo = b.dataset.mt; $("sheet-body").querySelectorAll("[data-mt]").forEach(x => x.classList.toggle("sel", x === b)); $("dn-ok").disabled = false; });
   $("dn-ok").onclick = async () => { $("dn-ok").disabled = true;
-    try{ await q(SB().from("denuncias").insert({ tipo, alvo_id: String(alvo), motivo, detalhe: $("dn-t").value.trim() || null })); toast("Obrigada. A equipe CK Life vai analisar com cuidado."); fecharSheet(); }
+    try{ await q(SB().from("denuncias").insert({ autor: NU.uid, tipo, alvo_id: String(alvo), motivo, detalhe: $("dn-t").value.trim() || null })); toast("Obrigada. A equipe CK Life vai analisar com cuidado."); fecharSheet(); }
     catch(e){ toast(ERR_MSG(e)); $("dn-ok").disabled = false; } };
 }
 function menuAcoes(itens){ // itens: [[icone, texto, fn, perigo]]
@@ -118,7 +127,7 @@ function menuAcoes(itens){ // itens: [[icone, texto, fn, perigo]]
 /* ---------- Perfil social ---------- */
 const INTERESSES = ["Treino em casa","Musculação","Corrida","Yoga","Pilates","Dança","Alimentação saudável","Receitas fit","Autoestima","Bem-estar","Maternidade","Rotina","Emagrecimento saudável","Força","Mobilidade","Meditação"];
 async function abrirPerfil(u){
-  if(!SO.on()) return toast("Os perfis completos funcionam no app oficial.");
+  if(!SO.on()) return FORA();
   if(!u) return;
   sheet("Perfil", `<div class="post skel" style="height:260px"></div>`);
   try{ if(u === NU.uid) await garantePerfil(); }catch(e){}
@@ -180,7 +189,7 @@ async function listaPessoas(u, tipo, nome){
   $("lp-l").querySelectorAll("[data-u]").forEach(b => b.onclick = () => abrirPerfil(b.dataset.u));
 }
 async function encontrarMulheres(){
-  if(!SO.on()) return toast("Encontrar mulheres funciona no app oficial.");
+  if(!SO.on()) return FORA();
   await garantePerfil().catch(() => {});
   sheet("Encontrar mulheres", `<div class="search">${ic("search", 18)}<input class="input" id="em-q" placeholder="Buscar por nome ou @usuária" autocomplete="off"></div><div id="em-l"><div class="post skel" style="height:70px"></div></div>`);
   const desenha = async termo => {
@@ -275,7 +284,7 @@ let FD = { modo: "todos", cursor: null, fim: false, carregando: false }, SALVOS 
 async function seguindoIds(){ if(SEGUINDO) return SEGUINDO; try{ SEGUINDO = (await q(SB().from("seguidores").select("seguido").eq("seguidor", NU.uid).eq("status", "ativo").limit(1000))).map(x => x.seguido); }catch(e){ SEGUINDO = []; } return SEGUINDO; }
 async function completaPosts(rows){
   const ids = rows.map(p => p.id); let cu = [], co = [], sv = [];
-  if(ids.length){ [cu, co, sv] = await Promise.all([q(SB().from("curtidas").select("post_id,user_id").in("post_id", ids)), q(SB().from("comentarios").select("*").in("post_id", ids).order("criado", { ascending: true })), q(SB().from("salvos").select("post_id").eq("user_id", NU.uid).in("post_id", ids))]); }
+  if(ids.length){ [cu, co, sv] = await Promise.all([q(SB().from("curtidas").select("post_id,user_id").in("post_id", ids)), q(SB().from("comentarios").select("*").in("post_id", ids).order("criado", { ascending: true })), q(SB().from("salvos").select("post_id").eq("user_id", NU.uid).in("post_id", ids)).catch(() => [])]); }
   sv.forEach(s => SALVOS.add(s.post_id));
   await carregaPerfis([...rows.map(p => p.user_id), ...co.map(c => c.user_id)]);
   return rows.map(p => ({ id: p.id, user: p.user_id, nome: p.nome, foto: p.foto, texto: p.texto, img: p.img, midia: p.midia, conquista: p.conquista, criado: p.criado, oculto: p.oculto,
@@ -321,7 +330,7 @@ function ligaPost(el, p, detalhe){
     const meu = p.user === ME.id;
     if(meu) menuAcoes([["share", "Compartilhar", () => compartilharPost(p)], ["trash", "Excluir publicação", () => { if(!confirm("Excluir esta publicação?")) return; CM.apagaPost(p).then(() => { toast("Publicação excluída"); fecharSheet(); FEED = FEED.filter(x => x.id !== p.id); if(TAB === "juntas") desenhaFeed(); }).catch(e => toast(ERR_MSG(e))); }, 1]]);
     else if(SO.on()) menuAcoes([["perfil", "Ver perfil", () => abrirPerfil(p.user)], ["flag", "Denunciar publicação", () => denunciar("post", p.id), 1], ["ban", "Bloquear " + esc(nomeP(p.user, p.nome).split(" ")[0]), async () => { if(await bloquear(p.user, nomeP(p.user, p.nome))){ fecharSheet(); if(TAB === "juntas") desenhaFeed(); } }, 1]]);
-    else toast("Opções completas no app oficial.");
+    else FORA();
   };
   ligaMidia(el);
 }
@@ -374,12 +383,13 @@ async function compartilharPost(p){
     if(src){ try{ const b = await (await fetch(src)).blob(); file = new File([b], "ck-life.jpg", { type: "image/jpeg" }); }catch(e){} }
     const txt = `${p.texto ? p.texto + "\n\n" : ""}Minha evolução no CK Life 💚 ${location.origin}`;
     try{ if(file && navigator.canShare && navigator.canShare({ files: [file] })) await navigator.share({ files: [file], text: txt }); else if(navigator.share) await navigator.share({ text: txt }); else copyText(txt, "Texto copiado para colar onde quiser"); }catch(e){} }]);
-  if(!itens.length) return toast("Compartilhar funciona no app oficial.");
+  if(!itens.length) return FORA();
   menuAcoes(itens);
 }
 
 /* ---------- Tela da Comunidade ---------- */
 function rJuntas(){
+  if(NU.ativo && SO_PRONTO === null){ $("t-juntas").innerHTML = `<div class="feed"><div class="post skel"></div><div class="post skel"></div></div>`; detectaSocial().then(() => { if(TAB === "juntas") rJuntas(); }); return; }
   ME.feedVisto = new Date().toISOString(); save(); marcaNovidade(false);
   const on = SO.on();
   $("t-juntas").innerHTML = `<div class="so-head"><h1>Comunidade</h1><div class="so-hb">${on ? `<button class="iconbtn" id="cm-busca" aria-label="Encontrar mulheres">${ic("search", 19)}</button>` : ""}<button class="iconbtn so-badgebtn" id="cm-not" aria-label="Notificações">${ic("bell", 19)}<i class="so-dot" id="cm-not-n" hidden></i></button><button class="iconbtn so-badgebtn" id="cm-chat" aria-label="Conversas">${ic("chat", 19)}<i class="so-dot" id="cm-chat-n" hidden></i></button><button class="iconbtn" id="cm-eu" aria-label="Meu perfil social">${avU(ME.id, ME.nome, ME.foto)}</button></div></div>
@@ -458,7 +468,7 @@ async function criarStory(){
   $("sp-c").querySelectorAll("[data-c]").forEach(x => x.onclick = () => { cor = x.dataset.c; $("sp-c").querySelectorAll("[data-c]").forEach(y => y.setAttribute("aria-pressed", y === x)); pinta(); });
   $("sp-ok").onclick = async () => { const bt = $("sp-ok"); bt.disabled = true; bt.classList.add("carregando");
     try{ await garantePerfil(); const final = await montaStory(b, $("sp-t").value.trim(), cor); const midia = await sobe("story", NU.uid, final, "jpg", "image/jpeg");
-      await q(SB().from("stories").insert({ midia, texto: $("sp-t").value.trim() || null, cor }));
+      await q(SB().from("stories").insert({ user_id: NU.uid, midia, texto: $("sp-t").value.trim() || null, cor }));
       SOM.done ? SOM.done() : SOM.check(); fecharSheet(); toast("Story publicado por 24 horas 💚"); carregaStories(); }
     catch(e){ console.warn(e); toast(ERR_MSG(e)); bt.disabled = false; bt.classList.remove("carregando"); } };
 }
@@ -531,7 +541,7 @@ async function enviarParaAmiga(conteudo){
   $("sheet-body").querySelectorAll("[data-cv]").forEach(b => b.onclick = async () => { try{ await enviaMsg(L.find(c => c.id === b.dataset.cv), conteudo); toast("Enviado 💚"); fecharSheet(); }catch(e){ toast(ERR_MSG(e)); } });
 }
 async function listaConversas(){
-  if(!SO.on()) return toast("O chat privado funciona no app oficial (cklife.vercel.app).");
+  if(!SO.on()) return FORA();
   sheet("Conversas", `<button class="so-novaconv" id="cv-nova">${ic("plus", 16)} Nova conversa</button><div id="cv-l"><div class="post skel" style="height:70px"></div></div>`);
   $("cv-nova").onclick = encontrarMulheres;
   try{ await garantePerfil(); CONV = await q(SB().from("conversas").select("*").order("ultima_em", { ascending: false }).limit(100)); await contaNaoLidas(); }
@@ -745,7 +755,7 @@ async function atualizaBadges(){
 const NT_ABA = { todas: () => true, interacoes: n => ["seguiu","solicitou","aceitou","curtida","comentario"].includes(n.tipo), mensagens: n => ["mensagem","story_resposta"].includes(n.tipo), conquistas: n => n.tipo === "conquista" };
 let NTA = "todas";
 async function abrirNotificacoes(){
-  if(!SO.on()) return toast("As notificações funcionam no app oficial.");
+  if(!SO.on()) return FORA();
   sheet("Notificações", `<div class="chips scroll">${[["todas","Todas"],["interacoes","Interações"],["mensagens","Mensagens"],["conquistas","Conquistas"]].map(([k, n]) => `<button class="chip" data-na="${k}" aria-pressed="${NTA === k}">${n}</button>`).join("")}</div><div id="nt-l"><div class="post skel" style="height:70px"></div></div>`, () => atualizaBadges());
   $("sheet-body").querySelectorAll("[data-na]").forEach(b => b.onclick = () => { NTA = b.dataset.na; abrirNotificacoes(); });
   let L = []; try{ L = await q(SB().from("notificacoes").select("*").eq("user_id", NU.uid).order("criado", { ascending: false }).limit(60)); }catch(e){ $("nt-l").innerHTML = `<p class="empty">${ERR_MSG(e)}</p>`; return; }
@@ -827,7 +837,8 @@ async function celebrar(c){
 }
 
 /* ---------- Integração com o resto do app ---------- */
-function iniciaSocial(){
+async function iniciaSocial(){
+  await detectaSocial();
   if(!SO.on()) return;
   garantePerfil().catch(() => {});
   ligaRealtime();

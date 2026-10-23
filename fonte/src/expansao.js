@@ -126,30 +126,6 @@ const XP = {
       if(!xnuvem()){ let ativas = 0, total = 0, ck = 0; const lim = addD(today(), -6); try{ Object.keys(localStorage).filter(k => k.startsWith(KEY + "_x_ciclo_")).forEach(k => { const d = JSON.parse(localStorage.getItem(k) || "{}"); total++; if(d.ativo !== false){ ativas++; ck += Object.keys(d.checkins || {}).filter(x => x >= lim).length; } }); }catch(e){} return { ativas, total, checkins_7d: ck }; }
       return sbq(NU.sb.rpc("ciclo_resumo"));
     }
-  },
-  chat: {
-    async conversas(){ if(!xnuvem()) return lxArr("conv").filter(c => c.a === ME.id || c.b === ME.id).sort((a, b) => String(b.ultima_em).localeCompare(String(a.ultima_em))); return sbq(NU.sb.from("conversas").select("*").order("ultima_em", { ascending: false }).limit(100)); },
-    async abrir(o){
-      const foto = await miniFoto(ME.foto, 64);
-      if(!xnuvem()){ const L = lxArr("conv"); let c = L.find(x => (x.a === ME.id && x.b === o.id) || (x.b === ME.id && x.a === o.id));
-        if(!c){ c = { id: novoId(), a: ME.id, b: o.id, nome_a: ME.nome, foto_a: foto, nome_b: o.nome, foto_b: o.foto || "", ultima: "", ultima_em: agora(), ultimo_autor: null, lida_a: agora(), lida_b: null, criado: agora() }; L.push(c); LX.set("conv", L); }
-        return c; }
-      const busca = () => sbq(NU.sb.from("conversas").select("*").or(`and(a.eq.${NU.uid},b.eq.${o.id}),and(a.eq.${o.id},b.eq.${NU.uid})`));
-      let r = await busca(); if(r[0]) return r[0];
-      const ins = await NU.sb.from("conversas").insert({ a: NU.uid, b: o.id, nome_a: ME.nome, foto_a: foto, nome_b: o.nome, foto_b: o.foto || "" }).select();
-      if(ins.error){ r = await busca(); if(r[0]) return r[0]; throw ins.error; }
-      return ins.data[0];
-    },
-    async mensagens(cid){ if(!xnuvem()) return lxArr("msg").filter(m => m.conversa_id === cid).sort((a, b) => String(a.criado).localeCompare(String(b.criado))); return sbq(NU.sb.from("mensagens").select("*").eq("conversa_id", cid).order("criado", { ascending: true }).limit(400)); },
-    async enviar(c, texto){
-      if(!xnuvem()){ const m = { id: novoId(), conversa_id: c.id, autor: ME.id, texto, criado: agora() }, M = lxArr("msg"); M.push(m); LX.set("msg", M);
-        const L = lxArr("conv"), x = L.find(y => y.id === c.id); if(x){ x.ultima = texto.slice(0, 90); x.ultima_em = m.criado; x.ultimo_autor = ME.id; x[x.a === ME.id ? "lida_a" : "lida_b"] = m.criado; LX.set("conv", L); } return m; }
-      const r = await sbq(NU.sb.from("mensagens").insert({ conversa_id: c.id, autor: NU.uid, texto }).select()); return r[0];
-    },
-    async apagarMsg(m){ if(!xnuvem()){ LX.set("msg", lxArr("msg").filter(x => x.id !== m.id)); return; } await sbq(NU.sb.from("mensagens").delete().eq("id", m.id)); },
-    async lida(c){ const lado = c.a === ME.id ? "lida_a" : "lida_b", t = agora(); c[lado] = t;
-      if(!xnuvem()){ const L = lxArr("conv"), x = L.find(y => y.id === c.id); if(x){ x[lado] = t; LX.set("conv", L); } return; }
-      try{ await NU.sb.from("conversas").update({ [lado]: t }).eq("id", c.id); }catch(e){} }
   }
 };
 
@@ -772,78 +748,6 @@ function ligaPerfilXP(){
   on("px-share", () => { const s = streak(), n = (ME.treinos || []).length; abreComposer(s > 1 ? `🔥 ${s} dias seguidos treinando no CK Life! Já são ${n} treinos. Bora juntas?` : `💪 Já são ${n} treinos no CK Life! Bora juntas?`); });
   on("px-prof", () => { XS.sec = "profissionais"; XS.q = ""; tab("explorar"); });
 }
-function privacidade(){
-  const bl = ME.chatBloq || [];
-  sheet("Privacidade", `<div class="card"><h3 style="font-size:16px">O que outras alunas veem</h3><p class="hint" style="margin:6px 0 0">Seu nome, sua foto de perfil e o que você publicar na Comunidade. Só isso.</p></div>
-    <div class="card"><h3 style="font-size:16px">O que nunca é compartilhado</h3><p class="hint" style="margin:6px 0 0">Meu Ciclo, peso, medidas, sintomas e qualquer dado de saúde. Nada disso vai para anúncios, parceiros, academias ou profissionais. Compartilhar uma conquista é sempre escolha sua.</p></div>
-    <div class="card"><h3 style="font-size:16px">Alunas bloqueadas no chat</h3>${bl.length ? bl.map(b => `<div class="xp-cidrow"><b>${esc(b.nome)}</b><button class="btn btn-line btn-sm" data-desb="${b.id}">Desbloquear</button></div>`).join("") : `<p class="hint" style="margin:6px 0 0">Ninguém bloqueado.</p>`}</div>
-    <div class="card" style="padding:6px 16px">${setRow("pv-ciclo", "ciclo", "Apagar dados do Meu Ciclo", "Remove tudo o que você registrou")}${linkSuporte() ? setRow("pv-sup", "speaker", "Pedir exclusão da conta", "Fale com o suporte") : ""}</div>`);
-  $("sheet-body").querySelectorAll("[data-desb]").forEach(b => b.onclick = () => { ME.chatBloq = (ME.chatBloq || []).filter(x => x.id !== b.dataset.desb); save(); privacidade(); });
-  $("pv-ciclo").onclick = () => { if(!confirm("Apagar todos os dados do Meu Ciclo?")) return; XP.ciclo.apagar().then(() => { CIC = null; toast("Dados do Meu Ciclo apagados"); }).catch(e => toast(XERR(e) ? XAVISO : "Não deu agora")); };
-  const s = $("pv-sup"); if(s) s.onclick = () => window.open(linkSuporte(), "_blank", "noopener");
-}
-
-/* ===================== CHAT ENTRE ALUNAS ===================== */
-let CONV = [], CHAT_T = null, CHAT_ABERTA = null;
-const lidaDe = c => c.a === ME.id ? c.lida_a : c.lida_b;
-const naoLida = c => c.ultimo_autor && c.ultimo_autor !== ME.id && (!lidaDe(c) || new Date(lidaDe(c)) < new Date(c.ultima_em));
-const outroDe = c => c.a === ME.id ? { id: c.b, nome: c.nome_b, foto: c.foto_b } : { id: c.a, nome: c.nome_a, foto: c.foto_a };
-const bloqueada = id => (ME.chatBloq || []).some(b => b.id === id);
-async function confereChat(){
-  try{ CONV = await XP.chat.conversas(); }catch(e){ return; }
-  const n = CONV.filter(c => naoLida(c) && !bloqueada(outroDe(c).id)).length, d = $("cm-chat-n");
-  if(d){ d.hidden = !n; d.textContent = n; }
-  if(n && TAB !== "juntas") marcaNovidade(true);
-}
-const chatBotao = () => `<div class="xp-chatbar"><button class="btn btn-line btn-sm" id="cm-chat">${ic("chat", 17)} Conversas <i class="xp-badge" id="cm-chat-n" hidden></i></button><button class="btn btn-line btn-sm" id="cm-share">${ic("flame", 16)} Compartilhar sequência</button></div>`;
-function ligaChatBotao(){
-  const b = $("cm-chat"); if(b) b.onclick = listaConversas;
-  const s = $("cm-share"); if(s) s.onclick = () => { const st = streak(), n = (ME.treinos || []).length; abreComposer(st > 1 ? `🔥 ${st} dias seguidos treinando no CK Life! Já são ${n} treinos. Bora juntas?` : `💪 Já são ${n} treinos no CK Life! Bora juntas?`); };
-  confereChat();
-}
-async function listaConversas(){
-  sheet("Conversas", `<div id="cv-l"><div class="post skel" style="height:70px"></div></div>`);
-  try{ CONV = await XP.chat.conversas(); }catch(e){ $("cv-l").innerHTML = `<p class="empty">${XERR(e) ? "O chat está sendo ativado. Volte daqui a pouco!" : "Sem conexão agora."}</p>`; return; }
-  const L = CONV.filter(c => !bloqueada(outroDe(c).id));
-  $("cv-l").innerHTML = L.length ? L.map(c => { const o = outroDe(c); return `<button class="xp-conv ${naoLida(c) ? "nova" : ""}" data-cv="${c.id}">${avPost(o.nome, o.foto)}<span class="xp-ct"><b>${esc(o.nome || "Aluna")}</b><small>${c.ultima ? (c.ultimo_autor === ME.id ? "Você: " : "") + esc(c.ultima) : "Diga oi 👋"}</small></span><small>${c.ultima ? tempoAtras(c.ultima_em) : ""}</small></button>`; }).join("")
-    : `<div class="empty">${ic("chat", 34, 1.6)}<p>Nenhuma conversa ainda. Toque no nome de uma aluna no feed para mandar uma mensagem.</p></div>`;
-  $("cv-l").querySelectorAll("[data-cv]").forEach(b => b.onclick = () => abreConversa(CONV.find(c => c.id === b.dataset.cv)));
-}
-function perfilPublico(u){
-  if(!u || u.id === ME.id) return;
-  const posts = (FEED || []).filter(p => p.user === u.id);
-  sheet(u.nome || "Aluna", `<div class="xp-ph-top">${avPost(u.nome, u.foto).replace('class="pav"', 'class="pav xl"')}</div><div class="xp-dh" style="text-align:center"><h2>${esc(u.nome || "Aluna")}</h2><p class="muted">${posts.length} ${posts.length === 1 ? "publicação" : "publicações"} na comunidade</p></div>
-    <div class="xp-acts xp-acts-main"><button class="btn btn-accent btn-lg" id="pp-msg">${ic("chat", 18)} Enviar mensagem</button></div>
-    ${posts.filter(p => p.img).length ? `<div class="xp-pgrid">${posts.filter(p => p.img).slice(0, 9).map(p => `<img src="${esc(p.img)}" alt="" loading="lazy">`).join("")}</div>` : ""}
-    <button class="link xp-den" id="pp-bl">${ic("flag", 13)} ${bloqueada(u.id) ? "Desbloquear" : "Bloquear"} ${esc((u.nome || "").split(" ")[0])}</button>`);
-  $("pp-msg").onclick = async () => { if(bloqueada(u.id)) return toast("Desbloqueie para conversar"); if(ME.bloqueado) return toast("Sua conta está bloqueada"); try{ const c = await XP.chat.abrir(u); abreConversa(c); }catch(e){ toast(XERR(e) ? "O chat está sendo ativado. Volte daqui a pouco!" : "Não deu para abrir a conversa agora"); } };
-  $("pp-bl").onclick = () => { if(bloqueada(u.id)){ ME.chatBloq = ME.chatBloq.filter(x => x.id !== u.id); toast("Desbloqueada"); } else { if(!confirm(`Bloquear ${u.nome}? Você não verá mais as mensagens dela.`)) return; ME.chatBloq = [...(ME.chatBloq || []), { id: u.id, nome: u.nome }]; toast("Bloqueada"); } save(); perfilPublico(u); };
-}
-async function abreConversa(c){
-  if(!c) return; const o = outroDe(c); CHAT_ABERTA = c.id; clearInterval(CHAT_T);
-  sheet("Conversa", `<button class="xp-chathead" id="cv-perfil">${avPost(o.nome, o.foto)}<span><b>${esc(o.nome || "Aluna")}</b><small>Ver perfil</small></span></button><p class="hint xp-chat-aviso">${ic("shield", 13)} Seja gentil. Nunca envie senhas, dados de cartão ou documentos.</p><div class="xp-msgs" id="cv-m"><div class="post skel" style="height:60px"></div></div>
-    <div class="cbar"><input class="input" id="cv-t" maxlength="2000" placeholder="Mensagem" autocomplete="off"><button class="btn btn-accent" id="cv-env" aria-label="Enviar">${ic("send", 18)}</button></div>`, () => { CHAT_ABERTA = null; clearInterval(CHAT_T); confereChat(); });
-  const ext = $("cv-perfil"); if(ext) ext.onclick = () => perfilPublico(o);
-  let ultimo = "";
-  const desenha = async () => {
-    let M = []; try{ M = await XP.chat.mensagens(c.id); }catch(e){ if(!ultimo) $("cv-m").innerHTML = `<p class="empty">${XERR(e) ? "O chat está sendo ativado." : "Sem conexão agora."}</p>`; return; }
-    if(CHAT_ABERTA !== c.id || !$("cv-m")) return;
-    const sig = M.length + ":" + (M.length ? M[M.length - 1].id : ""); if(sig === ultimo) return; ultimo = sig;
-    const box = $("cv-m"), noFim = box.scrollHeight - box.scrollTop - box.clientHeight < 80;
-    box.innerHTML = M.length ? M.map((m, i) => { const eu = m.autor === ME.id, ultimaDela = !eu && (!M[i + 1] || M[i + 1].autor !== m.autor); return `<div class="xp-msgrow ${eu ? "eu" : ""}">${!eu ? (ultimaDela ? avPost(o.nome, o.foto) : `<span style="width:28px;flex:0 0 28px"></span>`) : ""}<div class="xp-msg ${eu ? "eu" : ""}" data-mid="${m.id}"><p>${esc(m.texto)}</p><small>${new Date(m.criado).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}${eu ? ` · <button class="link" data-mdel="${m.id}">apagar</button>` : ""}</small></div></div>`; }).join("") : `<p class="empty">Comece a conversa com ${esc((o.nome || "").split(" ")[0])} 💚</p>`;
-    box.querySelectorAll("[data-mdel]").forEach(b => b.onclick = () => { const m = M.find(x => x.id === b.dataset.mdel); if(m && confirm("Apagar esta mensagem?")) XP.chat.apagarMsg(m).then(() => { ultimo = ""; desenha(); }).catch(() => toast("Não deu agora")); });
-    if(noFim || M.length < 30) box.scrollTop = box.scrollHeight;
-    XP.chat.lida(c);
-  };
-  await desenha();
-  CHAT_T = setInterval(() => { if(document.visibilityState === "visible" && CHAT_ABERTA === c.id) desenha(); }, 4000);
-  const env = async () => { const t = $("cv-t").value.trim(); if(!t) return; if(ME.bloqueado) return toast("Sua conta está bloqueada"); $("cv-env").disabled = true;
-    try{ await XP.chat.enviar(c, t); $("cv-t").value = ""; SOM.tap(); ultimo = ""; await desenha(); }catch(e){ toast(XERR(e) ? "O chat está sendo ativado." : "Não deu para enviar agora"); }
-    $("cv-env").disabled = false; $("cv-t").focus(); };
-  $("cv-env").onclick = env; $("cv-t").onkeydown = e => { if(e.key === "Enter") env(); };
-}
-setInterval(() => { if(ME && !$("v-app").hidden && document.visibilityState === "visible" && !CHAT_ABERTA) confereChat(); }, 45000);
-
 /* troca Treinos/Nutrição e voltar ao Perfil */
 const areaSw = cur => `<div class="seg xp-area" role="group"><button data-area="treinar" aria-pressed="${cur === "treinar"}">${ic("treinar", 17)} Treinos</button><button data-area="dieta" aria-pressed="${cur === "dieta"}">${ic("dieta", 17)} Nutrição</button></div>`;
 document.addEventListener("click", e => { const b = e.target.closest("[data-area]"); if(b && ME && !$("v-app").hidden){ e.preventDefault(); tab(b.dataset.area); } });

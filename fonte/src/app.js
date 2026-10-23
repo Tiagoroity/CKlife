@@ -536,7 +536,7 @@ const CM = {
     const sb = NU.sb, r = await sb.from("posts").select("*").order("criado", { ascending: false }).limit(80); if(r.error) throw r.error;
     const ps = r.data || [], ids = ps.map(p => p.id); let cu = [], co = [];
     if(ids.length){ const a = await sb.from("curtidas").select("*").in("post_id", ids), b = await sb.from("comentarios").select("*").in("post_id", ids); cu = a.data || []; co = b.data || []; }
-    return ps.map(p => ({ id: p.id, user: p.user_id, nome: p.nome, foto: p.foto, texto: p.texto, img: p.img, criado: p.criado, oculto: p.oculto, curtidas: cu.filter(c => c.post_id === p.id).map(c => c.user_id), coments: co.filter(c => c.post_id === p.id).sort((x, y) => String(x.criado).localeCompare(String(y.criado))).map(c => ({ id: c.id, user: c.user_id, nome: c.nome, foto: c.foto, texto: c.texto, criado: c.criado })) })).sort((a, b) => String(b.criado).localeCompare(String(a.criado)));
+    return ps.map(p => ({ id: p.id, user: p.user_id, nome: p.nome, foto: p.foto, texto: p.texto, img: p.img, midia: p.midia, conquista: p.conquista, criado: p.criado, oculto: p.oculto, curtidas: cu.filter(c => c.post_id === p.id).map(c => c.user_id), coments: co.filter(c => c.post_id === p.id).sort((x, y) => String(x.criado).localeCompare(String(y.criado))).map(c => ({ id: c.id, user: c.user_id, nome: c.nome, foto: c.foto, texto: c.texto, criado: c.criado })) })).sort((a, b) => String(b.criado).localeCompare(String(a.criado)));
   },
   async publicar(texto, blob){
     const id = novoId(), foto = await miniFoto(ME.foto), criado = new Date().toISOString();
@@ -560,78 +560,10 @@ const CM = {
 };
 const tempoAtras = iso => { const s = (Date.now() - new Date(iso).getTime()) / 1000; if(s < 60) return "agora"; if(s < 3600) return `há ${Math.floor(s / 60)} min`; if(s < 86400) return `há ${Math.floor(s / 3600)} h`; if(s < 172800) return "ontem"; return new Date(iso).toLocaleDateString("pt-BR", { day: "2-digit", month: "short" }); };
 const avPost = (nome, foto) => `<span class="pav">${foto ? `<img src="${foto}" alt="">` : esc(String(nome || "?").trim()[0].toUpperCase())}</span>`;
-function postHtml(p){
-  const meu = p.user === ME.id, liked = (p.curtidas || []).includes(ME.id), nc = (p.coments || []).length, nl = (p.curtidas || []).length;
-  return `<article class="post" data-id="${p.id}">
-    <header>${avPost(p.nome, p.foto)}<div class="pmeta"><b>${esc(p.nome)}</b><small>${tempoAtras(p.criado)}${p.oculto ? " · oculto pela moderação" : ""}</small></div>${meu ? `<button class="iconbtn sm" data-del aria-label="Excluir publicação">${ic("close", 16)}</button>` : ""}</header>
-    ${p.texto ? `<p class="ptx">${esc(p.texto)}</p>` : ""}
-    ${p.img ? `<div class="pimg" data-abre><img src="${esc(p.img)}" alt="" loading="lazy"><i class="pheart">${ic("heart", 70)}</i></div>` : ""}
-    <div class="pacts"><button class="pl ${liked ? "on" : ""}" data-like aria-label="Curtir">${ic("heart", 22)}<span>${nl || ""}</span></button><button data-abre aria-label="Comentar">${ic("chat", 21)}<span>${nc || ""}</span></button>${nl ? `<small class="pquem">${liked ? (nl === 1 ? "Você curtiu" : `Você e mais ${nl - 1}`) : `${nl} ${nl === 1 ? "curtida" : "curtidas"}`}</small>` : ""}</div>
-    ${(p.coments || []).slice(-2).map(c => `<p class="pc"><b>${esc(c.nome.split(" ")[0])}</b> ${esc(c.texto)}</p>`).join("")}
-    ${nc > 2 ? `<button class="link pver" data-abre>Ver os ${nc} comentários</button>` : ""}
-    <button class="pcin" data-abre>${avPost(ME.nome, ME.foto)}<span>Escreva um comentário…</span></button>
-  </article>`;
-}
-function rJuntas(){
-  ME.feedVisto = new Date().toISOString(); save(); marcaNovidade(false);
-  $("t-juntas").innerHTML = `${capa("Comunidade", "Juntas somos mais fortes. Compartilhe e se inspire.", "", "img/ex-polichinelo.jpg")}
-    ${chatBotao()}
-    <button class="composer" id="cm-nova">${avPost(ME.nome, ME.foto)}<span>Compartilhe sua conquista de hoje…</span><i>${ic("camera", 20)}</i></button>
-    <div class="regras">${ic("heart", 15)} Um espaço de apoio: elogie, incentive e respeite todas.</div>
-    <div id="feed" class="feed"><div class="post skel"></div><div class="post skel"></div></div>`;
-  $("cm-nova").onclick = () => abreComposer(); ligaChatBotao();
-  carregaFeed();
-  clearInterval(FEED_T); FEED_T = setInterval(() => { if(TAB === "juntas" && document.visibilityState === "visible" && $("sheet").hidden && $("play").hidden) carregaFeed(true); }, 25000);
-}
-async function carregaFeed(silencio){
-  try{ FEED = await CM.carregar(); FEED_ERRO = ""; }
-  catch(e){ console.warn(e); FEED_ERRO = /PGRST205|42P01|does not exist|schema cache/i.test((e && (e.code + " " + e.message)) || "") ? "A comunidade está sendo preparada. Volte daqui a pouco!" : "Sem conexão agora. Puxe para atualizar daqui a pouco."; }
-  const f = $("feed"); if(!f) return;
-  if(FEED_ERRO){ f.innerHTML = `<div class="card empty-feed">${ic("people", 34)}<b>${FEED_ERRO}</b></div>`; return; }
-  if(!FEED.length){ f.innerHTML = `<div class="card empty-feed">${ic("people", 34)}<b>Seja a primeira a postar!</b><p>Conte como foi seu treino ou mostre sua receita favorita.</p></div>`; return; }
-  const y = window.scrollY; f.innerHTML = FEED.map(postHtml).join(""); if(silencio) window.scrollTo(0, y);
-  f.querySelectorAll(".post").forEach(el => ligaPost(el, FEED.find(p => p.id === el.dataset.id)));
-}
-function ligaPost(el, p, detalhe){
-  if(!p) return;
-  const like = async () => { const on = !(p.curtidas || []).includes(ME.id); p.curtidas = (p.curtidas || []).filter(u => u !== ME.id); if(on) p.curtidas.push(ME.id); if(on){ SOM.fav ? SOM.fav() : SOM.tap(); vibra(12); }
-    const b = el.querySelector("[data-like]"); b.classList.toggle("on", on); b.classList.remove("pop"); void b.offsetWidth; if(on) b.classList.add("pop"); b.querySelector("span").textContent = p.curtidas.length || "";
-    try{ await CM.curtir(p, on); }catch(e){ toast("Não deu para curtir agora"); } };
-  el.querySelector("[data-like]").onclick = like;
-  const im = el.querySelector(".pimg"); if(im){ let t = 0; im.addEventListener("click", e => { const n = Date.now(); if(n - t < 320){ e.stopPropagation(); if(!(p.curtidas || []).includes(ME.id)) like(); im.classList.remove("bate"); void im.offsetWidth; im.classList.add("bate"); t = 0; return; } t = n; if(!detalhe) setTimeout(() => { if(t === n) abrePost(p); }, 330); }); }
-  const hd = el.querySelector("header"); if(hd && p.user !== ME.id){ hd.classList.add("xp-autor"); [hd.querySelector(".pav"), hd.querySelector(".pmeta b")].forEach(x => { if(x) x.onclick = e => { e.stopPropagation(); perfilPublico({ id: p.user, nome: p.nome, foto: p.foto }); }; }); }
-  if(!detalhe) el.querySelectorAll("[data-abre]:not(.pimg)").forEach(b => b.onclick = () => abrePost(p, b.classList.contains("pcin")));
-  const del = el.querySelector("[data-del]"); if(del) del.onclick = () => { if(!confirm("Excluir esta publicação?")) return; CM.apagaPost(p).then(() => { toast("Publicação excluída"); if(detalhe) fecharSheet(); carregaFeed(); }).catch(() => toast("Não deu para excluir agora")); };
-}
-function abrePost(p, foca){
-  const lista = () => (p.coments || []).map(c => `<div class="cmt">${avPost(c.nome, c.foto)}<div><p><b>${esc(c.nome)}</b> ${esc(c.texto)}</p><small>${tempoAtras(c.criado)}${c.user === ME.id ? ` · <button class="link cdel" data-cdel="${c.id}">Excluir</button>` : ""}</small></div></div>`).join("") || `<p class="hint" style="margin:6px 0">Ainda sem comentários. Comece a conversa!</p>`;
-  sheet("Publicação", `<div class="post post-full" data-id="${p.id}">${postHtml(p).replace(/^<article[^>]*>|<\/article>$/g, "")}</div><div class="cmts" id="cmts">${lista()}</div>
-    <div class="cbar"><input class="input" id="cm-txt" maxlength="500" placeholder="Escreva um comentário…" autocomplete="off"><button class="btn btn-accent" id="cm-env" aria-label="Enviar">${ic("send", 18)}</button></div>`, () => { if(TAB === "juntas") carregaFeed(true); });
-  const el = $("sheet-body").querySelector(".post-full"); el.querySelectorAll(".pcin,.pver,.pc").forEach(x => x.remove()); ligaPost(el, p, true);
-  const ligaDel = () => $("cmts").querySelectorAll("[data-cdel]").forEach(b => b.onclick = () => { const c = p.coments.find(x => x.id === b.dataset.cdel); CM.apagaComent(p, c).then(() => { p.coments = p.coments.filter(x => x !== c); $("cmts").innerHTML = lista(); ligaDel(); }).catch(() => toast("Não deu para excluir agora")); });
-  ligaDel();
-  const env = async () => { const t = $("cm-txt").value.trim(); if(!t) return; $("cm-env").disabled = true; try{ const c = await CM.comentar(p, t); p.coments = p.coments || []; if(!p.coments.some(x => x.id === c.id)) p.coments.push(c); $("cm-txt").value = ""; $("cmts").innerHTML = lista(); ligaDel(); SOM.check(); const u = $("cmts").lastElementChild; if(u) u.scrollIntoView({ behavior: "smooth", block: "nearest" }); }catch(e){ toast("Não deu para comentar agora"); } $("cm-env").disabled = false; };
-  $("cm-env").onclick = env; $("cm-txt").onkeydown = e => { if(e.key === "Enter") env(); };
-  if(foca) setTimeout(() => $("cm-txt").focus(), 250);
-}
-function abreComposer(texto0, blob0){
-  let blob = blob0 || null;
-  sheet("Nova publicação", `<div class="cmp-top">${avPost(ME.nome, ME.foto)}<b>${esc(ME.nome)}</b></div>
-    <textarea class="input cmp-tx" id="cp-t" maxlength="1000" placeholder="Como foi seu treino hoje? Conte, inspire, comemore 💚">${esc(texto0 || "")}</textarea>
-    <div id="cp-prev" class="cp-prev"></div>
-    <div class="toolbar"><button class="btn btn-line" id="cp-foto">${ic("camera", 18)} Foto</button><span class="hint" id="cp-n"></span></div>
-    <button class="btn btn-accent btn-block btn-lg" id="cp-ok">Publicar</button>`);
-  const prev = async () => { $("cp-prev").innerHTML = blob ? `<img src="${await blobParaURL(blob)}" alt=""><button class="iconbtn sm" id="cp-x" aria-label="Tirar foto">${ic("close", 16)}</button>` : ""; const x = $("cp-x"); if(x) x.onclick = () => { blob = null; prev(); }; };
-  prev();
-  $("cp-foto").onclick = () => { const inp = document.createElement("input"); inp.type = "file"; inp.accept = "image/*"; inp.onchange = async () => { const f = inp.files && inp.files[0]; if(!f) return; try{ blob = await comprimeImg(f); prev(); }catch(e){ toast("Não deu para abrir essa foto"); } }; inp.click(); };
-  $("cp-ok").onclick = async () => { const t = $("cp-t").value.trim(); if(!t && !blob) return toast("Escreva algo ou escolha uma foto"); if(ME.bloqueado) return toast("Sua conta está bloqueada");
-    const b = $("cp-ok"); b.classList.add("carregando"); b.disabled = true;
-    try{ await CM.publicar(t, blob); SOM.done ? SOM.done() : SOM.check(); fecharSheet(); toast("Publicado na comunidade!"); if(TAB !== "juntas") tab("juntas"); else carregaFeed(); }
-    catch(e){ console.warn(e); toast(/PGRST205|42P01|schema cache/i.test(String(e && (e.code + e.message))) ? "A comunidade ainda está sendo preparada" : "Não deu para publicar agora"); b.classList.remove("carregando"); b.disabled = false; } };
-}
 function marcaNovidade(on){ const b = $("nav") && $("nav").querySelector('[data-tab="juntas"]'); if(b) b.classList.toggle("novo", !!on); }
 function confereNovidade(){ CM.ultimo().then(u => { if(u && (!ME.feedVisto || u > ME.feedVisto) && TAB !== "juntas") marcaNovidade(true); }).catch(() => {}); }
 /*EXPANSAO*/
+/*SOCIAL*/
 const TABS = [["inicio","Início"],["treinar","Treinos"],["dieta","Nutrição"],["juntas","Comunidade"],["explorar","Explorar"],["perfil","Perfil"],["evolucao","Evolução"]];
 const NAV = TABS.slice(0, 6), NAV_DE = { evolucao: "perfil" };
 let TAB = "inicio";
@@ -640,7 +572,7 @@ $("nav").querySelectorAll("[data-tab]").forEach(b => b.onclick = () => tab(b.dat
 $("b-adm").innerHTML = ic("grid", 19);
 $("b-adm").onclick = () => window.ADMIN.abrir();
 function abrirApp(){
-  xpGarante();
+  xpGarante(); setTimeout(iniciaSocial, 1200);
   setTimeout(confereNovidade, 2500);
   show("v-app"); $("b-adm").hidden = true;
   if(location.hash === "#admin") history.replaceState(null, "", location.pathname);
@@ -700,7 +632,7 @@ document.addEventListener("input", e => { if(e.target.matches && e.target.matche
 function escolheFoto(){
   const inp = document.createElement("input"); inp.type = "file"; inp.accept = "image/*";
   inp.onchange = () => { const f = inp.files && inp.files[0]; if(!f) return; const rd = new FileReader();
-    rd.onload = () => { const im = new Image(); im.onload = () => { const S = 320, c = document.createElement("canvas"); c.width = c.height = S; const x = c.getContext("2d"), m = Math.min(im.width, im.height); x.drawImage(im, (im.width - m) / 2, (im.height - m) / 2, m, m, 0, 0, S, S); ME.foto = c.toDataURL("image/jpeg", .82); save(); SOM.chime && SOM.chime(); toast("Foto do perfil atualizada"); rPerfil(); atualizaTopo(); }; im.onerror = () => toast("Não deu para abrir essa imagem"); im.src = rd.result; };
+    rd.onload = () => { const im = new Image(); im.onload = () => { const S = 320, c = document.createElement("canvas"); c.width = c.height = S; const x = c.getContext("2d"), m = Math.min(im.width, im.height); x.drawImage(im, (im.width - m) / 2, (im.height - m) / 2, m, m, 0, 0, S, S); ME.foto = c.toDataURL("image/jpeg", .82); save(); sincFotoPerfil(); SOM.chime && SOM.chime(); toast("Foto do perfil atualizada"); rPerfil(); atualizaTopo(); }; im.onerror = () => toast("Não deu para abrir essa imagem"); im.src = rd.result; };
     rd.readAsDataURL(f); };
   inp.click();
 }
@@ -1142,6 +1074,7 @@ function fimTreino(parcial){
   const meta = DB.config.treinosParaCupom || 8; let ganhou = null;
   if(ME.treinos.length % meta === 0) ganhou = darCupom();
   save();
+  setTimeout(() => { try{ checaConquistas(); }catch(e){ console.warn(e); } }, 1600);
   const novas = medalhas().filter(m => m.ok && !antes.includes(m.id));
   const recorde = !parcial && ME.treinos.length > 2 && min >= Math.max(...ME.treinos.slice(0, -1).map(t => t.min || 0)) && min > 0;
   SOM.done(); vibra([100, 60, 100]);

@@ -13,13 +13,14 @@ Object.assign(AIC, {
   avaliacoes:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',
   destaques:'<path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/><circle cx="12" cy="12" r="3"/>',
   explorarm:'<circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/>',
+  moderacao:'<path d="M5 21V4h11l-2 4 2 4H5"/>',
   ciclo:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5s3 3.4 3 5.5a3 3 0 0 1-6 0c0-2.1 3-5.5 3-5.5z"/>'
 });
-SECOES.push(["empresas","Empresas e academias"],["servicos","Serviços"],["agendamentos","Agendamentos"],["avaliacoes","Avaliações"],["destaques","Destaques"],["produtos","Loja e produtos"],["cupons","Cupons"],["banners","Banners"],["categorias","Categorias"],["explorarm","Métricas do Explorar"],["ciclo","Módulo Ciclo"]);
+SECOES.push(["moderacao","Denúncias"],["empresas","Empresas e academias"],["servicos","Serviços"],["agendamentos","Agendamentos"],["avaliacoes","Avaliações"],["destaques","Destaques"],["produtos","Loja e produtos"],["cupons","Cupons"],["banners","Banners"],["categorias","Categorias"],["explorarm","Métricas do Explorar"],["ciclo","Módulo Ciclo"]);
 SECOES.find(s => s[0] === "parceiros")[1] = "Clube CK";
 GRUPOS.length = 0;
 GRUPOS.push(["Visão geral", ["resumo","metricas","explorarm"]], ["Explorar", ["empresas","profissionais","servicos","agendamentos","avaliacoes","destaques"]], ["Clube e loja", ["parceiros","cupons","produtos","banners"]],
-  ["Anúncios", ["anunciantes","campanhas","financeiro"]], ["Conteúdo do app", ["alunos","comunidade","receitas","exercicios","avisos","ciclo"]], ["Ajustes", ["cidades","segmentos","categorias","admins","config"]]);
+  ["Anúncios", ["anunciantes","campanhas","financeiro"]], ["Conteúdo do app", ["alunos","comunidade","moderacao","receitas","exercicios","avisos","ciclo"]], ["Ajustes", ["cidades","segmentos","categorias","admins","config"]]);
 
 /* ---------- utilidades ---------- */
 const XERRA = e => F.XERR ? F.XERR(e) : false;
@@ -409,4 +410,48 @@ formPerm = function(u){
     toast("Papel aplicado. Clique em Salvar permissões."); });
 };
 
-Object.assign(VIEWS, { resumo: vResumoX, empresas: vEmpresas, profissionais: vProfX, servicos: vServicos, agendamentos: vAgendamentos, avaliacoes: vAvaliacoes, destaques: vDestaques, produtos: vProdutos, cupons: vCupons, banners: vBanners, categorias: vCategorias, explorarm: vExplorarM, ciclo: vCiclo });
+
+/* ---------- Denúncias e moderação (só o conteúdo denunciado; nunca navegar pelos chats) ---------- */
+const MOT = { assedio: "Assédio", improprio: "Conteúdo impróprio", spam: "Spam", ofensivo: "Comportamento ofensivo", outro: "Outro" };
+const TIPD = { perfil: "Perfil", post: "Publicação", comentario: "Comentário", story: "Story", mensagem: "Mensagem privada" };
+let XDN = { st: "aberta" };
+async function vModeracao(){
+  const N = F.nuvem;
+  $("adm-main").innerHTML = `<div class="head"><div><h1>Denúncias</h1><p class="muted">O que as alunas denunciaram. Você vê apenas o conteúdo denunciado — o painel não dá acesso às conversas privadas.</p></div><button class="btn btn-line btn-sm" id="dn-at">Atualizar</button></div><div id="dn-b"><div class="card">Carregando…</div></div>`;
+  $("dn-at").onclick = rerender;
+  if(!N || !N.ativo || !N.sb){ $("dn-b").innerHTML = `<div class="card">As denúncias funcionam no app oficial, com o banco conectado.</div>`; return; }
+  let L = [], LOG = [];
+  try{ const r = await N.sb.from("denuncias").select("*").order("criado", { ascending: false }).limit(300); if(r.error) throw r.error; L = r.data;
+    const g = await N.sb.from("moderacao_log").select("*").order("criado", { ascending: false }).limit(50); LOG = g.data || []; }
+  catch(e){ $("dn-b").innerHTML = XERRA(e) ? `<div class="card"><b>Esta área precisa ser ativada no banco.</b><p class="muted" style="margin:6px 0 0">Rode o arquivo <b>social.sql</b> no Supabase.</p></div>` : `<div class="card">Sem conexão agora.</div>`; return; }
+  const ids = [...new Set(L.flatMap(d => [d.autor, d.alvo_user]).concat(LOG.map(l => l.admin)).filter(Boolean))]; const nomes = {};
+  if(ids.length){ const r = await N.sb.from("perfis").select("user_id,nome,username").in("user_id", ids); (r.data || []).forEach(p => nomes[p.user_id] = `${p.nome} (@${p.username})`); }
+  const nm = u => nomes[u] || ((F.DB.users.find(x => x.id === u) || {}).nome) || "Aluna";
+  const V = L.filter(d => !XDN.st || d.status === XDN.st);
+  $("dn-b").innerHTML = `<div class="grid g3">${kpi("Abertas", int(L.filter(d => d.status === "aberta").length), "", "moderacao", 1)}${kpi("Resolvidas", int(L.filter(d => d.status === "resolvida").length))}${kpi("Descartadas", int(L.filter(d => d.status === "descartada").length))}</div>
+    <div class="chips">${[["aberta","Abertas"],["resolvida","Resolvidas"],["descartada","Descartadas"],["","Todas"]].map(([k, n]) => `<button class="chip" data-ds="${k}" aria-pressed="${XDN.st === k}">${n}</button>`).join("")}</div>
+    <div class="tbl"><table><thead><tr><th>Data</th><th>Tipo</th><th>Motivo</th><th>Quem denunciou</th><th>Conta denunciada</th><th>Status</th><th></th></tr></thead><tbody>
+      ${V.map(d => `<tr><td class="num">${brD(String(d.criado).slice(0, 10))}</td><td>${TIPD[d.tipo] || d.tipo}</td><td><b>${MOT[d.motivo] || d.motivo}</b>${d.detalhe ? `<br><small class="muted">${esc(d.detalhe)}</small>` : ""}</td><td>${esc(nm(d.autor))}</td><td>${esc(nm(d.alvo_user))}</td><td><span class="st ${d.status === "aberta" ? "warn" : d.status === "resolvida" ? "ok" : "off"}">${d.status}</span>${d.acao ? `<br><small class="muted">${esc(d.acao)}</small>` : ""}</td><td><button class="btn btn-line btn-sm" data-dv="${d.id}">Analisar</button></td></tr>`).join("") || `<tr><td colspan="7" class="empty">Nenhuma denúncia aqui. 💚</td></tr>`}
+    </tbody></table></div>
+    <div class="card"><h3 style="margin-bottom:8px">Histórico de ações</h3>${LOG.length ? LOG.map(l => `<p style="margin:4px 0"><small class="muted">${new Date(l.criado).toLocaleString("pt-BR")}</small> · <b>${esc(nm(l.admin))}</b>: ${esc(l.acao)} (${TIPD[l.alvo_tipo] || l.alvo_tipo})</p>`).join("") : `<p class="muted">Sem ações ainda.</p>`}</div>`;
+  $("adm-main").querySelectorAll("[data-ds]").forEach(b => b.onclick = () => { XDN.st = b.dataset.ds; rerender(); });
+  $("adm-main").querySelectorAll("[data-dv]").forEach(b => b.onclick = () => analisaDenuncia(L.find(d => d.id === b.dataset.dv), nm));
+}
+async function analisaDenuncia(d, nm){
+  const N = F.nuvem; let c = null;
+  try{ const r = await N.sb.rpc("denuncia_conteudo", { p_id: d.id }); if(r.error) throw r.error; c = r.data || {}; }catch(e){ return toast("Não deu para abrir agora"); }
+  let midia = "";
+  const path = c.midia; if(path){ const r = await N.sb.storage.from("social").createSignedUrl(path, 120); if(r.data && r.data.signedUrl) midia = /\.(webm|m4a|ogg|mp3|aac|mp4)$/i.test(path) ? `<p class="muted">Áudio denunciado:</p><audio controls controlsList="nodownload" src="${esc(r.data.signedUrl)}" style="width:100%"></audio>` : `<img src="${esc(r.data.signedUrl)}" alt="" style="max-width:100%;max-height:360px;border-radius:12px;display:block" draggable="false" oncontextmenu="return false">`; }
+  else if(c.img) midia = `<img src="${esc(c.img)}" alt="" style="max-width:100%;max-height:360px;border-radius:12px;display:block">`;
+  const pode = podeEditar("moderacao");
+  modal("Denúncia · " + (TIPD[d.tipo] || d.tipo), `<p><b>Motivo:</b> ${MOT[d.motivo] || d.motivo}${d.detalhe ? ` — ${esc(d.detalhe)}` : ""}</p><p><b>Denunciada:</b> ${esc(nm(d.alvo_user))} · <b>por</b> ${esc(nm(d.autor))}</p>
+    <div class="card" style="background:var(--surface-2)">${c.removido ? `<p class="muted">O conteúdo já foi apagado pela autora.</p>` : `${c.nome ? `<p><b>${esc(c.nome)}</b> @${esc(c.username || "")}</p>` : ""}${c.texto || c.bio ? `<p style="white-space:pre-wrap">${esc(c.texto || c.bio)}</p>` : ""}${midia}${c.oculto ? `<p><span class="st warn">Oculto</span></p>` : ""}`}</div>
+    <p class="muted" style="font-size:13px">Por privacidade, só este conteúdo aparece. O resto da conversa continua privado.</p>
+    ${pode ? `<div class="toolbar">${d.tipo !== "perfil" ? `<button class="btn btn-bad btn-sm" data-ac="ocultar">Ocultar conteúdo</button><button class="btn btn-line btn-sm" data-ac="restaurar">Restaurar</button>` : ""}<button class="btn btn-bad btn-sm" data-ac="suspender">Suspender conta</button><button class="btn btn-line btn-sm" data-ac="reativar">Reativar conta</button><button class="btn btn-accent btn-sm" data-ac="resolver">Marcar resolvida</button><button class="btn btn-line btn-sm" data-ac="descartar">Descartar</button></div>` : `<p class="muted">Você pode ver, mas não pode agir nesta área.</p>`}`);
+  $("mbox").querySelectorAll("[data-ac]").forEach(b => b.onclick = () => {
+    const ac = b.dataset.ac, txt = { ocultar: "Ocultar este conteúdo?", restaurar: "Mostrar o conteúdo de novo?", suspender: "Suspender a conta denunciada? Ela não poderá publicar nem mandar mensagens.", reativar: "Reativar a conta?", resolver: "Marcar como resolvida?", descartar: "Descartar a denúncia?" }[ac];
+    confirmar(txt, async () => { const r = await N.sb.rpc("moderar", { p_id: d.id, p_acao: ac }); if(r.error) return toast("Não deu: " + (r.error.message || "")); toast("Feito e registrado no histórico"); rerender(); });
+  });
+}
+
+Object.assign(VIEWS, { moderacao: vModeracao, resumo: vResumoX, empresas: vEmpresas, profissionais: vProfX, servicos: vServicos, agendamentos: vAgendamentos, avaliacoes: vAvaliacoes, destaques: vDestaques, produtos: vProdutos, cupons: vCupons, banners: vBanners, categorias: vCategorias, explorarm: vExplorarM, ciclo: vCiclo });

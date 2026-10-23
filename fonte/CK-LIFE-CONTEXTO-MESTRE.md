@@ -532,20 +532,25 @@ Você vai continuar o desenvolvimento do CK Life, meu app de treino em casa para
 
 ---
 
-## CHECKPOINT · REDE SOCIAL (23/10/2026) — EM ANDAMENTO
+## REDE SOCIAL (23/10/2026) — NO AR, aguardando o banco
 
-**Status:** banco pronto e testado; app ainda NÃO ligado (o site no ar continua com a comunidade anterior, funcionando).
+**App publicado** com a rede social ligada de forma segura: enquanto o `social.sql` não existir no Supabase, a Comunidade continua no modo antigo (feed, curtidas, comentários) e os botões novos avisam "A rede social está sendo ativada". Assim que o banco existir, liga sozinha (`detectaSocial()` testa a tabela `perfis`).
+⚠️ Até rodar o banco, o chat fica indisponível (o chat antigo foi substituído pelo novo).
 
-### Pronto
-- `fonte/social.sql` (= `ck-life/social.sql`): perfis (username único), seguidores (público/privado com pedido), bloqueios, denúncias + `moderacao_log`, Stories 24h (expiração no banco), `story_vistas`, chat ampliado (foto, áudio, resposta, Story, post, `entregue_em`/`lida_em`, apagar para mim), notificações por gatilho (sem duplicar), salvos, bucket PRIVADO `social` (10 MB, só imagem/áudio), funções `social_pode_ler/gravar`, RPCs `username_livre`, `perfil_contagens`, `marcar_entregues`, `marcar_lidas`, `nao_lidas`, `ocultar_mensagem`, `denuncia_conteudo`, `moderar`; tempo real (publicação `supabase_realtime`).
-- **89 testes de segurança passando** em Postgres 16 local (`fonte/testes-banco/`: `rodar.sh`, `supabase_base.sql`, `testes.sql`), incluindo os 8 cenários obrigatórios (C não abre chat/arquivo de A↔B, sem login nada abre, Story privado negado a não seguidora, Story vencido some, bloqueio no banco, admin só vê o conteúdo denunciado).
-- `fonte/src/social.js` escrito (perfil social, editar perfil, seguir/pedidos, bloquear/denunciar, feed com abas e paginação, Stories com visualizações e resposta, chat com foto/áudio/status com corações/tempo real, central de notificações, conquistas com cartão e compartilhamento nativo). **Ainda não testado nem ligado ao build.**
+**Banco:** `fonte/social.sql` ou, em partes, `fonte/social-partes/social-parte1..5.sql` (rodar na ordem). 87 testes de segurança passando em Postgres local (`fonte/testes-banco/rodar.sh`, que aplica as 5 partes e roda `testes.sql`).
 
-### Próximos passos (na ordem)
-1. Ligar `social.js`: marcador `/*SOCIAL*/` logo após `/*EXPANSAO*/` no `app.js` + `build.py`; remover do `app.js` as versões antigas de `postHtml`, `rJuntas`, `carregaFeed`, `ligaPost`, `abrePost`, `abreComposer` (cópia em scratchpad `comunidade_antiga.js`); remover do `expansao.js` o chat antigo (`XP.chat`, `listaConversas`, `perfilPublico`, `abreConversa`, `chatBotao`, `ligaChatBotao`, `confereChat`, `privacidade`).
-2. Ganchos: `abrirApp` → `iniciaSocial()`; `fimTreino` → `setTimeout(checaConquistas, 900)`; `escolheFoto` (Perfil) → `sincFotoPerfil()`; `CM.carregar` incluir `midia` e `conquista` no mapeamento; badge `#top-not-n` opcional no topo.
-3. CSS das classes `so-*` (perfil, stories, viewer, chat, notificações, celebração, menus, aviso).
-4. Ampliar `mock-supabase.js` (tabelas novas, rpcs, storage com createSignedUrls, `channel` sem efeito) e testar no `teste-nuvem.html` com duas contas; auditoria de layout 320/375/1366 e modo escuro; regressão completa.
-5. Painel: seção **Denúncias** (`moderacao`) em `admin-xp.js` usando `denuncia_conteudo` e `moderar`, com histórico.
-6. Entregar `social.sql` ao Tiago em partes para rodar no Supabase; depois publicar o app.
-7. Limitações a documentar: PWA no navegador não permite bloquear/detectar print de forma real (não implementado, sem aviso falso); vídeo em Stories fica para depois; fotos antigas da comunidade continuam no bucket público `posts` (migração futura); limpeza de arquivos de Stories vencidos (ficam inacessíveis pelo banco, apagar depois).
+**App (`src/social.js`, marcador `/*SOCIAL*/` no app.js):**
+- Perfil social (`abrirPerfil`, `editarPerfil`): capa, foto, nome, @ único (checagem ao vivo), bio, cidade/objetivo opcionais, interesses, privado, quem manda mensagem, mostrar conquistas; publicações/seguidoras/seguindo (contagem no banco), pedidos para seguir, salvos, compartilhar perfil (`?u=username`).
+- Seguir/deixar de seguir/solicitar/aceitar/recusar, bloquear (no banco), denunciar (perfil, post, comentário, Story, mensagem).
+- Feed: abas Para você/Seguindo, paginação infinita (12 por vez), boas-vindas, salvar, compartilhar (interno para amiga; externo só do próprio post), fotos novas no bucket privado.
+- Stories 24h: criar com texto/cor, visualizador com barras, visto/não visto, quem viu, excluir, denunciar/bloquear, responder → chat.
+- Chat: texto, foto, áudio (MediaRecorder), responder, apagar para mim/para as duas, denunciar, silenciar, status com corações (enviada/entregue/lida), não lidas, tempo real (Supabase Realtime) + plano B a cada 20 s.
+- Notificações: central (Todas/Interações/Mensagens/Conquistas), avisos discretos no topo, badges.
+- Conquistas (1/10/25/50/100/200 treinos; 3/7/15/30/60 dias): celebração com Postar/Compartilhar (cartão 1080x1350, @ opcional, share nativo)/Continuar; quem já tinha histórico não recebe festa retroativa.
+- Painel: seção **Denúncias** (`moderacao`): lista, análise só do conteúdo denunciado (`denuncia_conteudo`), ocultar/restaurar/suspender/reativar/resolver/descartar (`moderar`) e histórico.
+
+**Testado:** demonstração (sem rede social) e banco simulado (`mock-supabase.js` com `localStorage.MOCKEXP=1` e `MOCKSOCIAL=1`) com duas contas: perfil, @, editar, seguir, Story (ver, visto, responder), post com foto privada, chat texto+foto, entregue/lida, contadores, notificações. Áudio: código pronto, gravação real depende do microfone do aparelho (não testável aqui).
+
+**Limitações (sem promessa falsa):** PWA no navegador não bloqueia nem detecta print/gravação de tela — não implementado; vídeo em Stories fica para depois; fotos antigas da comunidade seguem no bucket público `posts`; arquivos de Stories vencidos ficam inacessíveis pelo banco mas não são apagados automaticamente.
+
+**Próximos passos:** (1) Tiago roda as 5 partes; (2) testar no site real com duas contas; (3) migrar fotos antigas do bucket `posts` para o privado; (4) limpeza automática de mídia de Stories vencidos; (5) vídeo em Stories.

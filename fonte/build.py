@@ -7,7 +7,7 @@ def monta(config, supa):
     h = h.replace("/*CONFIG*/", config).replace("<!--SUPABASE-->", supa)
     for k, f in [("NUVEM","nuvem.js"),("SONS","sons.js"),("BONECO","boneco.js"),("FOTOS","fotos.js"),("APP","app.js"),("ADMIN","admin.js")]:
         txt = (s/f).read_text()
-        if f == "app.js": txt = txt.replace("/*EXPANSAO*/", (s/"expansao.js").read_text())
+        if f == "app.js": txt = txt.replace("/*EXPANSAO*/", (s/"expansao.js").read_text()).replace("/*SOCIAL*/", (s/"social.js").read_text())
         if f == "admin.js": txt = txt.replace("/*ADMINXP*/", (s/"admin-xp.js").read_text())
         h = h.replace("/*%s*/" % k, txt)
     return h

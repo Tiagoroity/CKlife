@@ -339,6 +339,17 @@ begin
     where id = p_id and e_participante(conversa_id);
   return found;
 end $$;
+-- última mensagem na lista de conversas também para foto, áudio e Story
+create or replace function public.atualiza_conversa() returns trigger
+language plpgsql security definer set search_path = public as $$
+begin
+  update conversas set ultima = left(coalesce(nullif(new.texto, ''), case new.tipo when 'foto' then '📷 Foto' when 'audio' then '🎤 Áudio' when 'story' then 'Respondeu ao Story' when 'post' then 'Publicação compartilhada' else '' end), 90),
+    ultima_em = new.criado, ultimo_autor = new.autor,
+    lida_a = case when a = new.autor then new.criado else lida_a end,
+    lida_b = case when b = new.autor then new.criado else lida_b end
+  where id = new.conversa_id;
+  return new;
+end $$;
 create or replace function public.nao_lidas() returns table(conversa_id uuid, n bigint)
 language sql stable security definer set search_path = public as $$
   select m.conversa_id, count(*) from mensagens m join conversas c on c.id = m.conversa_id
