@@ -1438,3 +1438,35 @@ ul.xp-lista:not(:has(svg)) li::before{content:"•";color:var(--accent);font-wei
 .so-sv-pe{gap:10px}
 .so-st-av>i{cursor:pointer}
 .so-st.meu .so-st-av>i{width:24px;height:24px}
+/* ===== Comunidade premium: 20 melhorias ===== */
+.so-men{border:0;background:none;padding:0;color:var(--accent-strong);font-weight:700;font:inherit;font-weight:700;cursor:pointer}
+.ptx.so-trunc{display:-webkit-box;-webkit-line-clamp:6;-webkit-box-orient:vertical;overflow:hidden}
+.so-vermais{margin:-6px 0 8px;font-weight:700}
+.pquem[data-quem]{cursor:pointer;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
+.pav.so-anel,.so-av.so-anel{box-shadow:0 0 0 2px var(--bg),0 0 0 4px #C2577B;cursor:pointer}
+.so-temas{margin:-2px -16px 0;padding-left:16px}.so-temas .chip{font-size:13px;padding:7px 12px}
+.so-cont{display:block;text-align:right;color:var(--muted);font-size:11.5px;margin-top:-6px}
+.post.so-recem{animation:recem 1.6s ease-out}
+@keyframes recem{0%{box-shadow:0 0 0 3px var(--accent)}100%{box-shadow:var(--shadow-sm)}}
+.so-sug .hscroll{gap:10px;padding-top:6px}
+.so-sugc{flex:0 0 132px;display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px 10px;border:1px solid var(--line);border-radius:18px;background:var(--surface);text-align:center;cursor:pointer}
+.so-sugc .pav{width:58px;height:58px;font-size:22px}.so-sugc b{font-size:14px}.so-sugc small{color:var(--muted);font-size:11.5px;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.so-sugc .btn{margin-top:4px;width:100%;justify-content:center}
+.so-pessoa .btn,.so-nt .btn{flex:0 0 auto;font-style:normal}
+.so-seguindo{font-style:normal;font-size:12.5px;font-weight:700;color:var(--muted);flex:0 0 auto}
+.so-abas{margin-top:2px}.so-abas button{display:flex;align-items:center;justify-content:center;gap:5px;font-size:13px}
+.so-gconq{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}
+.so-gconq .so-badge{width:auto}.so-badge small{font-size:10px;opacity:.7}
+.so-desde{margin:-4px 0 0;text-align:center;font-size:12.5px;color:var(--muted);display:flex;gap:5px;justify-content:center;align-items:center}
+.so-comp{display:flex;flex-direction:column;gap:8px;text-align:left;width:100%;color:var(--ink);background:linear-gradient(135deg,var(--accent-soft),var(--surface))}
+.so-comp-h{display:flex;justify-content:space-between;align-items:center}.so-comp small{color:var(--muted);line-height:1.4}
+.so-ntg{margin:14px 2px 2px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.so-ntall{display:block;margin:2px 0 0 auto}
+.so-reac{display:flex;gap:6px;position:absolute;left:0;right:0;bottom:62px;justify-content:center}
+.so-reac button{width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.14);font-size:22px;backdrop-filter:blur(6px);transition:transform .15s}
+.so-reac button.pop{transform:scale(1.35)}
+.so-puxa{display:flex;align-items:center;justify-content:center;gap:8px;height:40px;color:var(--accent-strong);font-weight:700;font-size:13px;overflow:hidden}
+.so-novas{position:sticky;top:calc(64px + env(safe-area-inset-top,0px));z-index:5;margin:0 auto -36px;display:flex;align-items:center;gap:6px;border:0;border-radius:999px;background:var(--accent);color:var(--accent-ink);font-weight:800;font-size:13.5px;padding:9px 16px;box-shadow:0 10px 24px -10px rgba(0,0,0,.4)}
+.so-novas svg{transform:rotate(90deg)}
+#cv-q{margin-bottom:6px}
+:root[data-theme="dark"] .so-novas{background:#4ECB86;color:#04170F}

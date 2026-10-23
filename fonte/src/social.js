@@ -36,6 +36,8 @@ async function urls(paths, segs = 600){
   }
   return paths.map(p => (MID.get(p) || {}).u || "");
 }
+// se a URL temporária ainda vale, usa direto (sem piscar ao redesenhar)
+const midiaPronta = path => { const m = MID.get(path); return m && m.t > Date.now() ? `src="${esc(m.u)}" data-m="${esc(path)}" data-mok="1"` : `data-m="${esc(path)}"`; };
 function ligaMidia(root, segs){
   const els = [...(root || document).querySelectorAll("[data-m]:not([data-mok])")]; if(!els.length) return;
   urls(els.map(e => e.dataset.m), segs).then(us => els.forEach((e, i) => { e.dataset.mok = 1;
@@ -84,6 +86,11 @@ async function sincFotoPerfil(){ // chamada quando a aluna troca a foto pelo Per
   await detectaSocial(); if(!SO.on()) return; try{ await garantePerfil(); const foto = ME.foto ? await sobe("perfil", NU.uid, await (await fetch(ME.foto)).blob(), "jpg", "image/jpeg") : null;
     const mini = ME.foto ? await miniFoto(ME.foto, 96) : null; const rr = await q(SB().from("perfis").update({ foto, foto_mini: mini }).eq("user_id", NU.uid).select()); EU = (rr && rr[0]) || { ...EU, foto, foto_mini: mini }; PERFIS.set(NU.uid, EU); }catch(e){ console.warn(e); }
 }
+// @menções viram links para o perfil
+const rico = t => esc(t || "").replace(/(^|[\s(])@([a-z0-9._]{3,20})/gi, (m, a, u) => `${a}<button class="so-men" data-men="${u.toLowerCase()}">@${u}</button>`);
+document.addEventListener("click", async e => { const b = e.target.closest && e.target.closest("[data-men]"); if(!b || !SO.on()) return; e.stopPropagation();
+  try{ const r = await q(SB().from("perfis").select("user_id").eq("username", b.dataset.men)); if(r[0]) abrirPerfil(r[0].user_id); else toast("Perfil não encontrado"); }catch(err){} }, true);
+const temStory = u => STO.grupos.some(g => g.u === u && u !== (NU && NU.uid));
 const nomeP = (u, fb) => (PERFIS.get(u) || {}).nome || fb || "Aluna";
 const userP = u => (PERFIS.get(u) || {}).username || "";
 const avU = (u, nomeFb, fotoFb, cls) => { const p = PERFIS.get(u) || {}, f = p.foto_mini || fotoFb, n = p.nome || nomeFb; return `<span class="pav ${cls || ""}">${f ? `<img src="${esc(f)}" alt="" draggable="false">` : esc(String(n || "?").trim()[0] || "?").toUpperCase()}</span>`; };
@@ -148,13 +155,20 @@ async function abrirPerfil(u){
     <div class="so-acts">${meu ? `<button class="btn btn-accent" id="pf-ed">${ic("edit", 16)} Editar perfil</button>` : btSeg + `<button class="btn btn-line" id="pf-msg">${ic("chat", 16)} Mensagem</button>`}<button class="iconbtn" id="pf-mais" aria-label="Mais opções">${ic(meu ? "share" : "dots", 18)}</button></div>
     <div class="so-nums"><button data-ls="posts"><b class="num">${int(c ? c.posts : 0)}</b><span>Publicações</span></button><button data-ls="seguidores"><b class="num">${int(c ? c.seguidores : 0)}</b><span>Seguidoras</span></button><button data-ls="seguindo"><b class="num">${int(c ? c.seguindo : 0)}</b><span>Seguindo</span></button></div>
     ${meu ? `<div id="pf-ped"></div>` : ""}
-    ${conq.length ? `<div class="so-conq"><h3>Conquistas</h3><div class="hscroll">${conq.slice(-12).reverse().map(k => { const d = CONQ.find(x => x[0] === (k.k || k)); return d ? `<span class="so-badge"><i>${d[2]}</i><b>${d[3]}</b></span>` : ""; }).join("")}</div></div>` : ""}
+    ${meu ? perfilCompleto(p) : ""}
+    <p class="so-desde">${ic("calendar", 13)} No CK Life desde ${new Date(p.criado).toLocaleDateString("pt-BR", { month: "long", year: "numeric" })}</p>
+    <div class="seg seg-sm so-abas" id="pf-abas"><button data-pa="posts" aria-pressed="true">${ic("grid", 15)} Publicações</button><button data-pa="conq" aria-pressed="false">${ic("trophy", 15)} Conquistas</button>${meu ? `<button data-pa="salvos" aria-pressed="false">${ic("bookmark", 15)} Salvos</button>` : ""}</div>
+    <div id="pf-conq" hidden>${conq.length ? `<div class="so-gconq">${conq.slice().reverse().map(k => { const d = CONQ.find(x => x[0] === (k.k || k)); return d ? `<span class="so-badge"><i>${d[3]}</i><b>${d[4]}</b><small>${k.d ? brD(k.d) : ""}</small></span>` : ""; }).join("")}</div>` : `<div class="card empty"><p>${meu ? "Suas conquistas de treino aparecem aqui. Cada treino conta! 💪" : "Ainda sem conquistas para mostrar."}</p></div>`}</div>
+    <div id="pf-salv" hidden></div>
     <div id="pf-posts">${podeVer ? `<div class="post skel" style="height:120px"></div>` : `<div class="card empty">${ic("lock", 30, 1.6)}<p><b>Perfil privado</b><br>Siga para ver as publicações e os Stories.</p></div>`}</div>
     ${meu ? `<div class="card" style="padding:6px 16px">${setRow("pf-salvos", "bookmark", "Publicações salvas", "Só você vê")}${setRow("pf-priv", "shield", "Privacidade e bloqueios", p.privado ? "Perfil privado" : "Perfil público no CK Life")}</div>` : ""}
   </div>`);
   const b = $("sheet-body"); ligaMidia(b, 3600);
   const on = (id, fn) => { const e = $(id); if(e) e.onclick = fn; };
   on("pf-ed", () => editarPerfil());
+  on("pf-comp", () => editarPerfil());
+  const avp = b.querySelector(".so-ph .so-av"); if(avp && !meu && temStory(u)){ avp.classList.add("so-anel"); avp.onclick = () => { fecharSheet(); verStories(u); }; }
+  b.querySelectorAll("[data-pa]").forEach(x => x.onclick = () => { const a = x.dataset.pa; b.querySelectorAll("[data-pa]").forEach(y => y.setAttribute("aria-pressed", y === x)); $("pf-posts").hidden = a !== "posts"; $("pf-conq").hidden = a !== "conq"; const sv = $("pf-salv"); if(sv){ sv.hidden = a !== "salvos"; if(a === "salvos" && !sv.dataset.ok){ sv.dataset.ok = 1; salvosEm(sv); } } });
   on("pf-salvos", () => verSalvos());
   on("pf-priv", () => privacidade());
   on("pf-msg", async () => { try{ const cv = await conversaCom(u); abreConversa(cv); }catch(e){ toast(/row-level/i.test(String(e.message)) ? "Ela não está recebendo mensagens agora." : ERR_MSG(e)); } });
@@ -163,6 +177,19 @@ async function abrirPerfil(u){
   b.querySelectorAll("[data-ls]").forEach(x => x.onclick = () => { const t = x.dataset.ls; if(t === "posts"){ const e = $("pf-posts"); if(e) e.scrollIntoView({ behavior: "smooth" }); } else if(podeVer) listaPessoas(u, t, p.nome); else toast("Perfil privado."); });
   if(meu) pedidosSeguir();
   if(podeVer) gradePosts(u);
+}
+function perfilCompleto(p){
+  const itens = [[!!p.foto_mini, "foto de perfil"], [!!p.capa, "foto de capa"], [!!p.bio, "algo sobre você"], [(p.interesses || []).length > 0, "seus interesses"], [!/\d{2,}$/.test(p.username), "um @ do seu jeito"]];
+  const ok = itens.filter(i => i[0]).length, pct = Math.round(ok / itens.length * 100); if(pct >= 100) return "";
+  const falta = itens.filter(i => !i[0]).map(i => i[1]);
+  return `<button class="card so-comp" id="pf-comp"><div class="so-comp-h"><b>Seu perfil está ${pct}% completo</b><span>${ic("chev", 16)}</span></div><div class="prog"><i style="width:${pct}%"></i></div><small>Falta: ${falta.join(", ")}. Perfis completos fazem mais amizades 💚</small></button>`;
+}
+async function salvosEm(box){
+  box.innerHTML = `<div class="post skel"></div>`;
+  let ids = []; try{ ids = (await q(SB().from("salvos").select("post_id").eq("user_id", NU.uid).order("criado", { ascending: false }).limit(60))).map(x => x.post_id); }catch(e){}
+  const L = await feedBusca(ids);
+  box.innerHTML = L.length ? `<div class="so-grade">${L.map(x => `<button class="so-gi priv" data-pid="${x.id}">${x.midia ? `<img data-m="${esc(x.midia)}" alt="" draggable="false">` : x.img ? `<img src="${esc(x.img)}" alt="" draggable="false">` : `<span>${esc((x.texto || "").slice(0, 70))}</span>`}</button>`).join("")}</div>` : `<div class="card empty"><p>Toque no marcador de uma publicação para guardar aqui. Só você vê.</p></div>`;
+  ligaMidia(box); box.querySelectorAll("[data-pid]").forEach(x => x.onclick = () => { const p = L.find(y => y.id === x.dataset.pid); if(p) abrePost(p); });
 }
 async function gradePosts(u){
   const box = $("pf-posts"); if(!box) return;
@@ -200,9 +227,10 @@ async function encontrarMulheres(){
     L.forEach(p => PERFIS.set(p.user_id, Object.assign(PERFIS.get(p.user_id) || {}, p)));
     if(!termo){ const cid = ME.cidade; L.sort((a, b) => ((b.mostrar_cidade && +b.cidade === +cid) - (a.mostrar_cidade && +a.cidade === +cid))); }
     const box = $("em-l"); if(!box) return;
-    box.innerHTML = (termo ? "" : `<p class="hint" style="margin:4px 0 8px">Mulheres que chegaram por aqui. Siga quem te inspira 💚</p>`) + (L.map(p => `<button class="so-pessoa" data-u="${p.user_id}">${avU(p.user_id)}<span><b>${esc(p.nome)}</b><small>@${esc(p.username)}${p.bio ? " · " + esc(p.bio.slice(0, 50)) : ""}</small></span>${p.privado ? ic("lock", 15) : ""}</button>`).join("") || `<p class="empty">Ninguém encontrado com “${esc(termo)}”.</p>`);
-    box.querySelectorAll("[data-u]").forEach(b => b.onclick = () => abrirPerfil(b.dataset.u));
+    box.innerHTML = (termo ? "" : `<p class="hint" style="margin:4px 0 8px">Mulheres que chegaram por aqui. Siga quem te inspira 💚</p>`) + (L.map(p => `<button class="so-pessoa" data-u="${p.user_id}">${avU(p.user_id)}<span><b>${esc(p.nome)}</b><small>@${esc(p.username)}${p.bio ? " · " + esc(p.bio.slice(0, 50)) : ""}</small></span>${SEG_SET.has(p.user_id) ? `<i class="so-seguindo">Seguindo</i>` : `<i class="btn btn-accent btn-sm" data-sg="${p.user_id}">${p.privado ? "Solicitar" : "Seguir"}</i>`}</button>`).join("") || `<p class="empty">Ninguém encontrado com “${esc(termo)}”.</p>`);
+    box.querySelectorAll("[data-u]").forEach(b => b.onclick = async e => { const sg = e.target.closest("[data-sg]"); if(sg){ e.stopPropagation(); await seguir(sg.dataset.sg); SEGUINDO = null; SEG_SET.add(sg.dataset.sg); sg.outerHTML = `<i class="so-seguindo">${(PERFIS.get(sg.dataset.sg) || {}).privado ? "Solicitado" : "Seguindo"}</i>`; return; } abrirPerfil(b.dataset.u); });
   };
+  const SEG_SET = new Set(await seguindoIds());
   let t; $("em-q").oninput = e => { clearTimeout(t); t = setTimeout(() => desenha(e.target.value.trim()), 300); };
   desenha("");
 }
@@ -213,7 +241,7 @@ function editarPerfil(){
     <div class="formgrid">
       <div class="field full"><label for="ed-n">Nome</label><input class="input" id="ed-n" maxlength="60" value="${esc(p.nome)}"></div>
       <div class="field full"><label for="ed-u">Nome de usuária</label><div class="so-at"><span>@</span><input class="input" id="ed-u" maxlength="20" value="${esc(p.username)}" autocapitalize="none" autocomplete="off"></div><small class="hint" id="ed-u-m">Letras minúsculas, números, ponto ou _ (3 a 20).</small></div>
-      <div class="field full"><label for="ed-b">Sobre você</label><textarea class="input" id="ed-b" maxlength="160" placeholder="Ex.: Mãe, treinando em casa e buscando minha melhor versão 💚">${esc(p.bio || "")}</textarea></div>
+      <div class="field full"><label for="ed-b">Sobre você</label><textarea class="input" id="ed-b" oninput="this.nextElementSibling.textContent=this.value.length+'/160'" maxlength="160" placeholder="Ex.: Mãe, treinando em casa e buscando minha melhor versão 💚">${esc(p.bio || "")}</textarea><small class="so-cont">${(p.bio || "").length}/160</small></div>
       <div class="field"><label for="ed-c">Cidade</label><select class="input" id="ed-c"><option value="">Não mostrar</option>${DB.cidades.filter(c => c.ativa !== false).map(c => `<option value="${c.id}" ${p.mostrar_cidade && +p.cidade === +c.id ? "selected" : ""}>${esc(c.nome)}</option>`).join("")}</select></div>
       <div class="field"><label for="ed-o">Objetivo (opcional)</label><select class="input" id="ed-o"><option value="">Não mostrar</option>${OBJS.map(o => `<option ${p.mostrar_objetivo && p.objetivo === o[1] ? "selected" : ""}>${esc(o[1])}</option>`).join("")}</select></div>
     </div>
@@ -280,6 +308,7 @@ async function privacidade(){
 }
 
 /* ---------- FEED ---------- */
+let NOVO_POST = false, SUG = null;
 let FD = { modo: "todos", cursor: null, fim: false, carregando: false }, SALVOS = new Set(), SEGUINDO = null;
 async function seguindoIds(){ if(SEGUINDO) return SEGUINDO; try{ SEGUINDO = (await q(SB().from("seguidores").select("seguido").eq("seguidor", NU.uid).eq("status", "ativo").limit(1000))).map(x => x.seguido); }catch(e){ SEGUINDO = []; } return SEGUINDO; }
 async function completaPosts(rows){
@@ -306,11 +335,11 @@ function postHtml(p){
   const cq = p.conquista ? `<div class="so-pconq"><i>${esc(p.conquista.emoji || "🏆")}</i><div><b>${esc(p.conquista.titulo || "Conquista")}</b><small>${esc(p.conquista.frase || "")}</small></div></div>` : "";
   return `<article class="post" data-id="${p.id}">
     <header>${avU(p.user, p.nome, p.foto)}<div class="pmeta"><b>${esc(nomeP(p.user, p.nome))}</b><small>${us ? "@" + esc(us) + " · " : ""}${tempoAtras(p.criado)}${p.oculto ? " · oculto pela moderação" : ""}</small></div><button class="iconbtn sm" data-mais aria-label="Opções">${ic("dots", 18)}</button></header>
-    ${p.texto ? `<p class="ptx">${esc(p.texto)}</p>` : ""}${cq}
-    ${p.midia ? `<div class="pimg priv" data-abre><img data-m="${esc(p.midia)}" alt="" loading="lazy" draggable="false"><i class="pheart">${ic("heart", 70)}</i></div>` : p.img ? `<div class="pimg priv" data-abre><img src="${esc(p.img)}" alt="" loading="lazy" draggable="false"><i class="pheart">${ic("heart", 70)}</i></div>` : ""}
+    ${p.texto ? `<p class="ptx ${p.texto.length > 260 ? "so-trunc" : ""}">${rico(p.texto)}</p>${p.texto.length > 260 ? `<button class="link so-vermais" data-vermais>ver mais</button>` : ""}` : ""}${cq}
+    ${p.midia ? `<div class="pimg priv" data-abre><img ${midiaPronta(p.midia)} alt="" loading="lazy" draggable="false"><i class="pheart">${ic("heart", 70)}</i></div>` : p.img ? `<div class="pimg priv" data-abre><img src="${esc(p.img)}" alt="" loading="lazy" draggable="false"><i class="pheart">${ic("heart", 70)}</i></div>` : ""}
     <div class="pacts"><button class="pl ${liked ? "on" : ""}" data-like aria-label="Curtir">${ic("heart", 22)}<span>${nl || ""}</span></button><button data-abre aria-label="Comentar">${ic("chat", 21)}<span>${nc || ""}</span></button>${SO.on() ? `<button data-share aria-label="Compartilhar">${ic("send", 20)}</button><button class="so-save ${salvo ? "on" : ""}" data-save aria-label="Salvar">${ic("bookmark", 20)}</button>` : ""}
-      ${nl ? `<small class="pquem">${liked ? (nl === 1 ? "Você curtiu" : `Você e mais ${nl - 1}`) : `${nl} ${nl === 1 ? "curtida" : "curtidas"}`}</small>` : ""}</div>
-    ${(p.coments || []).slice(-2).map(c => `<p class="pc"><b>${esc(nomeP(c.user, c.nome).split(" ")[0])}</b> ${esc(c.texto)}</p>`).join("")}
+      ${nl ? `<small class="pquem" data-quem role="button">${liked ? (nl === 1 ? "Você curtiu" : `Você e mais ${nl - 1}`) : `${nl} ${nl === 1 ? "curtida" : "curtidas"}`}</small>` : ""}</div>
+    ${(p.coments || []).slice(-2).map(c => `<p class="pc"><b>${esc(nomeP(c.user, c.nome).split(" ")[0])}</b> ${rico(c.texto)}</p>`).join("")}
     ${nc > 2 ? `<button class="link pver" data-abre>Ver os ${nc} comentários</button>` : ""}
     <button class="pcin" data-abre>${avU(ME.id, ME.nome, ME.foto)}<span>Escreva um comentário…</span></button>
   </article>`;
@@ -323,24 +352,31 @@ function ligaPost(el, p, detalhe){
   el.querySelector("[data-like]").onclick = like;
   const im = el.querySelector(".pimg"); if(im){ let t = 0; im.addEventListener("click", e => { const n = Date.now(); if(n - t < 320){ e.stopPropagation(); if(!(p.curtidas || []).includes(ME.id)) like(); im.classList.remove("bate"); void im.offsetWidth; im.classList.add("bate"); t = 0; return; } t = n; if(!detalhe) setTimeout(() => { if(t === n) abrePost(p); }, 330); }); }
   if(!detalhe) el.querySelectorAll("[data-abre]:not(.pimg)").forEach(b => b.onclick = () => abrePost(p, b.classList.contains("pcin")));
-  const hd = el.querySelector("header"); if(hd){ [hd.querySelector(".pav"), hd.querySelector(".pmeta b")].forEach(x => { if(x) x.onclick = e => { e.stopPropagation(); if(SO.on()) abrirPerfil(p.user); }; }); }
+  const hd = el.querySelector("header"); if(hd){ const av = hd.querySelector(".pav"); if(av && temStory(p.user)) av.classList.add("so-anel");
+    [av, hd.querySelector(".pmeta b")].forEach(x => { if(x) x.onclick = e => { e.stopPropagation(); if(!SO.on()) return; if(x === av && temStory(p.user)) verStories(p.user); else abrirPerfil(p.user); }; }); }
+  const vm = el.querySelector("[data-vermais]"); if(vm) vm.onclick = e => { e.stopPropagation(); const t = el.querySelector(".ptx"); t.classList.toggle("so-trunc"); vm.textContent = t.classList.contains("so-trunc") ? "ver mais" : "ver menos"; };
+  const qm = el.querySelector("[data-quem]"); if(qm) qm.onclick = async () => { await carregaPerfis(p.curtidas || []); sheet("Curtidas", (p.curtidas || []).map(u => `<button class="so-pessoa" data-u="${u}">${avU(u)}<span><b>${esc(u === ME.id ? "Você" : nomeP(u))}</b><small>${userP(u) ? "@" + esc(userP(u)) : ""}</small></span>${ic("heart", 16)}</button>`).join(""));
+    $("sheet-body").querySelectorAll("[data-u]").forEach(b => b.onclick = () => abrirPerfil(b.dataset.u)); };
+  if(detalhe){ const ft = el.querySelector(".pimg img"); if(ft) ft.parentNode.onclick = () => verFoto(p.midia || p.img, !p.midia); }
   const sv = el.querySelector("[data-save]"); if(sv) sv.onclick = async () => { const on = !SALVOS.has(p.id); sv.classList.toggle("on", on); try{ if(on){ await q(SB().from("salvos").insert({ user_id: NU.uid, post_id: p.id })); SALVOS.add(p.id); toast("Salvo. Veja em Perfil › Publicações salvas."); } else { await q(SB().from("salvos").delete().eq("user_id", NU.uid).eq("post_id", p.id)); SALVOS.delete(p.id); } }catch(e){ sv.classList.toggle("on", !on); toast(ERR_MSG(e)); } };
   const sh = el.querySelector("[data-share]"); if(sh) sh.onclick = () => compartilharPost(p);
   const mais = el.querySelector("[data-mais]"); if(mais) mais.onclick = () => {
     const meu = p.user === ME.id;
-    if(meu) menuAcoes([["share", "Compartilhar", () => compartilharPost(p)], ["trash", "Excluir publicação", () => { if(!confirm("Excluir esta publicação?")) return; CM.apagaPost(p).then(() => { toast("Publicação excluída"); fecharSheet(); FEED = FEED.filter(x => x.id !== p.id); if(TAB === "juntas") desenhaFeed(); }).catch(e => toast(ERR_MSG(e))); }, 1]]);
-    else if(SO.on()) menuAcoes([["perfil", "Ver perfil", () => abrirPerfil(p.user)], ["flag", "Denunciar publicação", () => denunciar("post", p.id), 1], ["ban", "Bloquear " + esc(nomeP(p.user, p.nome).split(" ")[0]), async () => { if(await bloquear(p.user, nomeP(p.user, p.nome))){ fecharSheet(); if(TAB === "juntas") desenhaFeed(); } }, 1]]);
+    const copiar = p.texto ? [["share", "Copiar texto", () => { fecharSheet(); copyText(p.texto, "Texto copiado"); }]] : [];
+    if(meu) menuAcoes([["send", "Compartilhar", () => compartilharPost(p)], ...copiar, ["trash", "Excluir publicação", () => { if(!confirm("Excluir esta publicação?")) return; CM.apagaPost(p).then(() => { toast("Publicação excluída"); fecharSheet(); FEED = FEED.filter(x => x.id !== p.id); if(TAB === "juntas") desenhaFeed(); }).catch(e => toast(ERR_MSG(e))); }, 1]]);
+    else if(SO.on()) menuAcoes([["perfil", "Ver perfil", () => abrirPerfil(p.user)], ...copiar, ["flag", "Denunciar publicação", () => denunciar("post", p.id), 1], ["ban", "Bloquear " + esc(nomeP(p.user, p.nome).split(" ")[0]), async () => { if(await bloquear(p.user, nomeP(p.user, p.nome))){ fecharSheet(); if(TAB === "juntas") desenhaFeed(); } }, 1]]);
     else FORA();
   };
   ligaMidia(el);
 }
 function abrePost(p, foca){
-  const lista = () => (p.coments || []).map(c => `<div class="cmt">${avU(c.user, c.nome, c.foto)}<div><p><b>${esc(nomeP(c.user, c.nome))}</b> ${esc(c.texto)}</p><small>${tempoAtras(c.criado)}${c.user === ME.id ? ` · <button class="link cdel" data-cdel="${c.id}">Excluir</button>` : SO.on() ? ` · <button class="link cdel" data-cden="${c.id}">Denunciar</button>` : ""}</small></div></div>`).join("") || `<p class="hint" style="margin:0">Seja a primeira a comentar 💚</p>`;
+  const lista = () => (p.coments || []).map(c => `<div class="cmt">${avU(c.user, c.nome, c.foto)}<div><p><b>${esc(nomeP(c.user, c.nome))}</b> ${rico(c.texto)}</p><small>${tempoAtras(c.criado)}${SO.on() && c.user !== ME.id && userP(c.user) ? ` · <button class="link cdel" data-resp="${esc(userP(c.user))}">Responder</button>` : ""}${c.user === ME.id ? ` · <button class="link cdel" data-cdel="${c.id}">Excluir</button>` : SO.on() ? ` · <button class="link cdel" data-cden="${c.id}">Denunciar</button>` : ""}</small></div></div>`).join("") || `<p class="hint" style="margin:0">Seja a primeira a comentar 💚</p>`;
   sheet("Publicação", `<div class="post post-full" data-id="${p.id}">${postHtml(p).replace(/^<article[^>]*>|<\/article>$/g, "")}</div><div class="cmts" id="cmts">${lista()}</div>
     <div class="cbar"><input class="input" id="cm-txt" maxlength="500" placeholder="Escreva um comentário…" autocomplete="off"><button class="btn btn-accent" id="cm-env" aria-label="Enviar">${ic("send", 18)}</button></div>`, () => { if(TAB === "juntas") desenhaFeed(); });
   const el = $("sheet-body").querySelector(".post-full"); el.querySelectorAll(".pcin,.pver,.pc").forEach(x => x.remove()); ligaPost(el, p, true);
   const ligaDel = () => { $("cmts").querySelectorAll("[data-cdel]").forEach(b => b.onclick = () => { const c = p.coments.find(x => x.id === b.dataset.cdel); CM.apagaComent(p, c).then(() => { p.coments = p.coments.filter(x => x !== c); $("cmts").innerHTML = lista(); ligaDel(); }).catch(() => toast("Não deu para excluir agora")); });
-    $("cmts").querySelectorAll("[data-cden]").forEach(b => b.onclick = () => denunciar("comentario", b.dataset.cden, () => abrePost(p))); };
+    $("cmts").querySelectorAll("[data-cden]").forEach(b => b.onclick = () => denunciar("comentario", b.dataset.cden, () => abrePost(p)));
+    $("cmts").querySelectorAll("[data-resp]").forEach(b => b.onclick = () => { const t = $("cm-txt"); t.value = `@${b.dataset.resp} `; t.focus(); t.setSelectionRange(t.value.length, t.value.length); }); };
   ligaDel();
   const env = async () => { const t = $("cm-txt").value.trim(); if(!t) return; $("cm-env").disabled = true; try{ const c = await CM.comentar(p, t); p.coments = p.coments || []; if(!p.coments.some(x => x.id === c.id)) p.coments.push(c); $("cm-txt").value = ""; $("cmts").innerHTML = lista(); ligaDel(); SOM.check(); const sp = el.querySelector("[data-abre] span"); if(sp) sp.textContent = p.coments.length; const ul = $("cmts").lastElementChild; if(ul) ul.scrollIntoView({ behavior: "smooth", block: "nearest" }); }catch(e){ toast(ERR_MSG(e)); } $("cm-env").disabled = false; };
   $("cm-env").onclick = env; $("cm-txt").onkeydown = e => { if(e.key === "Enter") env(); };
@@ -350,16 +386,19 @@ function abreComposer(texto0, blob0, extra){
   let blob = blob0 || null; const cq = extra && extra.conquista;
   sheet("Nova publicação", `<div class="cmp-top">${avU(ME.id, ME.nome, ME.foto)}<b>${esc(ME.nome)}</b></div>
     ${cq ? `<div class="so-pconq"><i>${esc(cq.emoji)}</i><div><b>${esc(cq.titulo)}</b><small>${esc(cq.frase)}</small></div></div>` : ""}
-    <textarea class="input cmp-tx" id="cp-t" maxlength="1000" placeholder="O que você quer compartilhar hoje? 💚">${esc(texto0 || "")}</textarea>
+    ${!texto0 && !cq ? `<div class="chips scroll so-temas">${[["💪","Treino de hoje","Treino de hoje concluído! "],["🥗","Receita","Fiz uma receita do app hoje: "],["✨","Motivação","Lembrete do dia: "],["👋","Me apresentar","Oi, meninas! Sou "],["🙋","Pergunta","Alguém tem dica de "]].map(([e, n, t]) => `<button class="chip" data-tema="${esc(t)}">${e} ${n}</button>`).join("")}</div>` : ""}
+    <textarea class="input cmp-tx" id="cp-t" maxlength="1000" placeholder="O que você quer compartilhar hoje? 💚">${esc(texto0 || "")}</textarea><small class="so-cont" id="cp-n">0/1000</small>
     <div id="cp-prev" class="cp-prev"></div>
     <div class="toolbar"><button class="btn btn-line" id="cp-foto">${ic("camera", 18)} Foto</button><span class="hint">Compartilhe só o que você quiser. Seu peso, medidas e ciclo nunca são postados.</span></div>
     <button class="btn btn-accent btn-block btn-lg" id="cp-ok">Publicar</button>`);
+  const cont = () => { const n = $("cp-t").value.length; $("cp-n").textContent = `${n}/1000`; }; $("cp-t").oninput = cont; cont();
+  $("sheet-body").querySelectorAll("[data-tema]").forEach(b => b.onclick = () => { const t = $("cp-t"); t.value = b.dataset.tema + t.value; t.focus(); t.setSelectionRange(t.value.length, t.value.length); cont(); SOM.tap(); });
   const prev = async () => { $("cp-prev").innerHTML = blob ? `<img src="${await blobParaURL(blob)}" alt=""><button class="iconbtn sm" id="cp-x" aria-label="Tirar foto">${ic("close", 16)}</button>` : ""; const x = $("cp-x"); if(x) x.onclick = () => { blob = null; prev(); }; };
   prev();
   $("cp-foto").onclick = async () => { const f = await escolheArquivo("image/*"); const b = await imagemValida(f, 1440); if(b){ blob = b; prev(); } };
   $("cp-ok").onclick = async () => { const t = $("cp-t").value.trim(); if(!t && !blob && !cq) return toast("Escreva algo ou escolha uma foto"); if(ME.bloqueado) return toast("Sua conta está bloqueada");
     const b = $("cp-ok"); b.classList.add("carregando"); b.disabled = true;
-    try{ await CM.publicar(t, blob, extra); SOM.done ? SOM.done() : SOM.check(); fecharSheet(); toast("Publicado no CK Life 💚"); FD = { ...FD, cursor: null, fim: false }; if(TAB !== "juntas") tab("juntas"); else rJuntas(); }
+    try{ await CM.publicar(t, blob, extra); SOM.done ? SOM.done() : SOM.check(); fecharSheet(); toast("Publicado no CK Life 💚"); window.scrollTo({ top: 0, behavior: "smooth" }); NOVO_POST = true; FD = { ...FD, cursor: null, fim: false }; if(TAB !== "juntas") tab("juntas"); else rJuntas(); }
     catch(e){ console.warn(e); toast(ERR_MSG(e)); b.classList.remove("carregando"); b.disabled = false; } };
 }
 // publicar na nuvem: a foto vai para o bucket PRIVADO (caminho), nunca link público
@@ -408,7 +447,18 @@ function rJuntas(){
   if(on){ garantePerfil().then(() => { const e = $("cm-eu"); if(e) e.innerHTML = avU(NU.uid); }).catch(() => {}); carregaStories(); atualizaBadges(); }
   FD.cursor = null; FD.fim = false; FEED = [];
   carregaFeed();
+  // puxar para atualizar
+  const tj = $("t-juntas"); let y0 = null, puxou = 0;
+  tj.ontouchstart = e => { y0 = window.scrollY <= 0 ? e.touches[0].clientY : null; puxou = 0; };
+  tj.ontouchmove = e => { if(y0 == null) return; puxou = e.touches[0].clientY - y0; const ind = $("so-puxa"); if(puxou > 20){ if(!ind) tj.insertAdjacentHTML("afterbegin", `<div class="so-puxa" id="so-puxa">${ic("repeat", 18)}<span>Solte para atualizar</span></div>`); else ind.style.height = Math.min(60, puxou / 2) + "px"; } };
+  tj.ontouchend = () => { const ind = $("so-puxa"); if(ind) ind.remove(); if(y0 != null && puxou > 90){ SOM.tap(); SEGUINDO = null; SUG = null; rJuntas(); } y0 = null; };
 }
+// aviso discreto quando chegam publicações novas
+setInterval(async () => {
+  if(TAB !== "juntas" || !SO.on() || document.visibilityState !== "visible" || !FEED.length || $("fd-novas") || !$("sheet").hidden) return;
+  try{ const r = await q(SB().from("posts").select("id,criado,user_id").order("criado", { ascending: false }).limit(1)); const n = r[0];
+    if(n && n.criado > FEED[0].criado && n.user_id !== NU.uid && $("t-juntas")){ $("t-juntas").insertAdjacentHTML("afterbegin", `<button class="so-novas" id="fd-novas">${ic("back", 14)} Novas publicações</button>`); $("fd-novas").onclick = () => { $("fd-novas").remove(); window.scrollTo({ top: 0, behavior: "smooth" }); rJuntas(); }; } }catch(e){}
+}, 30000);
 async function carregaFeed(silencio){
   const f = $("feed"); if(!f) return;
   try{
@@ -430,12 +480,24 @@ function desenhaFeed(){
   }
   if(!FEED.length){ f.innerHTML = `<div class="card empty-feed">${ic("people", 34)}<b>${FD.modo === "seguindo" ? "Quem você segue ainda não publicou." : "Seja a primeira a postar!"}</b><p>${FD.modo === "seguindo" ? "Encontre mais mulheres para acompanhar." : "Conte como foi seu treino ou mostre sua receita favorita."}</p>${FD.modo === "seguindo" && SO.on() ? `<button class="btn btn-accent btn-sm" id="fd-achar">Fazer novas amigas</button>` : ""}</div>`; const a = $("fd-achar"); if(a) a.onclick = encontrarMulheres; $("feed-mais").innerHTML = ""; return; }
   f.innerHTML = FEED.map(postHtml).join("");
+  if(NOVO_POST){ NOVO_POST = false; const pr = f.querySelector(".post"); if(pr) pr.classList.add("so-recem"); }
+  sugestoes();
   f.querySelectorAll(".post").forEach(el => ligaPost(el, FEED.find(p => p.id === el.dataset.id)));
   const mais = $("feed-mais");
   if(mais){ mais.innerHTML = SO.on() && !FD.fim ? `<div class="so-sentinela" id="fd-sent"><div class="post skel" style="height:90px"></div></div>` : FEED.length > 4 ? `<p class="hint" style="text-align:center">Você viu tudo por aqui 💚</p>` : "";
     const s = $("fd-sent"); if(s){ const io = new IntersectionObserver(es => { if(es.some(x => x.isIntersecting)){ io.disconnect(); carregaFeed(); } }, { rootMargin: "400px" }); io.observe(s); } }
 }
 
+async function sugestoes(){
+  if(!SO.on() || FD.modo !== "todos") return; const f = $("feed"); if(!f || f.querySelector(".so-sug")) return;
+  if(!SUG){ try{ const seg = new Set(await seguindoIds()); const L = await q(SB().from("perfis").select("user_id,username,nome,foto_mini,privado,bio").neq("user_id", NU.uid).order("criado", { ascending: false }).limit(30)); SUG = L.filter(p => !seg.has(p.user_id)).slice(0, 10); SUG.forEach(p => PERFIS.set(p.user_id, Object.assign(PERFIS.get(p.user_id) || {}, p))); }catch(e){ SUG = []; } }
+  if(!SUG.length) return; const posts = f.querySelectorAll(".post"), ref = posts[Math.min(1, posts.length - 1)];
+  const html = `<div class="card so-sug"><div class="sec-title"><h3>Sugestões de amigas</h3><button class="link" id="sg-mais">Ver mais</button></div><div class="hscroll">${SUG.map(p => `<div class="so-sugc" data-u="${p.user_id}">${avU(p.user_id)}<b>${esc(p.nome.split(" ")[0])}</b><small>@${esc(p.username)}</small><button class="btn btn-accent btn-sm" data-seg="${p.user_id}">${p.privado ? "Solicitar" : "Seguir"}</button></div>`).join("")}</div></div>`;
+  if(ref) ref.insertAdjacentHTML("afterend", html); else f.insertAdjacentHTML("afterbegin", html);
+  const box = f.querySelector(".so-sug"); $("sg-mais").onclick = encontrarMulheres;
+  box.querySelectorAll(".so-sugc").forEach(c => c.onclick = e => { if(!e.target.closest("[data-seg]")) abrirPerfil(c.dataset.u); });
+  box.querySelectorAll("[data-seg]").forEach(b => b.onclick = async () => { b.disabled = true; await seguir(b.dataset.seg); SEGUINDO = null; const p = PERFIS.get(b.dataset.seg) || {}; b.textContent = p.privado ? "Solicitado" : "Seguindo"; b.classList.replace("btn-accent", "btn-line"); SUG = SUG.filter(x => x.user_id !== b.dataset.seg); });
+}
 /* ---------- STORIES (24h; expiração e permissão no banco) ---------- */
 let STO = { grupos: [], vistos: new Set() };
 async function carregaStories(){
@@ -494,7 +556,7 @@ async function mostraStory(){
     <div class="so-sv-top"><button class="so-sv-quem" id="sv-perfil">${avU(g.u)}<span><b>${esc(nomeP(g.u))}</b><small>${tempoAtras(s.criado)}</small></span></button><button class="iconbtn" id="sv-mais" aria-label="Opções">${ic("dots", 18)}</button><button class="iconbtn" id="sv-x" aria-label="Fechar">${ic("close", 18)}</button></div>
     <div class="so-sv-img"><img data-m="${esc(s.midia)}" alt="" draggable="false"></div>
     <button class="so-sv-nav ant" id="sv-ant" aria-label="Anterior"></button><button class="so-sv-nav prox" id="sv-prox" aria-label="Próximo"></button>
-    <div class="so-sv-pe">${meu ? `<button class="btn btn-soft btn-sm" id="sv-vistas">${ic("perfil", 15)} <span id="sv-nv">Quem viu</span></button><button class="btn btn-soft btn-sm" id="sv-novo">${ic("plus", 15)} Novo</button>` : `<input class="input" id="sv-resp" maxlength="500" placeholder="Responder a ${esc(nomeP(g.u).split(" ")[0])}…"><button class="btn btn-accent" id="sv-env" aria-label="Enviar">${ic("send", 17)}</button>`}</div>`;
+    <div class="so-sv-pe">${meu ? `<button class="btn btn-soft btn-sm" id="sv-vistas">${ic("perfil", 15)} <span id="sv-nv">Quem viu</span></button><button class="btn btn-soft btn-sm" id="sv-novo">${ic("plus", 15)} Novo</button>` : `<div class="so-reac">${["💚","🔥","👏","😍","💪"].map(e => `<button data-reac="${e}" aria-label="Reagir ${e}">${e}</button>`).join("")}</div><input class="input" id="sv-resp" maxlength="500" placeholder="Responder a ${esc(nomeP(g.u).split(" ")[0])}…"><button class="btn btn-accent" id="sv-env" aria-label="Enviar">${ic("send", 17)}</button>`}</div>`;
   const img = box.querySelector(".so-sv-img img");
   const us = await urls([s.midia], 300); if(!SV) return;
   if(!us[0]){ img.replaceWith(Object.assign(document.createElement("p"), { className: "so-sv-falha", textContent: "Este Story não está mais disponível." })); }
@@ -522,6 +584,8 @@ async function mostraStory(){
   void area;
   const vi = $("sv-vistas"); if(vi) vi.onclick = async () => { SV.pausa = true; let L = []; try{ L = await q(SB().from("story_vistas").select("user_id,criado").eq("story_id", s.id).order("criado", { ascending: false })); }catch(e){} await carregaPerfis(L.map(v => v.user_id));
     sheet(`Visto por ${L.length}`, L.map(v => `<div class="so-pessoa">${avU(v.user_id)}<span><b>${esc(nomeP(v.user_id))}</b><small>${tempoAtras(v.criado)}</small></span></div>`).join("") || `<p class="empty">Ninguém viu ainda.</p>`, () => { if(SV) SV.pausa = false; }); };
+  box.querySelectorAll("[data-reac]").forEach(b => b.onclick = async ev => { ev.stopPropagation(); b.classList.add("pop"); vibra(15);
+    try{ const cv = await conversaCom(g.u); await enviaMsg(cv, { tipo: "story", story_id: s.id, texto: b.dataset.reac }); toast(`Reação ${b.dataset.reac} enviada`); }catch(e){ toast(/row-level/i.test(String(e.message)) ? "Ela não está recebendo mensagens agora." : ERR_MSG(e)); } });
   const rp = $("sv-resp"); if(rp){ rp.onfocus = () => SV.pausa = true; rp.onblur = () => { if(SV) SV.pausa = false; };
     const env = async () => { const t = rp.value.trim(); if(!t) return; $("sv-env").disabled = true;
       try{ const cv = await conversaCom(g.u); await enviaMsg(cv, { tipo: "story", story_id: s.id, texto: t }); toast("Resposta enviada no chat 💚"); rp.value = ""; rp.blur(); }
@@ -559,9 +623,11 @@ async function listaConversas(){
   if(minhas.length){ try{ (await q(SB().from("mensagens").select("conversa_id,criado,entregue_em,lida_em").in("conversa_id", minhas).eq("autor", NU.uid).order("criado", { ascending: false }).limit(300))).forEach(m => { if(!st[m.conversa_id]) st[m.conversa_id] = m; }); }catch(e){} }
   SB().rpc("marcar_entregues").then(() => {});
   const box = $("cv-l"); if(!box) return;
+  if(CONV.length > 5 && !$("cv-q")) box.insertAdjacentHTML("beforebegin", `<div class="search">${ic("search", 18)}<input class="input" id="cv-q" placeholder="Buscar conversa" autocomplete="off"></div>`);
   box.innerHTML = CONV.length ? CONV.map(c => { const o = outroDe(c), n = NAOLIDAS[c.id] || 0, m = st[c.id]; return `<button class="xp-conv ${n ? "nova" : ""}" data-cv="${c.id}">${avU(o, c.a === NU.uid ? c.nome_b : c.nome_a, c.a === NU.uid ? c.foto_b : c.foto_a)}<span class="xp-ct"><b>${esc(nomeP(o, c.a === NU.uid ? c.nome_b : c.nome_a))}</b><small>${c.ultima ? (c.ultimo_autor === NU.uid ? `${m ? stIcone(m) : ""} Você: ` : "") + esc(c.ultima) : "Diga oi 👋"}</small></span><span class="so-cvr"><small>${c.ultima ? tempoAtras(c.ultima_em) : ""}</small>${n ? `<i class="xp-badge">${n}</i>` : ""}</span></button>`; }).join("")
     : `<div class="empty">${ic("chat", 34, 1.6)}<p>Nenhuma conversa ainda. Encontre mulheres da comunidade e mande um oi 💚</p></div>`;
   box.querySelectorAll("[data-cv]").forEach(b => b.onclick = () => abreConversa(CONV.find(c => c.id === b.dataset.cv)));
+  const cq = $("cv-q"); if(cq) cq.oninput = () => { const t = norm(cq.value); box.querySelectorAll("[data-cv]").forEach(b => b.hidden = !!t && !norm(b.textContent).includes(t)); };
 }
 // status: ✓ enviada · ✓✓ entregue · ✓✓ colorido = visto
 const CK1 = `<svg viewBox="0 0 16 12" width="15" height="12" aria-hidden="true"><path d="M1.5 6.5l3.5 3.5L14.5 1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
@@ -682,9 +748,9 @@ setInterval(async () => {
 let LIDAS_T = null;
 function marcaLidas(){ clearTimeout(LIDAS_T); LIDAS_T = setTimeout(async () => { if(!CHAT || document.visibilityState !== "visible" || $("sheet").hidden) return; try{ const n = await q(SB().rpc("marcar_lidas", { p_conversa: CHAT.c.id })); if(n) atualizaBadges(); }catch(e){} }, 400); }
 document.addEventListener("visibilitychange", () => { if(document.visibilityState === "visible"){ if(CHAT) marcaLidas(); if(SO.on() && ME) sincroniza(); } });
-function verFoto(path){
+function verFoto(path, ehUrl){
   let box = $("so-foto"); if(!box){ box = document.createElement("div"); box.id = "so-foto"; box.className = "so-foto priv"; document.body.appendChild(box); }
-  box.innerHTML = `<button class="iconbtn" id="sf-x" aria-label="Fechar">${ic("close", 20)}</button><img data-m="${esc(path)}" alt="" draggable="false">`;
+  box.innerHTML = `<button class="iconbtn" id="sf-x" aria-label="Fechar">${ic("close", 20)}</button><img ${ehUrl ? `src="${esc(path)}"` : `data-m="${esc(path)}"`} alt="" draggable="false">`;
   box.hidden = false; ligaMidia(box, 300); $("sf-x").onclick = () => { box.hidden = true; box.innerHTML = ""; }; box.onclick = e => { if(e.target === box){ box.hidden = true; box.innerHTML = ""; } };
 }
 let AUD = null;
@@ -817,8 +883,13 @@ async function abrirNotificacoes(){
   let L = []; try{ L = await q(SB().from("notificacoes").select("*").eq("user_id", NU.uid).order("criado", { ascending: false }).limit(60)); }catch(e){ $("nt-l").innerHTML = `<p class="empty">${ERR_MSG(e)}</p>`; return; }
   await carregaPerfis(L.map(n => n.ator).filter(Boolean));
   const V = L.filter(NT_ABA[NTA]), box = $("nt-l"); if(!box) return;
-  box.innerHTML = V.length ? V.map(n => `<button class="so-nt ${n.lida ? "" : "nova"}" data-nt="${n.id}">${n.ator ? avU(n.ator) : `<span class="pav so-nt-ic">${n.tipo === "conquista" ? "🏆" : ic("bell", 16)}</span>`}<span><b>${esc(n.texto || "")}</b><small>${tempoAtras(n.criado)}</small></span></button>`).join("")
-    : `<div class="empty">${ic("bell", 32, 1.6)}<p>Nada por aqui ainda. Quando alguém seguir, curtir ou comentar, aparece aqui.</p></div>`;
+  const SEGN = new Set(await seguindoIds()), hoje0 = new Date(); hoje0.setHours(0, 0, 0, 0); let grupo = "";
+  const cab = n => { const d = new Date(n.criado), g = d >= hoje0 ? "Hoje" : (hoje0 - d) < 7 * 864e5 ? "Esta semana" : "Antes"; if(g === grupo) return ""; grupo = g; return `<h4 class="so-ntg">${g}</h4>`; };
+  box.innerHTML = (V.length ? `<button class="link so-ntall" id="nt-all">Marcar todas como lidas</button>` : "") + (V.length ? V.map(n => cab(n) + `<button class="so-nt ${n.lida ? "" : "nova"}" data-nt="${n.id}">${n.ator ? avU(n.ator) : `<span class="pav so-nt-ic">${n.tipo === "conquista" ? "🏆" : ic("bell", 16)}</span>`}<span><b>${esc(n.texto || "")}</b><small>${tempoAtras(n.criado)}</small></span></button>`).join("")
+    : `<div class="empty">${ic("bell", 32, 1.6)}<p>Nada por aqui ainda. Quando alguém seguir, curtir ou comentar, aparece aqui.</p></div>`);
+  box.querySelectorAll(".so-nt").forEach(el => { const n = L.find(x => x.id === el.dataset.nt); if(n && n.tipo === "seguiu" && n.ator && !SEGN.has(n.ator)) el.insertAdjacentHTML("beforeend", `<i class="btn btn-accent btn-sm" data-sv="${n.ator}">Seguir de volta</i>`); });
+  box.querySelectorAll("[data-sv]").forEach(b => b.onclick = async e => { e.stopPropagation(); await seguir(b.dataset.sv); SEGUINDO = null; b.outerHTML = `<i class="so-seguindo">Seguindo</i>`; });
+  const all = $("nt-all"); if(all) all.onclick = async () => { try{ await q(SB().from("notificacoes").update({ lida: true }).eq("user_id", NU.uid).eq("lida", false)); }catch(e){} box.querySelectorAll(".so-nt.nova").forEach(x => x.classList.remove("nova")); atualizaBadges(); toast("Tudo lido"); };
   box.querySelectorAll("[data-nt]").forEach(b => b.onclick = () => abreNotificacao(L.find(n => n.id === b.dataset.nt)));
   const naoLidas = L.filter(n => !n.lida && !["mensagem","story_resposta"].includes(n.tipo)).map(n => n.id);
   if(naoLidas.length) SB().from("notificacoes").update({ lida: true }).in("id", naoLidas).then(() => atualizaBadges());
