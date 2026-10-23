@@ -166,7 +166,7 @@ Gera: `fitverde.html` (demonstração, sem charset: o claude.ai coloca), `teste.
   - O admin pode ocultar e apagar qualquer coisa.
 - **Storage:** bucket público `posts`, caminho `${uid}/${id}.jpg`. Cada uma só envia para a própria pasta.
 
-### `expansao.sql` ✅ PRONTO · ⛔ BLOQUEADO PELO USUÁRIO (rodar no Supabase)
+### `expansao.sql` ✅ RODADO NO SUPABASE em 23/10/2026 (em 5 partes) e conferido
 
 Arquivo final (revisado, só adiciona, pode rodar mais de uma vez). Contém:
 - `admin_pode(area)` e `area_colecao(nome)`: permissão "editar" por área conferida no banco. Políticas de escrita de `colecoes`, `alunas`, `admins` e moderação de `posts` passam a usar isso (ler continua igual).
@@ -254,7 +254,7 @@ Arquivo final (revisado, só adiciona, pode rodar mais de uma vez). Contém:
 | Item | Status |
 |---|---|
 | Feed, foto, curtida, comentário, apagar, moderação, novidade | ✅ |
-| **Chat 1 a 1** (botão "Conversas" no topo da Comunidade; tocar no nome/foto da autora → perfil público → Enviar mensagem) | ✅ código pronto · tabelas `conversas`/`mensagens` dependem do `expansao.sql` (BLOQUEADO PELO USUÁRIO) |
+| **Chat 1 a 1** (botão "Conversas" no topo da Comunidade; tocar no nome/foto da autora → perfil público → Enviar mensagem) | ✅ |
 | Perfil público (nome, foto, nº de publicações, fotos postadas) | ✅ sem dados de saúde |
 | Bloquear aluna (some do chat; lista em Perfil › Privacidade) | ✅ (bloqueio é do lado de quem bloqueia) |
 | Compartilhar sequência (abre o composer com o texto; a aluna decide postar) | ✅ |
@@ -266,7 +266,7 @@ Chat atualiza a cada 4 s com a conversa aberta e confere novas mensagens a cada 
 
 ---
 
-## 9. Meu Ciclo ✅ (código pronto · tabela `ciclo` depende do `expansao.sql`)
+## 9. Meu Ciclo ✅
 
 - **Entrada:** Perfil › Meu Ciclo e card na Início (a aluna pode esconder). Fora do menu principal.
 - **Ativação opt-in** com tela explicando: opcional e privado, previsões são estimativas, quem decide o treino é ela, **não é contraceptivo nem diagnóstico**.
@@ -364,13 +364,12 @@ Filtro de conteúdo (`PROIBIDO`) bloqueia ao salvar: resultado garantido, "perca
 
 ## 17. Funcionalidades prontas ✅
 
-Tudo da seção 2. As partes que dependem das tabelas novas (agendamentos, avaliações, Meu Ciclo, chat, leitura do catálogo pelas alunas, imagens no bucket, permissões por área no banco) **já estão no ar no código**, e passam a funcionar no site real assim que o `expansao.sql` for rodado. Até lá mostram "Esta parte está sendo ativada".
+Tudo da seção 2. As partes que dependem das tabelas novas (agendamentos, avaliações, Meu Ciclo, chat, leitura do catálogo pelas alunas, imagens no bucket, permissões por área no banco) **já estão no ar no código**, e já funcionam no site real (banco ativado e testado em 23/10).
 
 **Testes feitos em 23/10 (demonstração e banco simulado com/sem tabelas):** agendar (4 passos), horário ocupado bloqueado, status pelo painel, avaliação com selo, denúncia, moderação, favoritos, cupom livre, links (WhatsApp, mapa, afiliado com utm preservado), busca, filtros, cidade, Meu Ciclo (ativar, atraso, registrar, check-in, adaptar, caminhada, ajustar sem perder histórico), chat, perfil público, CRUDs do painel (criar, validar, filtro de promessas, testar link, desativar, duplicar, excluir, aprovar, verificar), papéis. Regressão: login/cadastro na nuvem, treino completo, feed (post/curtida/comentário), receitas, perfil. Layout sem nada fora da tela em 320/375/1366 px; contraste ok no modo escuro.
 
 ## 18. Funcionalidades parciais 🟡
 
-- **Banco da expansão:** `expansao.sql` pronto, revisado, só aditivo, **não rodado** (BLOQUEADO PELO USUÁRIO).
 - **Premium/Kiwify:** webhook pronto, falta link e variáveis (BLOQUEADO PELO USUÁRIO).
 - **Fotos das receitas:** 93 de 197 (BLOQUEADO PELO USUÁRIO).
 - **Catálogo real:** o site real começa vazio (exemplos só na demonstração). Cadastrar no painel.
@@ -387,7 +386,6 @@ Tudo da seção 2. As partes que dependem das tabelas novas (agendamentos, avali
 
 ## 20. Bugs e limitações conhecidas
 
-- Até rodar `expansao.sql`: alunas não leem as coleções novas (Explorar aparece vazio com mensagens de "ainda não temos"), e agenda/avaliações/ciclo/chat mostram "sendo ativada". O admin já consegue cadastrar (a política antiga de escrita do admin permite).
 - Permissões por área: com o `expansao.sql`, o banco passa a conferir "editar" por área (`admin_pode`). Ler continua liberado para qualquer admin.
 - Agendamento: a regra "1 horário = 1 pessoa" é conferida na hora de escolher (RPC `horarios_ocupados`), não há trava no banco contra duas reservas simultâneas no mesmo segundo.
 - Chat: sem tempo real (consulta a cada 4 s); bloquear é só do lado de quem bloqueia.
@@ -496,7 +494,7 @@ Ver "Fila de espera" na seção 25.
 ## 25. Próximos passos recomendados
 
 ### A. Tiago precisa fazer (PENDÊNCIAS QUE PRECISAM DO TIAGO)
-1. **Rodar `expansao.sql`** no Supabase (SQL Editor → New query → colar → Run). Arquivo: `fonte/expansao.sql` no GitHub.
+1. ~~Rodar `expansao.sql`~~ ✅ feito em 23/10.
 2. Cadastrar no painel as empresas, profissionais, serviços, produtos, banners e benefícios reais.
 3. Kiwify: link do checkout + 3 variáveis na Vercel + URL do webhook.
 4. Fotos das receitas, lotes 10 a 20 (107), e dos 8 exercícios sem foto.
@@ -504,7 +502,7 @@ Ver "Fila de espera" na seção 25.
 6. Decidir se quer: login para profissionais, pagamento de agendamentos, push com app fechado (envolvem custo/decisão).
 
 ### B. O agente pode fazer depois
-1. Depois do SQL rodado: testar no site real (criar 1 profissional, agendar, avaliar, ciclo, chat entre duas contas).
+1. ✅ Teste real feito pelo Tiago em 23/10: cadastro de profissional e serviço no painel, agendamento, status, avaliação — tudo funcionou.
 2. Denúncia de post/mensagem, bloqueio no servidor, seguidores e desafios.
 3. Trava no banco contra reserva dupla do mesmo horário.
 4. Paginação do catálogo.
@@ -527,5 +525,5 @@ Você vai continuar o desenvolvimento do CK Life, meu app de treino em casa para
 
 4) Site: https://cklife.vercel.app (alunas) e /admin (painel). Banco: Supabase, projeto psxmyiudtuozasbqzvnu. Demonstração: atualizar o artifact https://claude.ai/artifact/FYyAokNvw9kzNDTprzkKPd com o fitverde.html.
 
-5) A GRANDE EXPANSÃO já foi implementada e publicada (commit 8b9235f): navegação em 5 áreas, Explorar, agendamentos, avaliações, favoritos, Clube CK, loja, banners, métricas, Meu Ciclo, chat e módulos do painel. Primeiro me pergunte se eu já rodei o fonte/expansao.sql no Supabase. Se sim, teste no site real (criar um profissional no painel, agendar, avaliar, Meu Ciclo e chat entre duas contas) e corrija o que aparecer. Depois siga a seção 25-B do documento mestre e atualize o documento ao final de cada fase.
+5) A GRANDE EXPANSÃO já foi implementada e publicada (commit 8b9235f): navegação em 5 áreas, Explorar, agendamentos, avaliações, favoritos, Clube CK, loja, banners, métricas, Meu Ciclo, chat e módulos do painel. O expansao.sql já foi rodado no Supabase e o teste real passou. Siga a seção 25-B do documento mestre e atualize o documento ao final de cada fase.
 ```
