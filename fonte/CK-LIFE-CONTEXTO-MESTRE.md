@@ -37,7 +37,7 @@
 |---|---|
 | Conta | Cadastro, login, esqueci a senha, nova senha, sessão que não cai, mostrar ou esconder senha, e-mail lembrado |
 | Primeiro acesso | Questionário de 7 passos que recomenda um programa |
-| Navegação | **5 áreas:** Início, Treinos (com seletor Treinos/Nutrição), Comunidade, Explorar, Perfil. Evolução virou "Meu progresso" no Perfil |
+| Navegação | **6 abas** (pedido do Tiago em 23/10): Início, Treinos, Nutrição, Comunidade, Explorar, Perfil. Evolução virou "Meu progresso" no Perfil |
 | Início | Saudação, treino de hoje, anel de calorias, água, primeiros passos, meta semanal, frase e dica do dia, receita do dia, instalar o app. Também mostra card do Meu Ciclo (se ativo e não escondido), próximo agendamento e banners do local "Início" |
 | Treinos | Programas, treinos rápidos, biblioteca de exercícios, player com voz, sons, confete, cartão de conquista |
 | Nutrição | 197 receitas, cardápio, diário, metas, modo cozinha |
@@ -64,8 +64,8 @@
 - `#splash`, login/cadastro (`.lhero`), nova senha (`#type=recovery`), onboarding (`#v-onb`), bloqueada (`#v-bloq`).
 - `#v-app`:
   - **Topo:** logo, chip de sequência, avatar `#top-av`, botão do painel (só admin).
-  - **Barra (5 abas):** `inicio` Início · `treinar` Treinos · `juntas` Comunidade · `explorar` Explorar · `perfil` Perfil.
-  - **Painéis que continuam existindo fora da barra:** `t-dieta` (Nutrição, aberto pelo seletor no topo de Treinos) e `t-evolucao` (Meu progresso, aberto pelo Perfil). Ao abrir, a aba destacada é Treinos ou Perfil (`NAV_DE`).
+  - **Barra (6 abas):** `inicio` Início · `treinar` Treinos · `dieta` Nutrição · `juntas` Comunidade · `explorar` Explorar · `perfil` Perfil.
+  - **Fora da barra:** `t-evolucao` (Meu progresso, aberto pelo Perfil; destaca a aba Perfil via `NAV_DE`).
   - **Folha `#sheet`:** detalhes (empresa, profissional, produto, Clube), agendamento em passos, Meus agendamentos, favoritos, cidade, privacidade, Meu Ciclo (todas as telas), conversas e chat, perfil público.
   - `#play` (player), `#cook` (modo cozinha), `#ad` (anúncio).
 
@@ -385,6 +385,8 @@ Tudo da seção 2. As partes que dependem das tabelas novas (agendamentos, avali
 - Paginação do catálogo quando crescer (hoje `colecoes` é lido inteiro ao abrir).
 
 ## 20. Bugs e limitações conhecidas
+
+- **Fotos (corrigido 23/10):** listas e cartões usam miniaturas leves em `img/p/` (geradas pelo `miniaturas.py` no `build.py`, recorte quadrado automático na pessoa + ajustes manuais em `AJUSTE`). Fotos só aparecem depois de carregar inteiras (classe `ok`), e o ícone/foto de reserva some quando a foto carrega. Foto nova de receita/exercício: basta salvar em `img/` e rodar o `build.py` (gera a miniatura). Transições sem esmaecer.
 
 - Permissões por área: com o `expansao.sql`, o banco passa a conferir "editar" por área (`admin_pode`). Ler continua liberado para qualquer admin.
 - Agendamento: a regra "1 horário = 1 pessoa" é conferida na hora de escolher (RPC `horarios_ocupados`), não há trava no banco contra duas reservas simultâneas no mesmo segundo.

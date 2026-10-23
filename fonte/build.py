@@ -35,3 +35,8 @@ os.makedirs("img", exist_ok=True)
 for f in (out/"img").iterdir():
     if f.suffix in (".jpg", ".png"): shutil.copy(f, pathlib.Path("img")/f.name)
 print(len(demo), len(site))
+# miniaturas leves (img/p) para listas e cartões
+import miniaturas
+miniaturas.gera(out/"img", out/"img"/"p")
+os.makedirs("img/p", exist_ok=True)
+for f in (out/"img"/"p").iterdir(): shutil.copy(f, pathlib.Path("img/p")/f.name)

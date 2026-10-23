@@ -943,7 +943,7 @@ main.adm .msg-ok{border-radius:16px}
 .streak.viva svg{animation:chama 1.6s ease-in-out infinite;transform-origin:50% 90%}
 @keyframes chama{0%,100%{transform:scale(1)}50%{transform:scale(1.18) rotate(-4deg)}}
 .tab-panel:not([hidden]){animation:entra .28s ease-out}
-@keyframes entra{from{opacity:.4;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes entra{from{transform:translateY(6px)}to{transform:none}}
 .nav .ico{transition:background .25s ease,transform .25s ease}
 .nav button[aria-selected="true"] .ico{transform:translateY(-1px)}
 @media (prefers-reduced-motion:reduce){.tab-panel:not([hidden]),.streak.viva svg{animation:none}}
@@ -957,7 +957,7 @@ main.adm .msg-ok{border-radius:16px}
 .play{position:fixed}
 .recorde{display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 12px;border-radius:999px;background:rgba(244,166,42,.18);color:#FFD9A0;font-weight:800;font-size:14px}
 /* ===== Comunidade (Juntas) ===== */
-.nav .wrap{grid-template-columns:repeat(5,minmax(0,1fr))}
+.nav .wrap{grid-template-columns:repeat(6,minmax(0,1fr))}
 .nav button{font-size:11px;min-width:0}
 .nav .ico{width:44px}
 .nav button.novo .ico{position:relative}
@@ -1190,11 +1190,12 @@ ul.xp-lista:not(:has(svg)) li::before{content:"•";color:var(--accent);font-wei
 .xp-badge[hidden]{display:none}
 .xp-autor .pav,.xp-autor .pmeta b{cursor:pointer}
 .xp-conv{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:12px 2px;color:var(--ink)}
-.xp-conv>span{flex:1;min-width:0;display:flex;flex-direction:column}
-.xp-conv>span small{color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.xp-conv>.pav{width:52px;height:52px;font-size:20px;flex:0 0 52px}
+.xp-conv>span:not(.pav){flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.xp-conv>span:not(.pav) small{color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .xp-conv>small{color:var(--muted);font-size:12px;flex:0 0 auto}
 .xp-conv.nova b::after{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:#E0475B;margin-left:6px;vertical-align:2px}
-.xp-conv.nova>span small{color:var(--ink);font-weight:700}
+.xp-conv.nova>span:not(.pav) small{color:var(--ink);font-weight:700}
 .xp-chat-aviso{margin:0;text-align:center}
 .xp-msgs{display:flex;flex-direction:column;gap:6px;min-height:42vh;max-height:58vh;overflow-y:auto;padding:6px 2px 80px}
 .xp-msg{max-width:80%;align-self:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:18px 18px 18px 6px;padding:8px 12px}
@@ -1221,3 +1222,34 @@ ul.xp-lista:not(:has(svg)) li::before{content:"•";color:var(--accent);font-wei
 .xf-gal{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px}.xf-gal span{position:relative}.xf-gal img{width:84px;height:64px;object-fit:cover;border-radius:10px;display:block}
 .xf-gal button{position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;border:0;background:#C0392B;color:#fff;font-weight:800;line-height:1}
 .xf-nome{display:flex;gap:10px;align-items:center}.xf-mini{width:40px;height:40px;border-radius:10px;object-fit:cover;flex:0 0 auto}
+
+/* chat: topo da conversa e avatares sempre redondos */
+.pav,.xp-pav{aspect-ratio:1/1}
+.pav img,.xp-pav img{display:block;width:100%;height:100%;object-fit:cover;border-radius:50%}
+.xp-chathead{display:flex;align-items:center;gap:12px;padding:4px 0 10px;border-bottom:1px solid var(--line);width:100%;background:none;border-top:0;border-left:0;border-right:0;text-align:left;color:var(--ink)}
+.xp-chathead .pav{width:46px;height:46px;font-size:18px}
+.xp-chathead span:not(.pav){display:flex;flex-direction:column;min-width:0}.xp-chathead small{color:var(--muted);font-size:12.5px}
+.xp-msgrow{display:flex;align-items:flex-end;gap:8px}
+.xp-msgrow .pav{width:28px;height:28px;font-size:12px}
+.xp-msgrow.eu{justify-content:flex-end}
+.xp-msgrow .xp-msg{max-width:78%}
+.xp-conv .xp-badge{margin-left:6px}
+
+/* ===== Revisão de fotos (23/10): sem pedaços, sem sobreposição ===== */
+#v-app img:not(.ok),#sheet img:not(.ok),#play img:not(.ok),#cook img:not(.ok){opacity:0}
+#v-app img,#sheet img,#play img,#cook img{transition:opacity .35s ease}
+.rart:has(img.ok)>svg,.rthumb:has(img.ok)>svg,.rhero-art:has(img.ok)>svg,.rdet:has(>img.ok) .rdet-art{opacity:0}
+.pf:has(>.ph.ok)>.fx,.hfig:has(>.ph.ok)>.fx{opacity:0}
+.fx.semfoto{background:linear-gradient(135deg,#0E3D32,#2E7D5A 60%,#7BA77A)}
+/* capa: texto sempre legível sobre a foto */
+.capa::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(90deg,rgba(9,40,32,.92) 0%,rgba(9,40,32,.7) 38%,rgba(9,40,32,.12) 72%,rgba(9,40,32,0) 100%),linear-gradient(0deg,rgba(9,40,32,.55),rgba(9,40,32,0) 45%)}
+.capa-tx{z-index:2}.capa .avatar{z-index:3}
+.capa-tx h1,.capa-tx h2,.capa .hello h2{text-shadow:0 2px 14px rgba(0,0,0,.35)}
+.capa-tx p,.capa .hello .k{text-shadow:0 1px 8px rgba(0,0,0,.4)}
+/* barra com 6 abas */
+@media(max-width:1023px){.nav button{font-size:10.5px;letter-spacing:-.01em;padding:9px 0 10px;white-space:nowrap}.nav .ico{width:44px}}
+@media(max-width:360px){.nav button{font-size:9.6px}.nav .ico{width:38px;height:28px}}
+.xp-msgs{min-height:calc(100vh - 330px);min-height:calc(100dvh - 330px)}
+@media(max-width:360px){.nav .wrap{padding-left:2px;padding-right:2px}.nav button{font-size:9.2px;letter-spacing:-.02em}}
+
+.splash{transition-duration:.22s!important}

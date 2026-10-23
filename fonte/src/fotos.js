@@ -14,7 +14,10 @@ const inicial = e => esc2((e && e.nome || "").split(/\s+/).filter(w => w.length 
 function esc2(s){ return String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
 // sem foto ainda: cartão verde da marca com as iniciais do exercício
 const FALHA = "this.parentNode&&this.parentNode.classList.add('semfoto');this.remove()";
-B.thumb = e => `<span class="fx" data-i="${inicial(e)}"><img src="${B.fotoDe(e)}" alt="" loading="lazy" onerror="${FALHA}"></span>`;
+// miniatura leve e já enquadrada (img/p); se faltar, usa a foto grande
+B.miniDe = e => { const g = B.fotoDe(e); return /^img\/ex-/.test(g) ? g.replace(/^img\//, "img/p/") : g; };
+const FALHA_MINI = "if(this.src.indexOf('/p/')>-1&&!this.dataset.g){this.dataset.g=1;this.src=this.src.replace('/p/','/')}else{" + FALHA + "}";
+B.thumb = (e, _s, grande) => `<span class="fx" data-i="${inicial(e)}"><img src="${grande ? B.fotoDe(e) : B.miniDe(e)}" alt="" loading="lazy" onerror="${FALHA_MINI}"></span>`;
 
 let ATIVO = null;
 B.mount = (host, e, opt = {}) => {

@@ -805,7 +805,7 @@ async function listaConversas(){
   sheet("Conversas", `<div id="cv-l"><div class="post skel" style="height:70px"></div></div>`);
   try{ CONV = await XP.chat.conversas(); }catch(e){ $("cv-l").innerHTML = `<p class="empty">${XERR(e) ? "O chat está sendo ativado. Volte daqui a pouco!" : "Sem conexão agora."}</p>`; return; }
   const L = CONV.filter(c => !bloqueada(outroDe(c).id));
-  $("cv-l").innerHTML = L.length ? L.map(c => { const o = outroDe(c); return `<button class="xp-conv ${naoLida(c) ? "nova" : ""}" data-cv="${c.id}">${avPost(o.nome, o.foto)}<span><b>${esc(o.nome || "Aluna")}</b><small>${c.ultima ? (c.ultimo_autor === ME.id ? "Você: " : "") + esc(c.ultima) : "Diga oi 👋"}</small></span><small>${c.ultima ? tempoAtras(c.ultima_em) : ""}</small></button>`; }).join("")
+  $("cv-l").innerHTML = L.length ? L.map(c => { const o = outroDe(c); return `<button class="xp-conv ${naoLida(c) ? "nova" : ""}" data-cv="${c.id}">${avPost(o.nome, o.foto)}<span class="xp-ct"><b>${esc(o.nome || "Aluna")}</b><small>${c.ultima ? (c.ultimo_autor === ME.id ? "Você: " : "") + esc(c.ultima) : "Diga oi 👋"}</small></span><small>${c.ultima ? tempoAtras(c.ultima_em) : ""}</small></button>`; }).join("")
     : `<div class="empty">${ic("chat", 34, 1.6)}<p>Nenhuma conversa ainda. Toque no nome de uma aluna no feed para mandar uma mensagem.</p></div>`;
   $("cv-l").querySelectorAll("[data-cv]").forEach(b => b.onclick = () => abreConversa(CONV.find(c => c.id === b.dataset.cv)));
 }
@@ -821,8 +821,8 @@ function perfilPublico(u){
 }
 async function abreConversa(c){
   if(!c) return; const o = outroDe(c); CHAT_ABERTA = c.id; clearInterval(CHAT_T);
-  sheet(o.nome || "Conversa", `<p class="hint xp-chat-aviso">${ic("shield", 13)} Seja gentil. Nunca envie senhas, dados de cartão ou documentos.</p><div class="xp-msgs" id="cv-m"><div class="post skel" style="height:60px"></div></div>
-    <div class="cbar"><input class="input" id="cv-t" maxlength="2000" placeholder="Mensagem" autocomplete="off"><button class="btn btn-accent" id="cv-env" aria-label="Enviar">${ic("send", 18)}</button></div>`, () => { CHAT_ABERTA = null; clearInterval(CHAT_T); confereChat(); }, `<button class="iconbtn sm" id="cv-perfil" aria-label="Perfil">${ic("perfil", 18)}</button>`);
+  sheet("Conversa", `<button class="xp-chathead" id="cv-perfil">${avPost(o.nome, o.foto)}<span><b>${esc(o.nome || "Aluna")}</b><small>Ver perfil</small></span></button><p class="hint xp-chat-aviso">${ic("shield", 13)} Seja gentil. Nunca envie senhas, dados de cartão ou documentos.</p><div class="xp-msgs" id="cv-m"><div class="post skel" style="height:60px"></div></div>
+    <div class="cbar"><input class="input" id="cv-t" maxlength="2000" placeholder="Mensagem" autocomplete="off"><button class="btn btn-accent" id="cv-env" aria-label="Enviar">${ic("send", 18)}</button></div>`, () => { CHAT_ABERTA = null; clearInterval(CHAT_T); confereChat(); });
   const ext = $("cv-perfil"); if(ext) ext.onclick = () => perfilPublico(o);
   let ultimo = "";
   const desenha = async () => {
@@ -830,7 +830,7 @@ async function abreConversa(c){
     if(CHAT_ABERTA !== c.id || !$("cv-m")) return;
     const sig = M.length + ":" + (M.length ? M[M.length - 1].id : ""); if(sig === ultimo) return; ultimo = sig;
     const box = $("cv-m"), noFim = box.scrollHeight - box.scrollTop - box.clientHeight < 80;
-    box.innerHTML = M.length ? M.map(m => `<div class="xp-msg ${m.autor === ME.id ? "eu" : ""}" data-mid="${m.id}"><p>${esc(m.texto)}</p><small>${new Date(m.criado).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}${m.autor === ME.id ? ` · <button class="link" data-mdel="${m.id}">apagar</button>` : ""}</small></div>`).join("") : `<p class="empty">Comece a conversa com ${esc((o.nome || "").split(" ")[0])} 💚</p>`;
+    box.innerHTML = M.length ? M.map((m, i) => { const eu = m.autor === ME.id, ultimaDela = !eu && (!M[i + 1] || M[i + 1].autor !== m.autor); return `<div class="xp-msgrow ${eu ? "eu" : ""}">${!eu ? (ultimaDela ? avPost(o.nome, o.foto) : `<span style="width:28px;flex:0 0 28px"></span>`) : ""}<div class="xp-msg ${eu ? "eu" : ""}" data-mid="${m.id}"><p>${esc(m.texto)}</p><small>${new Date(m.criado).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}${eu ? ` · <button class="link" data-mdel="${m.id}">apagar</button>` : ""}</small></div></div>`; }).join("") : `<p class="empty">Comece a conversa com ${esc((o.nome || "").split(" ")[0])} 💚</p>`;
     box.querySelectorAll("[data-mdel]").forEach(b => b.onclick = () => { const m = M.find(x => x.id === b.dataset.mdel); if(m && confirm("Apagar esta mensagem?")) XP.chat.apagarMsg(m).then(() => { ultimo = ""; desenha(); }).catch(() => toast("Não deu agora")); });
     if(noFim || M.length < 30) box.scrollTop = box.scrollHeight;
     XP.chat.lida(c);

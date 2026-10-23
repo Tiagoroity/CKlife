@@ -68,6 +68,14 @@ const P = {
   sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/>'
 };
 const foto = (src, alt = "") => `<img class="ph" src="${src}" alt="${alt}" loading="lazy" onerror="this.remove()">`;
+/* versão leve (pasta img/p) para listas e cartões; se a leve faltar, usa a grande */
+(() => {
+  const marca = img => { if(img.complete && img.naturalWidth) img.classList.add("ok"); };
+  document.addEventListener("load", e => { if(e.target && e.target.tagName === "IMG") e.target.classList.add("ok"); }, true);
+  new MutationObserver(ms => ms.forEach(m => m.addedNodes.forEach(n => { if(n.nodeType !== 1) return; if(n.tagName === "IMG") marca(n); else n.querySelectorAll && n.querySelectorAll("img").forEach(marca); }))).observe(document.documentElement, { childList: true, subtree: true });
+  document.querySelectorAll("img").forEach(marca);
+})();
+const fotoP = (src, alt = "") => `<img class="ph" src="${src.replace(/^img\//, "img/p/")}" alt="${alt}" loading="lazy" onerror="if(!this.dataset.g){this.dataset.g=1;this.src='${src}'}else this.remove()">`;
 const capa = (titulo, sub, extra = "", src = "img/modelo.jpg") => `<div class="capa"><img class="capa-foto" src="${src}" alt="" onerror="this.remove()"><div class="capa-tx">${extra}${titulo ? `<h1>${titulo}</h1>` : ""}${sub ? `<p>${sub}</p>` : ""}</div></div>`;
 const ic = (k, s = 22, sw = 2) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[k] || ""}</svg>`;
 let LOGON = 0;
@@ -624,8 +632,8 @@ function abreComposer(texto0, blob0){
 function marcaNovidade(on){ const b = $("nav") && $("nav").querySelector('[data-tab="juntas"]'); if(b) b.classList.toggle("novo", !!on); }
 function confereNovidade(){ CM.ultimo().then(u => { if(u && (!ME.feedVisto || u > ME.feedVisto) && TAB !== "juntas") marcaNovidade(true); }).catch(() => {}); }
 /*EXPANSAO*/
-const TABS = [["inicio","Início"],["treinar","Treinos"],["juntas","Comunidade"],["explorar","Explorar"],["perfil","Perfil"],["dieta","Nutrição"],["evolucao","Evolução"]];
-const NAV = TABS.slice(0, 5), NAV_DE = { dieta: "treinar", evolucao: "perfil" };
+const TABS = [["inicio","Início"],["treinar","Treinos"],["dieta","Nutrição"],["juntas","Comunidade"],["explorar","Explorar"],["perfil","Perfil"],["evolucao","Evolução"]];
+const NAV = TABS.slice(0, 6), NAV_DE = { evolucao: "perfil" };
 let TAB = "inicio";
 $("nav").innerHTML = NAV.map(([k, n]) => `<button role="tab" data-tab="${k}" aria-selected="false"><span class="ico">${ic(k, 21)}</span>${n}</button>`).join("");
 $("nav").querySelectorAll("[data-tab]").forEach(b => b.onclick = () => tab(b.dataset.tab));
@@ -783,11 +791,11 @@ function rInicio(){
   const obj = objById(ME.perfil.objetivo), rd = receitaDoDia();
   $("t-inicio").innerHTML = `
     <div class="capa"><img class="capa-foto" src="img/modelo.jpg" alt="" onerror="this.remove()"><button class="avatar" id="h-av" aria-label="Perfil">${fotoAv(ME)}</button><div class="capa-tx"><span class="hi">${saudacao()}, ${esc(ME.nome.split(" ")[0])} 👋</span><h1>Vamos evoluir hoje?</h1><p>${hojeFeito ? "Treino de hoje feito. " + frase() : "Seu treino está pronto."}</p></div></div>
-    ${hojeFeito ? `<div class="today done"><div><span class="eyebrow">Treino de hoje concluído</span><h2>Você está mais perto do que ontem.</h2><p>${ultimo ? `${esc(ultimo.nome)} · ${ultimo.min} min · ${int(ultimo.kcal)} kcal` : ""}</p><div class="meta" style="margin-bottom:10px"><span>${ic("flame", 14)} ${s} ${s === 1 ? "dia" : "dias"} seguidos</span></div><button class="btn btn-sm" id="h-extra">Quero treinar mais</button></div></div>`
+    ${hojeFeito ? `<div class="today done"><div><span class="eyebrow">Treino de hoje concluído</span><h2>Você está mais perto do que ontem.</h2><p>${ultimo ? `${esc(ultimo.nome)} · ${ultimo.min} min · ${int(ultimo.kcal)} kcal` : ""}</p><div class="meta" style="margin-bottom:10px"><span>${ic("flame", 14)} ${s} ${s === 1 ? "dia seguido" : "dias seguidos"}</span></div><button class="btn btn-sm" id="h-extra">Quero treinar mais</button></div></div>`
     : `<div class="today"><div><span class="eyebrow">Treino de hoje</span><h2>${esc(T.nome)}</h2><p>Semana ${semana()} de ${p.semanas}</p>
         <div class="meta"><span>${ic("clock", 14)} ${minTreino(T)} min</span><span>${ic("bolt", 14)} ${nivelN}</span><span>${ic("flame", 14)} ~${kcalTreino(T)} kcal</span></div>
         <button class="btn" id="h-go">${ic("play", 16)} Começar treino</button></div>
-        <div class="hfig">${window.BONECO.thumb(exById(T.steps[0].id), "f")}${foto(`img/treino-${p.id}.jpg`)}</div></div>`}
+        <div class="hfig">${window.BONECO.thumb(exById(T.steps[0].id), "f", true)}${foto(`img/treino-${p.id}.jpg`)}</div></div>`}
     ${cardPassos()}
     <div id="xp-ini" class="xp-ini"></div>
     ${av ? `<div class="notice">${ic("speaker", 22)}<div><b>${esc(av.titulo)}</b><p>${esc(av.texto)}</p></div></div>` : ""}
@@ -844,7 +852,7 @@ function abrirObjetivo(id){
     <div class="today" style="grid-template-columns:1fr;min-height:0"><div><span class="eyebrow">Objetivo</span><h2>${o[1]}</h2><p>${o[2]}</p>
       ${atual ? `<div class="meta"><span>${ic("check", 14, 3)} Seu objetivo atual</span></div>` : `<button class="btn" id="ob-set" style="margin-top:14px">Definir como meu objetivo</button>`}</div></div>
     <div><h3 style="font-size:20px;margin-bottom:10px">Programas para ${o[1].toLowerCase()}</h3>
-      ${progs.map(p => `<button class="pcard" style="--pc:${p.cor};margin-bottom:10px" data-prog="${p.id}"><div><h4>${esc(p.nome)}</h4><p>${esc(p.sub)}</p><div class="tags"><span class="tag c">${p.nivel}</span><span class="tag">${p.semanas} semanas</span><span class="tag">~${p.min} min</span></div></div><div class="pf">${window.BONECO.thumb(exById(p.dias[0].itens[0][0]), "f")}${foto(`img/treino-${p.id}.jpg`)}</div></button>`).join("")}</div>
+      ${progs.map(p => `<button class="pcard" style="--pc:${p.cor};margin-bottom:10px" data-prog="${p.id}"><div><h4>${esc(p.nome)}</h4><p>${esc(p.sub)}</p><div class="tags"><span class="tag c">${p.nivel}</span><span class="tag">${p.semanas} semanas</span><span class="tag">~${p.min} min</span></div></div><div class="pf">${window.BONECO.thumb(exById(p.dias[0].itens[0][0]), "f")}${fotoP(`img/treino-${p.id}.jpg`)}</div></button>`).join("")}</div>
     <div><h3 style="font-size:20px;margin-bottom:10px">Receitas que ajudam</h3><div class="hscroll">${recs.map(rTile).join("")}</div></div>
     <p class="slogan">${frase(id.length)}</p>`, rerender);
   $("sheet-body").querySelectorAll("[data-prog]").forEach(b => b.onclick = () => abrirPrograma(b.dataset.prog));
@@ -887,8 +895,8 @@ function rTreinar(){
   if(TV === "programas"){
     const atual = progAtual(), rec = recomenda(ME.perfil), L = PROGS.filter(p => p.local === TL && p.id !== atual.id).sort((a, b) => (b.id === rec) - (a.id === rec));
     const feitos = (ME.prog && ME.prog.feitos) || 0, tot = atual.semanas * atual.diasSem;
-    body = `<button class="pcard on" style="--pc:${atual.cor}" data-prog="${atual.id}"><div><span class="tag c">Seu programa</span><h4 style="margin-top:10px">${esc(atual.nome)}</h4><p>Semana ${semana()} de ${atual.semanas} · ${feitos} de ${tot} treinos</p><div class="prog" style="margin-top:12px"><i style="width:${Math.min(100, 100 * feitos / tot)}%;background:${atual.cor}"></i></div></div><div class="pf">${window.BONECO.thumb(exById(atual.dias[0].itens[0][0]), sexoB())}${foto(`img/treino-${atual.id}.jpg`)}</div></button>
-      ${L.map(p => `<button class="pcard" style="--pc:${p.cor}" data-prog="${p.id}"><div>${p.id === rec ? `<span class="tag c" style="margin-bottom:8px;display:inline-block">Recomendado para você</span>` : ""}<h4>${esc(p.nome)}</h4><p>${esc(p.sub)}</p><div class="tags"><span class="tag c">${p.nivel}</span><span class="tag">${p.semanas} semanas</span><span class="tag">~${p.min} min</span></div></div><div class="pf">${window.BONECO.thumb(exById(p.dias[0].itens[0][0]), sexoB())}${foto(`img/treino-${p.id}.jpg`)}</div></button>`).join("")}`;
+    body = `<button class="pcard on" style="--pc:${atual.cor}" data-prog="${atual.id}"><div><span class="tag c">Seu programa</span><h4 style="margin-top:10px">${esc(atual.nome)}</h4><p>Semana ${semana()} de ${atual.semanas} · ${feitos} de ${tot} treinos</p><div class="prog" style="margin-top:12px"><i style="width:${Math.min(100, 100 * feitos / tot)}%;background:${atual.cor}"></i></div></div><div class="pf">${window.BONECO.thumb(exById(atual.dias[0].itens[0][0]), sexoB())}${fotoP(`img/treino-${atual.id}.jpg`)}</div></button>
+      ${L.map(p => `<button class="pcard" style="--pc:${p.cor}" data-prog="${p.id}"><div>${p.id === rec ? `<span class="tag c" style="margin-bottom:8px;display:inline-block">Recomendado para você</span>` : ""}<h4>${esc(p.nome)}</h4><p>${esc(p.sub)}</p><div class="tags"><span class="tag c">${p.nivel}</span><span class="tag">${p.semanas} semanas</span><span class="tag">~${p.min} min</span></div></div><div class="pf">${window.BONECO.thumb(exById(p.dias[0].itens[0][0]), sexoB())}${fotoP(`img/treino-${p.id}.jpg`)}</div></button>`).join("")}`;
   } else if(TV === "rapidos"){
     body = `<p class="hint" style="margin:0">Sem compromisso com o programa. Escolha e comece.</p>` + QUICK.map(q => { const t = treinoRapido(q); return `<button class="pcard" style="--pc:#2E7D5A" data-q="${q.id}"><div><h4>${esc(q.nome)}</h4><p>${new Set(q.itens.map(i => i[0])).size} exercícios · ${q.rodadas} ${q.rodadas > 1 ? "rodadas" : "rodada"}</p><div class="tags"><span class="tag c">${esc(q.foco)}</span><span class="tag">${minTreino(t)} min</span><span class="tag">~${kcalTreino(t)} kcal</span></div></div><div class="pf">${window.BONECO.thumb(exById(q.itens[0][0]), sexoB())}</div></button>`; }).join("");
   } else {
@@ -900,7 +908,7 @@ function rTreinar(){
       <div class="chips scroll">${["", ...usados].map(g => `<button class="chip" data-g="${g}" aria-pressed="${EXF.m === g}">${g ? M[g] : "Todos os músculos"}</button>`).join("")}</div>
       <div class="list">${L.map(e => `<button class="exrow" data-ex="${e.id}">${thumbEx(e.id)}<span style="min-width:0"><b>${esc(e.nome)}</b><small>${esc(window.BONECO.info(e).prim.map(m => M[m]).join(", "))}</small><span class="tags" style="margin-top:4px"><span class="tag ${emCasa(e.id) ? "g" : ""}">${emCasa(e.id) ? esc(EQN[META[e.id].eq]) : "Academia"}</span></span></span><span class="muted">${ic("back", 16)}</span></button>`).join("") || `<div class="empty">Nenhum exercício encontrado.</div>`}</div>`;
   }
-  $("t-treinar").innerHTML = areaSw("treinar") + capa("Treinos", "Escolha seu treino e evolua todos os dias.", "", "img/ex-desenv.jpg") + seg + body;
+  $("t-treinar").innerHTML = capa("Treinos", "Escolha seu treino e evolua todos os dias.", "", "img/ex-desenv.jpg") + seg + body;
   $("t-treinar").querySelectorAll(".seg [data-v]").forEach(b => b.onclick = () => { TV = b.dataset.v; SOM.tap(); rTreinar(); });
   $("t-treinar").querySelectorAll("[data-prog]").forEach(b => b.onclick = () => abrirPrograma(b.dataset.prog));
   $("t-treinar").querySelectorAll("[data-l]").forEach(b => b.onclick = () => { TL = b.dataset.l; rTreinar(); });
@@ -1191,12 +1199,12 @@ const TAGN = { secar: "Para perder gordura", massa: "Para ganhar massa", protein
 const alvoTag = () => { const o = ME.perfil && ME.perfil.objetivo; return ["perder","emagrecer"].includes(o) ? "secar" : ["forca","massa"].includes(o) ? "massa" : "proteina"; };
 const seedDia = (d, k = 0) => { let h = 7 + k * 131; for(const c of d) h = (h * 31 + c.charCodeAt(0)) % 100003; return h; };
 function receitaDoDia(){ const L = receitas().filter(r => recTags(r).includes(alvoTag()) && r.cat !== "doce"); return L[seedDia(today()) % L.length] || receitas()[0]; }
-const rArt = (r, big) => `<span class="rart" style="--rc:${CORCAT[r.cat] || "#2E7D5A"}">${ic(ICCAT[r.cat] || "dieta", big ? 44 : 30, 1.6)}${foto(`img/receita-${r.id}.jpg`)}<em class="num">${r.kcal} kcal</em></span>`;
+const rArt = (r, big) => `<span class="rart" style="--rc:${CORCAT[r.cat] || "#2E7D5A"}">${ic(ICCAT[r.cat] || "dieta", big ? 44 : 30, 1.6)}${fotoP(`img/receita-${r.id}.jpg`)}<em class="num">${r.kcal} kcal</em></span>`;
 const rTile = r => `<button class="rtile" data-rec="${r.id}">${rArt(r)}<b>${esc(r.nome)}</b><small class="num">${r.p} g proteína · ${r.min} min</small></button>`;
-const rCard = r => `<button class="rcard" data-rec="${r.id}"><span class="rthumb" style="--rc:${CORCAT[r.cat]}">${ic(ICCAT[r.cat] || "dieta", 26, 1.7)}${foto(`img/receita-${r.id}.jpg`)}</span><span style="min-width:0"><b>${esc(r.nome)}</b><small class="num">${r.kcal} kcal · ${r.p} g proteína · ${r.min} min</small><span class="tags" style="margin-top:4px"><span class="tag">${CATS[r.cat] || r.cat}</span>${recTags(r).slice(0, 1).map(k => `<span class="tag g">${TAGN[k]}</span>`).join("")}${(ME.favs || []).includes(r.id) ? `<span class="tag g">Favorita</span>` : ""}</span></span></button>`;
+const rCard = r => `<button class="rcard" data-rec="${r.id}"><span class="rthumb" style="--rc:${CORCAT[r.cat]}">${ic(ICCAT[r.cat] || "dieta", 26, 1.7)}${fotoP(`img/receita-${r.id}.jpg`)}</span><span style="min-width:0"><b>${esc(r.nome)}</b><small class="num">${r.kcal} kcal · ${r.p} g proteína · ${r.min} min</small><span class="tags" style="margin-top:4px"><span class="tag">${CATS[r.cat] || r.cat}</span>${recTags(r).slice(0, 1).map(k => `<span class="tag g">${TAGN[k]}</span>`).join("")}${(ME.favs || []).includes(r.id) ? `<span class="tag g">Favorita</span>` : ""}</span></span></button>`;
 function rDieta(){
   const seg = `<div class="seg" role="group">${[["receitas","Receitas"],["cardapio","Cardápio"],["diario","Meu dia"]].map(([k, n]) => `<button data-dv="${k}" aria-pressed="${DV === k}">${n}</button>`).join("")}</div>`;
-  $("t-dieta").innerHTML = areaSw("dieta") + capa("Nutrição", "Receitas para acompanhar sua evolução.") + seg + `<div id="d-body" class="tab-panel"></div>`;
+  $("t-dieta").innerHTML = capa("Nutrição", "Receitas para acompanhar sua evolução.") + seg + `<div id="d-body" class="tab-panel"></div>`;
   $("t-dieta").querySelectorAll("[data-dv]").forEach(b => b.onclick = () => { DV = b.dataset.dv; RV = "home"; SOM.tap(); rDieta(); });
   ({ receitas: rReceitas, cardapio: rCardapio, diario: rDiario })[DV]();
 }
@@ -1488,7 +1496,7 @@ function rPerfil(){
   const th = document.documentElement.dataset.theme || "light", nv = nivelAluna((ME.treinos || []).length);
   $("t-perfil").innerHTML = `
     ${capa("", "", `<div class="hello" style="gap:14px"><button class="avatar avedit" id="p-foto" aria-label="Trocar foto do perfil" style="width:72px;height:72px;font-size:28px">${fotoAv(ME)}<i class="avcam">${ic("plus", 13, 3)}</i></button><div><h2 style="color:#fff">${esc(ME.nome)}</h2><div class="k" style="color:rgba(245,248,239,.8)">${esc(ME.email)}</div><span class="nivel-chip">${ic("star", 13)} Nível ${nv.nome}</span></div></div>`, "img/ex-panturrilha.jpg")}
-    <div class="pstats"><div><b class="num">${int((ME.treinos || []).length)}</b><span>treinos</span></div><div><b class="num">${int((ME.treinos || []).reduce((a, t) => a + (t.min || 0), 0))}</b><span>minutos</span></div><div><b class="num">${streak()}</b><span>dias seguidos</span></div></div>
+    <div class="pstats"><div><b class="num">${int((ME.treinos || []).length)}</b><span>treinos</span></div><div><b class="num">${int((ME.treinos || []).reduce((a, t) => a + (t.min || 0), 0))}</b><span>minutos</span></div><div><b class="num">${streak()}</b><span>${streak() === 1 ? "dia seguido" : "dias seguidos"}</span></div></div>
     ${nv.prox ? `<div class="card nivel-card"><div class="sec-title"><h3 style="font-size:16px">Próximo nível: ${nv.prox[1]}</h3><span class="muted num" style="font-size:13px">faltam ${nv.falta} ${nv.falta === 1 ? "treino" : "treinos"}</span></div><div class="prog" style="margin-top:10px"><i style="width:${nv.pct}%"></i></div><p class="hint" style="margin:8px 0 0">Membro desde ${brD(ME.criado || today())}</p></div>` : `<div class="card nivel-card"><h3 style="font-size:16px">Você chegou ao nível máximo 🏆</h3><p class="hint" style="margin:6px 0 0">Membro desde ${brD(ME.criado || today())}</p></div>`}
     ${perfilXP()}
     <div class="today" style="--pc:${prem ? "#3DDC6E" : "#FFB23F"};min-height:0;grid-template-columns:1fr"><div><span class="eyebrow">${prem ? (ME.premium.tipo === "teste" ? "Premium · teste grátis" : "Premium") : "Plano gratuito"}</span>
