@@ -5163,13 +5163,13 @@ async function minhasAutorizacoes(){
 }
 async function registraConsent(tipo, aceito, versao){ if(!MD_OK()) return; try{ await q(SB().from("consentimentos").insert({ user_id: NU.uid, tipo, aceito, versao: versao || null, origem: "app" })); }catch(e){} }
 /* aceite de nova versão de documento (Termos/Privacidade marcados com "novo aceite") */
-async function confereAceites(){
-  const app = $("v-app"); if(!MD_OK() || !app || app.offsetParent === null || location.hash.startsWith("#admin")) return;
+async function confereAceites(forca){
+  if(!MD_OK() || (!forca && !mdNoApp())) return;
   try{ const docs = await q(SB().from("documentos").select("id,tipo,nome,versao").eq("status", "publicado").eq("novo_aceite", true)); if(!docs.length) return;
     const meus = await q(SB().from("consentimentos_atuais").select("tipo,versao,aceito").eq("user_id", NU.uid));
     const falta = docs.filter(d => !meus.some(c => c.tipo === d.tipo && c.versao === d.versao && c.aceito)); if(!falta.length) return;
     sheet("Atualizamos nossas regras", `<p>Para continuar, leia e aceite:</p><div class="card" style="padding:6px 16px">${falta.map(d => setRow("ac-" + d.id, "book", d.nome, "Versão " + d.versao)).join("")}</div><button class="btn btn-accent btn-block" id="ac-ok">Li e aceito</button>`);
-    falta.forEach(d => { const e = $("ac-" + d.id); if(e) e.onclick = () => verDoc(d.id, () => confereAceites()); });
+    falta.forEach(d => { const e = $("ac-" + d.id); if(e) e.onclick = () => verDoc(d.id, () => confereAceites(true)); });
     $("ac-ok").onclick = async () => { for(const d of falta) await registraConsent(d.tipo, true, d.versao); fecharSheet(); toast("Obrigada! 💚"); };
   }catch(e){}
 }
@@ -5183,7 +5183,8 @@ let MD_CIC = false;
 cicloGrava = async function(){ const r = await cicloGrava0.apply(this, arguments);
   if(r && !MD_CIC && MD_OK()){ MD_CIC = true; try{ const c = await q(SB().from("consentimentos_atuais").select("aceito").eq("user_id", NU.uid).eq("tipo", "ciclo")); if(!c.length || !c[0].aceito) registraConsent("ciclo", true); }catch(e){} }
   return r; };
-{ let n = 0; const t = setInterval(() => { if(MD_OK()){ clearInterval(t); setTimeout(confereAceites, 4000); } else if(++n > 60) clearInterval(t); }, 5000); }
+const mdNoApp = () => { const app = $("v-app"); return !!(app && app.offsetParent !== null && !location.hash.startsWith("#admin") && $("sheet").hidden); };
+{ let n = 0; const t = setInterval(() => { if(MD_OK() && mdNoApp()){ clearInterval(t); confereAceites(); } else if(++n > 120) clearInterval(t); }, 4000); }
 
 const TABS = [["inicio","Início"],["treinar","Treinos"],["dieta","Nutrição"],["juntas","Comunidade"],["explorar","Explorar"],["perfil","Perfil"],["evolucao","Evolução"]];
 const NAV = TABS.slice(0, 6), NAV_DE = { evolucao: "perfil" };
