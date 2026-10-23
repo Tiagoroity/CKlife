@@ -6,6 +6,11 @@
 <meta name="theme-color" content="#0E3D32">
 <link rel="icon" href="img/icone-192.png">
 <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="CK Life">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="description" content="CK Life: treino em casa para mulheres. Sua evolução, todos os dias.">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}</style>
 </head>
@@ -813,6 +818,91 @@ main.adm .msg-ok{border-radius:16px}
 .rl-ok{margin-top:12px;padding:14px;border-radius:16px;background:#E8F2E6;display:flex;flex-direction:column;gap:10px}
 .rl-ok b{color:#0E3D32;word-break:break-all}
 .ro-aviso{border-radius:14px}
+
+/* ===== Versão para computador (notebook, Mac, PC) ===== */
+@media (min-width:1024px){
+  #v-app:not([hidden]){padding-left:256px}
+  #v-app .top{position:fixed;left:0;top:0;width:256px;z-index:8;background:none;backdrop-filter:none;-webkit-backdrop-filter:none}
+  #v-app .top .wrap{max-width:none;padding:26px 22px 0;flex-wrap:wrap;gap:12px}
+  #v-app .top .wordmark{color:#fff;font-size:20px}
+  #v-app .top .wordmark b{color:#B9DDB2}
+  #v-app .top .streak{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.14);color:#fff}
+  #v-app .top .iconbtn{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.14);color:#fff}
+  .nav{left:0;top:0;bottom:0;right:auto;width:256px;border-top:0;background:linear-gradient(165deg,#0E3D32 0%,#0B3229 55%,#082820 100%);backdrop-filter:none;-webkit-backdrop-filter:none;padding:110px 16px 24px;box-shadow:12px 0 40px -30px rgba(0,0,0,.6)}
+  .nav .wrap{display:flex;flex-direction:column;gap:4px;padding:0;max-width:none}
+  .nav button{flex-direction:row;justify-content:flex-start;gap:12px;padding:12px 14px;font-size:15.5px;font-weight:700;color:rgba(255,255,255,.72);border-radius:14px;transition:background .15s,color .15s}
+  .nav button:hover{background:rgba(255,255,255,.07);color:#fff}
+  .nav .ico{width:auto;height:auto;background:none!important;color:inherit}
+  .nav button[aria-selected="true"]{background:#F5F8EF;color:#0E3D32;box-shadow:0 8px 20px -10px rgba(0,0,0,.5)}
+  .nav button[aria-selected="true"] .ico{color:#2E7D5A}
+  .nav::after{content:"Sua evolução, todos os dias.";position:absolute;left:30px;right:20px;bottom:28px;font-size:12.5px;color:rgba(185,221,178,.6);font-weight:600}
+  main.app{max-width:1080px;padding:30px 44px 70px}
+  main.app .capa{margin:0;border-radius:28px;min-height:280px;padding:34px 34px 34px}
+  main.app .capa-tx h1{font-size:44px}
+  main.app .today{min-height:300px;padding:30px}
+  main.app .today h2{font-size:36px}
+  .objlist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .objlist button:last-child:nth-child(odd){grid-column:1/-1}
+  .sheet-body{max-width:760px}
+  .phero{min-height:440px}
+  .pdia{display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-areas:"head head" "ring mac";align-items:center;column-gap:30px;padding:26px 30px}
+  .pdia-head{grid-area:head}
+  .pdia-ring{grid-area:ring;margin:16px 0 6px}
+  .pdia-mac{grid-area:mac;margin:0}
+  /* treino guiado: foto em formato de celular, centralizada */
+  .play{align-items:center;background:radial-gradient(120% 90% at 50% 0%,#14402F,#061813 70%)}
+  .play>.pfull{width:min(480px,100%);flex:1;box-shadow:0 30px 80px -30px rgba(0,0,0,.7)}
+  .play>.phd{width:min(640px,100%)}
+}
+@media (min-width:1024px) and (max-height:760px){.nav{padding-top:96px}.nav button{padding:10px 14px}}
+@media (min-width:1024px){main.app .evo{grid-template-columns:repeat(4,minmax(0,1fr))}}
+/* painel sempre claro, mesmo se a pessoa escolheu tema escuro no app */
+#v-admin{--bg:#F1F5EE;--surface:#FFFFFF;--surface-2:#EAF2E7;--surface-3:#D5E7D3;--line:#E1EADD;--ink:#17211D;--muted:#65736C;--accent:#2E7D5A;--accent-strong:#0E3D32;--accent-soft:#D5E7D3;--bad:#C8463C;--bad-soft:#F8E4E1;--warn:#A6731F;--warn-soft:#F7EDD8;color-scheme:light;color:#17211D}
+#v-admin~.modal .mbox,body:has(#v-admin:not([hidden])) .mbox{--bg:#F5F8EF;--surface:#FFFFFF;--surface-2:#EAF2E7;--line:#E1EADD;--ink:#17211D;--muted:#65736C;color:#17211D;background:#F5F8EF}
+
+/* instalar como app */
+.inst{display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px 14px;align-items:center;background:linear-gradient(135deg,#E8F2E6,#F5F8EF);border:1px solid #D5E7D3;border-radius:22px;padding:16px}
+.inst img{border-radius:14px;box-shadow:0 8px 18px -10px rgba(14,61,50,.6)}
+.inst>div>b{display:block;font-size:16px;color:#0E3D32}
+.inst>div>span{display:block;font-size:13.5px;color:#4d5e55}
+.inst-passos b,.inst p b{color:#0E3D32}
+.inst p,.inst ol,.inst .btn{grid-column:1/-1;margin:0}
+.inst p{font-size:14px;color:#33443b}
+.inst-passos{padding-left:20px;font-size:14px;color:#33443b;display:flex;flex-direction:column;gap:4px}
+.inst-ic{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:6px;background:#fff;color:#2E7D5A;vertical-align:middle}
+:root[data-theme="dark"] .inst{background:linear-gradient(135deg,#164034,#10362C);border-color:#245746}
+:root[data-theme="dark"] .inst b{color:#A8E6B4}
+:root[data-theme="dark"] .inst>div>span,:root[data-theme="dark"] .inst p,:root[data-theme="dark"] .inst-passos{color:#cfe0d4}
+/* toque com resposta: cartões afundam de leve */
+.pcard,.objlist button,.rtile,.qcard,.opt,.exrow,.dayrow,.rhero,.nx,.chip{transition:transform .12s ease}
+.pcard:active,.objlist button:active,.rtile:active,.qcard:active,.opt:active,.exrow:active,.dayrow:active,.rhero:active,.chip:active{transform:scale(.98)}
+/* receita do dia: foto grande em cima, texto e botão embaixo */
+.rhero{display:flex;flex-direction:column;align-items:stretch;gap:0;padding:0;overflow:hidden;background:var(--surface);box-shadow:0 16px 34px -26px rgba(14,61,50,.55)}
+.rhero-art{width:100%;height:auto;aspect-ratio:16/9;border-radius:0}
+.rhero-art .ph{object-position:center 55%}
+.rhero-tx{padding:16px 18px 18px;gap:4px}
+.rhero-tx b{font-size:23px}
+.rhero-tx .btn{align-self:stretch!important;margin-top:12px!important;min-height:48px}
+@media (min-width:700px){.rhero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);align-items:center}.rhero-art{aspect-ratio:auto;height:100%;min-height:220px}.rhero-tx{padding:24px}}
+@media (max-width:360px){.pdia-head{flex-direction:column;align-items:stretch}.pdia-btn{align-self:flex-start}.pdia-c b{font-size:40px}.pdia-ring{width:180px;height:180px}.pdia-ring .anel{width:180px;height:180px}}
+/* modo cozinha: botões cabem até no iPhone pequeno */
+.cook .cf{grid-template-columns:54px minmax(0,1fr) 54px}
+.cook .cf .btn{min-width:0;white-space:normal;line-height:1.15;padding-inline:12px;text-align:center}
+
+.ckfoto{border-radius:22px;overflow:hidden;height:clamp(150px,28vh,240px);box-shadow:0 18px 36px -24px rgba(14,61,50,.6);flex:0 0 auto}
+.ckfoto.baixa{height:clamp(110px,18vh,160px)}
+.ckfoto img{width:100%;height:100%;object-fit:cover;object-position:center 55%;display:block}
+.ck-prox{margin:4px 0 0;padding:12px 14px;border-radius:16px;background:var(--surface-2);color:var(--muted);font-size:14.5px;line-height:1.4}
+.ck-prox b{color:var(--accent-strong)}
+
+.btn-share{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.22);gap:8px}
+.btn-share:active{background:rgba(255,255,255,.16)}
+.rate{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;width:100%}
+.rate button{min-width:0;white-space:nowrap;padding-inline:6px;font-size:14px}
+@media (max-width:520px){.mbox .g4,.mbox .g3{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.field label{overflow-wrap:anywhere}
+.row4{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+@media (max-width:520px){.row4{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 </style>
 
 <!-- Entrar / criar conta -->
@@ -2138,7 +2228,7 @@ const P = {
   play:'<path d="M7 4.5v15l12-7.5z" fill="currentColor" stroke="none"/>',
   pause:'<path d="M8 5v14M16 5v14" stroke-width="3"/>',
   prev:'<path d="M18 6l-8 6 8 6zM6 6v12"/>', next:'<path d="M6 6l8 6-8 6zM18 6v12"/>',
-  close:'<path d="M6 6l12 12M18 6L6 18"/>', back:'<path d="M15 5l-7 7 7 7"/>', chev:'<path d="M9 5l7 7-7 7"/>', check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+  close:'<path d="M6 6l12 12M18 6L6 18"/>', back:'<path d="M15 5l-7 7 7 7"/>', chev:'<path d="M9 5l7 7-7 7"/>', share:'<path d="M12 3v12M7 8l5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/>', check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
   clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>', bolt:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',
   chair:'<path d="M7 3v10h10V3M5 13h14M7 13v8M17 13v8"/>', mesa:'<path d="M3 8h18M5 8v12M19 8v12M3 8l2-3h14l2 3"/>', barra:'<path d="M3 5h18M7 5v4M17 5v4"/><circle cx="12" cy="14" r="2.5"/><path d="M12 16.5V21"/>', corda:'<path d="M5 4v6M19 4v6"/><path d="M5 10c0 8 14 8 14 0"/>',
   flame:'<path d="M12 2s5 4.6 5 10a5 5 0 0 1-10 0c0-2.2 1-3.9 2-5 0 1.6.8 3 2 3 0-3 1-6 1-8z" fill="currentColor" stroke="none"/>',
@@ -2648,6 +2738,22 @@ function ring(val, max, size = 96, cor = "var(--accent)"){
   return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" aria-hidden="true"><circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="var(--surface-3)" stroke-width="10"/><circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="${val > max ? "var(--bad)" : cor}" stroke-width="10" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C * (1 - f)}"/></svg>`;
 }
 function semanaAtualDias(){ const d = new Date(), dow = (d.getDay() + 6) % 7, seg = addD(today(), -dow); return Array.from({ length: 7 }, (_, i) => addD(seg, i)); }
+const saudacao = () => { const h = new Date().getHours(); return h < 5 ? "Boa noite" : h < 12 ? "Bom dia" : h < 18 ? "Boa tarde" : "Boa noite"; };
+/* instalar como app (tela inicial do celular) */
+let PEDIDO_INSTALAR = null;
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); PEDIDO_INSTALAR = e; });
+const instalado = () => (window.matchMedia && matchMedia("(display-mode: standalone)").matches) || navigator.standalone === true;
+const ehIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+const navInterno = () => /FBAN|FBAV|Instagram|WhatsApp|Line\/|TikTok/i.test(navigator.userAgent);
+function cardInstalar(){
+  if(instalado()) return "";
+  const passos = navInterno()
+    ? `<p>Você abriu pelo navegador de outro app. Para instalar e manter seu login salvo, abra no ${ehIOS() ? "Safari" : "Chrome"}: toque nos <b>três pontinhos</b> e escolha <b>Abrir no navegador</b>.</p>`
+    : ehIOS()
+      ? `<ol class="inst-passos"><li>Toque em <b>Compartilhar</b> <span class="inst-ic">${ic("share", 15)}</span> na barra do Safari</li><li>Escolha <b>Adicionar à Tela de Início</b></li><li>Toque em <b>Adicionar</b></li></ol>`
+      : PEDIDO_INSTALAR ? `<p>Um toque e o CK Life fica na sua tela inicial, como um app.</p>` : `<ol class="inst-passos"><li>Toque nos <b>três pontinhos</b> do navegador</li><li>Escolha <b>Instalar app</b> ou <b>Adicionar à tela inicial</b></li></ol>`;
+  return `<div class="inst"><img src="img/icone-192.png" alt="" width="56" height="56" onerror="this.remove()"><div><b>Instale o CK Life no celular</b><span>Abre em tela cheia, mais rápido, e seu login fica salvo.</span></div>${passos}${PEDIDO_INSTALAR && !ehIOS() && !navInterno() ? `<button class="btn btn-accent btn-block" id="p-inst">Instalar agora</button>` : ""}</div>`;
+}
 function rInicio(){
   const T = treinoDoDia(), p = progAtual(), feitos = diasTreino(), hojeFeito = feitos.has(today());
   const sem = semanaAtualDias(), nSem = sem.filter(d => feitos.has(d)).length, meta = ME.perfil.dias || 3;
@@ -2657,7 +2763,7 @@ function rInicio(){
   const nivelN = { Iniciante: "Iniciante", "Intermediário": "Intermediário", Todos: "Todos os níveis" }[p.nivel] || p.nivel;
   const obj = objById(ME.perfil.objetivo), rd = receitaDoDia();
   $("t-inicio").innerHTML = `
-    <div class="capa"><img class="capa-foto" src="img/modelo.jpg" alt="" onerror="this.remove()"><button class="avatar" id="h-av" aria-label="Perfil">${esc(ME.nome[0].toUpperCase())}</button><div class="capa-tx"><span class="hi">Olá, ${esc(ME.nome.split(" ")[0])} 👋</span><h1>Vamos evoluir hoje?</h1><p>${hojeFeito ? "Treino de hoje feito. " + frase() : "Seu treino está pronto."}</p></div></div>
+    <div class="capa"><img class="capa-foto" src="img/modelo.jpg" alt="" onerror="this.remove()"><button class="avatar" id="h-av" aria-label="Perfil">${esc(ME.nome[0].toUpperCase())}</button><div class="capa-tx"><span class="hi">${saudacao()}, ${esc(ME.nome.split(" ")[0])} 👋</span><h1>Vamos evoluir hoje?</h1><p>${hojeFeito ? "Treino de hoje feito. " + frase() : "Seu treino está pronto."}</p></div></div>
     ${hojeFeito ? `<div class="today done"><div><span class="eyebrow">Treino de hoje concluído</span><h2>Você está mais perto do que ontem.</h2><p>${ultimo ? `${esc(ultimo.nome)} · ${ultimo.min} min · ${int(ultimo.kcal)} kcal` : ""}</p><div class="meta" style="margin-bottom:10px"><span>${ic("flame", 14)} ${s} ${s === 1 ? "dia" : "dias"} seguidos</span></div><button class="btn btn-sm" id="h-extra">Quero treinar mais</button></div></div>`
     : `<div class="today"><div><span class="eyebrow">Treino de hoje</span><h2>${esc(T.nome)}</h2><p>Semana ${semana()} de ${p.semanas}</p>
         <div class="meta"><span>${ic("clock", 14)} ${minTreino(T)} min</span><span>${ic("bolt", 14)} ${nivelN}</span><span>${ic("flame", 14)} ~${kcalTreino(T)} kcal</span></div>
@@ -2840,6 +2946,10 @@ function abrirExercicio(id, x, voltar){ const e = exById(id); sheet(e.nome, howt
 
 /* ---------- Treino guiado ---------- */
 let PL = null;
+const sorteia = L => L[Math.floor(Math.random() * L.length)];
+const FR_METADE = ["Metade do treino! Você está indo muito bem.", "Já passou da metade. Continua firme!", "Metade feita. Respira e segue!"];
+const FR_ULTIMO = ["Último exercício. Capricha!", "Último! Dá tudo agora.", "Último exercício, você consegue!"];
+const FR_META = ["Terminou as repetições? Toque em concluí.", "Fez todas? É só tocar em concluí.", "Quando terminar, toque em concluí."];
 function iniciaTreino(T){
   if(!T || !T.steps.length) return;
   window.BONECO.stop(); calar();
@@ -2859,6 +2969,8 @@ function relogio(){
     PL.rem--;
     if(PL.rem <= 3 && PL.rem > 0){ SOM.tick(); if(PL.fase !== "ex") vibra(40); }
     if(PL.fase === "ex" && s.modo === "t" && PL.rem === Math.floor(s.val / 2) && s.val >= 30) falar("Metade. Continue!");
+    if(PL.fase === "ex" && s.modo === "t" && PL.rem === 10 && s.val >= 25) falar("Faltam 10 segundos!");
+    if(PL.fase === "rest" && PL.rem === 5) falar("Prepare-se.");
     if(PL.rem <= 0){ proximaFase(); return; }
     atualizaPlay();
   }, 1000);
@@ -2867,7 +2979,8 @@ function comecaExercicio(){
   const s = PL.T.steps[PL.i], e = exById(s.id);
   PL.fase = "ex"; PL.rem = s.modo === "t" ? s.val : 0;
   SOM.bell(); vibra(120);
-  falar(s.modo === "t" ? `${e.nome}. ${s.val} segundos. Vai!` : `${e.nome}. ${s.val} repetições.`);
+  const n = PL.T.steps.length, extra = PL.i === n - 1 && n > 2 ? sorteia(FR_ULTIMO) + " " : PL.i === Math.floor(n / 2) && n > 5 ? sorteia(FR_METADE) + " " : "";
+  falar(extra + (s.modo === "t" ? `${e.nome}. ${s.val} segundos. Vai!` : `${e.nome}. ${s.val} repetições, no seu ritmo.`));
   desenhaPlay();
 }
 function proximaFase(){
@@ -2919,7 +3032,7 @@ function desenhaPlay(){
       </div></div>`;
     window.BONECO.mount($("pl-stage"), e, { paused: PL.pausa, onFrame: f => {
       const c = $("pl-cue"); if(c && c.textContent !== f.cue) c.textContent = f.cue;
-      if(s.modo === "r"){ const n = Math.min(f.rep, s.val), r = $("pl-rep"), pg = $("pl-prog"); if(r && r.textContent !== String(n)){ r.textContent = n; if(pg) pg.style.width = (100 * n / s.val) + "%"; if(f.rep === s.val + 1 && !PL.avisou){ PL.avisou = true; SOM.chime && SOM.chime(); $("pl-main").classList.add("pulsa"); } } }
+      if(s.modo === "r"){ const n = Math.min(f.rep, s.val), r = $("pl-rep"), pg = $("pl-prog"); if(r && r.textContent !== String(n)){ r.textContent = n; if(pg) pg.style.width = (100 * n / s.val) + "%"; if(f.rep === s.val + 1 && !PL.avisou){ PL.avisou = true; SOM.chime && SOM.chime(); vibra(60); falar(sorteia(FR_META)); $("pl-main").classList.add("pulsa"); } } }
     } });
     PL.avisou = false;
     $("pl-main").onclick = () => { if(s.modo === "r"){ proximaFase(); return; } PL.pausa = !PL.pausa; SOM.tap(); if(PL.pausa) falar("Pausado."); desenhaPlay(); };
@@ -2946,6 +3059,31 @@ function sairTreino(){
   $("sx-volta").onclick = () => { box.remove(); PL.pausa = false; };
 }
 function fimPlay(){ clearInterval(PL && PL.int); PL = null; window.BONECO.stop(); calar(); telaAcesa(false); $("play").hidden = true; document.body.style.overflow = ""; rerender(); }
+/* cartão de conquista em formato de story (1080x1920) */
+function carregaImg(src){ return new Promise(ok => { const im = new Image(); im.onload = () => ok(im); im.onerror = () => ok(null); im.src = src; }); }
+async function cartaoConquista(o){
+  const W = 1080, H = 1920, c = document.createElement("canvas"); c.width = W; c.height = H; const x = c.getContext("2d");
+  try{ await document.fonts.load("800 90px 'Bricolage Grotesque'"); }catch(e){}
+  const F1 = "'Bricolage Grotesque','Avenir Next',system-ui,sans-serif", F2 = "Figtree,system-ui,sans-serif";
+  const g = x.createLinearGradient(0, 0, W, H); g.addColorStop(0, "#0E3D32"); g.addColorStop(1, "#061813"); x.fillStyle = g; x.fillRect(0, 0, W, H);
+  const foto = await carregaImg(window.BONECO.fotoDe(exById(o.T.steps[0].id)));
+  if(foto){ const fh = H * .66, k = Math.max(W / foto.width, fh / foto.height), fw = foto.width * k, fhh = foto.height * k; x.drawImage(foto, (W - fw) / 2, Math.min(0, (fh - fhh) * .25), fw, fhh); }
+  const sh = x.createLinearGradient(0, H * .28, 0, H * .72); sh.addColorStop(0, "rgba(6,24,19,0)"); sh.addColorStop(1, "rgba(6,24,19,1)"); x.fillStyle = sh; x.fillRect(0, 0, W, H * .72 + 2); x.fillStyle = "#061813"; x.fillRect(0, H * .72, W, H * .28);
+  const top = x.createLinearGradient(0, 0, 0, 260); top.addColorStop(0, "rgba(6,24,19,.65)"); top.addColorStop(1, "rgba(6,24,19,0)"); x.fillStyle = top; x.fillRect(0, 0, W, 260);
+  const ico = await carregaImg("img/icone-192.png"); if(ico){ x.save(); x.beginPath(); x.roundRect ? x.roundRect(80, 86, 110, 110, 28) : x.rect(80, 86, 110, 110); x.clip(); x.drawImage(ico, 80, 86, 110, 110); x.restore(); }
+  x.fillStyle = "#fff"; x.font = `800 64px ${F1}`; x.fillText("CK", ico ? 214 : 80, 160); const ckw = x.measureText("CK ").width; x.fillStyle = "#B9DDB2"; x.fillText("Life", (ico ? 214 : 80) + ckw, 160);
+  let y = 1180;
+  x.fillStyle = "#3DDC6E"; x.font = `800 40px ${F2}`; x.fillText(o.parcial ? "TREINO SALVO" : "TREINO CONCLUÍDO", 80, y); y += 100;
+  // nome do treino: diminui a letra até caber na largura
+  x.fillStyle = "#fff"; let fs = 110; do { x.font = `800 ${fs}px ${F1}`; fs -= 4; } while(x.measureText(o.T.nome).width > W - 160 && fs > 56); x.fillText(o.T.nome, 80, y); y += 76;
+  x.fillStyle = "rgba(255,255,255,.78)"; x.font = `600 42px ${F2}`; x.fillText(`${o.nome} mandou bem hoje 💪`, 80, y); y += 90;
+  const box = (bx, v, l) => { x.fillStyle = "rgba(255,255,255,.09)"; x.beginPath(); x.roundRect ? x.roundRect(bx, y, 290, 210, 36) : x.rect(bx, y, 290, 210); x.fill(); x.fillStyle = "#fff"; x.font = `800 84px ${F1}`; x.fillText(v, bx + 36, y + 112); x.fillStyle = "#B9DDB2"; x.font = `700 34px ${F2}`; x.fillText(l, bx + 36, y + 168); };
+  box(80, String(o.min), "minutos"); box(395, String(o.kcal), "kcal"); box(710, String(o.dias), o.dias === 1 ? "dia seguido" : "dias seguidos");
+  y += 300;
+  x.fillStyle = "rgba(255,255,255,.55)"; x.font = `600 36px ${F2}`; x.fillText(new Date().toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" }), 80, y);
+  x.fillStyle = "#B9DDB2"; x.font = `700 40px ${F2}`; x.fillText("Sua evolução, todos os dias.", 80, H - 120);
+  return new Promise(ok => c.toBlob(ok, "image/jpeg", .9));
+}
 function fimTreino(parcial){
   clearInterval(PL.int); window.BONECO.stop(); PL.fase = "fim";
   const T = PL.T, min = Math.max(1, Math.round((Date.now() - PL.ini) / 60000)), kcal = Math.round(PL.kcal), antes = medalhas().filter(m => m.ok).map(m => m.id);
@@ -2968,7 +3106,7 @@ function fimTreino(parcial){
     ${novas.map(m => `<div class="nx" style="max-width:none">${`<span class="exn" style="background:radial-gradient(circle at 30% 30%,#FFE08A,#FFB23F);color:#3a2200;width:56px;height:56px;border-radius:50%">${ic(m.ic, 26)}</span>`}<span><b>Nova conquista: ${esc(m.nome)}</b><small>${esc(m.desc)}</small></span></div>`).join("")}
     ${ganhou ? `<div class="coupon" style="width:100%;border-color:#3DDC6E"><b>Você ganhou um cupom!</b><span>${ganhou.desconto}% na ${esc(ganhou.loja)}</span><span class="code">${ganhou.codigo}</span></div>` : ""}
     ${parcial ? "" : `<p style="color:#cfd6d2;margin:10px 0 0;font-weight:600">Como foi o treino?</p><div class="rate"><button data-r="-1">Fácil</button><button data-r="0" aria-pressed="true">Na medida</button><button data-r="1">Difícil</button></div>`}
-    <button class="btn btn-accent btn-lg btn-block" id="fim-ok" style="margin-top:8px">Ver minha evolução</button><button class="btn btn-line btn-block" id="fim-out">Fazer outro treino</button>
+    <button class="btn btn-accent btn-lg btn-block" id="fim-ok" style="margin-top:8px">Ver minha evolução</button><button class="btn btn-share btn-block" id="fim-share">${ic("share", 18)} Compartilhar conquista</button><button class="btn btn-line btn-block" id="fim-out">Fazer outro treino</button>
   </div></div>`;
   let rate = 0;
   $("play").querySelectorAll("[data-r]").forEach(b => b.onclick = () => { rate = +b.dataset.r; $("play").querySelectorAll("[data-r]").forEach(x => x.setAttribute("aria-pressed", x === b)); });
@@ -2977,6 +3115,17 @@ function fimTreino(parcial){
     fimPlay(); tab(dest);
   };
   $("fim-ok").onclick = () => sai(parcial ? "inicio" : "evolucao");
+  $("fim-share").onclick = async () => {
+    const b = $("fim-share"); b.classList.add("carregando"); b.disabled = true;
+    try{
+      const blob = await cartaoConquista({ T, min, kcal, dias: streak(), nome: ME.nome.split(" ")[0], parcial });
+      const file = new File([blob], "ck-life-treino.jpg", { type: "image/jpeg" });
+      if(navigator.canShare && navigator.canShare({ files: [file] })) await navigator.share({ files: [file], text: "Mais um treino feito no CK Life 💚" }).catch(() => {});
+      else { const u = URL.createObjectURL(blob), a = document.createElement("a"); a.href = u; a.download = "ck-life-treino.jpg"; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 4000); toast("Imagem salva. Poste nos stories!"); }
+      SOM.chime && SOM.chime();
+    }catch(e){ console.warn(e); toast("Não deu para criar a imagem agora."); }
+    b.classList.remove("carregando"); b.disabled = false;
+  };
   $("fim-out").onclick = () => sai("treinar");
 }
 function darCupom(){
@@ -3174,10 +3323,12 @@ function desenhaCozinha(fala){
     <div class="sheet-head" style="background:var(--bg)"><button class="iconbtn sm" id="ck-x" aria-label="Fechar modo cozinha">${ic("close", 18)}</button><b>${esc(r.nome)}</b><button class="iconbtn sm" id="ck-voz" aria-label="${ME.voz === false ? "Ligar voz" : "Desligar voz"}" data-mudo>${ic(ME.voz === false ? "mute" : "speaker", 18)}</button></div>
     <div style="max-width:640px;width:100%;margin:0 auto;padding:0 18px"><div class="segs" style="display:flex">${[-1, ...r.passos.map((_, k) => k)].map(k => `<i class="${k < i ? "f" : k === i ? "f" : ""}" style="background:${k <= i ? "var(--accent)" : "var(--surface-3)"}"></i>`).join("")}</div></div>
     <div class="cb">
+      <div class="ckfoto${i < 0 ? " baixa" : ""}"><img src="img/receita-${r.id}.jpg" alt="" onerror="this.parentNode.remove()"></div>
       <div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><span class="stepn">${i < 0 ? "Ingredientes" : `Passo ${i + 1} de ${n}`}</span><span class="speaking" hidden><i></i><i></i><i></i> Falando</span></div>
       <div class="stept">${esc(titulo)}</div>
       ${i < 0 ? `<div class="ingck">${r.ing.map((x, k) => `<label><input type="checkbox" id="ck-i${k}"><span>${esc(x)}</span></label>`).join("")}</div><p class="hint" style="margin:0">Marque o que já separou. Rende ${r.porc} ${r.porc === 1 ? "porção" : "porções"} · ${r.min} min.</p>` : ""}
       ${seg ? `<div class="ctimer">${ic("clock", 26)}<b class="num" id="ck-t">${CK.tm && CK.passoT === i ? fmtT(CK.rem) : fmtT(seg)}</b><button class="btn btn-accent btn-sm" id="ck-tbtn" data-mudo>${CK.tm && CK.passoT === i ? (CK.pausa ? "Continuar" : "Pausar") : "Iniciar cronômetro"}</button></div>` : ""}
+      ${i >= 0 && !ult ? `<p class="ck-prox"><b>Depois:</b> ${esc(r.passos[i + 1])}</p>` : ""}
       ${ult ? `<div class="notice">${ic("star", 22)}<div><b>Último passo</b><p>Quando terminar, toque em Concluir. Dá para registrar no seu dia.</p></div></div>` : ""}
     </div>
     <div class="cf"><button class="iconbtn" id="ck-prev" aria-label="Passo anterior" ${i < 0 ? "disabled" : ""}>${ic("back", 20)}</button>
@@ -3294,7 +3445,8 @@ function rPerfil(){
     <div class="today" style="--pc:${prem ? "#3DDC6E" : "#FFB23F"};min-height:0;grid-template-columns:1fr"><div><span class="eyebrow">${prem ? (ME.premium.tipo === "teste" ? "Premium · teste grátis" : "Premium") : "Plano gratuito"}</span>
       <h2 style="font-size:24px">${prem ? (ME.premium.tipo === "vitalicio" ? "Premium vitalício" : `Premium até ${brD(ME.premium.ate)}`) : "Treine sem anúncios"}</h2>
       <p>${prem ? "Sem anúncios e com tudo liberado." : "Assine o Premium e treine sem interrupções."}</p>
-      ${!prem || ME.premium.tipo === "teste" ? (DB.config.checkout ? `<a class="btn btn-accent" style="margin-top:14px" href="${esc(DB.config.checkout)}" target="_blank" rel="noopener">Assinar por R$ ${String(DB.config.premiumPreco || 19.9).replace(".", ",")}/mês</a>` : `<p style="margin-top:10px;font-size:13px">A assinatura ainda não está disponível.</p>`) : ""}</div></div>
+      ${!prem || ME.premium.tipo === "teste" ? (DB.config.checkout ? `<a class="btn btn-accent" style="margin-top:14px" href="${esc(DB.config.checkout)}" target="_blank" rel="noopener">Assinar por R$ ${String(DB.config.premiumPreco || 19.9).replace(".", ",")}/mês</a>` : "") : ""}</div></div>
+    ${cardInstalar()}
     <div class="card" style="padding:6px 16px">
       ${setRow("p-plano", "target", "Meu plano de treino", `${esc(progAtual().nome)} · ${p.dias} dias por semana`)}
       ${setRow("p-obj", "target", "Meu objetivo", objById(p.objetivo)[1])}
@@ -3322,6 +3474,7 @@ function rPerfil(){
   $("p-peso").onclick = registraPeso;
   $("p-voz").onclick = editaVoz;
   $("p-som").onclick = () => { SOM.on = !SOM.on; if(SOM.on) SOM.bell(); rPerfil(); };
+  const pi = $("p-inst"); if(pi) pi.onclick = async () => { if(!PEDIDO_INSTALAR) return; PEDIDO_INSTALAR.prompt(); const r = await PEDIDO_INSTALAR.userChoice.catch(() => null); PEDIDO_INSTALAR = null; if(r && r.outcome === "accepted"){ SOM.done && SOM.done(); toast("Pronto! O CK Life está na sua tela inicial."); } rPerfil(); };
   $("p-tema").onclick = () => { const v = th === "light" ? "dark" : "light"; document.documentElement.dataset.theme = v; try{ localStorage.setItem(KEY + "_tema", v); }catch(e){} rPerfil(); };
   $("p-sair").onclick = logout;
   $("t-perfil").querySelectorAll("[data-usar]").forEach(b => b.onclick = () => {
@@ -4084,7 +4237,7 @@ function formRec(r){
     <div class="field full"><label for="re-n">Nome</label><input class="input" id="re-n" value="${esc(r.nome)}"></div>
     <div class="field"><label for="re-c">Categoria</label><select class="input" id="re-c">${Object.entries(F.CATS).map(([k, n]) => `<option value="${k}" ${r.cat === k ? "selected" : ""}>${n}</option>`).join("")}</select></div>
     <div class="row2"><div class="field"><label for="re-m">Minutos</label><input class="input num" id="re-m" value="${esc(r.min)}"></div><div class="field"><label for="re-po">Porções</label><input class="input num" id="re-po" value="${esc(r.porc)}"></div></div>
-    <div class="row2 full" style="grid-template-columns:repeat(4,minmax(0,1fr))"><div class="field"><label for="re-k">Kcal/porção</label><input class="input num" id="re-k" value="${esc(r.kcal)}"></div><div class="field"><label for="re-p">Proteína g</label><input class="input num" id="re-p" value="${esc(r.p)}"></div><div class="field"><label for="re-cb">Carbo g</label><input class="input num" id="re-cb" value="${esc(r.c)}"></div><div class="field"><label for="re-g">Gordura g</label><input class="input num" id="re-g" value="${esc(r.g)}"></div></div>
+    <div class="row2 full row4"><div class="field"><label for="re-k">Kcal/porção</label><input class="input num" id="re-k" value="${esc(r.kcal)}"></div><div class="field"><label for="re-p">Proteína g</label><input class="input num" id="re-p" value="${esc(r.p)}"></div><div class="field"><label for="re-cb">Carbo g</label><input class="input num" id="re-cb" value="${esc(r.c)}"></div><div class="field"><label for="re-g">Gordura g</label><input class="input num" id="re-g" value="${esc(r.g)}"></div></div>
     <div class="field full"><label for="re-i">Ingredientes (um por linha)</label><textarea class="input" id="re-i" style="min-height:120px">${esc(String(r.ing).split("|").join("\n"))}</textarea></div>
     <div class="field full"><label for="re-s">Modo de preparo (um passo por linha)</label><textarea class="input" id="re-s" style="min-height:120px">${esc(String(r.passos).split("|").join("\n"))}</textarea></div>
   </div><div id="re-msg"></div><div class="toolbar" style="justify-content:space-between">${r.id ? `<button class="btn btn-bad" id="re-del">Excluir</button>` : "<span></span>"}<button class="btn btn-accent" id="re-ok">Salvar</button></div>`);
