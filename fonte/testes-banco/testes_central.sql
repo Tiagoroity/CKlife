@@ -75,3 +75,11 @@ select ok((select allowed_mime_types from storage.buckets where id = 'anuncios')
 select ok((admin_painel_resumo() ->> 'push_inscritas')::int = 1, 'dashboard com números reais');
 select tst_como(:A); select ok(admin_painel_resumo() is null, 'aluna não vê dashboard');
 reset role;
+-- link opcional
+select tst_como(:M);
+insert into notif_campanhas (titulo, mensagem, link, publico) values ('Promo', 'Produto com desconto', 'https://loja.exemplo.com/produto', '{"tipo":"cidade","cidade":"1"}');
+select admin_notif_enviar_agora((select id from notif_campanhas where titulo = 'Promo'));
+reset role;
+select ok((select link from notificacoes where user_id = :A and ref = 'camp:' || (select id from notif_campanhas where titulo = 'Promo')) = 'https://loja.exemplo.com/produto', 'link do produto chega na lista do app');
+select ok((select payload ->> 'url' from push_fila where campanha = (select id from notif_campanhas where titulo = 'Promo')) = 'https://loja.exemplo.com/produto', 'toque na notificação abre o produto');
+select nega($$ insert into notif_campanhas (titulo, mensagem, link) values ('x', 'y', 'javascript:alert(1)') $$, 'link perigoso é recusado');

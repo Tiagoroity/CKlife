@@ -1885,3 +1885,4 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
 
 .toast.ruim .tk{background:#C8463C;color:#fff}
 @media (min-width:1024px){.adm-tabs{align-self:stretch;height:auto;max-height:100%;padding-bottom:16px}.adm-user{position:relative;z-index:2;box-shadow:0 -14px 20px -12px rgba(0,0,0,.45)}}
+.nf-dest{display:block;margin-top:8px;font-size:11.5px;color:#2E7D5A;font-weight:700}

@@ -155,6 +155,14 @@ begin
 end $$;
 grant execute on function public.admin_notif_previa(jsonb) to authenticated;
 
+-- link opcional da notificação (produto/compra ou área do app), também na lista dentro do app
+alter table public.notificacoes add column if not exists link text;
+do $$ begin
+  if not exists (select 1 from pg_constraint where conname = 'notificacoes_link_ok') then
+    alter table public.notificacoes add constraint notificacoes_link_ok check (link is null or link ~ '^(/|https://)');
+  end if;
+end $$;
+
 -- disparo (interno): lista do app + envio para o celular em lotes de 300
 create or replace function public._notif_disparar(p_id uuid) returns jsonb
 language plpgsql security definer set search_path = public as $$
@@ -169,7 +177,7 @@ begin
   insert into _alvo_tmp select distinct uid from _notif_alvos(c.publico);
   select count(*) into n_alvo from _alvo_tmp;
   -- aparece também na lista de notificações dentro do app
-  insert into notificacoes (user_id, tipo, ref, texto) select uid, 'sistema', 'camp:' || c.id, left(c.titulo || ' · ' || c.mensagem, 200) from _alvo_tmp on conflict do nothing;
+  insert into notificacoes (user_id, tipo, ref, texto, link) select uid, 'sistema', 'camp:' || c.id, left(c.titulo || ' · ' || c.mensagem, 200), c.link from _alvo_tmp on conflict do nothing;
   select count(distinct t.uid) into n_insc from _alvo_tmp t where exists (select 1 from push_inscricoes s where s.user_id = t.uid);
   pl := jsonb_build_object('title', c.titulo, 'body', c.mensagem, 'tag', 'camp:' || c.id, 'url', coalesce(c.link, '/?n=sistema'), 'image', c.imagem, 'cid', c.id, 'rk', c.rk);
   for lote in select array_agg(uid) from (select t.uid, (row_number() over () - 1) / 300 grp from _alvo_tmp t where exists (select 1 from push_inscricoes s where s.user_id = t.uid)) z group by grp loop

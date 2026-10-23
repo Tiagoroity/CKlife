@@ -1916,6 +1916,7 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
 
 .toast.ruim .tk{background:#C8463C;color:#fff}
 @media (min-width:1024px){.adm-tabs{align-self:stretch;height:auto;max-height:100%;padding-bottom:16px}.adm-user{position:relative;z-index:2;box-shadow:0 -14px 20px -12px rgba(0,0,0,.45)}}
+.nf-dest{display:block;margin-top:8px;font-size:11.5px;color:#2E7D5A;font-weight:700}
 </style>
 
 <!-- Entrar / criar conta -->
@@ -6805,6 +6806,12 @@ function irPorUrl(url){ try{ const u = new URL(url, location.origin), k = u.sear
 if("serviceWorker" in navigator) navigator.serviceWorker.addEventListener("message", e => { if(e.data && e.data.tipo === "push") irPorUrl(e.data.url); });
 { let n = 0; const t = setInterval(() => { if(ME && !$("v-app").hidden){ clearInterval(t); if(/[?&](ir|n)=/.test(location.search) && irPorUrl(location.href)) history.replaceState(null, "", location.pathname + location.hash); } else if(++n > 40) clearInterval(t); }, 500); }
 
+/* notificação da Central na lista do app: abre o produto/compra (link) ou a área do app */
+const abreNotificacaoNt = abreNotificacao; abreNotificacao = async function(n){
+  if(n && n.tipo === "sistema" && n.link){ if(/^https:\/\//.test(n.link)){ window.open(n.link, "_blank", "noopener"); return; } if(irPorUrl(n.link)){ fecharSheet && fecharSheet(); return; } }
+  return abreNotificacaoNt.apply(this, arguments);
+};
+
 /* ===================== ANÚNCIOS INTEGRADOS (imagem 1080x1080, vídeo até 30 s ou texto) =====================
    Regras que continuam valendo: só para quem usa o plano grátis a partir do 31º dia (ENT.d.anuncios), nunca no treino,
    no chat ou em telas de segurança; no máximo 1 anúncio por tela. Vídeo começa mudo, só toca visível e carrega sob demanda. */
@@ -9846,7 +9853,9 @@ AIC.notificacoes = '<path d="M6 8a6 6 0 1 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d
 SECOES.push(["notificacoes", "Central de Notificações"]);
 const NT_ST = { rascunho: ["Rascunho", "off"], agendada: ["Agendada", "warn"], enviando: ["Enviando", "warn"], enviada: ["Enviada", "ok"], cancelada: ["Cancelada", "off"], erro: ["Com erro", "bad"] };
 const NT_PUB = [["todas", "Todas as usuárias"], ["pro", "Assinantes Pro (pagantes)"], ["trial", "Em teste grátis do Pro"], ["free", "Plano grátis"], ["ativas", "Ativas nos últimos X dias"], ["inativas", "Sem abrir o app há X dias"], ["sem_treino", "Sem treinar há X dias"], ["novas", "Cadastradas nos últimos X dias"], ["grupo", "Membros de um grupo"], ["cidade", "De uma cidade"], ["especificas", "Pessoas específicas (e-mails)"]];
-const NT_ACAO = [["", "Abrir o app"], ["/?ir=treinar", "Treinos"], ["/?ir=dieta", "Nutrição"], ["/?ir=juntas", "Comunidade"], ["/?ir=explorar", "Explorar"], ["/?ir=perfil", "Perfil"], ["ext", "Link externo (https://)"]];
+const NT_ACAO = [["", "Início do app"], ["/?ir=treinar", "Treinos"], ["/?ir=dieta", "Nutrição"], ["/?ir=juntas", "Comunidade"], ["/?ir=explorar", "Explorar"], ["/?ir=perfil", "Perfil"]];
+const dominio = u => { try{ return new URL(u).hostname.replace(/^www\./, ""); }catch(e){ return u; } };
+const destinoTxt = l => !l ? "abre o app" : /^https:/.test(l) ? "abre " + dominio(l) : "abre " + (NT_ACAO.find(a => a[0] === l) || [, "o app"])[1];
 let NTF = "todas", NT_CACHE = null;
 const pubTxt = p => { p = p || {}; const n = (NT_PUB.find(x => x[0] === p.tipo) || [, "Todas"])[1]; return n.replace("X dias", (p.dias || 7) + " dias") + (p.tipo === "cidade" ? ": " + cidNome(p.cidade) : p.tipo === "especificas" ? ` (${(p.emails || []).length})` : ""); };
 const dtH = s => s ? new Date(s).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", year: "2-digit", hour: "2-digit", minute: "2-digit" }) : "-";
@@ -9875,7 +9884,7 @@ async function vNotificacoes(){
   const V = L.filter(n => NTF === "todas" || n.status === NTF);
   $("nt-b").innerHTML = (alertas.length ? `<div class="msg msg-warn">${alertas.map(esc).join("<br>")}</div>` : "") + (V.length ? `<div class="nt-list">${V.map(n => { const [st, k] = NT_ST[n.status] || [n.status, "off"]; return `<div class="nt-row">
       <div class="nt-main"><div class="nt-top"><span class="st ${k}">${st}</span><small class="muted">${n.status === "agendada" ? "Sai em " + dtH(n.enviar_em) : n.enviado_em ? "Enviada em " + dtH(n.enviado_em) : "Criada em " + dtH(n.criado)}</small></div>
-        <b>${esc(n.titulo)}</b><p>${esc(n.mensagem)}</p><small class="muted">${aic("alunos", 13)} ${esc(pubTxt(n.publico))}${n.link ? " · abre " + esc((NT_ACAO.find(a => a[0] === n.link) || [, n.link])[1]) : ""}</small>
+        <b>${esc(n.titulo)}</b><p>${esc(n.mensagem)}</p><small class="muted">${aic("alunos", 13)} ${esc(pubTxt(n.publico))} · ${esc(destinoTxt(n.link))}</small>
         ${n.erro ? `<small class="nt-err">${esc(n.erro)}</small>` : ""}</div>
       ${n.alvo != null ? `<div class="nt-nums"><span><b class="num">${int(n.alvo)}</b>público</span><span><b class="num">${int(n.inscritos || 0)}</b>com aviso</span><span><b class="num">${int(n.enviados)}</b>enviadas</span><span><b class="num">${int(n.recebidos)}</b>recebidas</span><span><b class="num">${int(n.cliques)}</b>toques</span>${n.falhas ? `<span class="bad"><b class="num">${int(n.falhas)}</b>falhas</span>` : ""}</div>` : ""}
       <div class="acts needs-edit">${["rascunho", "agendada"].includes(n.status) ? `<button class="btn btn-accent btn-sm" data-go="${n.id}">Enviar agora</button><button class="btn btn-line btn-sm" data-ed="${n.id}">Editar</button><button class="btn btn-line btn-sm" data-cc="${n.id}">Cancelar</button>` : `<button class="btn btn-line btn-sm" data-dup="${n.id}">Usar como modelo</button>`}</div></div>`; }).join("")}</div>`
@@ -9900,14 +9909,14 @@ async function imgNotif(file){
 async function formNotif(n){
   n = n || { titulo: "", mensagem: "", link: "", publico: { tipo: "todas" } }; const P = { tipo: "todas", dias: 7, ...(n.publico || {}) }; let img = n.imagem || "", novaImg = null;
   let grupos = []; try{ grupos = await sq(SB2().from("grupos").select("id,nome,emoji").eq("ativo", true).order("ordem")); }catch(e){}
-  const acao = NT_ACAO.some(a => a[0] === (n.link || "")) ? (n.link || "") : "ext";
+  const ext = /^https:/.test(n.link || "") ? n.link : "", area = ext ? "" : (n.link || "");
   const local = d => { const z = new Date(d.getTime() - d.getTimezoneOffset() * 6e4); return z.toISOString().slice(0, 16); };
   modal(n.id ? "Editar notificação" : "Nova notificação", `<div class="ad-form"><div class="formgrid">
     <div class="field full"><label for="nf-t">Título <small class="muted" id="nf-tc"></small></label><input class="input" id="nf-t" maxlength="65" value="${esc(n.titulo)}" placeholder="Ex.: Novo treino de glúteos liberado"></div>
     <div class="field full"><label for="nf-m">Mensagem <small class="muted" id="nf-mc"></small></label><textarea class="input" id="nf-m" maxlength="240" placeholder="Curta e direta. Ex.: São 20 minutos, dá para fazer em casa.">${esc(n.mensagem)}</textarea></div>
     <div class="field full"><label>Imagem (opcional)</label><div class="ad-up"><input type="file" id="nf-file" accept="image/jpeg,image/png,image/webp" hidden><button type="button" class="btn btn-line btn-sm" id="nf-pick">Escolher imagem</button><button type="button" class="btn btn-line btn-sm" id="nf-rm" ${img ? "" : "hidden"}>Remover</button><span class="hint">Aparece no Android e no computador. Ideal 2:1 (ex.: 1200×600).</span></div></div>
-    <div class="field"><label for="nf-a">Ao tocar, abre</label><select class="input" id="nf-a">${NT_ACAO.map(([k, t]) => `<option value="${k}" ${acao === k ? "selected" : ""}>${t}</option>`).join("")}</select></div>
-    <div class="field" id="nf-lw" ${acao === "ext" ? "" : "hidden"}><label for="nf-l">Link</label><input class="input" id="nf-l" value="${acao === "ext" ? esc(n.link || "") : ""}" placeholder="https://"></div>
+    <div class="field full"><label for="nf-l">Link do produto ou da compra <small class="muted">(opcional)</small></label><input class="input" id="nf-l" type="url" inputmode="url" value="${esc(ext)}" placeholder="https://… (cole aqui o link do produto)"><small class="hint">Com link: quem tocar na notificação vai direto para o produto/compra. Sem link (motivação, avisos): abre o app.</small></div>
+    <div class="field" id="nf-aw" ${ext ? "hidden" : ""}><label for="nf-a">Sem link, ao tocar abre</label><select class="input" id="nf-a">${NT_ACAO.map(([k, t]) => `<option value="${k}" ${area === k ? "selected" : ""}>${t}</option>`).join("")}</select></div>
     <div class="field full"><label for="nf-p">Público</label><select class="input" id="nf-p">${NT_PUB.map(([k, t]) => `<option value="${k}" ${P.tipo === k ? "selected" : ""}>${t}</option>`).join("")}</select></div>
     <div class="field nf-x" data-x="dias"><label for="nf-d">Quantos dias (X)</label><input class="input num" id="nf-d" type="number" min="1" max="365" value="${esc(P.dias || 7)}"></div>
     <div class="field nf-x" data-x="grupo"><label for="nf-g">Grupo</label><select class="input" id="nf-g">${grupos.map(g => `<option value="${g.id}" ${P.grupo === g.id ? "selected" : ""}>${esc((g.emoji || "") + " " + g.nome)}</option>`).join("") || `<option value="">Nenhum grupo</option>`}</select></div>
@@ -9922,14 +9931,14 @@ async function formNotif(n){
   let quando = n.enviar_em ? "agendar" : "agora";
   const pub = () => { const t = val("nf-p"), p = { tipo: t }; if(["ativas", "inativas", "sem_treino", "novas"].includes(t)) p.dias = Math.max(1, Math.min(365, +val("nf-d") || 7)); if(t === "grupo") p.grupo = val("nf-g"); if(t === "cidade") p.cidade = val("nf-c"); if(t === "especificas") p.emails = val("nf-e").split(/[\s,;]+/).map(x => x.trim().toLowerCase()).filter(x => /@/.test(x)).slice(0, 500); return p; };
   const prev = () => { const im = novaImg ? URL.createObjectURL(novaImg) : img;
-    $("nf-prev").innerHTML = `<div class="nf-nh"><img src="img/icone-192.png" alt=""><b>CK Life</b><small>agora</small></div><b class="nf-nt">${esc(val("nf-t") || "Título da notificação")}</b><p>${esc(val("nf-m") || "Sua mensagem aparece aqui.")}</p>${im ? `<img class="nf-img" src="${esc(im)}" alt="">` : ""}`;
+    $("nf-prev").innerHTML = `<div class="nf-nh"><img src="img/icone-192.png" alt=""><b>CK Life</b><small>agora</small></div><b class="nf-nt">${esc(val("nf-t") || "Título da notificação")}</b><p>${esc(val("nf-m") || "Sua mensagem aparece aqui.")}</p>${im ? `<img class="nf-img" src="${esc(im)}" alt="">` : ""}<small class="nf-dest">Ao tocar: ${esc(destinoTxt(val("nf-l") || val("nf-a")))}</small>`;
     $("nf-tc").textContent = `${val("nf-t").length}/65`; $("nf-mc").textContent = `${val("nf-m").length}/240`; };
   let tp; const conta = () => { clearTimeout(tp); tp = setTimeout(async () => { const p = pub(); $("mbox").querySelectorAll(".nf-x").forEach(e => { const x = e.dataset.x; e.hidden = !(x === p.tipo || (x === "dias" && "dias" in p)); });
     try{ const r = await SB2().rpc("admin_notif_previa", { p }); const d = r.data; $("nf-alvo").innerHTML = d ? `${aic("alunos", 16)} <b class="num">${int(d.alvo)}</b> pessoa(s) neste público · <b class="num">${int(d.inscritas)}</b> com aviso ligado no celular` : "Sem permissão para ver o público."; }
     catch(e){ $("nf-alvo").textContent = "Não foi possível calcular o público agora."; } }, 300); };
   ["nf-t", "nf-m"].forEach(id => $(id).addEventListener("input", prev));
   ["nf-p", "nf-d", "nf-g", "nf-c", "nf-e"].forEach(id => $(id).addEventListener("input", conta)); $("nf-p").addEventListener("change", conta);
-  $("nf-a").onchange = () => { $("nf-lw").hidden = val("nf-a") !== "ext"; };
+  $("nf-l").addEventListener("input", () => { $("nf-aw").hidden = !!val("nf-l"); prev(); }); $("nf-a").onchange = prev;
   $("nf-q").querySelectorAll("[data-q]").forEach(b => b.onclick = () => { quando = b.dataset.q; $("nf-q").querySelectorAll("[data-q]").forEach(x => x.setAttribute("aria-pressed", x === b)); $("nf-hw").hidden = quando !== "agendar"; $("nf-ok").textContent = quando === "agora" ? "Continuar" : "Agendar envio"; });
   $("nf-ok").textContent = quando === "agora" ? "Continuar" : "Agendar envio";
   $("nf-pick").onclick = () => $("nf-file").click();
@@ -9937,8 +9946,9 @@ async function formNotif(n){
   $("nf-rm").onclick = () => { img = ""; novaImg = null; $("nf-rm").hidden = true; prev(); };
   prev(); conta();
   const salva = async status => {
-    const a = val("nf-a"), link = a === "ext" ? val("nf-l") : a, p = pub();
-    const err = !val("nf-t") ? "Escreva o título." : !val("nf-m") ? "Escreva a mensagem." : a === "ext" && !/^https:\/\/[\w.-]+\.\w+/.test(link) ? "O link externo precisa começar com https://" : p.tipo === "especificas" && !p.emails.length ? "Informe pelo menos um e-mail." : p.tipo === "grupo" && !p.grupo ? "Escolha o grupo." : p.tipo === "cidade" && !p.cidade ? "Escolha a cidade." : "";
+    let lk = val("nf-l"); if(lk && !/^https?:\/\//i.test(lk)) lk = "https://" + lk; lk = lk.replace(/^http:\/\//i, "https://");
+    const link = lk || val("nf-a"), p = pub();
+    const err = !val("nf-t") ? "Escreva o título." : !val("nf-m") ? "Escreva a mensagem." : lk && !/^https:\/\/[\w-]+(\.[\w-]+)+(\/\S*)?$/.test(lk) ? "Esse link não parece válido. Cole o endereço completo do produto." : p.tipo === "especificas" && !p.emails.length ? "Informe pelo menos um e-mail." : p.tipo === "grupo" && !p.grupo ? "Escolha o grupo." : p.tipo === "cidade" && !p.cidade ? "Escolha a cidade." : "";
     if(err){ $("nf-msg").innerHTML = `<div class="msg msg-bad">${err}</div>`; return null; }
     let enviar_em = null; if(status === "agendada"){ const h = new Date(val("nf-h")); if(isNaN(h) || h < new Date(Date.now() - 6e4)) { $("nf-msg").innerHTML = `<div class="msg msg-bad">Escolha uma data e horário no futuro.</div>`; return null; } enviar_em = h.toISOString(); }
     if(novaImg){ try{ img = await sobeAnuncio("notif", novaImg, "jpg", "image/jpeg"); novaImg = null; }catch(e){ $("nf-msg").innerHTML = `<div class="msg msg-bad">Não deu para enviar a imagem: ${esc(e.message || "")}</div>`; return null; } }

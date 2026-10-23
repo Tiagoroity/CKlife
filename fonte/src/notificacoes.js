@@ -65,3 +65,9 @@ const IR_TAB = { treino: "treinar", treinar: "treinar", agua: "dieta", refeicao:
 function irPorUrl(url){ try{ const u = new URL(url, location.origin), k = u.searchParams.get("ir") || u.searchParams.get("n"); const t = IR_TAB[k]; if(t && typeof tab === "function" && ME){ tab(t); return true; } }catch(e){} return false; }
 if("serviceWorker" in navigator) navigator.serviceWorker.addEventListener("message", e => { if(e.data && e.data.tipo === "push") irPorUrl(e.data.url); });
 { let n = 0; const t = setInterval(() => { if(ME && !$("v-app").hidden){ clearInterval(t); if(/[?&](ir|n)=/.test(location.search) && irPorUrl(location.href)) history.replaceState(null, "", location.pathname + location.hash); } else if(++n > 40) clearInterval(t); }, 500); }
+
+/* notificação da Central na lista do app: abre o produto/compra (link) ou a área do app */
+const abreNotificacaoNt = abreNotificacao; abreNotificacao = async function(n){
+  if(n && n.tipo === "sistema" && n.link){ if(/^https:\/\//.test(n.link)){ window.open(n.link, "_blank", "noopener"); return; } if(irPorUrl(n.link)){ fecharSheet && fecharSheet(); return; } }
+  return abreNotificacaoNt.apply(this, arguments);
+};
