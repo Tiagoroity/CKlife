@@ -265,10 +265,10 @@ function formDoc(d){
     <div class="field full"><label for="dc-l">Link (opcional)</label><input class="input" id="dc-l" value="${esc(x.link || "")}" ${edita ? "" : "disabled"}></div><div class="field full"><label for="dc-c">Conteúdo</label><textarea class="input" id="dc-c" style="min-height:220px" ${edita ? "" : "disabled"}>${esc(x.conteudo || "")}</textarea></div></div>
     <div class="toolbar needs-edit" style="justify-content:flex-end">${edita ? `<button class="btn btn-line" id="dc-ok">Salvar rascunho</button><button class="btn btn-accent" id="dc-pub">Publicar</button>` : x.status === "publicado" ? `<button class="btn btn-line" id="dc-arq">Arquivar</button>` : ""}</div>`);
   const dados = () => ({ tipo: val("dc-t"), versao: val("dc-v"), nome: val("dc-n") || TIPOS_DOC[val("dc-t")], vigencia: val("dc-vg") || null, novo_aceite: $("dc-na").checked, link: val("dc-l") || null, conteudo: val("dc-c") || null });
-  const salva = async st => { const v = dados(); if(!v.versao) return toast("Informe a versão"); if(!v.conteudo && !v.link) return toast("Informe o conteúdo ou o link");
+  const salva = async (st, v) => { v = v || dados(); if(!v.versao) return toast("Informe a versão"); if(!v.conteudo && !v.link) return toast("Informe o conteúdo ou o link");
     try{ if(d) await sq(SB2().from("documentos").update({ ...v, status: st }).eq("id", d.id)); else await sq(SB2().from("documentos").insert({ ...v, status: st })); fechar(); toast(st === "publicado" ? "Publicado (versão anterior arquivada)" : "Rascunho salvo"); sgDocumentos(); }catch(e){ toast(/duplicate|unique/i.test(e.message || "") ? "Já existe essa versão para este documento" : "Sem permissão"); } };
   const ok = $("dc-ok"); if(ok) ok.onclick = () => salva("rascunho");
-  const pb = $("dc-pub"); if(pb) pb.onclick = () => confirmar("Publicar esta versão? Ela não poderá mais ser editada.", () => salva("publicado"));
+  const pb = $("dc-pub"); if(pb) pb.onclick = () => { const v = dados(); if(!v.versao) return toast("Informe a versão"); if(!v.conteudo && !v.link) return toast("Informe o conteúdo ou o link"); confirmar("Publicar esta versão? Ela não poderá mais ser editada.", () => salva("publicado", v)); };
   const aq = $("dc-arq"); if(aq) aq.onclick = () => confirmar("Arquivar este documento?", async () => { try{ await sq(SB2().from("documentos").update({ status: "arquivado" }).eq("id", d.id)); sgDocumentos(); }catch(e){ toast("Sem permissão"); } });
 }
 /* ---- 15. Configurações ---- */

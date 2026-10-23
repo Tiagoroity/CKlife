@@ -1,0 +1,60 @@
+POLÍTICA DE PRIVACIDADE DO CK LIFE
+Versão 1.0 · vigente a partir de 23/10/2026
+
+1. QUEM SOMOS
+O CK Life é um aplicativo de treinos em casa, receitas e comunidade para mulheres. O responsável pelo tratamento dos seus dados (controlador) é ROITY BUSINESS SOLUTIONS LTDA - ME, inscrita no CNPJ 53.472.596/0001-99. Contato sobre privacidade: assessoriaroity@gmail.com. Encarregada(o) pelo tratamento de dados (DPO): Tiago Roity.
+Você também pode falar conosco pelo próprio app, em Perfil › Privacidade › Privacidade e meus dados.
+
+2. QUAIS DADOS COLETAMOS
+• Cadastro: nome, e-mail, WhatsApp, data de nascimento e cidade.
+• Uso do app: treinos feitos, sequência de dias, conquistas, receitas e cardápio, favoritos e preferências.
+• Progresso (opcional): peso e medidas que você mesma registrar.
+• Meu Ciclo (opcional): datas da menstruação, sintomas e humor que você registrar. São dados de saúde, tratados como dados sensíveis.
+• Comunidade: foto, capa, @usuária, bio, publicações, comentários, curtidas, Stories, quem você segue e mensagens privadas (texto, foto e áudio).
+• Explorar: agendamentos que você solicitar e avaliações que escrever.
+• Compras: o pagamento do Premium é feito em plataforma externa; nós recebemos a confirmação da compra, não os dados do seu cartão.
+• Dados técnicos: data de acesso e registros de segurança necessários para proteger a conta.
+
+3. PARA QUE USAMOS
+• Criar e manter sua conta e o seu acesso.
+• Montar treinos, mostrar seu progresso, conquistas e lembretes.
+• Fazer funcionar a comunidade, o chat, os agendamentos e as avaliações.
+• Liberar o Premium e os cupons do Clube CK.
+• Mostrar conteúdos e anúncios da sua cidade (sem usar dados de saúde).
+• Segurança: prevenir fraudes, abusos e acessos indevidos, e atender denúncias.
+• Cumprir obrigações legais e responder aos seus pedidos.
+
+4. DADOS DE SAÚDE (MEU CICLO, PESO E MEDIDAS)
+O Meu Ciclo só é usado se você ativar, com o seu consentimento, e você pode revogar quando quiser (os registros do ciclo são apagados). Esses dados:
+• ficam visíveis apenas para você;
+• NÃO são usados para publicidade, segmentação comercial, marketplace, afiliados ou parceiros;
+• NÃO são compartilhados com academias, empresas, profissionais, anunciantes ou outras usuárias;
+• NÃO são acessados individualmente pela equipe do CK Life no painel administrativo.
+O CK Life não faz diagnóstico. As previsões do ciclo são estimativas e não substituem orientação de profissional de saúde.
+
+5. COM QUEM COMPARTILHAMOS
+Não vendemos seus dados. Compartilhamos somente o necessário com:
+• Provedores de tecnologia que hospedam o app e o banco de dados (por exemplo, Supabase e Vercel). Esses serviços podem armazenar dados fora do Brasil, com as garantias exigidas pela LGPD.
+• Plataforma de pagamento, quando você compra o Premium.
+• O profissional ou a empresa que você escolher agendar, que recebe os dados necessários para o atendimento (como nome, contato, serviço, data e hora).
+• Autoridades, quando a lei exigir.
+O que você publica na comunidade pode ser visto por outras usuárias conforme a sua configuração (perfil público ou privado).
+
+6. FOTOS, ÁUDIOS E MENSAGENS
+Fotos e áudios das conversas, Stories e fotos de perfis privados ficam guardados de forma privada e abrem por links temporários, só para quem tem permissão. A equipe não navega pelas suas conversas. Um conteúdo só é analisado quando é denunciado, e cada acesso fica registrado. Atenção: nenhum aplicativo consegue impedir totalmente que alguém fotografe ou grave a tela; compartilhe com cuidado.
+
+7. POR QUANTO TEMPO GUARDAMOS
+Guardamos os dados enquanto sua conta estiver ativa ou pelo tempo necessário para as finalidades acima. Alguns registros (como consentimentos, pedidos, denúncias e registros de segurança) podem ser mantidos pelo prazo exigido em lei ou para defesa em processos. Quando a conta é excluída, os demais dados são apagados ou anonimizados.
+
+8. SEUS DIREITOS
+Pela Lei Geral de Proteção de Dados (Lei 13.709/2018), você pode: confirmar se tratamos seus dados; acessar seus dados; corrigir dados; pedir anonimização, bloqueio ou eliminação de dados desnecessários; pedir portabilidade; saber com quem compartilhamos; revogar consentimentos; e se opor a tratamentos.
+Como pedir: no app, em Perfil › Privacidade › Privacidade e meus dados. Lá você baixa uma cópia dos seus dados, faz pedidos com número de protocolo e acompanha a resposta. Você também pode reclamar à Autoridade Nacional de Proteção de Dados (ANPD).
+
+9. SEGURANÇA
+Usamos regras de acesso no banco de dados (uma usuária não acessa dados de outra), conexão criptografada, armazenamento privado de mídias, limites contra abuso, registros de auditoria e acessos administrativos com permissões mínimas. Nenhum sistema é 100% invulnerável; se houver um incidente relevante, avisaremos as pessoas afetadas e a ANPD conforme a lei.
+
+10. IDADE
+O CK Life é destinado a pessoas com 18 anos ou mais.
+
+11. MUDANÇAS
+Podemos atualizar esta Política. Quando a mudança for importante, avisaremos no app e pediremos um novo aceite.
