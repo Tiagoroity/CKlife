@@ -191,7 +191,7 @@ async function listaPessoas(u, tipo, nome){
 async function encontrarMulheres(){
   if(!SO.on()) return FORA();
   await garantePerfil().catch(() => {});
-  sheet("Encontrar mulheres", `<div class="search">${ic("search", 18)}<input class="input" id="em-q" placeholder="Buscar por nome ou @usuária" autocomplete="off"></div><div id="em-l"><div class="post skel" style="height:70px"></div></div>`);
+  sheet("Fazer novas amigas", `<div class="search">${ic("search", 18)}<input class="input" id="em-q" placeholder="Buscar por nome ou @usuária" autocomplete="off"></div><div id="em-l"><div class="post skel" style="height:70px"></div></div>`);
   const desenha = async termo => {
     let L = [];
     try{ let qy = SB().from("perfis").select("user_id,username,nome,foto_mini,privado,bio,cidade,mostrar_cidade").neq("user_id", NU.uid).limit(30);
@@ -392,7 +392,7 @@ function rJuntas(){
   if(NU.ativo && SO_PRONTO === null){ $("t-juntas").innerHTML = `<div class="feed"><div class="post skel"></div><div class="post skel"></div></div>`; detectaSocial().then(() => { if(TAB === "juntas") rJuntas(); }); return; }
   ME.feedVisto = new Date().toISOString(); save(); marcaNovidade(false);
   const on = SO.on();
-  $("t-juntas").innerHTML = `<div class="so-head"><h1>Comunidade</h1><div class="so-hb">${on ? `<button class="iconbtn" id="cm-busca" aria-label="Encontrar mulheres">${ic("search", 19)}</button>` : ""}<button class="iconbtn so-badgebtn" id="cm-not" aria-label="Notificações">${ic("bell", 19)}<i class="so-dot" id="cm-not-n" hidden></i></button><button class="iconbtn so-badgebtn" id="cm-chat" aria-label="Conversas">${ic("chat", 19)}<i class="so-dot" id="cm-chat-n" hidden></i></button><button class="iconbtn" id="cm-eu" aria-label="Meu perfil social">${avU(ME.id, ME.nome, ME.foto)}</button></div></div>
+  $("t-juntas").innerHTML = `<div class="so-head"><h1>Comunidade</h1><div class="so-hb">${on ? `<button class="iconbtn" id="cm-busca" aria-label="Fazer novas amigas">${ic("search", 19)}</button>` : ""}<button class="iconbtn so-badgebtn" id="cm-not" aria-label="Notificações">${ic("bell", 19)}<i class="so-dot" id="cm-not-n" hidden></i></button><button class="iconbtn so-badgebtn" id="cm-chat" aria-label="Conversas">${ic("chat", 19)}<i class="so-dot" id="cm-chat-n" hidden></i></button><button class="iconbtn" id="cm-eu" aria-label="Meu perfil social">${avU(ME.id, ME.nome, ME.foto)}</button></div></div>
     ${on ? `<div class="so-stories hscroll" id="st-row"><button class="so-st meu" id="st-novo"><span class="so-st-av">${avU(ME.id, ME.nome, ME.foto)}<i>${ic("plus", 12, 3)}</i></span><small>Seu Story</small></button></div>` : ""}
     <button class="composer" id="cm-nova">${avU(ME.id, ME.nome, ME.foto)}<span>O que você quer compartilhar hoje?</span><i>${ic("camera", 20)}</i></button>
     ${on ? `<div class="seg seg-sm" id="fd-modo"><button data-fm="todos" aria-pressed="${FD.modo === "todos"}">Para você</button><button data-fm="seguindo" aria-pressed="${FD.modo === "seguindo"}">Seguindo</button></div>` : ""}
@@ -423,12 +423,12 @@ function desenhaFeed(){
   if(FEED_ERRO && !FEED.length){ f.innerHTML = `<div class="card empty-feed">${ic("people", 34)}<b>${FEED_ERRO}</b></div>`; return; }
   const boas = $("feed-boas");
   if(boas){ const novata = SO.on() && FD.modo === "todos" && (SEGUINDO ? !SEGUINDO.length : true) && !FEED.some(p => p.user === ME.id);
-    boas.innerHTML = novata && !ME.boasVindasOk ? `<div class="card so-boas"><button class="iconbtn sm so-x" id="bv-x" aria-label="Fechar">${ic("close", 14)}</button><h3>Bem-vinda à comunidade CK Life 💚</h3><p>Um lugar de mulheres que se apoiam na evolução, no treino e na autoestima. Que tal se apresentar?</p><div class="acts"><button class="btn btn-accent btn-sm" id="bv-post">Criar primeira publicação</button><button class="btn btn-line btn-sm" id="bv-perfil">Completar meu perfil</button><button class="btn btn-line btn-sm" id="bv-achar">Encontrar mulheres</button></div></div>` : "";
+    boas.innerHTML = novata && !ME.boasVindasOk ? `<div class="card so-boas"><button class="iconbtn sm so-x" id="bv-x" aria-label="Fechar">${ic("close", 14)}</button><h3>Bem-vinda à comunidade CK Life 💚</h3><p>Um lugar de mulheres que se apoiam na evolução, no treino e na autoestima. Que tal se apresentar?</p><div class="acts"><button class="btn btn-accent btn-sm" id="bv-post">Criar primeira publicação</button><button class="btn btn-line btn-sm" id="bv-perfil">Completar meu perfil</button><button class="btn btn-line btn-sm" id="bv-achar">Fazer novas amigas</button></div></div>` : "";
     const on = (id, fn) => { const e = $(id); if(e) e.onclick = fn; };
     on("bv-x", () => { ME.boasVindasOk = true; save(); boas.innerHTML = ""; }); on("bv-post", () => abreComposer("Oi, meninas! Sou nova por aqui 💚 ")); on("bv-perfil", async () => { await garantePerfil(); editarPerfil(); }); on("bv-achar", encontrarMulheres);
     if(SO.on() && !SEGUINDO) seguindoIds().then(() => { if(TAB === "juntas" && !$("bv-x") && SEGUINDO && !SEGUINDO.length && !ME.boasVindasOk) desenhaFeed(); });
   }
-  if(!FEED.length){ f.innerHTML = `<div class="card empty-feed">${ic("people", 34)}<b>${FD.modo === "seguindo" ? "Quem você segue ainda não publicou." : "Seja a primeira a postar!"}</b><p>${FD.modo === "seguindo" ? "Encontre mais mulheres para acompanhar." : "Conte como foi seu treino ou mostre sua receita favorita."}</p>${FD.modo === "seguindo" && SO.on() ? `<button class="btn btn-accent btn-sm" id="fd-achar">Encontrar mulheres</button>` : ""}</div>`; const a = $("fd-achar"); if(a) a.onclick = encontrarMulheres; $("feed-mais").innerHTML = ""; return; }
+  if(!FEED.length){ f.innerHTML = `<div class="card empty-feed">${ic("people", 34)}<b>${FD.modo === "seguindo" ? "Quem você segue ainda não publicou." : "Seja a primeira a postar!"}</b><p>${FD.modo === "seguindo" ? "Encontre mais mulheres para acompanhar." : "Conte como foi seu treino ou mostre sua receita favorita."}</p>${FD.modo === "seguindo" && SO.on() ? `<button class="btn btn-accent btn-sm" id="fd-achar">Fazer novas amigas</button>` : ""}</div>`; const a = $("fd-achar"); if(a) a.onclick = encontrarMulheres; $("feed-mais").innerHTML = ""; return; }
   f.innerHTML = FEED.map(postHtml).join("");
   f.querySelectorAll(".post").forEach(el => ligaPost(el, FEED.find(p => p.id === el.dataset.id)));
   const mais = $("feed-mais");

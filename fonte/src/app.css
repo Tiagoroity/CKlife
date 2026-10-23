@@ -1385,3 +1385,13 @@ ul.xp-lista:not(:has(svg)) li::before{content:"•";color:var(--accent);font-wei
 .so-cel-q .acts{justify-content:center;align-items:center}.so-cel-chk{display:flex;gap:6px;align-items:center;font-size:13px;color:rgba(255,255,255,.85)}
 :root[data-theme="dark"] .so-quote{background:rgba(255,255,255,.06)}
 :root[data-theme="dark"] .so-boas{background:linear-gradient(135deg,#143A2E,var(--surface))}
+/* cartão de boas-vindas: botões sempre dentro do cartão */
+.so-boas{overflow:hidden}
+.so-boas h3{padding-right:28px}
+.so-boas .acts{display:flex;flex-direction:column;gap:8px;width:100%}
+.so-boas .acts .btn{width:100%;max-width:100%;justify-content:center;white-space:normal;text-align:center;min-width:0}
+.empty-feed .btn,.card.empty .btn{max-width:100%;white-space:normal}
+.so-head{min-width:0}.so-head h1{min-width:0;white-space:nowrap}
+.so-hb{flex:0 0 auto}
+@media(max-width:420px){.so-head h1{font-size:23px}.so-hb{gap:4px}.so-hb .iconbtn{width:38px;height:38px}.so-hb #cm-eu .pav{width:30px;height:30px}}
+@media(max-width:340px){.so-head h1{font-size:20px}.so-hb .iconbtn{width:34px;height:34px}}
