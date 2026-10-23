@@ -33,10 +33,10 @@ const figPro = f => f && (f.pro != null ? !!f.pro : !FIG_FREE.has(f.id));
 const filtroLivre = k => pode("filtros_todos") || (DB.config.filtrosFree || ["original", "natural", "glow", "vivo"]).includes(k);
 
 /* ---------- paywall (camada própria, por cima de qualquer tela) ---------- */
-const BENEF = [["👑", "Programas e treinos completos"], ["🥗", "Nutrição completa"], ["🌸", "Ciclo inteligente"], ["📊", "Evolução avançada"], ["✨", "Stickers e recursos criativos"], ["🎁", "Clube CK Pro"], ["✓", "Direito a pedir verificação"], ["🚫", "Sem anúncios"]];
+const BENEF = [["star", "Programas e treinos completos"], ["bowl", "Nutrição completa"], ["moon", "Ciclo inteligente"], ["target", "Evolução avançada"], ["tag", "Stickers e recursos criativos"], ["trophy", "Clube CK Pro"], ["people", "Direito a pedir verificação"], ["leaf", "Sem anúncios"]];
 const pagou = () => !!(ENT.d && ENT.d.pro && !ENT.d.trial);
 async function paywall(contexto, preview){
-  if(pagou()) return sheet("👑 Você é CK Life Pro", `<div class="card"><b>Sua assinatura está ativa 💚</b><p class="hint" style="margin:6px 0 0">${ENT.d.fim ? "Pro até " + brD(String(ENT.d.fim).slice(0, 10)) + ". " : ""}Todos os recursos Pro estão liberados para você.</p></div>`);
+  if(pagou()) return sheet("Você é CK Life Pro", `<div class="card"><b>Sua assinatura está ativa 💚</b><p class="hint" style="margin:6px 0 0">${ENT.d.fim ? "Pro até " + brD(String(ENT.d.fim).slice(0, 10)) + ". " : ""}Todos os recursos Pro estão liberados para você.</p></div>`);
   registraEvento("paywall_viewed", { contexto: contexto || "geral" });
   if(!souPro() || emTrial()){ try{ const o = await NU.sb.rpc("oferta_ativar", { p_contexto: contexto || "paywall" }); if(o && !o.error && o.data) { ENT.d = { ...(ENT.d || {}), oferta: o.data }; } }catch(e){} }
   const P = await carregaPlanos(), of = ENT.d && ENT.d.oferta, men = P.find(p => p.id === "pro_mensal") || {}, anu = P.find(p => p.id === "pro_anual") || {};
@@ -49,9 +49,9 @@ async function paywall(contexto, preview){
   const promoA = of && of.preco_anual_promo ? { v: of.preco_anual_promo, n: of.parcelas_anual, pv: of.parcela_anual_valor, txt: `no primeiro ano, depois ${brlP(anu.preco)}/ano` } : null;
   box.innerHTML = `<div class="pw-in" role="dialog" aria-label="CK Life Pro"><button class="iconbtn sm pw-x" id="pw-x" aria-label="Fechar">${ic("close", 16)}</button>
     ${preview ? `<div class="pw-prev">${preview}</div>` : ""}
-    <span class="eyebrow">👑 CK LIFE PRO</span><h2>${of ? esc(of.titulo) : "Sua experiência completa"}</h2><p class="pw-sub">${of ? esc(of.subtitulo || "") : "Mais personalização, profundidade e conveniência."}</p>
+    <span class="eyebrow"><i class='ckc' aria-hidden='true'></i> CK LIFE PRO</span><h2>${of ? esc(of.titulo) : "Sua experiência completa"}</h2><p class="pw-sub">${of ? esc(of.subtitulo || "") : "Mais personalização, profundidade e conveniência."}</p>
     ${of ? `<p class="pw-tempo" id="pw-tempo"></p>` : ""}
-    <ul class="pw-ben">${BENEF.map(([i, t]) => `<li><i>${i}</i>${t}</li>`).join("")}</ul>
+    <ul class="pw-ben">${BENEF.map(([i, t]) => `<li><i>${ic(i, 16, 2)}</i>${t}</li>`).join("")}</ul>
     <div class="pw-plans">${cardP("anual", anu, promoA)}${cardP("mensal", men, promoM)}</div>
     <button class="btn btn-accent btn-block btn-lg" id="pw-go">Continuar</button>
     <p class="hint pw-nota">Sem fidelidade escondida: você cancela quando quiser e continua Pro até o fim do período pago. Na compra, use o e-mail <b>${esc(ME.email || "da sua conta")}</b> para liberar automaticamente.</p></div>`;
@@ -69,10 +69,10 @@ async function paywall(contexto, preview){
     ENT.voltouDoCheckout = true; window.open(url, "_blank", "noopener"); };
 }
 function tempoRest(fim){ const s = Math.max(0, Math.floor((new Date(fim).getTime() - agoraServ()) / 1000)); const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), ss = s % 60; return `${h}h ${String(m).padStart(2, "0")}min ${String(ss).padStart(2, "0")}s`; }
-document.addEventListener("visibilitychange", async () => { if(document.visibilityState !== "visible" || !ME) return; const antes = souPro(); await carregaPlano(true); if(ENT.voltouDoCheckout && !antes && souPro()){ ENT.voltouDoCheckout = false; toast("Bem-vinda ao CK Life Pro 👑"); rerender(); } });
+document.addEventListener("visibilitychange", async () => { if(document.visibilityState !== "visible" || !ME) return; const antes = souPro(); await carregaPlano(true); if(ENT.voltouDoCheckout && !antes && souPro()){ ENT.voltouDoCheckout = false; toast("Bem-vinda ao CK Life Pro!"); rerender(); } });
 function exigePro(f, contexto, preview){ if(pode(f)) return true; registraEvento("pro_feature_clicked", { recurso: f }); paywall(contexto || "recurso_pro", preview); return false; }
 
-/* ---------- 👑 no conteúdo Pro: aparece, mas ao tocar mostra prévia + paywall ---------- */
+/* ---------- <i class='ckc' aria-hidden='true'></i> no conteúdo Pro: aparece, mas ao tocar mostra prévia + paywall ---------- */
 function decoraPro(root){
   if(!ME) return;
   (root || document).querySelectorAll("[data-prog]:not([data-pz])").forEach(b => { b.dataset.pz = 1; if(!progLiberado(b.dataset.prog)) trava(b, "programas_completos", "programa_pro"); });
@@ -84,38 +84,38 @@ function decoraPro(root){
   [["#fl-mk", "maquiagem"], ["#se-dad", "selos_dados"]].forEach(([s, f]) => { const b = (root || document).querySelector(s + ":not([data-pz])"); if(b){ b.dataset.pz = 1; if(!pode(f)) trava(b, f, "recurso_pro"); } });
   (root || document).querySelectorAll("[data-des]:not([data-pz])").forEach(b => { b.dataset.pz = 1; if(b.dataset.des !== "d7" && !pode("desafios_longos")) trava(b, "desafios_longos", "programa_pro"); });
 }
-function trava(b, f, ctx){ b.classList.add("pro-lock"); b.dataset.exige = f; b.dataset.ctx = ctx; if(!b.querySelector(".pro-cr")) b.insertAdjacentHTML("beforeend", `<span class="pro-cr" aria-label="CK Life Pro">👑</span>`); }
+function trava(b, f, ctx){ b.classList.add("pro-lock"); b.dataset.exige = f; b.dataset.ctx = ctx; if(!b.querySelector(".pro-cr")) b.insertAdjacentHTML("beforeend", `<span class="pro-cr" aria-label="CK Life Pro"><i class='ckc' aria-hidden='true'></i></span>`); }
 new MutationObserver(() => { clearTimeout(decoraPro._t); decoraPro._t = setTimeout(() => decoraPro(), 60); }).observe(document.body, { childList: true, subtree: true });
 document.addEventListener("click", e => { const b = e.target.closest && e.target.closest(".pro-lock[data-exige]"); if(!b || pode(b.dataset.exige)) return; e.preventDefault(); e.stopImmediatePropagation();
-  const img = b.querySelector("img"), nome = ([...b.querySelectorAll("h4,b,strong")].map(x => x.textContent.trim()).find(Boolean) || "").replace("👑", "").trim().slice(0, 60); registraEvento("pro_feature_clicked", { recurso: b.dataset.exige }); paywall(b.dataset.ctx, `${img && /figurinhas|fg-it/.test(img.src + b.className) ? `<img src="${esc(img.currentSrc || img.src)}" alt="">` : ""}${nome ? `<b>👑 ${esc(nome)}</b>` : ""}<small>Disponível no CK Life Pro.</small>`); }, true);
+  const img = b.querySelector("img"), nome = ([...b.querySelectorAll("h4,b,strong")].map(x => x.textContent.trim()).find(Boolean) || "").trim().slice(0, 60); registraEvento("pro_feature_clicked", { recurso: b.dataset.exige }); paywall(b.dataset.ctx, `${img && /figurinhas|fg-it/.test(img.src + b.className) ? `<img src="${esc(img.currentSrc || img.src)}" alt="">` : ""}${nome ? `<b><i class='ckc' aria-hidden='true'></i> ${esc(nome)}</b>` : ""}<small>Disponível no CK Life Pro.</small>`); }, true);
 
 /* ---------- recursos Pro com verificação na hora de usar ---------- */
 const rCardapioP = rCardapio; rCardapio = function(){ if(pode("cardapio")) return rCardapioP.apply(this, arguments);
-  const b = $("d-body"); if(b){ b.innerHTML = `<div class="card pro-tela"><span>🗓️</span><b>👑 Cardápio semanal</b><p class="hint">Um cardápio para a semana toda, montado para a sua meta, com trocas de receitas em um toque.</p><button class="btn btn-accent" data-pw="1">Conhecer o CK Life Pro</button></div>`; b.querySelector("[data-pw]").onclick = () => exigePro("cardapio", "recurso_pro"); } };
+  const b = $("d-body"); if(b){ b.innerHTML = `<div class="card pro-tela"><span>🗓️</span><b><i class='ckc' aria-hidden='true'></i> Cardápio semanal</b><p class="hint">Um cardápio para a semana toda, montado para a sua meta, com trocas de receitas em um toque.</p><button class="btn btn-accent" data-pw="1">Conhecer o CK Life Pro</button></div>`; b.querySelector("[data-pw]").onclick = () => exigePro("cardapio", "recurso_pro"); } };
 const abrirCozinhaP = abrirCozinha; abrirCozinha = function(){ if(!exigePro("modo_cozinha", "recurso_pro")) return; return abrirCozinhaP.apply(this, arguments); };
-const abrirReceitaP = abrirReceita; abrirReceita = function(id){ if(!receitaLivre(id)){ const r = receitas().find(x => x.id === id); registraEvento("pro_feature_clicked", { recurso: "receitas_todas" }); return paywall("recurso_pro", r ? `<b>👑 ${esc(r.nome)}</b>` : ""); } return abrirReceitaP.apply(this, arguments); };
-const abrirProgramaP = abrirPrograma; abrirPrograma = function(id){ if(!progLiberado(id)){ const p = progById(id); registraEvento("pro_feature_clicked", { recurso: "programas_completos" }); return paywall("programa_pro", p ? `<b>👑 ${esc(p.nome)}</b><small>${p.semanas} semanas · ${esc(p.nivel)}</small>` : ""); } return abrirProgramaP.apply(this, arguments); };
+const abrirReceitaP = abrirReceita; abrirReceita = function(id){ if(!receitaLivre(id)){ const r = receitas().find(x => x.id === id); registraEvento("pro_feature_clicked", { recurso: "receitas_todas" }); return paywall("recurso_pro", r ? `<b><i class='ckc' aria-hidden='true'></i> ${esc(r.nome)}</b>` : ""); } return abrirReceitaP.apply(this, arguments); };
+const abrirProgramaP = abrirPrograma; abrirPrograma = function(id){ if(!progLiberado(id)){ const p = progById(id); registraEvento("pro_feature_clicked", { recurso: "programas_completos" }); return paywall("programa_pro", p ? `<b><i class='ckc' aria-hidden='true'></i> ${esc(p.nome)}</b><small>${p.semanas} semanas · ${esc(p.nivel)}</small>` : ""); } return abrirProgramaP.apply(this, arguments); };
 const checkinP = checkin; checkin = function(){ if(!exigePro("ciclo_avancado", "recurso_pro", "<b>🌸 Ciclo inteligente</b><small>Sintomas, insights e treino adaptado à fase</small>")) return; return checkinP.apply(this, arguments); };
 const adaptarTreinoP = adaptarTreino; adaptarTreino = function(){ if(!exigePro("ciclo_avancado", "recurso_pro", "<b>🌸 Treino adaptado ao ciclo</b>")) return; return adaptarTreinoP.apply(this, arguments); };
 const criarFigurinhaP = criarFigurinha; criarFigurinha = function(){ if(!exigePro("figurinha_propria", "sticker_pro")) return; return criarFigurinhaP.apply(this, arguments); };
 const videoValidoP = videoValido; videoValido = function(f, maxSeg){ const lim = limite("video_longo", souPro() ? 60 : 15); return videoValidoP.call(this, f, Math.min(maxSeg || 60, lim)); };
 const rEvolucaoP = rEvolucao; rEvolucao = function(){ rEvolucaoP.apply(this, arguments); if(pode("graficos_avancados")) return;
-  const cards = [...document.querySelectorAll("#t-evolucao .card")].filter(c => c.querySelector("#ev-peso")); cards.forEach(c => { const g = c.querySelector("svg"); if(g){ g.classList.add("pro-blur"); g.insertAdjacentHTML("afterend", `<button class="btn btn-soft btn-sm pro-graf" data-pw="graficos_avancados">👑 Ver evolução completa</button>`); } });
+  const cards = [...document.querySelectorAll("#t-evolucao .card")].filter(c => c.querySelector("#ev-peso")); cards.forEach(c => { const g = c.querySelector("svg"); if(g){ g.classList.add("pro-blur"); g.insertAdjacentHTML("afterend", `<button class="btn btn-soft btn-sm pro-graf" data-pw="graficos_avancados"><i class='ckc' aria-hidden='true'></i> Ver evolução completa</button>`); } });
   document.querySelectorAll("#t-evolucao [data-pw]").forEach(b => b.onclick = () => exigePro("graficos_avancados", "grafico_pro")); };
 /* fim do treino (Free): pode aparecer uma condição, nunca no meio do treino */
 const fimTreinoPl = fimTreino; fimTreino = function(parcial){ fimTreinoPl.apply(this, arguments); registraEvento("exercise_completed", { treino: PL && PL.T ? PL.T.nome : null });
   if(parcial || (souPro() && !emTrial()) || !NU.sb) return;
   NU.sb.rpc("oferta_ativar", { p_contexto: "treino_concluido" }).then(r => { const o = r && r.data; if(!o) return; ENT.d = { ...(ENT.d || {}), oferta: o }; const ok = $("fim-ok"); if(!ok || $("pw-fim")) return;
-    ok.insertAdjacentHTML("afterend", `<button class="pw-mini" id="pw-fim"><span>👑 ${esc(o.titulo)}</span><small>${esc(o.subtitulo || "Ver condição especial")}</small></button>`); $("pw-fim").onclick = () => { NU.sb.rpc("oferta_evento", { p_id: o.id, p_tipo: "clique" }); registraEvento("offer_clicked", { campanha: o.campanha }); paywall("treino_concluido"); }; }, () => {}); };
+    ok.insertAdjacentHTML("afterend", `<button class="pw-mini" id="pw-fim"><span><i class='ckc' aria-hidden='true'></i> ${esc(o.titulo)}</span><small>${esc(o.subtitulo || "Ver condição especial")}</small></button>`); $("pw-fim").onclick = () => { NU.sb.rpc("oferta_evento", { p_id: o.id, p_tipo: "clique" }); registraEvento("offer_clicked", { campanha: o.campanha }); paywall("treino_concluido"); }; }, () => {}); };
 
 /* ---------- Início e Perfil: teste, último dia, oferta ---------- */
 function blocoPlano(onde){
   const d = ENT.d; if(!d) return "";
-  if(d.pro && !d.trial){ if(onde !== "inicio") return ""; return `<div class="pl-bloco"><button class="pl-pro" data-pro="1"><span class="pl-cr">👑</span><span><b>Você é CK Life Pro</b><small>${d.fim ? "Assinatura ativa até " + brD(String(d.fim).slice(0, 10)) : "Assinatura ativa"} · tudo liberado</small></span></button></div>`; }
+  if(d.pro && !d.trial){ if(onde !== "inicio") return ""; return `<div class="pl-bloco"><button class="pl-pro" data-pro="1"><span class="pl-cr"><i class='ckc' aria-hidden='true'></i></span><span><b>Você é CK Life Pro</b><small>${d.fim ? "Assinatura ativa até " + brD(String(d.fim).slice(0, 10)) : "Assinatura ativa"} · tudo liberado</small></span></button></div>`; }
   const of = d.oferta, dias = d.dias_restantes;
   let h = "";
   if(d.trial && dias != null) h += dias <= 1 ? `<div class="pl-ultimo"><b>Seu último dia de CK Life Pro 💚</b><p>Amanhã você continua usando o CK Life gratuitamente. Você <b>não perde</b> conta, amigas, mensagens, posts, Stories, conquistas, histórico, medidas, progresso, fotos e registros. Só os recursos Pro ficam bloqueados.</p><button class="btn btn-accent btn-sm" data-pw="1">Continuar com o Pro</button></div>`
-    : `<button class="pl-chip" data-pw="1">👑 Pro grátis · ${dias} ${dias === 1 ? "dia restante" : "dias restantes"}</button>`;
+    : `<button class="pl-chip" data-pw="1"><i class='ckc' aria-hidden='true'></i> Pro grátis · ${dias} ${dias === 1 ? "dia restante" : "dias restantes"}</button>`;
   if(of){ const falta = new Date(of.expira).getTime() - agoraServ();
     h += `<button class="pl-oferta" data-pw="1"><span class="eyebrow">CONDIÇÃO ESPECIAL</span><b>${esc(of.titulo)}</b><small>${esc(of.subtitulo || "")}</small><em class="pl-cont" data-fim="${esc(of.expira)}">${falta < 864e5 * 2 && falta > 864e5 ? "Sua condição especial termina amanhã." : "Termina em " + tempoRest(of.expira)}</em></button>`;
     if(onde === "inicio" && !blocoPlano.visto){ blocoPlano.visto = 1; NU.sb && NU.sb.rpc("oferta_evento", { p_id: of.id, p_tipo: "impressao" }).then(() => {}, () => {}); } }
@@ -124,11 +124,11 @@ function blocoPlano(onde){
 setInterval(() => document.querySelectorAll(".pl-cont[data-fim]").forEach(e => { const f = new Date(e.dataset.fim).getTime() - agoraServ(); e.textContent = f <= 0 ? "Condição encerrada" : f > 864e5 && f < 864e5 * 2 ? "Sua condição especial termina amanhã." : "Termina em " + tempoRest(e.dataset.fim); }), 1000);
 const rInicioPl = rInicio; rInicio = function(){ rInicioPl.apply(this, arguments); const b = blocoPlano("inicio"), alvo = document.querySelector("#t-inicio .xe-dia"); if(b && alvo) alvo.insertAdjacentHTML("afterbegin", b);
   document.querySelectorAll("#t-inicio [data-pw]").forEach(x => x.onclick = () => paywall("paywall")); document.querySelectorAll("#t-inicio [data-pro]").forEach(x => x.onclick = () => tab("perfil"));
-  const rec = document.querySelector("#t-inicio .xe-rec"); if(rec && !pode("sugestoes_energia")){ const bt = rec.querySelector("button"); if(bt){ bt.innerHTML = "👑 Treino adaptado à sua energia"; bt.onclick = e => { e.stopPropagation(); exigePro("sugestoes_energia", "recurso_pro"); }; } }
+  const rec = document.querySelector("#t-inicio .xe-rec"); if(rec && !pode("sugestoes_energia")){ const bt = rec.querySelector("button"); if(bt){ bt.innerHTML = "<i class='ckc' aria-hidden='true'></i> Treino adaptado à sua energia"; bt.onclick = e => { e.stopPropagation(); exigePro("sugestoes_energia", "recurso_pro"); }; } }
   anunciosInicio(); };
 const rPerfilPl = rPerfil; rPerfil = function(){ rPerfilPl.apply(this, arguments); const el = $("t-perfil"); if(!el || !ENT.d) return;
   const card = [...el.querySelectorAll(".today")].find(c => /Premium|anúncios/i.test(c.textContent)), d = ENT.d;
-  const html = `<div class="pl-card ${d.pro ? "on" : ""}${d.pro && !d.trial ? " pago" : ""}"><span class="eyebrow">${d.pro ? (d.trial ? "👑 CK Life Pro · teste grátis" : "👑 CK Life Pro · assinante" + (d.plano === "pro_anual" ? " anual" : d.plano === "pro_mensal" ? " mensal" : "")) : "CK Life Free"}</span>
+  const html = `<div class="pl-card ${d.pro ? "on" : ""}${d.pro && !d.trial ? " pago" : ""}"><span class="eyebrow">${d.pro ? (d.trial ? "<i class='ckc' aria-hidden='true'></i> CK Life Pro · teste grátis" : "<i class='ckc' aria-hidden='true'></i> CK Life Pro · assinante" + (d.plano === "pro_anual" ? " anual" : d.plano === "pro_mensal" ? " mensal" : "")) : "CK Life Free"}</span>
     <h2>${d.pro ? (d.trial ? `${d.dias_restantes} ${d.dias_restantes === 1 ? "dia" : "dias"} de Pro grátis` : d.fim ? `Pro até ${brD(String(d.fim).slice(0, 10))}` : "Pro ativo") : "Treino, comunidade e conquistas grátis"}</h2>
     <p>${d.pro ? (d.status === "canceled" ? "Assinatura cancelada: você continua Pro até o fim do período." : "Programas completos, nutrição, ciclo inteligente e sem anúncios.") : "Conheça o Pro: programas completos, nutrição, ciclo inteligente e sem anúncios."}</p>
     ${!d.pro || d.trial ? `<button class="btn btn-accent" data-pw="1">${d.oferta ? "Ver condição especial" : "Conhecer o CK Life Pro"}</button>` : ""}</div>${blocoPlano("perfil").replace(/pl-chip/g, "pl-chip pl-oculto")}`;
@@ -155,8 +155,8 @@ function pedeSelfie(v){
     catch(e){ toast(ERR_MSG(e)); } };
 }
 
-/* ---------- Selos ✓ e 👑 ao lado do nome (só o ✓ e a 👑; nada de dado pessoal) ---------- */
-const selosP = u => { const p = PERFIS.get(u) || (EU && EU.user_id === u ? EU : {}); return `${p.verificada ? `<i class="sel-ver" title="Perfil verificado">✓</i>` : ""}${p.pro_ate && new Date(p.pro_ate) > new Date() ? `<i class="sel-pro" title="CK Life Pro">👑</i>` : ""}`; };
+/* ---------- Ao lado do nome só o ✓ (perfil verificado). A coroa Pro fica só sobre a foto (coroaDe / classe .cr). ---------- */
+const selosP = u => { const p = PERFIS.get(u) || (EU && EU.user_id === u ? EU : {}); return `${p.verificada ? `<i class="sel-ver" title="Perfil verificado">✓</i>` : ""}`; };
 
 /* ---------- Publicidade: só Free depois do 30º dia, só em espaços naturais (Feed e Explorar) ---------- */
 function anuncioHtml(local){
@@ -173,7 +173,7 @@ const rExplorarPl = rExplorar; rExplorar = function(){ rExplorarPl.apply(this, a
 
 /* ---------- voltou para o app (ex.: depois de pagar): confere o plano de novo ---------- */
 document.addEventListener("visibilitychange", async () => { if(document.hidden || !(NU.ativo && NU.sb && NU.uid)) return; const antes = pagou(); await carregaPlano(true);
-  if(pagou() && ENT.d) ENT.d.oferta = null; if(antes !== pagou()){ if(pagou()){ $("pw") && $("pw").remove(); toast("👑 Bem-vinda ao CK Life Pro!"); } if(!$("v-app").hidden) rerender(); atualizaTopo(); } });
+  if(pagou() && ENT.d) ENT.d.oferta = null; if(antes !== pagou()){ if(pagou()){ $("pw") && $("pw").remove(); toast("Bem-vinda ao CK Life Pro!"); } if(!$("v-app").hidden) rerender(); atualizaTopo(); } });
 /* ---------- carga inicial ---------- */
 { let n = 0; const t = setInterval(async () => { if(!(NU.ativo && NU.sb && NU.uid)){ if(++n > 60) clearInterval(t); return; } clearInterval(t);
   await carregaPlano(true); if(pagou()) ENT.d.oferta = null; if(emTrial() && NU.sb){ try{ const r = await NU.sb.rpc("oferta_ativar", { p_contexto: null }); if(r && r.data) ENT.d.oferta = r.data; }catch(e){} }

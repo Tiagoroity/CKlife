@@ -43,6 +43,8 @@ const S = {
   coupon: play(t => [1318, 1568, 1976, 2637, 3136].forEach((f, i) => tone(f, t + i * .055, .25, { vol: .07 }))),
   erro: play(t => { tone(230, t, .16, { type: "sawtooth", vol: .05, slide: .8 }); tone(180, t + .12, .2, { type: "sawtooth", vol: .05, slide: .8 }); }),
   swoosh: play(t => noise(t, .32, .09, 400, 3200)),
+  /* assinatura sonora do CK Life para notificações: duas notas de sino, sobe e assenta (curta e suave) */
+  notif: play(t => { bell(1046.5, .13, 1.0, t); bell(1567.98, .11, 1.25, t + .12); tone(3135.96, t + .12, .35, { vol: .018 }); }),
   chime: play(t => [784, 988, 1318].forEach((f, i) => bell(f, .12, 1.2, t + i * .12))),
   fav: play(t => [1568, 2093].forEach((f, i) => tone(f, t + i * .07, .2, { vol: .08 }))),
   beat: play(t => tone(1600, t, .03, { type: "square", vol: .045 })),

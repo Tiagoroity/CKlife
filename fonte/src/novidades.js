@@ -66,7 +66,7 @@ const PUSH_OK = () => "serviceWorker" in navigator && "PushManager" in window &&
 const pwaInstalado = () => matchMedia("(display-mode: standalone)").matches || navigator.standalone;
 let SWREG = null;
 if("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("/sw.js").then(r => { SWREG = r; }).catch(() => {});
-if("serviceWorker" in navigator) navigator.serviceWorker.addEventListener("message", e => { if(e.data && e.data.tipo === "push"){ const n = String(e.data.url || ""); if(/n=mensagem|n=story/.test(n)) tab("juntas"); else if(/n=/.test(n)) tab("juntas"); } });
+if("serviceWorker" in navigator) navigator.serviceWorker.addEventListener("message", e => { if(e.data && e.data.tipo === "push"){ const n = String(e.data.url || ""); if(/n=(mensagem|story|story_resposta|curtida|comentario|seguiu|solicitou|aceitou|conquista)\b/.test(n)) tab("juntas"); } });
 const b64u = s => { const p = "=".repeat((4 - s.length % 4) % 4), b = atob((s + p).replace(/-/g, "+").replace(/_/g, "/")); return Uint8Array.from([...b].map(c => c.charCodeAt(0))); };
 async function inscrevePush(silencioso){
   if(!PUSH_OK() || !NV_OK()) return false;

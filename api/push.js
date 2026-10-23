@@ -1,5 +1,5 @@
 // CK Life · envia notificações para o celular (Web Push).
-// O banco chama esta função com {id, token} de uso único; ela busca o aviso e as inscrições e envia.
+// O banco chama esta função com {id, token} de uso único; ela busca o aviso e as inscrições (uma pessoa ou um lote) e envia.
 // Variáveis na Vercel: VAPID_PRIVATE (obrigatória). A chave pública e a do Supabase já são públicas.
 const webpush = require("web-push");
 const SUPA = process.env.SUPABASE_URL || "https://psxmyiudtuozasbqzvnu.supabase.co";
@@ -17,11 +17,17 @@ module.exports = async (req, res) => {
     const r = await rpc("push_pegar", { p_id: b.id, p_token: b.token }); const j = r.ok ? await r.json() : null;
     if (!j || !j.subs) return res.status(200).json({ ok: true, enviados: 0 });
     webpush.setVapidDetails("mailto:assessoriaroity@gmail.com", VAPID_PUBLIC, priv);
-    let n = 0;
-    await Promise.all(j.subs.map(async s => {
-      try { await webpush.sendNotification(s, JSON.stringify(j.payload), { TTL: 3600, urgency: "normal" }); n++; }
-      catch (e) { if (e && (e.statusCode === 404 || e.statusCode === 410)) await rpc("push_expirou", { p_id: b.id, p_token: b.token, p_endpoint: s.endpoint }); else console.log("push erro", e && e.statusCode); }
-    }));
+    let n = 0, falhas = 0;
+    const lista = j.subs || [];
+    // envia em blocos de 50 para não estourar a função em campanhas grandes
+    for (let i = 0; i < lista.length; i += 50) {
+      await Promise.all(lista.slice(i, i + 50).map(async s => {
+        try { await webpush.sendNotification(s, JSON.stringify(j.payload), { TTL: 6 * 3600, urgency: j.payload && j.payload.cid ? "normal" : "high", topic: String((j.payload && j.payload.tag) || "ck").replace(/[^A-Za-z0-9_-]/g, "").slice(0, 32) || undefined }); n++; }
+        catch (e) { falhas++; if (e && (e.statusCode === 404 || e.statusCode === 410)) await rpc("push_expirou", { p_id: b.id, p_token: b.token, p_endpoint: s.endpoint }); else console.log("push erro", e && e.statusCode); }
+      }));
+    }
+    // informa ao banco quantos o serviço de push aceitou (sem inventar "entregues")
+    await rpc("push_resultado", { p_id: b.id, p_token: b.token, p_enviados: n, p_falhas: falhas }).catch(() => {});
     return res.status(200).json({ ok: true, enviados: n });
   } catch (e) { console.log("Erro:", e && e.message); return res.status(500).json({ ok: false }); }
 };

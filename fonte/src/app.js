@@ -1238,12 +1238,9 @@ const DICAS = {
 function rCardapio(){
   const m = metas(ME), c = cardapio(DD), alvo = alvoTag(), rs = receitas();
   const itens = REFS.map(([k, n]) => { const r = rs.find(x => x.id === c[k].id) || rs[0]; return { k, n, r, porc: c[k].porc }; });
-  const tot = itens.reduce((a, x) => ({ kcal: a.kcal + x.r.kcal * x.porc, p: a.p + x.r.p * x.porc }), { kcal: 0, p: 0 });
+  const tot = itens.reduce((a, x) => ({ kcal: a.kcal + x.r.kcal * x.porc, p: a.p + x.r.p * x.porc, c: a.c + (x.r.c || 0) * x.porc, g: a.g + (x.r.g || 0) * x.porc }), { kcal: 0, p: 0, c: 0, g: 0 });
   const pt = x => String(x).replace(".", ",") + (x === 1 ? " porção" : " porções");
-  $("d-body").innerHTML = `
-    <div class="card"><span class="eyebrow-s">Cardápio ${TAGN[alvo].toLowerCase()}</span><h3 style="font-size:24px;margin-top:4px">Seu dia de comida pronto</h3>
-      <p class="hint" style="margin:6px 0 12px">Montado para a sua meta de ${int(m.kcal)} kcal e ${m.p} g de proteína. Troque o que não gostar.</p>
-      <div class="ringrow"><div class="ring">${ring(tot.kcal, m.kcal)}<b class="num">${int(tot.kcal)}<small>KCAL</small></b></div><div class="macros"><div class="mac"><span>Proteína</span><span class="tr"><i style="width:${Math.min(100, 100 * tot.p / m.p)}%"></i></span><span class="num muted">${int(tot.p)}/${m.p} g</span></div><p class="hint" style="margin:4px 0 0">Complete com frutas, salada à vontade e água.</p></div></div></div>
+  $("d-body").innerHTML = `${painelCardapio(tot, m, alvo, itens)}
     ${itens.map(x => `<div class="meal"><div class="meal-h"><h4>${x.n}</h4><span class="num">${int(x.r.kcal * x.porc)} kcal</span></div>
       <button class="exrow" data-rec="${x.r.id}" style="grid-template-columns:56px minmax(0,1fr)"><span class="rthumb" style="--rc:${CORCAT[x.r.cat]};width:56px;height:56px">${ic(ICCAT[x.r.cat], 24, 1.7)}</span><span style="min-width:0"><b>${esc(x.r.nome)}</b><small class="num">${pt(x.porc)} · ${int(x.r.p * x.porc)} g proteína · ${x.r.min} min</small></span></button>
       <div class="meal-act"><button class="btn btn-soft btn-sm" data-troca="${x.k}">${ic("repeat", 15)} Trocar</button><button class="btn btn-soft btn-sm" data-cook="${x.r.id}">${ic("chef", 15)} Cozinhar</button><button class="btn btn-accent btn-sm" data-comi="${x.k}">${ic("check", 15, 3)} Comi</button></div></div>`).join("")}
@@ -1252,6 +1249,23 @@ function rCardapio(){
   $("d-body").querySelectorAll("[data-cook]").forEach(b => b.onclick = () => abrirCozinha(receitas().find(r => r.id === b.dataset.cook)));
   $("d-body").querySelectorAll("[data-troca]").forEach(b => b.onclick = () => { const k = b.dataset.troca, L = candidatos(k), i = ((c[k].i || 0) + 1) % L.length; c[k] = { ...L[i], i }; save(); SOM.tap(); rCardapio(); });
   $("d-body").querySelectorAll("[data-comi]").forEach(b => b.onclick = () => { const x = itens.find(i => i.k === b.dataset.comi); dia(DD)[x.k].push({ nome: x.r.nome, qtd: pt(x.porc), kcal: x.r.kcal * x.porc, p: x.r.p * x.porc, c: x.r.c * x.porc, g: x.r.g * x.porc }); save(); SOM.add(); toast(`Registrado: ${x.r.nome}`); });
+}
+/* Painel do cardápio: total planejado x meta, macros e como as calorias se dividem no dia (entende-se em segundos) */
+const COR_REF = { cafe: ["#F4B740", "Café"], almoco: ["#3DDC6E", "Almoço"], lanche: ["#7EC8E3", "Lanche"], jantar: ["#B9A3F0", "Jantar"] };
+function painelCardapio(tot, m, alvo, itens){
+  const r = m.kcal ? tot.kcal / m.kcal : 0, st = r > 1.1 ? ["alto", "Acima da meta", "Troque um item mais leve"] : r < .9 ? ["baixo", "Abaixo da meta", "Complete com frutas e salada"] : ["ok", "Na medida da sua meta", ""];
+  const mac = [["Proteína", "p", "#3DDC6E", "#9BE8B0"], ["Carboidrato", "c", "#F4B740", "#FFE08A"], ["Gordura", "g", "#FF8A65", "#FFC9B3"]];
+  const kc = itens.map(x => ({ k: x.k, v: x.r.kcal * x.porc })), soma = kc.reduce((a, x) => a + x.v, 0) || 1;
+  return `<section class="pdia cdp" aria-label="Resumo do cardápio">
+    <div class="pdia-head"><div><span class="pdia-eb">Cardápio · ${esc(TAGN[alvo])}</span><h3>Seu dia de comida pronto</h3></div><span class="cdp-st ${st[0]}">${ic(st[0] === "ok" ? "check" : "target", 13, 2.6)}${st[1]}</span></div>
+    <div class="cdp-main">
+      <div class="pdia-ring cdp-ring">${anel(r > 1.1 ? tot.kcal : Math.min(tot.kcal, m.kcal), m.kcal, 156, 14, ["#3DDC6E", "#B9DDB2"])}<div class="pdia-c"><b class="num">${int(tot.kcal)}</b><span>kcal no dia</span><small class="num">meta ${int(m.kcal)}</small></div></div>
+      <div class="cdp-mac">${mac.map(([n, k, c1, c2]) => { const v = tot[k] || 0, mt = m[k] || 0, f = mt ? Math.min(100, 100 * v / mt) : 0; return `<div class="cdp-m"><div class="cdp-mt"><span><i style="background:${c1}"></i>${n}</span><b class="num">${int(v)}<small> / ${int(mt)} g</small></b></div><span class="cdp-tr"><i style="width:${f}%;background:linear-gradient(90deg,${c1},${c2})"></i></span></div>`; }).join("")}</div>
+    </div>
+    <div class="cdp-dist"><div class="cdp-bar" role="img" aria-label="Calorias por refeição">${kc.map(x => `<i style="flex:${Math.max(.04, x.v / soma)};background:${COR_REF[x.k][0]}"></i>`).join("")}</div>
+      <div class="cdp-leg">${kc.map(x => `<span><i style="background:${COR_REF[x.k][0]}"></i>${COR_REF[x.k][1]} <b class="num">${int(x.v)}</b></span>`).join("")}</div></div>
+    <p class="cdp-hint">${st[2] ? st[2] + ". " : ""}Montado para ${int(m.kcal)} kcal e ${m.p} g de proteína. Toque em Trocar no que não gostar.</p>
+  </section>`;
 }
 function rDiario(){
   const m = metas(ME), t = totais(DD), x = dia(DD), rot = DD === today() ? "Hoje" : DD === addD(today(), -1) ? "Ontem" : brD(DD);

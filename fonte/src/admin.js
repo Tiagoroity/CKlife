@@ -49,8 +49,7 @@ function abrir(){
   F.show("v-admin");
   $("adm-me").textContent = ME.email; const av = $("adm-av"); if(av) av.textContent = (ME.nome || ME.email || "A").trim()[0].toUpperCase();
   const nomeSec = Object.fromEntries(SECOES);
-  $("adm-tabs").innerHTML = GRUPOS.map(([g, ks]) => { const vis = ks.filter(k => podeVer(k)); return vis.length ? `<span class="adm-grp">${g}</span>` + vis.map(k => `<button data-s="${k}"><span class="ai">${aic(k)}</span><span>${nomeSec[k]}</span></button>`).join("") : ""; }).join("");
-  $("adm-tabs").querySelectorAll("button").forEach(b => b.onclick = () => ir(b.dataset.s));
+  montaMenu(nomeSec);   // menu lateral/gaveta (admin-ux.js)
   const h = location.hash.replace("#admin", "").replace(/^[-/]/, "");
   ir(SECOES.some(s => s[0] === h) ? h : SEC);
 }
@@ -59,7 +58,7 @@ function ir(s){
   if(!podeVer(s)){ const ok = SECOES.find(x => podeVer(x[0])); if(!ok){ $("adm-main").innerHTML = `<div class="card empty">Seu acesso ainda não foi liberado. Fale com o administrador principal.</div>`; return; } s = ok[0]; }
   SEC = s; document.body.dataset.ro = podeEditar(s) ? "" : "1";
   $("adm-tabs").querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.s === s));
-  const on = $("adm-tabs").querySelector(".on"); if(on) on.scrollIntoView({ inline: "center", block: "nearest" });
+  const on = $("adm-tabs").querySelector("button.on"); if(on && on.offsetParent) on.scrollIntoView({ block: "nearest" });
   VIEWS[s]();
   if(!podeEditar(s)) $("adm-main").insertAdjacentHTML("afterbegin", `<div class="ro-aviso">Você pode ver esta área, mas não pode alterar.</div>`);
   window.scrollTo(0, 0);
@@ -163,7 +162,7 @@ function vResumo(){
     <div class="grid g4">
       ${kpi("Alunas cadastradas", int(al.total), `+${int(al.novos7)} nos últimos 7 dias`, "alunos", 1)}
       ${kpi("Ativas hoje", int(al.dau), `${int(al.wau)} na semana · ${int(al.mau)} no mês`, "resumo")}
-      ${kpi("👑 Assinantes Pro", int(al.pagos), `${int(al.teste)} em teste grátis · ${int(al.cortesia)} cortesia`, "alunos")}
+      ${kpi("Assinantes Pro", int(al.pagos), `${int(al.teste)} em teste grátis · ${int(al.cortesia)} cortesia`, "alunos")}
       ${kpi("Anunciantes ativos", int(anAt.length), `${int(ativas)} ${ativas === 1 ? "campanha no ar" : "campanhas no ar"}`, "anunciantes")}
       ${kpi("Impressões", int(t.imp), `Alcance: ${int(t.alc)} alunas`, "campanhas")}
       ${kpi("Cliques", int(t.clk), `Taxa de clique: ${pct(t.clk, t.imp)}`, "metricas")}
@@ -434,7 +433,7 @@ async function gerarPDF(o){
 /* ---------- Alunos ---------- */
 let AF = { q: "", cidade: "", plano: "" };
 const statusPrem = u => { const s = PLU && PLU[u.id]; if(s && s.pro){ const ate = s.fim ? " até " + brD(String(s.fim).slice(0, 10)).slice(0, 5) : "";
-    if(s.trial) return ["Teste grátis" + ate, "warn"]; return [(["kiwify", "apple", "google"].includes(s.provider) ? "👑 Pro " + (s.plano === "pro_anual" ? "anual" : "mensal") : "Cortesia") + ate, "ok"]; }
+    if(s.trial) return ["Teste grátis" + ate, "warn"]; return [(["kiwify", "apple", "google"].includes(s.provider) ? "Pro " + (s.plano === "pro_anual" ? "anual" : "mensal") : "Cortesia") + ate, "ok"]; }
   if(s && !s.pro) return ["Gratuito", "off"];
   if(!u.premium) return ["Gratuito", "off"]; if(u.premium.tipo === "vitalicio") return ["Vitalício", "ok"]; if(u.premium.ate < today()) return ["Gratuito", "off"]; return [{ pago: "Premium", teste: "Teste grátis", cortesia: "Cortesia" }[u.premium.tipo] + " até " + brD(u.premium.ate).slice(0, 5), u.premium.tipo === "teste" ? "warn" : "ok"]; };
 function vAlunos(){
@@ -447,7 +446,7 @@ function vAlunos(){
   $("adm-main").innerHTML = `
     <div class="head"><div><h1>Alunas</h1><p class="muted">Quem usa o app, de onde é e com que frequência volta.</p></div><div class="toolbar"><button class="btn btn-accent btn-sm needs-edit" id="al-prem">Dar Premium cortesia</button><button class="btn btn-line btn-sm" id="al-csv">Copiar planilha</button></div></div>
     <div class="toolbar"><select class="input" id="al-c">${optCid(AF.cidade, true)}</select></div>
-    <div class="grid g4">${kpi("Cadastrados", int(al.total), `+${int(al.novos7)} nos últimos 7 dias`)}${kpi("Ativos", int(al.dau), `hoje · ${int(al.wau)} na semana · ${int(al.mau)} no mês`)}${kpi("👑 Pro pago", int(al.pagos))}${kpi("Em teste grátis", int(al.teste), `${int(al.cortesia)} com cortesia`)}</div>
+    <div class="grid g4">${kpi("Cadastrados", int(al.total), `+${int(al.novos7)} nos últimos 7 dias`)}${kpi("Ativos", int(al.dau), `hoje · ${int(al.wau)} na semana · ${int(al.mau)} no mês`)}${kpi("Pro pago", int(al.pagos))}${kpi("Em teste grátis", int(al.teste), `${int(al.cortesia)} com cortesia`)}</div>
     <div class="card"><h3>Alunas ativas por dia</h3>${barChart(al.serie, "alunos", "alunas")}</div>
     <div class="grid g3">
       <div class="card"><h3>Por cidade</h3>${hbars(contaPor(al.U, u => cidNome(u.cidade) || "Sem cidade"))}</div>

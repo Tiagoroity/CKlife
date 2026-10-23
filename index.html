@@ -1732,15 +1732,187 @@ ul.xp-lista:not(:has(svg)) li::before{content:"•";color:var(--accent);font-wei
 .vf-foto{aspect-ratio:3/4;border-radius:14px;overflow:hidden;background:var(--surface-2);display:grid;place-items:center}.vf-foto img{width:100%;height:100%;object-fit:cover}
 .pexpl{overflow-x:hidden}.pex-top{overflow:hidden;width:100%}.pex-top img{max-width:100%}.pex-c{min-width:0;max-width:100%;box-sizing:border-box}.ex-txt{overflow-wrap:anywhere;min-width:0}.ex-bt{grid-template-columns:minmax(0,1fr) minmax(0,1.4fr)}
 
-/* 👑 coroa em cima da foto (CK Life Pro pago) */
+/* Coroa CK Life Pro: só sobre a FOTO (nunca ao lado do nome). Desenho próprio em dourado, escala com o avatar. */
+:root{--ck-crown:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 24'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='.3' y2='1'%3E%3Cstop offset='0' stop-color='%23FFF4C4'/%3E%3Cstop offset='.42' stop-color='%23E8C35A'/%3E%3Cstop offset='.75' stop-color='%23C99A2E'/%3E%3Cstop offset='1' stop-color='%239A6E16'/%3E%3C/linearGradient%3E%3ClinearGradient id='b' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23F2D57A'/%3E%3Cstop offset='1' stop-color='%238E6412'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M5 18.2 3.4 7.6l6.9 5.1L16 4.4l5.7 8.3 6.9-5.1L27 18.2z' fill='url%28%23g%29' stroke='%23fff' stroke-width='2.2' stroke-linejoin='round' paint-order='stroke'/%3E%3Crect x='4.6' y='17.4' width='22.8' height='4.4' rx='1.7' fill='url%28%23b%29' stroke='%23fff' stroke-width='2.2' stroke-linejoin='round' paint-order='stroke'/%3E%3Ccircle cx='3.4' cy='6.6' r='1.9' fill='url%28%23g%29' stroke='%23fff' stroke-width='1.6' stroke-linejoin='round' paint-order='stroke'/%3E%3Ccircle cx='16' cy='3.4' r='1.9' fill='url%28%23g%29' stroke='%23fff' stroke-width='1.6' stroke-linejoin='round' paint-order='stroke'/%3E%3Ccircle cx='28.6' cy='6.6' r='1.9' fill='url%28%23g%29' stroke='%23fff' stroke-width='1.6' stroke-linejoin='round' paint-order='stroke'/%3E%3Cpath d='M8 15.6h16' stroke='%23FFF7D6' stroke-opacity='.7' stroke-width='.8' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='19.6' r='1.15' fill='%232E7D5A'/%3E%3Ccircle cx='10.6' cy='19.6' r='.75' fill='%23FFF4C4' fill-opacity='.85'/%3E%3Ccircle cx='21.4' cy='19.6' r='.75' fill='%23FFF4C4' fill-opacity='.85'/%3E%3C/svg%3E");--ck-crown-s:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 24'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='.3' y2='1'%3E%3Cstop offset='0' stop-color='%23FFF4C4'/%3E%3Cstop offset='.42' stop-color='%23E8C35A'/%3E%3Cstop offset='.75' stop-color='%23C99A2E'/%3E%3Cstop offset='1' stop-color='%239A6E16'/%3E%3C/linearGradient%3E%3ClinearGradient id='b' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23F2D57A'/%3E%3Cstop offset='1' stop-color='%238E6412'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M5 18.2 3.4 7.6l6.9 5.1L16 4.4l5.7 8.3 6.9-5.1L27 18.2z' fill='url%28%23g%29' stroke='%23fff' stroke-width='2.8' stroke-linejoin='round' paint-order='stroke'/%3E%3Crect x='4.6' y='17.4' width='22.8' height='4.4' rx='1.7' fill='url%28%23b%29' stroke='%23fff' stroke-width='2.8' stroke-linejoin='round' paint-order='stroke'/%3E%3Ccircle cx='3.4' cy='6.6' r='2.2' fill='url%28%23g%29' stroke='%23fff' stroke-width='2' stroke-linejoin='round' paint-order='stroke'/%3E%3Ccircle cx='16' cy='3.4' r='2.2' fill='url%28%23g%29' stroke='%23fff' stroke-width='2' stroke-linejoin='round' paint-order='stroke'/%3E%3Ccircle cx='28.6' cy='6.6' r='2.2' fill='url%28%23g%29' stroke='%23fff' stroke-width='2' stroke-linejoin='round' paint-order='stroke'/%3E%3C/svg%3E")}
 .cr{overflow:visible!important;position:relative}
 .capa .hello .avatar.cr{position:relative}
 .cr>img,.cr>.avf{border-radius:50%}
-.cr::after{content:"👑";position:absolute;top:-.62em;right:-.28em;font-size:max(14px,.95em);line-height:1;transform:rotate(22deg);filter:drop-shadow(0 1px 1.5px rgba(0,0,0,.35));pointer-events:none;z-index:4}
-.so-av.cr::after{font-size:34px;top:-18px;right:-8px}
+.cr::after{content:"";position:absolute;z-index:4;pointer-events:none;width:clamp(13px,40%,44px);aspect-ratio:32/24;top:-15%;right:-11%;transform:rotate(20deg);background:var(--ck-crown-s) center/contain no-repeat;filter:drop-shadow(0 1px 1.2px rgba(0,0,0,.35)) drop-shadow(0 2px 4px rgba(120,84,10,.25))}
+.so-av.cr::after,.avatar.avedit.cr::after,.pav.xl.cr::after,.so-sugc .pav.cr::after,.xp-conv>.pav.cr::after{background-image:var(--ck-crown);width:38%;top:-13%;right:-9%}
+.so-av.cr::after{width:34%;top:-11%;right:-4%}
+.so-st-av .pav.cr::after{top:-6%;right:-6%}
+.ckc{display:inline-block;width:1.3em;height:1em;background:var(--ck-crown) center/contain no-repeat;vertical-align:-.12em;font-style:normal;flex:0 0 auto}
 .pl-pro{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:1px solid rgba(201,162,39,.45);background:linear-gradient(135deg,rgba(201,162,39,.16),rgba(201,162,39,.05));border-radius:16px;padding:11px 14px;color:var(--ink);font:inherit;cursor:pointer}
 .pl-pro b{font-size:14.5px}.pl-pro small{display:block;color:var(--muted);font-size:12.5px}.pl-pro .pl-cr{font-size:24px}
 .pl-card.on.pago{box-shadow:0 0 0 2px #D4AF37,var(--shadow-sm)}.pl-card.on.pago .eyebrow{color:#F3D77A}
+
+/* ===== Cardápio: painel premium (mesma família do "Meu dia") ===== */
+.cdp{display:block;padding:20px 18px 16px}
+.cdp .pdia-head h3{font-size:20px}
+.cdp-st{display:inline-flex;align-items:center;gap:5px;flex:0 0 auto;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:800;background:rgba(61,220,110,.16);color:#B9F5C9;border:1px solid rgba(185,245,201,.22);backdrop-filter:blur(4px)}
+.cdp-st.alto{background:rgba(255,138,101,.16);color:#FFD2C2;border-color:rgba(255,210,194,.25)}
+.cdp-st.baixo{background:rgba(244,183,64,.16);color:#FFE6A8;border-color:rgba(255,230,168,.25)}
+.cdp-main{position:relative;display:grid;grid-template-columns:auto minmax(0,1fr);gap:18px;align-items:center;margin-top:12px}
+.cdp-ring{width:156px;height:156px;margin:0}
+.cdp-ring .anel{width:156px;height:156px}
+.cdp .pdia-c{inset:22px}
+.cdp .pdia-c b{font-size:34px}
+.cdp .pdia-c span{font-size:10.5px;margin-top:5px}
+.cdp .pdia-c small{font-size:11px}
+.cdp-mac{display:grid;gap:12px}
+.cdp-mt{display:flex;align-items:baseline;justify-content:space-between;gap:8px;font-size:13px;font-weight:700;color:rgba(255,255,255,.86)}
+.cdp-mt span{display:inline-flex;align-items:center;gap:7px}.cdp-mt span i{width:8px;height:8px;border-radius:50%;box-shadow:0 0 0 3px rgba(255,255,255,.06)}
+.cdp-mt b{font-family:var(--display);font-size:16px;color:#fff;white-space:nowrap}.cdp-mt b small{font-family:var(--body);font-size:11.5px;font-weight:700;color:rgba(255,255,255,.55)}
+.cdp-tr{display:block;height:8px;margin-top:6px;border-radius:9px;background:rgba(255,255,255,.1);overflow:hidden;box-shadow:inset 0 1px 2px rgba(0,0,0,.25)}
+.cdp-tr i{display:block;height:100%;border-radius:9px;box-shadow:0 0 10px rgba(61,220,110,.35);transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.cdp-dist{position:relative;margin-top:16px;padding:12px;border-radius:18px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.07)}
+.cdp-bar{display:flex;gap:3px;height:10px;border-radius:9px;overflow:hidden}
+.cdp-bar i{display:block;min-width:6px;border-radius:3px;box-shadow:inset 0 1px 0 rgba(255,255,255,.35)}
+.cdp-leg{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:12px;color:rgba(255,255,255,.75)}
+.cdp-leg span{display:inline-flex;align-items:center;gap:6px}.cdp-leg i{width:8px;height:8px;border-radius:3px}.cdp-leg b{color:#fff;font-weight:800}
+.cdp-hint{position:relative;margin:12px 2px 0;font-size:12.5px;line-height:1.45;color:rgba(255,255,255,.66)}
+@media (max-width:380px){.cdp-main{grid-template-columns:1fr;justify-items:center}.cdp-mac{width:100%}.cdp-ring,.cdp-ring .anel{width:150px;height:150px}}
+@media (min-width:1024px){.cdp{padding:26px 30px 22px}.cdp-main{gap:34px}.cdp-ring,.cdp-ring .anel{width:176px;height:176px}.cdp .pdia-c b{font-size:40px}}
+.cdp .pdia-head{flex-wrap:wrap;gap:10px}.cdp .pdia-head>div{flex:1 1 210px;min-width:0}
+
+/* ===== Anúncio integrado (card nativo: imagem 1:1, vídeo ou texto) ===== */
+.adx{display:block;position:relative;border-radius:22px;background:var(--surface);border:1px solid var(--line);box-shadow:0 14px 30px -24px rgba(14,61,50,.45);overflow:hidden;margin:4px 0 14px;color:var(--ink);text-decoration:none}
+.adx-h{display:flex;align-items:center;gap:10px;padding:12px 14px}
+.adx-logo{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#0E3D32,#2E7D5A);color:#fff;font-weight:800;font-size:14px;flex:0 0 auto}
+.adx-h b{display:block;font-size:14px;line-height:1.2}.adx-h small{display:block;font-size:11.5px;color:var(--muted);letter-spacing:.02em}
+.adx-m{position:relative;width:100%;background:#0b1512;overflow:hidden}
+.adx-m img,.adx-m video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.adx-som,.adx-play{position:absolute;border:0;color:#fff;background:rgba(10,20,16,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:grid;place-items:center;cursor:pointer}
+.adx-som{right:10px;bottom:12px;width:34px;height:34px;border-radius:50%}
+.adx-play{left:50%;top:50%;width:62px;height:62px;margin:-31px 0 0 -31px;border-radius:50%;transition:opacity .2s}
+.adx.tocando .adx-play{opacity:0;pointer-events:none}
+.adx-prog{position:absolute;left:0;bottom:0;height:3px;width:0;background:linear-gradient(90deg,#3DDC6E,#B9DDB2)}
+.adx-tx{padding:12px 14px 2px}.adx-tx b{display:block;font-family:var(--display);font-size:17px;line-height:1.25}.adx-tx p{margin:4px 0 0;font-size:13.5px;color:var(--muted);line-height:1.4}
+.adx-cta{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:10px 14px 14px;padding:11px 14px;border-radius:14px;background:var(--surface-2);color:var(--accent-strong,#0E3D32);font-weight:800;font-size:14px;text-decoration:none}
+.adx-cta span{display:grid;transform:rotate(180deg)}
+.adx-cta:active{transform:scale(.98)}
+:root[data-theme="dark"] .adx-cta{color:#B9F5C9}
+@media (min-width:1024px){.adx{max-width:560px}}
+.adx.ad-card{padding:0;border-style:solid;gap:0}
+
+/* ===================== PAINEL ADMIN · design system (rodada 8) ===================== */
+#v-admin{--r-sm:10px;--r-md:14px;--r-lg:20px;--sh-1:0 1px 0 rgba(14,61,50,.03),0 10px 24px -20px rgba(14,61,50,.45);--sh-2:0 18px 40px -26px rgba(14,61,50,.55);--ring:0 0 0 3px rgba(46,125,90,.22);--gold:#C99A2E}
+#v-admin .btn{border-radius:12px;min-height:42px;font-weight:700;transition:transform .12s,box-shadow .15s,background .15s}
+#v-admin .btn-sm{min-height:36px;border-radius:10px;padding:0 12px;font-size:13.5px}
+#v-admin .btn:focus-visible,#v-admin .input:focus,#v-admin .chip:focus-visible{outline:0;box-shadow:var(--ring)}
+#v-admin .btn:active{transform:translateY(1px)}
+#v-admin .btn-accent{box-shadow:0 8px 18px -12px rgba(46,125,90,.9)}
+#v-admin .input,.mbox .input{border-radius:12px;min-height:44px;border:1px solid #D9E4D5;background:#fff;transition:border-color .15s,box-shadow .15s}
+.mbox .input:focus{outline:0;border-color:#2E7D5A;box-shadow:var(--ring,0 0 0 3px rgba(46,125,90,.22))}
+#v-admin .card,.mbox .card{border-radius:var(--r-lg,20px)}
+main.adm .head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px 16px;flex-wrap:wrap;margin-bottom:14px}
+main.adm .head h1{font-size:clamp(26px,4.4vw,34px);margin:0}
+main.adm .head p{margin:4px 0 0;max-width:720px}
+main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-inline:0;padding:0}
+.msg{border-radius:14px}.msg-warn{background:var(--warn-soft,#F7EDD8);color:#7A5512}
+/* esqueleto de carregamento */
+.skel{border-radius:8px;background:linear-gradient(90deg,#E8EFE5 25%,#F4F8F2 50%,#E8EFE5 75%);background-size:200% 100%;animation:skel 1.2s ease-in-out infinite}
+@keyframes skel{to{background-position:-200% 0}}
+@media (prefers-reduced-motion:reduce){.skel{animation:none}}
+/* estado vazio */
+.adm-vazio{display:grid;justify-items:center;text-align:center;gap:8px;padding:34px 18px!important}
+.adm-vazio>span{width:56px;height:56px;border-radius:18px;display:grid;place-items:center;background:#E8F2E6;color:#2E7D5A}
+.adm-vazio b{font-size:17px}.adm-vazio p{margin:0;max-width:380px}
+/* chips de escolha */
+.seg-pills{display:flex;flex-wrap:wrap;gap:8px}
+.seg-pills .chip[aria-pressed="true"],.adm-sub .chip[aria-pressed="true"]{background:#0E3D32;color:#fff;border-color:#0E3D32}
+.adm-sub{display:flex;flex-wrap:wrap;gap:8px;margin:-2px 0 16px}
+.mbox-wide{max-width:980px}
+/* topo + menu */
+.adm-mb,.adm-sb{display:none;border:0;background:rgba(255,255,255,.08);color:#fff;width:42px;height:42px;border-radius:12px;place-items:center;cursor:pointer;flex:0 0 auto}
+.adm-cur{display:none}
+.adm-cat{display:block;margin:16px 12px 6px;font-size:10.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(185,221,178,.6)}
+.adm-tabs .adm-gh,.adm-tabs .adm-it{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;color:rgba(255,255,255,.78);text-align:left;font:inherit;font-weight:700;font-size:14.5px;padding:10px 12px;border-radius:12px;cursor:pointer;transition:background .15s,color .15s}
+.adm-tabs .adm-gh:hover,.adm-tabs .adm-it:hover{background:rgba(255,255,255,.07);color:#fff}
+.adm-gn{flex:1;min-width:0}
+.adm-chev{display:grid;opacity:.6;transition:transform .2s}
+.adm-g.ab .adm-chev{transform:rotate(90deg)}
+.adm-g.tem>.adm-gh{color:#fff}
+.adm-gi{display:none;padding:2px 0 6px 30px;position:relative}
+.adm-gi::before{content:"";position:absolute;left:21px;top:4px;bottom:8px;width:1px;background:rgba(255,255,255,.12)}
+.adm-g.ab .adm-gi{display:block}
+.adm-tabs .adm-it{font-size:14px;font-weight:600;padding:8px 12px;color:rgba(255,255,255,.66)}
+.adm-tabs .adm-it.on,.adm-tabs .adm-gh.solo.on{background:#F5F8EF;color:#0E3D32;box-shadow:0 6px 16px -8px rgba(0,0,0,.5)}
+.adm-tabs .adm-gh.solo.on .ai{color:#2E7D5A}
+.adm-busca-bt{display:flex;align-items:center;gap:10px;width:100%;margin:2px 0 6px;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:rgba(255,255,255,.75);font:inherit;font-size:14px;cursor:pointer}
+.adm-busca-bt span{flex:1;text-align:left}.adm-busca-bt kbd{font:700 11px var(--body);padding:2px 6px;border-radius:6px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.7)}
+@media (max-width:1023px){
+  .adm-top{grid-template-columns:auto minmax(0,1fr) auto auto;grid-template-areas:"mb brand sb user";padding-bottom:10px}
+  .adm-mb{display:grid;grid-area:mb}.adm-sb{display:grid;grid-area:sb}
+  .adm-brand .wordmark small{display:none}
+  .adm-user .btn-line{padding:0 10px}
+  .adm-tabs{position:fixed;z-index:60;top:0;bottom:0;left:0;width:min(86vw,320px);display:block;overflow-y:auto;overscroll-behavior:contain;padding:max(16px,env(safe-area-inset-top)) 12px 24px;background:linear-gradient(170deg,#0E3D32,#082820);box-shadow:20px 0 50px -20px rgba(0,0,0,.6);transform:translateX(-102%);transition:transform .25s cubic-bezier(.2,.8,.2,1);visibility:hidden}
+  body.adm-menu-on .adm-tabs{transform:none;visibility:visible}
+  .adm-veu{position:fixed;inset:0;z-index:59;background:rgba(6,20,15,.45);backdrop-filter:blur(2px)}
+  body.adm-menu-on{overflow:hidden}
+  .adm-cur{display:block;grid-column:1/-1;font-family:var(--display);font-weight:800;font-size:15px;color:#B9DDB2;padding:2px 2px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  main.adm{padding:16px 16px 60px}
+}
+@media (min-width:1024px){.adm-tabs{display:block!important;overflow-y:auto}.adm-veu{display:none}}
+/* busca global */
+.adm-busca{position:fixed;inset:0;z-index:90;background:rgba(6,20,15,.42);backdrop-filter:blur(3px);display:flex;justify-content:center;align-items:flex-start;padding:min(12vh,90px) 16px 16px}
+.adm-busca[hidden]{display:none}
+.adm-bx{width:100%;max-width:620px;background:#fff;border-radius:20px;box-shadow:0 30px 80px -24px rgba(0,0,0,.55);overflow:hidden;color:#17211D}
+.adm-bi{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid #E6EDE3;color:#65736C}
+.adm-bi input{flex:1;border:0;outline:0;font:inherit;font-size:16px;color:#17211D;background:none;min-width:0}
+.adm-bi kbd{font:700 11px var(--body);padding:3px 7px;border-radius:6px;background:#EEF3EC;color:#65736C}
+.adm-br{max-height:min(60vh,460px);overflow-y:auto;padding:6px}
+.adm-bres{display:flex;align-items:center;gap:12px;width:100%;border:0;background:none;text-align:left;padding:10px 12px;border-radius:12px;font:inherit;color:inherit;cursor:pointer}
+.adm-bres.sel{background:#EEF5EC}
+.adm-bres .ai{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:#E8F2E6;color:#2E7D5A;flex:0 0 auto}
+.adm-brt{flex:1;min-width:0;display:flex;flex-direction:column}.adm-brt b{font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.adm-brt small{color:#65736C;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.adm-bres em{font-style:normal;font-size:11px;font-weight:800;color:#65736C;background:#F1F5EE;border-radius:999px;padding:3px 8px;flex:0 0 auto}
+.adm-bvazio{padding:22px;text-align:center;color:#65736C;font-size:14px}
+/* dashboard */
+.dash-sec{margin:18px 0 -4px}.dash-sec .adm-cat{color:#65736C;margin:0 2px}
+.dash-alertas{display:grid;gap:8px;margin-bottom:6px}
+.dash-al{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:1px solid;border-radius:14px;padding:11px 14px;font:inherit;font-weight:700;font-size:14px;cursor:pointer}
+.dash-al.bad{background:#FBEDEA;border-color:#F2CFC9;color:#9C3329}.dash-al.warn{background:#FBF4E4;border-color:#F0DFB5;color:#7A5512}
+.dash-al>span{display:grid}.dash-al i{margin-left:auto;display:grid;opacity:.7}
+.dash-ok{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:14px;background:#EAF4E7;color:#2E6B4C;font-weight:700;font-size:13.5px}
+.dash-rec{display:grid;gap:2px}
+.dash-ri{display:flex;align-items:center;gap:12px;border:0;background:none;text-align:left;padding:9px 6px;border-radius:12px;font:inherit;color:inherit;cursor:pointer}
+.dash-ri:hover{background:#F5F8F3}
+.dash-ri .ai{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:#E8F2E6;color:#2E7D5A;flex:0 0 auto}
+.dash-ri span:last-child{display:flex;flex-direction:column;min-width:0}.dash-ri b{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.dash-ri small{color:#65736C;font-size:12px}
+.dash-g{margin-top:14px}
+/* anúncios (lista e formulário com prévia) */
+.adm-adlist{display:grid;gap:10px;margin-top:14px}
+.adm-adrow{display:grid;grid-template-columns:64px minmax(0,1fr) auto auto;align-items:center;gap:14px;padding:12px;border-radius:18px;background:#fff;border:1px solid #E1EADB;box-shadow:var(--sh-1)}
+.adm-adth{position:relative;width:64px;height:64px;border-radius:14px;overflow:hidden;background:#E8F2E6;color:#2E7D5A;display:grid;place-items:center}
+.adm-adth img{width:100%;height:100%;object-fit:cover}.adm-adth i{position:absolute;right:4px;bottom:4px;width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;display:grid;place-items:center}
+.adm-adtx{display:flex;flex-direction:column;min-width:0;gap:2px}.adm-adtx b{font-size:15px}.adm-adtx small{color:#65736C;font-size:12.5px}
+@media (max-width:640px){.adm-adrow{grid-template-columns:56px minmax(0,1fr);}.adm-adth{width:56px;height:56px}.adm-adrow .st{justify-self:start}.adm-adrow .acts{grid-column:1/-1}}
+.ad-form{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:22px;align-items:start}
+.ad-prev{position:sticky;top:0;display:grid;gap:10px;padding:14px;border-radius:20px;background:#EEF3EC}
+.ad-prev .adx{margin:0}
+.ad-up{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
+@media (max-width:860px){.ad-form{grid-template-columns:1fr}.ad-prev{position:static}}
+/* central de notificações */
+.nt-list{display:grid;gap:10px}
+.nt-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px 16px;padding:14px 16px;border-radius:18px;background:#fff;border:1px solid #E1EADB;box-shadow:var(--sh-1)}
+.nt-main{min-width:0;display:grid;gap:3px}.nt-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.nt-main b{font-size:15.5px}.nt-main p{margin:0;color:#3d4b44;font-size:14px}.nt-main small{display:inline-flex;align-items:center;gap:5px}
+.nt-err{color:#9C3329}
+.nt-nums{display:flex;gap:6px;flex-wrap:wrap;align-self:center}
+.nt-nums span{display:flex;flex-direction:column;align-items:center;min-width:64px;padding:8px 10px;border-radius:12px;background:#F3F7F1;font-size:11px;color:#65736C;font-weight:700}
+.nt-nums span b{font-size:18px;color:#17211D}.nt-nums span.bad b{color:#9C3329}
+.nt-row .acts{grid-column:1/-1}
+.nt-nota{margin:14px 2px 0;font-size:12.5px}
+@media (max-width:760px){.nt-row{grid-template-columns:1fr}.nt-nums span{min-width:56px;flex:1}}
+.nf-alvo{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:12px 14px;border-radius:14px;background:#EAF4E7;color:#22573E;font-size:14px}
+.nf-phone{padding:18px 12px 26px;border-radius:26px;background:linear-gradient(160deg,#2a3f37,#0e1a16);box-shadow:inset 0 0 0 6px #0b1210}
+.nf-not{background:rgba(255,255,255,.92);border-radius:16px;padding:10px 12px;color:#111;box-shadow:0 10px 24px -14px rgba(0,0,0,.6)}
+.nf-nh{display:flex;align-items:center;gap:6px;font-size:11.5px;color:#555}.nf-nh img{width:18px;height:18px;border-radius:5px}.nf-nh b{color:#222}.nf-nh small{margin-left:auto}
+.nf-nt{display:block;font-size:14px;margin-top:6px}.nf-not p{margin:2px 0 0;font-size:13.5px;line-height:1.35;color:#333}
+.nf-img{display:block;width:100%;aspect-ratio:2/1;object-fit:cover;border-radius:10px;margin-top:8px}
+@media (min-width:600px){.adx{max-width:520px;margin-inline:auto}}
+@media (min-width:1024px){.adm-top{overflow:hidden}.adm-tabs{min-height:0;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.15) transparent}.adm-user{background:#082820}}
 </style>
 
 <!-- Entrar / criar conta -->
@@ -2496,6 +2668,8 @@ const S = {
   coupon: play(t => [1318, 1568, 1976, 2637, 3136].forEach((f, i) => tone(f, t + i * .055, .25, { vol: .07 }))),
   erro: play(t => { tone(230, t, .16, { type: "sawtooth", vol: .05, slide: .8 }); tone(180, t + .12, .2, { type: "sawtooth", vol: .05, slide: .8 }); }),
   swoosh: play(t => noise(t, .32, .09, 400, 3200)),
+  /* assinatura sonora do CK Life para notificações: duas notas de sino, sobe e assenta (curta e suave) */
+  notif: play(t => { bell(1046.5, .13, 1.0, t); bell(1567.98, .11, 1.25, t + .12); tone(3135.96, t + .12, .35, { vol: .018 }); }),
   chime: play(t => [784, 988, 1318].forEach((f, i) => bell(f, .12, 1.2, t + i * .12))),
   fav: play(t => [1568, 2093].forEach((f, i) => tone(f, t + i * .07, .2, { vol: .08 }))),
   beat: play(t => tone(1600, t, .03, { type: "square", vol: .045 })),
@@ -6097,7 +6271,7 @@ const PUSH_OK = () => "serviceWorker" in navigator && "PushManager" in window &&
 const pwaInstalado = () => matchMedia("(display-mode: standalone)").matches || navigator.standalone;
 let SWREG = null;
 if("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("/sw.js").then(r => { SWREG = r; }).catch(() => {});
-if("serviceWorker" in navigator) navigator.serviceWorker.addEventListener("message", e => { if(e.data && e.data.tipo === "push"){ const n = String(e.data.url || ""); if(/n=mensagem|n=story/.test(n)) tab("juntas"); else if(/n=/.test(n)) tab("juntas"); } });
+if("serviceWorker" in navigator) navigator.serviceWorker.addEventListener("message", e => { if(e.data && e.data.tipo === "push"){ const n = String(e.data.url || ""); if(/n=(mensagem|story|story_resposta|curtida|comentario|seguiu|solicitou|aceitou|conquista)\b/.test(n)) tab("juntas"); } });
 const b64u = s => { const p = "=".repeat((4 - s.length % 4) % 4), b = atob((s + p).replace(/-/g, "+").replace(/_/g, "/")); return Uint8Array.from([...b].map(c => c.charCodeAt(0))); };
 async function inscrevePush(silencioso){
   if(!PUSH_OK() || !NV_OK()) return false;
@@ -6209,10 +6383,10 @@ const figPro = f => f && (f.pro != null ? !!f.pro : !FIG_FREE.has(f.id));
 const filtroLivre = k => pode("filtros_todos") || (DB.config.filtrosFree || ["original", "natural", "glow", "vivo"]).includes(k);
 
 /* ---------- paywall (camada própria, por cima de qualquer tela) ---------- */
-const BENEF = [["👑", "Programas e treinos completos"], ["🥗", "Nutrição completa"], ["🌸", "Ciclo inteligente"], ["📊", "Evolução avançada"], ["✨", "Stickers e recursos criativos"], ["🎁", "Clube CK Pro"], ["✓", "Direito a pedir verificação"], ["🚫", "Sem anúncios"]];
+const BENEF = [["star", "Programas e treinos completos"], ["bowl", "Nutrição completa"], ["moon", "Ciclo inteligente"], ["target", "Evolução avançada"], ["tag", "Stickers e recursos criativos"], ["trophy", "Clube CK Pro"], ["people", "Direito a pedir verificação"], ["leaf", "Sem anúncios"]];
 const pagou = () => !!(ENT.d && ENT.d.pro && !ENT.d.trial);
 async function paywall(contexto, preview){
-  if(pagou()) return sheet("👑 Você é CK Life Pro", `<div class="card"><b>Sua assinatura está ativa 💚</b><p class="hint" style="margin:6px 0 0">${ENT.d.fim ? "Pro até " + brD(String(ENT.d.fim).slice(0, 10)) + ". " : ""}Todos os recursos Pro estão liberados para você.</p></div>`);
+  if(pagou()) return sheet("Você é CK Life Pro", `<div class="card"><b>Sua assinatura está ativa 💚</b><p class="hint" style="margin:6px 0 0">${ENT.d.fim ? "Pro até " + brD(String(ENT.d.fim).slice(0, 10)) + ". " : ""}Todos os recursos Pro estão liberados para você.</p></div>`);
   registraEvento("paywall_viewed", { contexto: contexto || "geral" });
   if(!souPro() || emTrial()){ try{ const o = await NU.sb.rpc("oferta_ativar", { p_contexto: contexto || "paywall" }); if(o && !o.error && o.data) { ENT.d = { ...(ENT.d || {}), oferta: o.data }; } }catch(e){} }
   const P = await carregaPlanos(), of = ENT.d && ENT.d.oferta, men = P.find(p => p.id === "pro_mensal") || {}, anu = P.find(p => p.id === "pro_anual") || {};
@@ -6225,9 +6399,9 @@ async function paywall(contexto, preview){
   const promoA = of && of.preco_anual_promo ? { v: of.preco_anual_promo, n: of.parcelas_anual, pv: of.parcela_anual_valor, txt: `no primeiro ano, depois ${brlP(anu.preco)}/ano` } : null;
   box.innerHTML = `<div class="pw-in" role="dialog" aria-label="CK Life Pro"><button class="iconbtn sm pw-x" id="pw-x" aria-label="Fechar">${ic("close", 16)}</button>
     ${preview ? `<div class="pw-prev">${preview}</div>` : ""}
-    <span class="eyebrow">👑 CK LIFE PRO</span><h2>${of ? esc(of.titulo) : "Sua experiência completa"}</h2><p class="pw-sub">${of ? esc(of.subtitulo || "") : "Mais personalização, profundidade e conveniência."}</p>
+    <span class="eyebrow"><i class='ckc' aria-hidden='true'></i> CK LIFE PRO</span><h2>${of ? esc(of.titulo) : "Sua experiência completa"}</h2><p class="pw-sub">${of ? esc(of.subtitulo || "") : "Mais personalização, profundidade e conveniência."}</p>
     ${of ? `<p class="pw-tempo" id="pw-tempo"></p>` : ""}
-    <ul class="pw-ben">${BENEF.map(([i, t]) => `<li><i>${i}</i>${t}</li>`).join("")}</ul>
+    <ul class="pw-ben">${BENEF.map(([i, t]) => `<li><i>${ic(i, 16, 2)}</i>${t}</li>`).join("")}</ul>
     <div class="pw-plans">${cardP("anual", anu, promoA)}${cardP("mensal", men, promoM)}</div>
     <button class="btn btn-accent btn-block btn-lg" id="pw-go">Continuar</button>
     <p class="hint pw-nota">Sem fidelidade escondida: você cancela quando quiser e continua Pro até o fim do período pago. Na compra, use o e-mail <b>${esc(ME.email || "da sua conta")}</b> para liberar automaticamente.</p></div>`;
@@ -6245,10 +6419,10 @@ async function paywall(contexto, preview){
     ENT.voltouDoCheckout = true; window.open(url, "_blank", "noopener"); };
 }
 function tempoRest(fim){ const s = Math.max(0, Math.floor((new Date(fim).getTime() - agoraServ()) / 1000)); const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), ss = s % 60; return `${h}h ${String(m).padStart(2, "0")}min ${String(ss).padStart(2, "0")}s`; }
-document.addEventListener("visibilitychange", async () => { if(document.visibilityState !== "visible" || !ME) return; const antes = souPro(); await carregaPlano(true); if(ENT.voltouDoCheckout && !antes && souPro()){ ENT.voltouDoCheckout = false; toast("Bem-vinda ao CK Life Pro 👑"); rerender(); } });
+document.addEventListener("visibilitychange", async () => { if(document.visibilityState !== "visible" || !ME) return; const antes = souPro(); await carregaPlano(true); if(ENT.voltouDoCheckout && !antes && souPro()){ ENT.voltouDoCheckout = false; toast("Bem-vinda ao CK Life Pro!"); rerender(); } });
 function exigePro(f, contexto, preview){ if(pode(f)) return true; registraEvento("pro_feature_clicked", { recurso: f }); paywall(contexto || "recurso_pro", preview); return false; }
 
-/* ---------- 👑 no conteúdo Pro: aparece, mas ao tocar mostra prévia + paywall ---------- */
+/* ---------- <i class='ckc' aria-hidden='true'></i> no conteúdo Pro: aparece, mas ao tocar mostra prévia + paywall ---------- */
 function decoraPro(root){
   if(!ME) return;
   (root || document).querySelectorAll("[data-prog]:not([data-pz])").forEach(b => { b.dataset.pz = 1; if(!progLiberado(b.dataset.prog)) trava(b, "programas_completos", "programa_pro"); });
@@ -6260,38 +6434,38 @@ function decoraPro(root){
   [["#fl-mk", "maquiagem"], ["#se-dad", "selos_dados"]].forEach(([s, f]) => { const b = (root || document).querySelector(s + ":not([data-pz])"); if(b){ b.dataset.pz = 1; if(!pode(f)) trava(b, f, "recurso_pro"); } });
   (root || document).querySelectorAll("[data-des]:not([data-pz])").forEach(b => { b.dataset.pz = 1; if(b.dataset.des !== "d7" && !pode("desafios_longos")) trava(b, "desafios_longos", "programa_pro"); });
 }
-function trava(b, f, ctx){ b.classList.add("pro-lock"); b.dataset.exige = f; b.dataset.ctx = ctx; if(!b.querySelector(".pro-cr")) b.insertAdjacentHTML("beforeend", `<span class="pro-cr" aria-label="CK Life Pro">👑</span>`); }
+function trava(b, f, ctx){ b.classList.add("pro-lock"); b.dataset.exige = f; b.dataset.ctx = ctx; if(!b.querySelector(".pro-cr")) b.insertAdjacentHTML("beforeend", `<span class="pro-cr" aria-label="CK Life Pro"><i class='ckc' aria-hidden='true'></i></span>`); }
 new MutationObserver(() => { clearTimeout(decoraPro._t); decoraPro._t = setTimeout(() => decoraPro(), 60); }).observe(document.body, { childList: true, subtree: true });
 document.addEventListener("click", e => { const b = e.target.closest && e.target.closest(".pro-lock[data-exige]"); if(!b || pode(b.dataset.exige)) return; e.preventDefault(); e.stopImmediatePropagation();
-  const img = b.querySelector("img"), nome = ([...b.querySelectorAll("h4,b,strong")].map(x => x.textContent.trim()).find(Boolean) || "").replace("👑", "").trim().slice(0, 60); registraEvento("pro_feature_clicked", { recurso: b.dataset.exige }); paywall(b.dataset.ctx, `${img && /figurinhas|fg-it/.test(img.src + b.className) ? `<img src="${esc(img.currentSrc || img.src)}" alt="">` : ""}${nome ? `<b>👑 ${esc(nome)}</b>` : ""}<small>Disponível no CK Life Pro.</small>`); }, true);
+  const img = b.querySelector("img"), nome = ([...b.querySelectorAll("h4,b,strong")].map(x => x.textContent.trim()).find(Boolean) || "").trim().slice(0, 60); registraEvento("pro_feature_clicked", { recurso: b.dataset.exige }); paywall(b.dataset.ctx, `${img && /figurinhas|fg-it/.test(img.src + b.className) ? `<img src="${esc(img.currentSrc || img.src)}" alt="">` : ""}${nome ? `<b><i class='ckc' aria-hidden='true'></i> ${esc(nome)}</b>` : ""}<small>Disponível no CK Life Pro.</small>`); }, true);
 
 /* ---------- recursos Pro com verificação na hora de usar ---------- */
 const rCardapioP = rCardapio; rCardapio = function(){ if(pode("cardapio")) return rCardapioP.apply(this, arguments);
-  const b = $("d-body"); if(b){ b.innerHTML = `<div class="card pro-tela"><span>🗓️</span><b>👑 Cardápio semanal</b><p class="hint">Um cardápio para a semana toda, montado para a sua meta, com trocas de receitas em um toque.</p><button class="btn btn-accent" data-pw="1">Conhecer o CK Life Pro</button></div>`; b.querySelector("[data-pw]").onclick = () => exigePro("cardapio", "recurso_pro"); } };
+  const b = $("d-body"); if(b){ b.innerHTML = `<div class="card pro-tela"><span>🗓️</span><b><i class='ckc' aria-hidden='true'></i> Cardápio semanal</b><p class="hint">Um cardápio para a semana toda, montado para a sua meta, com trocas de receitas em um toque.</p><button class="btn btn-accent" data-pw="1">Conhecer o CK Life Pro</button></div>`; b.querySelector("[data-pw]").onclick = () => exigePro("cardapio", "recurso_pro"); } };
 const abrirCozinhaP = abrirCozinha; abrirCozinha = function(){ if(!exigePro("modo_cozinha", "recurso_pro")) return; return abrirCozinhaP.apply(this, arguments); };
-const abrirReceitaP = abrirReceita; abrirReceita = function(id){ if(!receitaLivre(id)){ const r = receitas().find(x => x.id === id); registraEvento("pro_feature_clicked", { recurso: "receitas_todas" }); return paywall("recurso_pro", r ? `<b>👑 ${esc(r.nome)}</b>` : ""); } return abrirReceitaP.apply(this, arguments); };
-const abrirProgramaP = abrirPrograma; abrirPrograma = function(id){ if(!progLiberado(id)){ const p = progById(id); registraEvento("pro_feature_clicked", { recurso: "programas_completos" }); return paywall("programa_pro", p ? `<b>👑 ${esc(p.nome)}</b><small>${p.semanas} semanas · ${esc(p.nivel)}</small>` : ""); } return abrirProgramaP.apply(this, arguments); };
+const abrirReceitaP = abrirReceita; abrirReceita = function(id){ if(!receitaLivre(id)){ const r = receitas().find(x => x.id === id); registraEvento("pro_feature_clicked", { recurso: "receitas_todas" }); return paywall("recurso_pro", r ? `<b><i class='ckc' aria-hidden='true'></i> ${esc(r.nome)}</b>` : ""); } return abrirReceitaP.apply(this, arguments); };
+const abrirProgramaP = abrirPrograma; abrirPrograma = function(id){ if(!progLiberado(id)){ const p = progById(id); registraEvento("pro_feature_clicked", { recurso: "programas_completos" }); return paywall("programa_pro", p ? `<b><i class='ckc' aria-hidden='true'></i> ${esc(p.nome)}</b><small>${p.semanas} semanas · ${esc(p.nivel)}</small>` : ""); } return abrirProgramaP.apply(this, arguments); };
 const checkinP = checkin; checkin = function(){ if(!exigePro("ciclo_avancado", "recurso_pro", "<b>🌸 Ciclo inteligente</b><small>Sintomas, insights e treino adaptado à fase</small>")) return; return checkinP.apply(this, arguments); };
 const adaptarTreinoP = adaptarTreino; adaptarTreino = function(){ if(!exigePro("ciclo_avancado", "recurso_pro", "<b>🌸 Treino adaptado ao ciclo</b>")) return; return adaptarTreinoP.apply(this, arguments); };
 const criarFigurinhaP = criarFigurinha; criarFigurinha = function(){ if(!exigePro("figurinha_propria", "sticker_pro")) return; return criarFigurinhaP.apply(this, arguments); };
 const videoValidoP = videoValido; videoValido = function(f, maxSeg){ const lim = limite("video_longo", souPro() ? 60 : 15); return videoValidoP.call(this, f, Math.min(maxSeg || 60, lim)); };
 const rEvolucaoP = rEvolucao; rEvolucao = function(){ rEvolucaoP.apply(this, arguments); if(pode("graficos_avancados")) return;
-  const cards = [...document.querySelectorAll("#t-evolucao .card")].filter(c => c.querySelector("#ev-peso")); cards.forEach(c => { const g = c.querySelector("svg"); if(g){ g.classList.add("pro-blur"); g.insertAdjacentHTML("afterend", `<button class="btn btn-soft btn-sm pro-graf" data-pw="graficos_avancados">👑 Ver evolução completa</button>`); } });
+  const cards = [...document.querySelectorAll("#t-evolucao .card")].filter(c => c.querySelector("#ev-peso")); cards.forEach(c => { const g = c.querySelector("svg"); if(g){ g.classList.add("pro-blur"); g.insertAdjacentHTML("afterend", `<button class="btn btn-soft btn-sm pro-graf" data-pw="graficos_avancados"><i class='ckc' aria-hidden='true'></i> Ver evolução completa</button>`); } });
   document.querySelectorAll("#t-evolucao [data-pw]").forEach(b => b.onclick = () => exigePro("graficos_avancados", "grafico_pro")); };
 /* fim do treino (Free): pode aparecer uma condição, nunca no meio do treino */
 const fimTreinoPl = fimTreino; fimTreino = function(parcial){ fimTreinoPl.apply(this, arguments); registraEvento("exercise_completed", { treino: PL && PL.T ? PL.T.nome : null });
   if(parcial || (souPro() && !emTrial()) || !NU.sb) return;
   NU.sb.rpc("oferta_ativar", { p_contexto: "treino_concluido" }).then(r => { const o = r && r.data; if(!o) return; ENT.d = { ...(ENT.d || {}), oferta: o }; const ok = $("fim-ok"); if(!ok || $("pw-fim")) return;
-    ok.insertAdjacentHTML("afterend", `<button class="pw-mini" id="pw-fim"><span>👑 ${esc(o.titulo)}</span><small>${esc(o.subtitulo || "Ver condição especial")}</small></button>`); $("pw-fim").onclick = () => { NU.sb.rpc("oferta_evento", { p_id: o.id, p_tipo: "clique" }); registraEvento("offer_clicked", { campanha: o.campanha }); paywall("treino_concluido"); }; }, () => {}); };
+    ok.insertAdjacentHTML("afterend", `<button class="pw-mini" id="pw-fim"><span><i class='ckc' aria-hidden='true'></i> ${esc(o.titulo)}</span><small>${esc(o.subtitulo || "Ver condição especial")}</small></button>`); $("pw-fim").onclick = () => { NU.sb.rpc("oferta_evento", { p_id: o.id, p_tipo: "clique" }); registraEvento("offer_clicked", { campanha: o.campanha }); paywall("treino_concluido"); }; }, () => {}); };
 
 /* ---------- Início e Perfil: teste, último dia, oferta ---------- */
 function blocoPlano(onde){
   const d = ENT.d; if(!d) return "";
-  if(d.pro && !d.trial){ if(onde !== "inicio") return ""; return `<div class="pl-bloco"><button class="pl-pro" data-pro="1"><span class="pl-cr">👑</span><span><b>Você é CK Life Pro</b><small>${d.fim ? "Assinatura ativa até " + brD(String(d.fim).slice(0, 10)) : "Assinatura ativa"} · tudo liberado</small></span></button></div>`; }
+  if(d.pro && !d.trial){ if(onde !== "inicio") return ""; return `<div class="pl-bloco"><button class="pl-pro" data-pro="1"><span class="pl-cr"><i class='ckc' aria-hidden='true'></i></span><span><b>Você é CK Life Pro</b><small>${d.fim ? "Assinatura ativa até " + brD(String(d.fim).slice(0, 10)) : "Assinatura ativa"} · tudo liberado</small></span></button></div>`; }
   const of = d.oferta, dias = d.dias_restantes;
   let h = "";
   if(d.trial && dias != null) h += dias <= 1 ? `<div class="pl-ultimo"><b>Seu último dia de CK Life Pro 💚</b><p>Amanhã você continua usando o CK Life gratuitamente. Você <b>não perde</b> conta, amigas, mensagens, posts, Stories, conquistas, histórico, medidas, progresso, fotos e registros. Só os recursos Pro ficam bloqueados.</p><button class="btn btn-accent btn-sm" data-pw="1">Continuar com o Pro</button></div>`
-    : `<button class="pl-chip" data-pw="1">👑 Pro grátis · ${dias} ${dias === 1 ? "dia restante" : "dias restantes"}</button>`;
+    : `<button class="pl-chip" data-pw="1"><i class='ckc' aria-hidden='true'></i> Pro grátis · ${dias} ${dias === 1 ? "dia restante" : "dias restantes"}</button>`;
   if(of){ const falta = new Date(of.expira).getTime() - agoraServ();
     h += `<button class="pl-oferta" data-pw="1"><span class="eyebrow">CONDIÇÃO ESPECIAL</span><b>${esc(of.titulo)}</b><small>${esc(of.subtitulo || "")}</small><em class="pl-cont" data-fim="${esc(of.expira)}">${falta < 864e5 * 2 && falta > 864e5 ? "Sua condição especial termina amanhã." : "Termina em " + tempoRest(of.expira)}</em></button>`;
     if(onde === "inicio" && !blocoPlano.visto){ blocoPlano.visto = 1; NU.sb && NU.sb.rpc("oferta_evento", { p_id: of.id, p_tipo: "impressao" }).then(() => {}, () => {}); } }
@@ -6300,11 +6474,11 @@ function blocoPlano(onde){
 setInterval(() => document.querySelectorAll(".pl-cont[data-fim]").forEach(e => { const f = new Date(e.dataset.fim).getTime() - agoraServ(); e.textContent = f <= 0 ? "Condição encerrada" : f > 864e5 && f < 864e5 * 2 ? "Sua condição especial termina amanhã." : "Termina em " + tempoRest(e.dataset.fim); }), 1000);
 const rInicioPl = rInicio; rInicio = function(){ rInicioPl.apply(this, arguments); const b = blocoPlano("inicio"), alvo = document.querySelector("#t-inicio .xe-dia"); if(b && alvo) alvo.insertAdjacentHTML("afterbegin", b);
   document.querySelectorAll("#t-inicio [data-pw]").forEach(x => x.onclick = () => paywall("paywall")); document.querySelectorAll("#t-inicio [data-pro]").forEach(x => x.onclick = () => tab("perfil"));
-  const rec = document.querySelector("#t-inicio .xe-rec"); if(rec && !pode("sugestoes_energia")){ const bt = rec.querySelector("button"); if(bt){ bt.innerHTML = "👑 Treino adaptado à sua energia"; bt.onclick = e => { e.stopPropagation(); exigePro("sugestoes_energia", "recurso_pro"); }; } }
+  const rec = document.querySelector("#t-inicio .xe-rec"); if(rec && !pode("sugestoes_energia")){ const bt = rec.querySelector("button"); if(bt){ bt.innerHTML = "<i class='ckc' aria-hidden='true'></i> Treino adaptado à sua energia"; bt.onclick = e => { e.stopPropagation(); exigePro("sugestoes_energia", "recurso_pro"); }; } }
   anunciosInicio(); };
 const rPerfilPl = rPerfil; rPerfil = function(){ rPerfilPl.apply(this, arguments); const el = $("t-perfil"); if(!el || !ENT.d) return;
   const card = [...el.querySelectorAll(".today")].find(c => /Premium|anúncios/i.test(c.textContent)), d = ENT.d;
-  const html = `<div class="pl-card ${d.pro ? "on" : ""}${d.pro && !d.trial ? " pago" : ""}"><span class="eyebrow">${d.pro ? (d.trial ? "👑 CK Life Pro · teste grátis" : "👑 CK Life Pro · assinante" + (d.plano === "pro_anual" ? " anual" : d.plano === "pro_mensal" ? " mensal" : "")) : "CK Life Free"}</span>
+  const html = `<div class="pl-card ${d.pro ? "on" : ""}${d.pro && !d.trial ? " pago" : ""}"><span class="eyebrow">${d.pro ? (d.trial ? "<i class='ckc' aria-hidden='true'></i> CK Life Pro · teste grátis" : "<i class='ckc' aria-hidden='true'></i> CK Life Pro · assinante" + (d.plano === "pro_anual" ? " anual" : d.plano === "pro_mensal" ? " mensal" : "")) : "CK Life Free"}</span>
     <h2>${d.pro ? (d.trial ? `${d.dias_restantes} ${d.dias_restantes === 1 ? "dia" : "dias"} de Pro grátis` : d.fim ? `Pro até ${brD(String(d.fim).slice(0, 10))}` : "Pro ativo") : "Treino, comunidade e conquistas grátis"}</h2>
     <p>${d.pro ? (d.status === "canceled" ? "Assinatura cancelada: você continua Pro até o fim do período." : "Programas completos, nutrição, ciclo inteligente e sem anúncios.") : "Conheça o Pro: programas completos, nutrição, ciclo inteligente e sem anúncios."}</p>
     ${!d.pro || d.trial ? `<button class="btn btn-accent" data-pw="1">${d.oferta ? "Ver condição especial" : "Conhecer o CK Life Pro"}</button>` : ""}</div>${blocoPlano("perfil").replace(/pl-chip/g, "pl-chip pl-oculto")}`;
@@ -6331,8 +6505,8 @@ function pedeSelfie(v){
     catch(e){ toast(ERR_MSG(e)); } };
 }
 
-/* ---------- Selos ✓ e 👑 ao lado do nome (só o ✓ e a 👑; nada de dado pessoal) ---------- */
-const selosP = u => { const p = PERFIS.get(u) || (EU && EU.user_id === u ? EU : {}); return `${p.verificada ? `<i class="sel-ver" title="Perfil verificado">✓</i>` : ""}${p.pro_ate && new Date(p.pro_ate) > new Date() ? `<i class="sel-pro" title="CK Life Pro">👑</i>` : ""}`; };
+/* ---------- Ao lado do nome só o ✓ (perfil verificado). A coroa Pro fica só sobre a foto (coroaDe / classe .cr). ---------- */
+const selosP = u => { const p = PERFIS.get(u) || (EU && EU.user_id === u ? EU : {}); return `${p.verificada ? `<i class="sel-ver" title="Perfil verificado">✓</i>` : ""}`; };
 
 /* ---------- Publicidade: só Free depois do 30º dia, só em espaços naturais (Feed e Explorar) ---------- */
 function anuncioHtml(local){
@@ -6349,7 +6523,7 @@ const rExplorarPl = rExplorar; rExplorar = function(){ rExplorarPl.apply(this, a
 
 /* ---------- voltou para o app (ex.: depois de pagar): confere o plano de novo ---------- */
 document.addEventListener("visibilitychange", async () => { if(document.hidden || !(NU.ativo && NU.sb && NU.uid)) return; const antes = pagou(); await carregaPlano(true);
-  if(pagou() && ENT.d) ENT.d.oferta = null; if(antes !== pagou()){ if(pagou()){ $("pw") && $("pw").remove(); toast("👑 Bem-vinda ao CK Life Pro!"); } if(!$("v-app").hidden) rerender(); atualizaTopo(); } });
+  if(pagou() && ENT.d) ENT.d.oferta = null; if(antes !== pagou()){ if(pagou()){ $("pw") && $("pw").remove(); toast("Bem-vinda ao CK Life Pro!"); } if(!$("v-app").hidden) rerender(); atualizaTopo(); } });
 /* ---------- carga inicial ---------- */
 { let n = 0; const t = setInterval(async () => { if(!(NU.ativo && NU.sb && NU.uid)){ if(++n > 60) clearInterval(t); return; } clearInterval(t);
   await carregaPlano(true); if(pagou()) ENT.d.oferta = null; if(emTrial() && NU.sb){ try{ const r = await NU.sb.rpc("oferta_ativar", { p_contexto: null }); if(r && r.data) ENT.d.oferta = r.data; }catch(e){} }
@@ -6559,6 +6733,121 @@ document.addEventListener("touchend", () => {
   else { g.el.style.transform = ""; setTimeout(() => { g.el.style.boxShadow = ""; g.el.classList.remove("nav-arrasta"); }, 230); }
 });
 document.addEventListener("touchcancel", () => { if(G && G.ativo){ G.el.style.transition = "transform .2s"; G.el.style.transform = ""; } G = null; });
+
+/* ===================== NOTIFICAÇÕES: som do CK Life e lembrete de treino no servidor =====================
+   Som: com o app aberto, toca a assinatura sonora do CK Life (sons.js > notif). Com o app fechado, o celular usa o som
+   do sistema (Android/iPhone não deixam um site/PWA escolher o som da notificação); a vibração tem um ritmo próprio.
+   Lembrete: fica salvo no banco (tabela lembretes) e o servidor envia ~20 min antes, mesmo com o app fechado. */
+const SOMN_K = "cklife_som_notif";
+const somNotifOn = () => { try{ return localStorage.getItem(SOMN_K) !== "0"; }catch(e){ return true; } };
+const tocaNotif = () => { if(somNotifOn() && SOM.notif) SOM.notif(); };
+/* todo aviso que aparece dentro do app toca o som do CK Life */
+const avisoNt = aviso; aviso = function(){ tocaNotif(); vibra && vibra([60, 40, 60]); return avisoNt.apply(this, arguments); };
+/* aviso que chegou pelo celular com o app aberto: mostra dentro do app (o do sistema vem sem som) */
+if("serviceWorker" in navigator) navigator.serviceWorker.addEventListener("message", e => { const d = e.data || {};
+  if(d.tipo === "push-ao-vivo" && d.p) aviso(`<span class="pav nt-ic">${ic("bell", 16)}</span><span><b>${esc(d.p.title || "CK Life")}</b> ${esc(d.p.body || "")}</span>`, d.p.url && d.p.url !== "/" ? () => { try{ const u = new URL(d.p.url, location.origin); if(u.origin === location.origin) location.href = u.pathname + u.search; else window.open(u.href, "_blank", "noopener"); }catch(x){} } : null); });
+
+/* ---------- Lembrete de treino (servidor) ---------- */
+const fusoLocal = () => { try{ return Intl.DateTimeFormat().resolvedOptions().timeZone || "America/Cuiaba"; }catch(e){ return "America/Cuiaba"; } };
+async function sincLembrete(L){
+  if(!(NU.ativo && NU.sb && NU.uid)) return false;
+  try{
+    if(!L || !L.celular){ await q(SB().from("lembretes").delete().eq("user_id", NU.uid).eq("tipo", "treino")); return true; }
+    await q(SB().from("lembretes").upsert({ user_id: NU.uid, tipo: "treino", hora: L.hora, dias: L.dias, antecedencia: L.antes ?? 20, fuso: fusoLocal(), ativo: true, pausado_ate: L.pulaAte || null }, { onConflict: "user_id,tipo" }));
+    return true;
+  }catch(e){ console.warn("lembrete", e); return false; }
+}
+editaLembrete = function(){
+  const L = ME.lembrete || { dias: ["MO", "WE", "FR"], hora: "07:00", celular: true, antes: 20 }, cel = L.celular !== false, hojeK = ["SU", "MO", "TU", "WE", "TH", "FR", "SA"][new Date().getDay()];
+  sheet("Lembrete de treino", `<p class="lead" style="margin:0">Escolha os dias e o horário do seu treino. A gente avisa no celular <b>20 minutos antes</b>, mesmo com o app fechado.</p>
+    <div><h4 style="margin-bottom:10px">Dias</h4><div class="chips" id="lb-d">${DSEM.map(([k, n]) => `<button class="chip" data-d="${k}" aria-pressed="${L.dias.includes(k)}">${n}</button>`).join("")}</div></div>
+    <div class="formgrid lb-g"><div class="field"><label for="lb-h">Horário do treino</label><input class="input" id="lb-h" type="time" value="${L.hora}"></div>
+      <div class="field"><label for="lb-a">Avisar antes</label><select class="input" id="lb-a">${[10, 15, 20, 30, 45, 60].map(m => `<option value="${m}" ${(L.antes ?? 20) === m ? "selected" : ""}>${m} minutos</option>`).join("")}</select></div></div>
+    <label class="lb-nav"><input type="checkbox" id="lb-c" ${cel ? "checked" : ""}> Avisar no celular (notificação do CK Life)</label>
+    ${ME.lembrete && L.dias.includes(hojeK) ? `<label class="lb-nav"><input type="checkbox" id="lb-p" ${L.pulaAte === today() ? "checked" : ""}> Hoje não vou treinar (não avisar hoje)</label>` : ""}
+    <button class="btn btn-accent btn-block btn-lg" id="lb-ok">${ic("bell", 18)} Salvar lembrete</button>
+    <button class="btn btn-line btn-block" id="lb-cal">${ic("calendar", 18)} Também colocar no calendário do celular</button>
+    ${ME.lembrete ? `<button class="link lb-off" id="lb-off">Desligar lembrete</button>` : ""}
+    <p class="hint" style="margin:0">O aviso usa o fuso do seu celular (${esc(fusoLocal().replace(/_/g, " "))}). No iPhone, os avisos funcionam com o CK Life instalado na tela de início.</p>`);
+  $("lb-d").querySelectorAll("[data-d]").forEach(b => b.onclick = () => { b.setAttribute("aria-pressed", b.getAttribute("aria-pressed") !== "true"); SOM.tap(); });
+  const ler = () => { const dias = [...$("lb-d").querySelectorAll('[aria-pressed="true"]')].map(b => b.dataset.d); return dias.length ? { dias, hora: $("lb-h").value || "07:00", antes: +$("lb-a").value || 20, celular: $("lb-c").checked, pulaAte: $("lb-p") && $("lb-p").checked ? today() : null } : null; };
+  $("lb-ok").onclick = async () => {
+    const n = ler(); if(!n) return toast("Escolha pelo menos um dia");
+    ME.lembrete = { ...n, nav: false }; save();
+    if(n.celular && !pushLigado()) await ativarNotificacoes();
+    const ok = await sincLembrete(ME.lembrete); ME.lembrete.sinc = ok ? JSON.stringify(n) : null; save();
+    SOM.chime && SOM.chime(); fecharSheet();
+    toast(!n.celular ? "Lembrete salvo (sem aviso no celular)" : ok ? `Pronto! Aviso ${n.antes} min antes do treino` : "Lembrete salvo. O aviso no celular liga quando você estiver conectada.");
+    if(TAB === "perfil") rPerfil(); else if(TAB === "inicio") rInicio();
+  };
+  $("lb-cal").onclick = async () => { const n = ler(); if(!n) return toast("Escolha pelo menos um dia");
+    const blob = new Blob([icsLembrete(n.dias, n.hora)], { type: "text/calendar;charset=utf-8" }), file = new File([blob], "lembrete-ck-life.ics", { type: "text/calendar" });
+    if(navigator.canShare && navigator.canShare({ files: [file] }) && /android/i.test(navigator.userAgent)) await navigator.share({ files: [file], title: "Lembrete CK Life" }).catch(() => {});
+    else { const u = URL.createObjectURL(blob), a = document.createElement("a"); a.href = u; a.download = "lembrete-ck-life.ics"; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 5000); }
+    toast("Confirme no calendário do celular"); };
+  const off = $("lb-off"); if(off) off.onclick = async () => { delete ME.lembrete; save(); await sincLembrete(null); fecharSheet(); toast("Lembrete desligado"); if(TAB === "perfil") rPerfil(); else if(TAB === "inicio") rInicio(); };
+};
+/* quem já tinha lembrete salvo só no aparelho passa a receber pelo servidor */
+setTimeout(() => { const L = ME && ME.lembrete; if(!L || L.celular === false) return; const k = JSON.stringify({ dias: L.dias, hora: L.hora, antes: L.antes ?? 20, celular: true, pulaAte: L.pulaAte || null });
+  if(L.sinc !== k && pushLigado()) sincLembrete({ ...L, celular: true }).then(ok => { if(ok){ L.celular = true; L.sinc = k; save(); } }); }, 12000);
+
+/* ---------- Perfil: som das notificações ---------- */
+const rPerfilNt = rPerfil; rPerfil = function(){ rPerfilNt.apply(this, arguments); const pp = $("p-push"); if(!pp || $("p-somn")) return;
+  pp.insertAdjacentHTML("afterend", setRow("p-somn", "speaker", "Som do CK Life", somNotifOn() ? "Toque próprio nos avisos com o app aberto" : "Desligado", sw(somNotifOn())));
+  $("p-somn").onclick = () => { const v = !somNotifOn(); try{ localStorage.setItem(SOMN_K, v ? "1" : "0"); }catch(e){} if(v) SOM.notif && SOM.notif(); rPerfil(); }; };
+
+/* ---------- Ao tocar no aviso: abre a área certa do app ---------- */
+const IR_TAB = { treino: "treinar", treinar: "treinar", agua: "dieta", refeicao: "dieta", dieta: "dieta", nutricao: "dieta", juntas: "juntas", comunidade: "juntas", explorar: "explorar", perfil: "perfil", inicio: "inicio", sistema: "inicio", evolucao: "evolucao" };
+function irPorUrl(url){ try{ const u = new URL(url, location.origin), k = u.searchParams.get("ir") || u.searchParams.get("n"); const t = IR_TAB[k]; if(t && typeof tab === "function" && ME){ tab(t); return true; } }catch(e){} return false; }
+if("serviceWorker" in navigator) navigator.serviceWorker.addEventListener("message", e => { if(e.data && e.data.tipo === "push") irPorUrl(e.data.url); });
+{ let n = 0; const t = setInterval(() => { if(ME && !$("v-app").hidden){ clearInterval(t); if(/[?&](ir|n)=/.test(location.search) && irPorUrl(location.href)) history.replaceState(null, "", location.pathname + location.hash); } else if(++n > 40) clearInterval(t); }, 500); }
+
+/* ===================== ANÚNCIOS INTEGRADOS (imagem 1080x1080, vídeo até 30 s ou texto) =====================
+   Regras que continuam valendo: só para quem usa o plano grátis a partir do 31º dia (ENT.d.anuncios), nunca no treino,
+   no chat ou em telas de segurança; no máximo 1 anúncio por tela. Vídeo começa mudo, só toca visível e carrega sob demanda. */
+const AD_LOCAIS_PADRAO = ["feed", "explorar"];
+function adCard(c, an, local, previa){
+  const fmt = c.formato === "video" && c.midia ? "video" : c.formato === "imagem" && c.midia ? "imagem" : "texto";
+  const prop = fmt === "video" && c.prop ? Math.max(.5, Math.min(2, +c.prop)) : 1, href = esc(linkCamp(c));
+  const midia = fmt === "imagem" ? `<div class="adx-m" style="aspect-ratio:1/1"><img src="${esc(c.midia)}" alt="${esc(c.titulo || an.nome)}" width="1080" height="1080" loading="lazy" decoding="async"></div>`
+    : fmt === "video" ? `<div class="adx-m" style="aspect-ratio:${prop}"><video muted playsinline preload="none" ${c.capa ? `poster="${esc(c.capa)}"` : ""} data-src="${esc(c.midia)}" aria-label="Vídeo do anúncio"></video><button class="adx-som" type="button" aria-label="Ativar som">${ic("mute", 16)}</button><button class="adx-play" type="button" aria-label="Reproduzir">${ic("play", 26)}</button><i class="adx-prog"></i></div>` : "";
+  return `<article class="ad-card adx adx-${fmt}" ${previa ? "" : `data-ad="${c.id}" data-local="${local}"`}>
+    <header class="adx-h"><span class="adx-logo">${esc((an.nome || "?").trim()[0] || "?")}</span><span><b>${esc(an.nome || "Anunciante")}</b><small>Patrocinado</small></span></header>
+    ${midia}
+    ${c.titulo || c.texto ? `<div class="adx-tx">${c.titulo ? `<b>${esc(c.titulo)}</b>` : ""}${c.texto ? `<p>${esc(c.texto)}</p>` : ""}</div>` : ""}
+    <a class="adx-cta" href="${href}" target="_blank" rel="noopener sponsored">${esc(c.botao || "Saiba mais")}<span>${ic("back", 15, 2.4)}</span></a>
+  </article>`;
+}
+window.CKAD = { card: (c, an) => adCard(c, an, "previa", true) };
+anuncioHtml = function(local){
+  if(!ENT.d || !ENT.d.anuncios) return "";
+  const L = campanhasPara(ME).filter(c => (c.locais && c.locais.length ? c.locais : AD_LOCAIS_PADRAO).includes(local)); if(!L.length) return "";
+  const c = L[(anuncioHtml.n = (anuncioHtml.n || 0) + 1) % L.length], an = DB.anunciantes.find(a => a.id === c.anunc); if(!an) return "";
+  return adCard(c, an, local);
+};
+/* Início: um card discreto, depois do conteúdo principal (só se a campanha escolheu "Início") */
+anunciosInicio = function(){ const box = $("t-inicio"); if(!box || box.querySelector(".adx")) return; const h = anuncioHtml("inicio"); if(!h) return;
+  const cards = box.querySelectorAll(":scope > .card, :scope .xe-dia ~ .card"); const alvo = cards[Math.min(3, cards.length - 1)]; if(alvo) alvo.insertAdjacentHTML("afterend", h); };
+
+/* vídeo: só carrega/toca quando aparece na tela; mudo por padrão; pausa ao sair */
+const adSaveData = () => !!(navigator.connection && navigator.connection.saveData) || matchMedia("(prefers-reduced-motion: reduce)").matches;
+const adIO = "IntersectionObserver" in window ? new IntersectionObserver(es => es.forEach(e => { const v = e.target;
+  if(e.isIntersecting && e.intersectionRatio >= .6){ if(!v.src && v.dataset.src){ v.src = v.dataset.src; } if(!adSaveData() || v.dataset.quer) v.play().catch(() => {}); }
+  else if(!v.paused) v.pause(); }), { threshold: [0, .6] }) : null;
+function ligaAdVideo(card){
+  const v = card.querySelector("video"); if(!v || v.dataset.lig) return; v.dataset.lig = 1;
+  const som = card.querySelector(".adx-som"), play = card.querySelector(".adx-play"), prog = card.querySelector(".adx-prog");
+  if(adIO) adIO.observe(v); else { v.src = v.dataset.src; }
+  v.addEventListener("play", () => card.classList.add("tocando")); v.addEventListener("pause", () => card.classList.remove("tocando"));
+  v.addEventListener("timeupdate", () => { if(v.currentTime > 30.5){ v.pause(); v.currentTime = 0; } if(prog && v.duration) prog.style.width = (100 * v.currentTime / Math.min(30, v.duration)) + "%"; });
+  v.addEventListener("ended", () => { v.currentTime = 0; card.classList.remove("tocando"); });
+  const toca = e => { e.stopPropagation(); e.preventDefault(); v.dataset.quer = 1; if(!v.src) v.src = v.dataset.src; v.paused ? v.play().catch(() => {}) : v.pause(); };
+  if(play) play.onclick = toca; v.onclick = toca;
+  if(som) som.onclick = e => { e.stopPropagation(); e.preventDefault(); v.muted = !v.muted; if(!v.muted){ v.volume = .6; if(v.paused) v.play().catch(() => {}); } som.innerHTML = ic(v.muted ? "mute" : "speaker", 16); som.setAttribute("aria-label", v.muted ? "Ativar som" : "Tirar som"); };
+}
+new MutationObserver(() => document.querySelectorAll(".adx-video:not([data-v])").forEach(c => { c.dataset.v = 1; ligaAdVideo(c); })).observe(document.body, { childList: true, subtree: true });
+/* saiu da aba/tela: nenhum vídeo continua tocando */
+document.addEventListener("visibilitychange", () => { if(document.hidden) document.querySelectorAll(".adx video").forEach(v => v.pause()); });
 
 const TABS = [["inicio","Início"],["treinar","Treinos"],["dieta","Nutrição"],["juntas","Comunidade"],["explorar","Explorar"],["perfil","Perfil"],["evolucao","Evolução"]];
 const NAV = TABS.slice(0, 6), NAV_DE = { evolucao: "perfil" };
@@ -7224,12 +7513,9 @@ const DICAS = {
 function rCardapio(){
   const m = metas(ME), c = cardapio(DD), alvo = alvoTag(), rs = receitas();
   const itens = REFS.map(([k, n]) => { const r = rs.find(x => x.id === c[k].id) || rs[0]; return { k, n, r, porc: c[k].porc }; });
-  const tot = itens.reduce((a, x) => ({ kcal: a.kcal + x.r.kcal * x.porc, p: a.p + x.r.p * x.porc }), { kcal: 0, p: 0 });
+  const tot = itens.reduce((a, x) => ({ kcal: a.kcal + x.r.kcal * x.porc, p: a.p + x.r.p * x.porc, c: a.c + (x.r.c || 0) * x.porc, g: a.g + (x.r.g || 0) * x.porc }), { kcal: 0, p: 0, c: 0, g: 0 });
   const pt = x => String(x).replace(".", ",") + (x === 1 ? " porção" : " porções");
-  $("d-body").innerHTML = `
-    <div class="card"><span class="eyebrow-s">Cardápio ${TAGN[alvo].toLowerCase()}</span><h3 style="font-size:24px;margin-top:4px">Seu dia de comida pronto</h3>
-      <p class="hint" style="margin:6px 0 12px">Montado para a sua meta de ${int(m.kcal)} kcal e ${m.p} g de proteína. Troque o que não gostar.</p>
-      <div class="ringrow"><div class="ring">${ring(tot.kcal, m.kcal)}<b class="num">${int(tot.kcal)}<small>KCAL</small></b></div><div class="macros"><div class="mac"><span>Proteína</span><span class="tr"><i style="width:${Math.min(100, 100 * tot.p / m.p)}%"></i></span><span class="num muted">${int(tot.p)}/${m.p} g</span></div><p class="hint" style="margin:4px 0 0">Complete com frutas, salada à vontade e água.</p></div></div></div>
+  $("d-body").innerHTML = `${painelCardapio(tot, m, alvo, itens)}
     ${itens.map(x => `<div class="meal"><div class="meal-h"><h4>${x.n}</h4><span class="num">${int(x.r.kcal * x.porc)} kcal</span></div>
       <button class="exrow" data-rec="${x.r.id}" style="grid-template-columns:56px minmax(0,1fr)"><span class="rthumb" style="--rc:${CORCAT[x.r.cat]};width:56px;height:56px">${ic(ICCAT[x.r.cat], 24, 1.7)}</span><span style="min-width:0"><b>${esc(x.r.nome)}</b><small class="num">${pt(x.porc)} · ${int(x.r.p * x.porc)} g proteína · ${x.r.min} min</small></span></button>
       <div class="meal-act"><button class="btn btn-soft btn-sm" data-troca="${x.k}">${ic("repeat", 15)} Trocar</button><button class="btn btn-soft btn-sm" data-cook="${x.r.id}">${ic("chef", 15)} Cozinhar</button><button class="btn btn-accent btn-sm" data-comi="${x.k}">${ic("check", 15, 3)} Comi</button></div></div>`).join("")}
@@ -7238,6 +7524,23 @@ function rCardapio(){
   $("d-body").querySelectorAll("[data-cook]").forEach(b => b.onclick = () => abrirCozinha(receitas().find(r => r.id === b.dataset.cook)));
   $("d-body").querySelectorAll("[data-troca]").forEach(b => b.onclick = () => { const k = b.dataset.troca, L = candidatos(k), i = ((c[k].i || 0) + 1) % L.length; c[k] = { ...L[i], i }; save(); SOM.tap(); rCardapio(); });
   $("d-body").querySelectorAll("[data-comi]").forEach(b => b.onclick = () => { const x = itens.find(i => i.k === b.dataset.comi); dia(DD)[x.k].push({ nome: x.r.nome, qtd: pt(x.porc), kcal: x.r.kcal * x.porc, p: x.r.p * x.porc, c: x.r.c * x.porc, g: x.r.g * x.porc }); save(); SOM.add(); toast(`Registrado: ${x.r.nome}`); });
+}
+/* Painel do cardápio: total planejado x meta, macros e como as calorias se dividem no dia (entende-se em segundos) */
+const COR_REF = { cafe: ["#F4B740", "Café"], almoco: ["#3DDC6E", "Almoço"], lanche: ["#7EC8E3", "Lanche"], jantar: ["#B9A3F0", "Jantar"] };
+function painelCardapio(tot, m, alvo, itens){
+  const r = m.kcal ? tot.kcal / m.kcal : 0, st = r > 1.1 ? ["alto", "Acima da meta", "Troque um item mais leve"] : r < .9 ? ["baixo", "Abaixo da meta", "Complete com frutas e salada"] : ["ok", "Na medida da sua meta", ""];
+  const mac = [["Proteína", "p", "#3DDC6E", "#9BE8B0"], ["Carboidrato", "c", "#F4B740", "#FFE08A"], ["Gordura", "g", "#FF8A65", "#FFC9B3"]];
+  const kc = itens.map(x => ({ k: x.k, v: x.r.kcal * x.porc })), soma = kc.reduce((a, x) => a + x.v, 0) || 1;
+  return `<section class="pdia cdp" aria-label="Resumo do cardápio">
+    <div class="pdia-head"><div><span class="pdia-eb">Cardápio · ${esc(TAGN[alvo])}</span><h3>Seu dia de comida pronto</h3></div><span class="cdp-st ${st[0]}">${ic(st[0] === "ok" ? "check" : "target", 13, 2.6)}${st[1]}</span></div>
+    <div class="cdp-main">
+      <div class="pdia-ring cdp-ring">${anel(r > 1.1 ? tot.kcal : Math.min(tot.kcal, m.kcal), m.kcal, 156, 14, ["#3DDC6E", "#B9DDB2"])}<div class="pdia-c"><b class="num">${int(tot.kcal)}</b><span>kcal no dia</span><small class="num">meta ${int(m.kcal)}</small></div></div>
+      <div class="cdp-mac">${mac.map(([n, k, c1, c2]) => { const v = tot[k] || 0, mt = m[k] || 0, f = mt ? Math.min(100, 100 * v / mt) : 0; return `<div class="cdp-m"><div class="cdp-mt"><span><i style="background:${c1}"></i>${n}</span><b class="num">${int(v)}<small> / ${int(mt)} g</small></b></div><span class="cdp-tr"><i style="width:${f}%;background:linear-gradient(90deg,${c1},${c2})"></i></span></div>`; }).join("")}</div>
+    </div>
+    <div class="cdp-dist"><div class="cdp-bar" role="img" aria-label="Calorias por refeição">${kc.map(x => `<i style="flex:${Math.max(.04, x.v / soma)};background:${COR_REF[x.k][0]}"></i>`).join("")}</div>
+      <div class="cdp-leg">${kc.map(x => `<span><i style="background:${COR_REF[x.k][0]}"></i>${COR_REF[x.k][1]} <b class="num">${int(x.v)}</b></span>`).join("")}</div></div>
+    <p class="cdp-hint">${st[2] ? st[2] + ". " : ""}Montado para ${int(m.kcal)} kcal e ${m.p} g de proteína. Toque em Trocar no que não gostar.</p>
+  </section>`;
 }
 function rDiario(){
   const m = metas(ME), t = totais(DD), x = dia(DD), rot = DD === today() ? "Hoje" : DD === addD(today(), -1) ? "Ontem" : brD(DD);
@@ -7657,8 +7960,7 @@ function abrir(){
   F.show("v-admin");
   $("adm-me").textContent = ME.email; const av = $("adm-av"); if(av) av.textContent = (ME.nome || ME.email || "A").trim()[0].toUpperCase();
   const nomeSec = Object.fromEntries(SECOES);
-  $("adm-tabs").innerHTML = GRUPOS.map(([g, ks]) => { const vis = ks.filter(k => podeVer(k)); return vis.length ? `<span class="adm-grp">${g}</span>` + vis.map(k => `<button data-s="${k}"><span class="ai">${aic(k)}</span><span>${nomeSec[k]}</span></button>`).join("") : ""; }).join("");
-  $("adm-tabs").querySelectorAll("button").forEach(b => b.onclick = () => ir(b.dataset.s));
+  montaMenu(nomeSec);   // menu lateral/gaveta (admin-ux.js)
   const h = location.hash.replace("#admin", "").replace(/^[-/]/, "");
   ir(SECOES.some(s => s[0] === h) ? h : SEC);
 }
@@ -7667,7 +7969,7 @@ function ir(s){
   if(!podeVer(s)){ const ok = SECOES.find(x => podeVer(x[0])); if(!ok){ $("adm-main").innerHTML = `<div class="card empty">Seu acesso ainda não foi liberado. Fale com o administrador principal.</div>`; return; } s = ok[0]; }
   SEC = s; document.body.dataset.ro = podeEditar(s) ? "" : "1";
   $("adm-tabs").querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.s === s));
-  const on = $("adm-tabs").querySelector(".on"); if(on) on.scrollIntoView({ inline: "center", block: "nearest" });
+  const on = $("adm-tabs").querySelector("button.on"); if(on && on.offsetParent) on.scrollIntoView({ block: "nearest" });
   VIEWS[s]();
   if(!podeEditar(s)) $("adm-main").insertAdjacentHTML("afterbegin", `<div class="ro-aviso">Você pode ver esta área, mas não pode alterar.</div>`);
   window.scrollTo(0, 0);
@@ -7771,7 +8073,7 @@ function vResumo(){
     <div class="grid g4">
       ${kpi("Alunas cadastradas", int(al.total), `+${int(al.novos7)} nos últimos 7 dias`, "alunos", 1)}
       ${kpi("Ativas hoje", int(al.dau), `${int(al.wau)} na semana · ${int(al.mau)} no mês`, "resumo")}
-      ${kpi("👑 Assinantes Pro", int(al.pagos), `${int(al.teste)} em teste grátis · ${int(al.cortesia)} cortesia`, "alunos")}
+      ${kpi("Assinantes Pro", int(al.pagos), `${int(al.teste)} em teste grátis · ${int(al.cortesia)} cortesia`, "alunos")}
       ${kpi("Anunciantes ativos", int(anAt.length), `${int(ativas)} ${ativas === 1 ? "campanha no ar" : "campanhas no ar"}`, "anunciantes")}
       ${kpi("Impressões", int(t.imp), `Alcance: ${int(t.alc)} alunas`, "campanhas")}
       ${kpi("Cliques", int(t.clk), `Taxa de clique: ${pct(t.clk, t.imp)}`, "metricas")}
@@ -8042,7 +8344,7 @@ async function gerarPDF(o){
 /* ---------- Alunos ---------- */
 let AF = { q: "", cidade: "", plano: "" };
 const statusPrem = u => { const s = PLU && PLU[u.id]; if(s && s.pro){ const ate = s.fim ? " até " + brD(String(s.fim).slice(0, 10)).slice(0, 5) : "";
-    if(s.trial) return ["Teste grátis" + ate, "warn"]; return [(["kiwify", "apple", "google"].includes(s.provider) ? "👑 Pro " + (s.plano === "pro_anual" ? "anual" : "mensal") : "Cortesia") + ate, "ok"]; }
+    if(s.trial) return ["Teste grátis" + ate, "warn"]; return [(["kiwify", "apple", "google"].includes(s.provider) ? "Pro " + (s.plano === "pro_anual" ? "anual" : "mensal") : "Cortesia") + ate, "ok"]; }
   if(s && !s.pro) return ["Gratuito", "off"];
   if(!u.premium) return ["Gratuito", "off"]; if(u.premium.tipo === "vitalicio") return ["Vitalício", "ok"]; if(u.premium.ate < today()) return ["Gratuito", "off"]; return [{ pago: "Premium", teste: "Teste grátis", cortesia: "Cortesia" }[u.premium.tipo] + " até " + brD(u.premium.ate).slice(0, 5), u.premium.tipo === "teste" ? "warn" : "ok"]; };
 function vAlunos(){
@@ -8055,7 +8357,7 @@ function vAlunos(){
   $("adm-main").innerHTML = `
     <div class="head"><div><h1>Alunas</h1><p class="muted">Quem usa o app, de onde é e com que frequência volta.</p></div><div class="toolbar"><button class="btn btn-accent btn-sm needs-edit" id="al-prem">Dar Premium cortesia</button><button class="btn btn-line btn-sm" id="al-csv">Copiar planilha</button></div></div>
     <div class="toolbar"><select class="input" id="al-c">${optCid(AF.cidade, true)}</select></div>
-    <div class="grid g4">${kpi("Cadastrados", int(al.total), `+${int(al.novos7)} nos últimos 7 dias`)}${kpi("Ativos", int(al.dau), `hoje · ${int(al.wau)} na semana · ${int(al.mau)} no mês`)}${kpi("👑 Pro pago", int(al.pagos))}${kpi("Em teste grátis", int(al.teste), `${int(al.cortesia)} com cortesia`)}</div>
+    <div class="grid g4">${kpi("Cadastrados", int(al.total), `+${int(al.novos7)} nos últimos 7 dias`)}${kpi("Ativos", int(al.dau), `hoje · ${int(al.wau)} na semana · ${int(al.mau)} no mês`)}${kpi("Pro pago", int(al.pagos))}${kpi("Em teste grátis", int(al.teste), `${int(al.cortesia)} com cortesia`)}</div>
     <div class="card"><h3>Alunas ativas por dia</h3>${barChart(al.serie, "alunos", "alunas")}</div>
     <div class="grid g3">
       <div class="card"><h3>Por cidade</h3>${hbars(contaPor(al.U, u => cidNome(u.cidade) || "Sem cidade"))}</div>
@@ -9397,7 +9699,7 @@ async function moReceitas(){
   const efetivo = (r, i) => pl[r.id] || (i % 3 === 0 ? "free" : "pro");
   const V = R.map((r, i) => ({ r, i })).filter(x => !MRQ || x.r.nome.toLowerCase().includes(MRQ.toLowerCase()));
   MB().innerHTML = `<div class="toolbar"><input class="input" id="mr-q" placeholder="Buscar receita" value="${esc(MRQ)}" style="max-width:260px"><span class="muted" style="font-size:13px">${R.filter((r, i) => efetivo(r, i) === "free").length} grátis · ${R.filter((r, i) => efetivo(r, i) === "pro").length} Pro</span></div>
-    <div class="tbl"><table><thead><tr><th>Receita</th><th>Plano</th></tr></thead><tbody>${V.slice(0, 250).map(({ r, i }) => `<tr><td>${esc(r.nome)}</td><td><select class="input needs-edit" data-rp="${esc(r.id)}" style="max-width:120px"><option value="free" ${efetivo(r, i) === "free" ? "selected" : ""}>Free</option><option value="pro" ${efetivo(r, i) === "pro" ? "selected" : ""}>👑 Pro</option></select></td></tr>`).join("")}</tbody></table></div>`;
+    <div class="tbl"><table><thead><tr><th>Receita</th><th>Plano</th></tr></thead><tbody>${V.slice(0, 250).map(({ r, i }) => `<tr><td>${esc(r.nome)}</td><td><select class="input needs-edit" data-rp="${esc(r.id)}" style="max-width:120px"><option value="free" ${efetivo(r, i) === "free" ? "selected" : ""}>Free</option><option value="pro" ${efetivo(r, i) === "pro" ? "selected" : ""}>Pro</option></select></td></tr>`).join("")}</tbody></table></div>`;
   let tq; $("mr-q").oninput = e => { clearTimeout(tq); tq = setTimeout(() => { MRQ = e.target.value; moReceitas(); }, 300); };
   MB().querySelectorAll("[data-rp]").forEach(s => s.onchange = () => { pl[s.dataset.rp] = s.value; save(); toast("Salvo"); });
 }
@@ -9504,7 +9806,7 @@ function vCidadesIBGE(){
 /* ---------- Clube CK Pro: marcar benefício como Pro, período e limite ---------- */
 const formParcPro = formParc;
 formParc = function(p){ formParcPro(p); const grid = $("mbox").querySelector(".formgrid"); if(!grid) return; const x = p || {};
-  grid.insertAdjacentHTML("beforeend", `<label class="field xf-chk"><input type="checkbox" id="pa-pro" ${x.pro ? "checked" : ""}> 👑 Benefício do Clube CK Pro</label><div class="field"><label for="pa-ini">Início</label><input class="input" type="date" id="pa-ini" value="${esc(x.inicio || "")}"></div><div class="field"><label for="pa-lim">Limite de cupons</label><input class="input num" id="pa-lim" value="${esc(x.limite || "")}"></div>`);
+  grid.insertAdjacentHTML("beforeend", `<label class="field xf-chk"><input type="checkbox" id="pa-pro" ${x.pro ? "checked" : ""}> <i class='ckc' aria-hidden='true'></i> Benefício do Clube CK Pro</label><div class="field"><label for="pa-ini">Início</label><input class="input" type="date" id="pa-ini" value="${esc(x.inicio || "")}"></div><div class="field"><label for="pa-lim">Limite de cupons</label><input class="input num" id="pa-lim" value="${esc(x.limite || "")}"></div>`);
   const ok = $("pa-ok"), s0 = ok.onclick; ok.onclick = () => { const extra = { pro: $("pa-pro").checked, inicio: val("pa-ini") || null, limite: +val("pa-lim") || null }; const antes = new Set(DB().parceiros.map(y => y.id)); s0(); const alvo = p || DB().parceiros.find(y => !antes.has(y.id)); if(alvo){ Object.assign(alvo, extra); save(); } }; };
 
 /* ---------- papéis prontos novos ---------- */
@@ -9522,17 +9824,399 @@ const comVendas = v => function(){ v.apply(this, arguments); const sec = SEC; ca
 function posVendasAdm(){ if(SEC === "financeiro") blocoVendas(); }
 function blocoVendas(){
   const h = document.querySelector("#adm-main .head"); if(!h || $("fi-vendas")) return;
-  if(!VENDAS) return h.insertAdjacentHTML("afterend", `<div class="card" id="fi-vendas"><h3>👑 Vendas do CK Life Pro</h3><p class="muted" style="margin:6px 0 0">${SB2() ? "Carregando… (se não aparecer, seu acesso não inclui Monetização ou falta rodar o ajuste do banco)" : "Funciona no app oficial, com o banco conectado."}</p></div>`);
+  if(!VENDAS) return h.insertAdjacentHTML("afterend", `<div class="card" id="fi-vendas"><h3><i class='ckc' aria-hidden='true'></i> Vendas do CK Life Pro</h3><p class="muted" style="margin:6px 0 0">${SB2() ? "Carregando… (se não aparecer, seu acesso não inclui Monetização ou falta rodar o ajuste do banco)" : "Funciona no app oficial, com o banco conectado."}</p></div>`);
   const ok = VENDAS.filter(vendaOk), mes = today().slice(0, 7), tot = ok.reduce((s, v) => s + (+v.valor || 0), 0);
   const ativos = PLU ? Object.values(PLU).filter(x => x.pro && !x.trial && ["kiwify", "apple", "google"].includes(x.provider)).length : 0;
   const EV = { order_approved: "Compra aprovada", subscription_renewed: "Renovação", subscription_canceled: "Cancelamento", subscription_late: "Atrasada", order_refunded: "Reembolso", chargeback: "Chargeback", pix_created: "Pix gerado", billet_created: "Boleto gerado", order_rejected: "Recusada" };
-  h.insertAdjacentHTML("afterend", `<div class="card" id="fi-vendas"><div class="sec-title"><h3>👑 Vendas do CK Life Pro (Kiwify)</h3><button class="btn btn-line btn-sm" id="fv-csv">Copiar planilha</button></div>
+  h.insertAdjacentHTML("afterend", `<div class="card" id="fi-vendas"><div class="sec-title"><h3><i class='ckc' aria-hidden='true'></i> Vendas do CK Life Pro (Kiwify)</h3><button class="btn btn-line btn-sm" id="fv-csv">Copiar planilha</button></div>
     <div class="grid g3" style="margin:10px 0">${kpi("Vendido no mês", money(vendasMes(mes)), `${ok.filter(v => String(v.quando).slice(0, 7) === mes).length} venda(s)`)}${kpi("Assinantes Pro ativos", int(ativos))}${kpi("Total vendido", money(tot), `${ok.length} venda(s) no total`)}</div>
     <div class="tbl"><table><thead><tr><th>Quando</th><th>Aluna</th><th>Plano</th><th>Valor</th><th>Evento</th><th>Pedido</th></tr></thead><tbody>${VENDAS.filter(v => !["pix_created", "billet_created"].includes(v.evento)).slice(0, 100).map(v => `<tr><td class="num">${new Date(v.quando).toLocaleString("pt-BR")}</td><td><b>${esc(v.nome || "Sem conta ainda")}</b><br><small class="muted">${esc(v.email || "")}</small></td><td>${v.plano === "pro_anual" ? "Anual" : v.plano === "pro_mensal" ? "Mensal" : "-"}</td><td class="num">${v.valor != null ? money(v.valor) : "-"}</td><td><span class="st ${vendaOk(v) ? "ok" : v.status === "erro" ? "bad" : "warn"}">${esc(EV[v.evento] || v.evento)}</span>${v.erro ? `<br><small class="muted">${esc(v.erro)}</small>` : ""}</td><td><small>${esc(v.pedido || "")}</small></td></tr>`).join("") || `<tr><td colspan="6" class="empty">Nenhuma venda ainda.</td></tr>`}</tbody></table></div></div>`);
   $("fv-csv").onclick = () => planilha(["Quando", "Aluna", "E-mail", "Plano", "Valor", "Evento", "Pedido"], VENDAS.map(v => [new Date(v.quando).toLocaleString("pt-BR"), v.nome || "", v.email || "", v.plano || "", v.valor != null ? String(v.valor).replace(".", ",") : "", EV[v.evento] || v.evento, v.pedido || ""]), "Vendas CK Life Pro");
 }
 VIEWS.resumo = comVendas(VIEWS.resumo); VIEWS.alunos = comVendas(VIEWS.alunos); VIEWS.financeiro = comVendas(VIEWS.financeiro);
 VIEWS.monetizacao = vMonetizacao; VIEWS.verificacoes = vVerificacoes; VIEWS.exercicios = vExerciciosVoz; VIEWS.cidades = vCidadesIBGE;
+
+/* ===================== Painel · CENTRAL DE NOTIFICAÇÕES =====================
+   Cria, agenda e envia avisos para o celular das alunas (Web Push) e para a lista de notificações do app.
+   Tudo é conferido no banco (admin_pode('notificacoes')); números vêm do envio real, nada é estimado. */
+AIC.notificacoes = '<path d="M6 8a6 6 0 1 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10 21h4"/><path d="M19.5 3.5 21 2M21 7h1.5"/>';
+SECOES.push(["notificacoes", "Central de Notificações"]);
+const NT_ST = { rascunho: ["Rascunho", "off"], agendada: ["Agendada", "warn"], enviando: ["Enviando", "warn"], enviada: ["Enviada", "ok"], cancelada: ["Cancelada", "off"], erro: ["Com erro", "bad"] };
+const NT_PUB = [["todas", "Todas as usuárias"], ["pro", "Assinantes Pro (pagantes)"], ["trial", "Em teste grátis do Pro"], ["free", "Plano grátis"], ["ativas", "Ativas nos últimos X dias"], ["inativas", "Sem abrir o app há X dias"], ["sem_treino", "Sem treinar há X dias"], ["novas", "Cadastradas nos últimos X dias"], ["grupo", "Membros de um grupo"], ["cidade", "De uma cidade"], ["especificas", "Pessoas específicas (e-mails)"]];
+const NT_ACAO = [["", "Abrir o app"], ["/?ir=treinar", "Treinos"], ["/?ir=dieta", "Nutrição"], ["/?ir=juntas", "Comunidade"], ["/?ir=explorar", "Explorar"], ["/?ir=perfil", "Perfil"], ["ext", "Link externo (https://)"]];
+let NTF = "todas", NT_CACHE = null;
+const pubTxt = p => { p = p || {}; const n = (NT_PUB.find(x => x[0] === p.tipo) || [, "Todas"])[1]; return n.replace("X dias", (p.dias || 7) + " dias") + (p.tipo === "cidade" ? ": " + cidNome(p.cidade) : p.tipo === "especificas" ? ` (${(p.emails || []).length})` : ""); };
+const dtH = s => s ? new Date(s).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", year: "2-digit", hour: "2-digit", minute: "2-digit" }) : "-";
+async function vNotificacoes(){
+  $("adm-main").innerHTML = `<div class="head"><div><h1>Central de Notificações</h1><p class="muted">Avisos que chegam no celular das alunas e ficam na lista de notificações do app.</p></div><button class="btn btn-accent needs-edit" id="nt-new">${aic("notificacoes", 16)} Nova notificação</button></div>
+    <div class="grid g4" id="nt-kpi">${[1, 2, 3, 4].map(() => `<div class="kpi"><div class="skel" style="height:12px;width:50%"></div><div class="skel" style="height:26px;width:40%;margin-top:12px"></div></div>`).join("")}</div>
+    <div class="chips scroll seg-sub" id="nt-f">${[["todas", "Todas"], ["agendada", "Agendadas"], ["enviada", "Enviadas"], ["rascunho", "Rascunhos"], ["erro", "Com erro"]].map(([k, n]) => `<button class="chip" data-f="${k}" aria-pressed="${NTF === k}">${n}</button>`).join("")}</div>
+    <div id="nt-b"><div class="card"><div class="skel" style="height:14px;width:70%"></div><div class="skel" style="height:14px;width:45%;margin-top:10px"></div></div></div>
+    <p class="hint nt-nota"><b>Como ler os números:</b> Público = pessoas que se encaixam no filtro. Com aviso ligado = quem ativou notificações no celular. Enviadas = aceitas pelo serviço de push (Google/Apple/Mozilla). Recebidas = aparelhos que confirmaram a chegada (alguns celulares com economia de bateria não confirmam). Toques = quem abriu pelo aviso.</p>`;
+  const nw = $("nt-new"); if(nw) nw.onclick = () => formNotif();
+  $("nt-f").querySelectorAll("[data-f]").forEach(b => b.onclick = () => { NTF = b.dataset.f; vNotificacoes(); });
+  if(!SB2()) return $("nt-b").innerHTML = `<div class="card adm-vazio"><b>Funciona no app oficial, com o banco conectado.</b></div>`;
+  let L = [], R = null, cfg = null;
+  try{ [L, R] = await Promise.all([sq(SB2().from("notif_campanhas").select("*").order("criado", { ascending: false }).limit(200)), SB2().rpc("admin_painel_resumo").then(r => r.data).catch(() => null)]); }
+  catch(e){ return $("nt-b").innerHTML = semBanco(e).replace("seguranca.sql", "central.sql"); }
+  try{ cfg = await (await fetch("/api/push")).json(); }catch(e){}
+  NT_CACHE = L; if(SEC !== "notificacoes") return;
+  const mes = L.filter(n => n.enviado_em && new Date(n.enviado_em) > new Date(Date.now() - 30 * 864e5));
+  $("nt-kpi").innerHTML = kpi("Enviadas em 30 dias", int(mes.length), `${int(mes.reduce((s, n) => s + (n.enviados || 0), 0))} entregas ao serviço de push`, "notificacoes", 1)
+    + kpi("Agendadas", int(L.filter(n => n.status === "agendada").length), "saem sozinhas no horário")
+    + kpi("Com aviso ligado", R ? int(R.push_inscritas) : "-", "alunas que ativaram no celular")
+    + kpi("Lembretes de treino", R ? int(R.lembretes_ativos) : "-", "ativos, 20 min antes do treino");
+  const alertas = [];
+  if(cfg && !cfg.configurado) alertas.push("O envio para o celular não está configurado na Vercel (VAPID_PRIVATE).");
+  if(R && R.cron === false) alertas.push("O agendador do banco (Cron) ainda não está ativo: notificações agendadas e lembretes de treino só saem depois de ativar. Em Supabase: Integrations → Cron → Enable, e rode o central.sql de novo.");
+  const V = L.filter(n => NTF === "todas" || n.status === NTF);
+  $("nt-b").innerHTML = (alertas.length ? `<div class="msg msg-warn">${alertas.map(esc).join("<br>")}</div>` : "") + (V.length ? `<div class="nt-list">${V.map(n => { const [st, k] = NT_ST[n.status] || [n.status, "off"]; return `<div class="nt-row">
+      <div class="nt-main"><div class="nt-top"><span class="st ${k}">${st}</span><small class="muted">${n.status === "agendada" ? "Sai em " + dtH(n.enviar_em) : n.enviado_em ? "Enviada em " + dtH(n.enviado_em) : "Criada em " + dtH(n.criado)}</small></div>
+        <b>${esc(n.titulo)}</b><p>${esc(n.mensagem)}</p><small class="muted">${aic("alunos", 13)} ${esc(pubTxt(n.publico))}${n.link ? " · abre " + esc((NT_ACAO.find(a => a[0] === n.link) || [, n.link])[1]) : ""}</small>
+        ${n.erro ? `<small class="nt-err">${esc(n.erro)}</small>` : ""}</div>
+      ${n.alvo != null ? `<div class="nt-nums"><span><b class="num">${int(n.alvo)}</b>público</span><span><b class="num">${int(n.inscritos || 0)}</b>com aviso</span><span><b class="num">${int(n.enviados)}</b>enviadas</span><span><b class="num">${int(n.recebidos)}</b>recebidas</span><span><b class="num">${int(n.cliques)}</b>toques</span>${n.falhas ? `<span class="bad"><b class="num">${int(n.falhas)}</b>falhas</span>` : ""}</div>` : ""}
+      <div class="acts needs-edit">${["rascunho", "agendada"].includes(n.status) ? `<button class="btn btn-accent btn-sm" data-go="${n.id}">Enviar agora</button><button class="btn btn-line btn-sm" data-ed="${n.id}">Editar</button><button class="btn btn-line btn-sm" data-cc="${n.id}">Cancelar</button>` : `<button class="btn btn-line btn-sm" data-dup="${n.id}">Usar como modelo</button>`}</div></div>`; }).join("")}</div>`
+    : `<div class="card adm-vazio"><span>${aic("notificacoes", 28)}</span><b>${NTF === "todas" ? "Nenhuma notificação ainda" : "Nada por aqui"}</b><p class="muted">Crie um aviso para todas as alunas ou para um público específico.</p></div>`);
+  const ach = id => L.find(n => n.id === id);
+  $("nt-b").querySelectorAll("[data-ed]").forEach(b => b.onclick = () => formNotif(ach(b.dataset.ed)));
+  $("nt-b").querySelectorAll("[data-dup]").forEach(b => b.onclick = () => { const n = ach(b.dataset.dup); formNotif({ titulo: n.titulo, mensagem: n.mensagem, imagem: n.imagem, link: n.link, publico: n.publico }); });
+  $("nt-b").querySelectorAll("[data-cc]").forEach(b => b.onclick = () => confirmar("Cancelar esta notificação? Ela não será enviada.", async () => { try{ await sq(SB2().from("notif_campanhas").update({ status: "cancelada" }).eq("id", b.dataset.cc)); toast("Notificação cancelada"); vNotificacoes(); }catch(e){ toast(e.message || "Não deu para cancelar"); } }));
+  $("nt-b").querySelectorAll("[data-go]").forEach(b => b.onclick = () => enviaAgora(ach(b.dataset.go)));
+}
+async function enviaAgora(n){
+  let pv = null; try{ pv = (await SB2().rpc("admin_notif_previa", { p: n.publico })).data; }catch(e){}
+  confirmar(`Enviar "${n.titulo}" agora para ${pv ? int(pv.alvo) + " pessoa(s)" : "o público escolhido"}${pv ? ` (${int(pv.inscritas)} com aviso no celular)` : ""}? Depois de enviada, não dá para desfazer.`, async () => {
+    toast("Enviando…"); try{ const r = await SB2().rpc("admin_notif_enviar_agora", { p_id: n.id }); if(r.error) throw r.error; toast(`Enviada para ${int(r.data.alvo)} pessoa(s)`); }catch(e){ toast("Não deu para enviar: " + (e.message || "erro")); } vNotificacoes(); });
+}
+/* imagem da notificação: até 1200 px de largura, proporção mantida (ideal 2:1) */
+async function imgNotif(file){
+  if(!/^image\/(jpeg|png|webp)$/.test(file.type)) throw new Error("Use JPG, PNG ou WebP."); if(file.size > 10 * 1024 * 1024) throw new Error("Imagem muito grande (máximo 10 MB).");
+  const b = await createImageBitmap(file), w = Math.min(1200, b.width), h = Math.round(w * b.height / b.width), cv = document.createElement("canvas"); cv.width = w; cv.height = h; cv.getContext("2d").drawImage(b, 0, 0, w, h);
+  return new Promise(ok => cv.toBlob(ok, "image/jpeg", .84));
+}
+async function formNotif(n){
+  n = n || { titulo: "", mensagem: "", link: "", publico: { tipo: "todas" } }; const P = { tipo: "todas", dias: 7, ...(n.publico || {}) }; let img = n.imagem || "", novaImg = null;
+  let grupos = []; try{ grupos = await sq(SB2().from("grupos").select("id,nome,emoji").eq("ativo", true).order("ordem")); }catch(e){}
+  const acao = NT_ACAO.some(a => a[0] === (n.link || "")) ? (n.link || "") : "ext";
+  const local = d => { const z = new Date(d.getTime() - d.getTimezoneOffset() * 6e4); return z.toISOString().slice(0, 16); };
+  modal(n.id ? "Editar notificação" : "Nova notificação", `<div class="ad-form"><div class="formgrid">
+    <div class="field full"><label for="nf-t">Título <small class="muted" id="nf-tc"></small></label><input class="input" id="nf-t" maxlength="65" value="${esc(n.titulo)}" placeholder="Ex.: Novo treino de glúteos liberado"></div>
+    <div class="field full"><label for="nf-m">Mensagem <small class="muted" id="nf-mc"></small></label><textarea class="input" id="nf-m" maxlength="240" placeholder="Curta e direta. Ex.: São 20 minutos, dá para fazer em casa.">${esc(n.mensagem)}</textarea></div>
+    <div class="field full"><label>Imagem (opcional)</label><div class="ad-up"><input type="file" id="nf-file" accept="image/jpeg,image/png,image/webp" hidden><button type="button" class="btn btn-line btn-sm" id="nf-pick">Escolher imagem</button><button type="button" class="btn btn-line btn-sm" id="nf-rm" ${img ? "" : "hidden"}>Remover</button><span class="hint">Aparece no Android e no computador. Ideal 2:1 (ex.: 1200×600).</span></div></div>
+    <div class="field"><label for="nf-a">Ao tocar, abre</label><select class="input" id="nf-a">${NT_ACAO.map(([k, t]) => `<option value="${k}" ${acao === k ? "selected" : ""}>${t}</option>`).join("")}</select></div>
+    <div class="field" id="nf-lw" ${acao === "ext" ? "" : "hidden"}><label for="nf-l">Link</label><input class="input" id="nf-l" value="${acao === "ext" ? esc(n.link || "") : ""}" placeholder="https://"></div>
+    <div class="field full"><label for="nf-p">Público</label><select class="input" id="nf-p">${NT_PUB.map(([k, t]) => `<option value="${k}" ${P.tipo === k ? "selected" : ""}>${t}</option>`).join("")}</select></div>
+    <div class="field nf-x" data-x="dias"><label for="nf-d">Quantos dias (X)</label><input class="input num" id="nf-d" type="number" min="1" max="365" value="${esc(P.dias || 7)}"></div>
+    <div class="field nf-x" data-x="grupo"><label for="nf-g">Grupo</label><select class="input" id="nf-g">${grupos.map(g => `<option value="${g.id}" ${P.grupo === g.id ? "selected" : ""}>${esc((g.emoji || "") + " " + g.nome)}</option>`).join("") || `<option value="">Nenhum grupo</option>`}</select></div>
+    <div class="field nf-x" data-x="cidade"><label for="nf-c">Cidade</label><select class="input" id="nf-c">${optCid(P.cidade)}</select></div>
+    <div class="field full nf-x" data-x="especificas"><label for="nf-e">E-mails (um por linha)</label><textarea class="input" id="nf-e" placeholder="aluna@email.com">${esc((P.emails || []).join("\n"))}</textarea></div>
+    <div class="field full"><div class="nf-alvo" id="nf-alvo">Calculando público…</div></div>
+    <div class="field full"><label>Quando</label><div class="seg-pills" id="nf-q"><button type="button" class="chip" data-q="agora" aria-pressed="${!n.enviar_em}">Enviar agora</button><button type="button" class="chip" data-q="agendar" aria-pressed="${!!n.enviar_em}">Agendar</button></div></div>
+    <div class="field" id="nf-hw" ${n.enviar_em ? "" : "hidden"}><label for="nf-h">Data e horário</label><input class="input" id="nf-h" type="datetime-local" value="${local(n.enviar_em ? new Date(n.enviar_em) : new Date(Date.now() + 36e5))}"></div>
+  </div><aside class="ad-prev"><span class="eyebrow">Prévia no celular</span><div class="nf-phone"><div class="nf-not" id="nf-prev"></div></div><small class="hint">A aparência final depende do celular. No iPhone o aviso só chega com o CK Life instalado na tela de início.</small></aside></div>
+  <div id="nf-msg"></div><div class="toolbar" style="justify-content:space-between"><button class="btn btn-line" id="nf-rasc">Salvar rascunho</button><button class="btn btn-accent" id="nf-ok">Continuar</button></div>`);
+  $("mbox").classList.add("mbox-wide");
+  let quando = n.enviar_em ? "agendar" : "agora";
+  const pub = () => { const t = val("nf-p"), p = { tipo: t }; if(["ativas", "inativas", "sem_treino", "novas"].includes(t)) p.dias = Math.max(1, Math.min(365, +val("nf-d") || 7)); if(t === "grupo") p.grupo = val("nf-g"); if(t === "cidade") p.cidade = val("nf-c"); if(t === "especificas") p.emails = val("nf-e").split(/[\s,;]+/).map(x => x.trim().toLowerCase()).filter(x => /@/.test(x)).slice(0, 500); return p; };
+  const prev = () => { const im = novaImg ? URL.createObjectURL(novaImg) : img;
+    $("nf-prev").innerHTML = `<div class="nf-nh"><img src="img/icone-192.png" alt=""><b>CK Life</b><small>agora</small></div><b class="nf-nt">${esc(val("nf-t") || "Título da notificação")}</b><p>${esc(val("nf-m") || "Sua mensagem aparece aqui.")}</p>${im ? `<img class="nf-img" src="${esc(im)}" alt="">` : ""}`;
+    $("nf-tc").textContent = `${val("nf-t").length}/65`; $("nf-mc").textContent = `${val("nf-m").length}/240`; };
+  let tp; const conta = () => { clearTimeout(tp); tp = setTimeout(async () => { const p = pub(); $("mbox").querySelectorAll(".nf-x").forEach(e => { const x = e.dataset.x; e.hidden = !(x === p.tipo || (x === "dias" && "dias" in p)); });
+    try{ const r = await SB2().rpc("admin_notif_previa", { p }); const d = r.data; $("nf-alvo").innerHTML = d ? `${aic("alunos", 16)} <b class="num">${int(d.alvo)}</b> pessoa(s) neste público · <b class="num">${int(d.inscritas)}</b> com aviso ligado no celular` : "Sem permissão para ver o público."; }
+    catch(e){ $("nf-alvo").textContent = "Não foi possível calcular o público agora."; } }, 300); };
+  ["nf-t", "nf-m"].forEach(id => $(id).addEventListener("input", prev));
+  ["nf-p", "nf-d", "nf-g", "nf-c", "nf-e"].forEach(id => $(id).addEventListener("input", conta)); $("nf-p").addEventListener("change", conta);
+  $("nf-a").onchange = () => { $("nf-lw").hidden = val("nf-a") !== "ext"; };
+  $("nf-q").querySelectorAll("[data-q]").forEach(b => b.onclick = () => { quando = b.dataset.q; $("nf-q").querySelectorAll("[data-q]").forEach(x => x.setAttribute("aria-pressed", x === b)); $("nf-hw").hidden = quando !== "agendar"; $("nf-ok").textContent = quando === "agora" ? "Continuar" : "Agendar envio"; });
+  $("nf-ok").textContent = quando === "agora" ? "Continuar" : "Agendar envio";
+  $("nf-pick").onclick = () => $("nf-file").click();
+  $("nf-file").onchange = async e => { const f = e.target.files[0]; e.target.value = ""; if(!f) return; try{ novaImg = await imgNotif(f); $("nf-rm").hidden = false; prev(); }catch(er){ $("nf-msg").innerHTML = `<div class="msg msg-bad">${esc(er.message)}</div>`; } };
+  $("nf-rm").onclick = () => { img = ""; novaImg = null; $("nf-rm").hidden = true; prev(); };
+  prev(); conta();
+  const salva = async status => {
+    const a = val("nf-a"), link = a === "ext" ? val("nf-l") : a, p = pub();
+    const err = !val("nf-t") ? "Escreva o título." : !val("nf-m") ? "Escreva a mensagem." : a === "ext" && !/^https:\/\/[\w.-]+\.\w+/.test(link) ? "O link externo precisa começar com https://" : p.tipo === "especificas" && !p.emails.length ? "Informe pelo menos um e-mail." : p.tipo === "grupo" && !p.grupo ? "Escolha o grupo." : p.tipo === "cidade" && !p.cidade ? "Escolha a cidade." : "";
+    if(err){ $("nf-msg").innerHTML = `<div class="msg msg-bad">${err}</div>`; return null; }
+    let enviar_em = null; if(status === "agendada"){ const h = new Date(val("nf-h")); if(isNaN(h) || h < new Date(Date.now() - 6e4)) { $("nf-msg").innerHTML = `<div class="msg msg-bad">Escolha uma data e horário no futuro.</div>`; return null; } enviar_em = h.toISOString(); }
+    if(novaImg){ try{ img = await sobeAnuncio("notif", novaImg, "jpg", "image/jpeg"); novaImg = null; }catch(e){ $("nf-msg").innerHTML = `<div class="msg msg-bad">Não deu para enviar a imagem: ${esc(e.message || "")}</div>`; return null; } }
+    const d = { titulo: val("nf-t"), mensagem: val("nf-m"), imagem: img || null, link: link || null, publico: p, status, enviar_em };
+    try{ const r = n.id ? await sq(SB2().from("notif_campanhas").update(d).eq("id", n.id).select()) : await sq(SB2().from("notif_campanhas").insert(d).select()); return r[0]; }
+    catch(e){ $("nf-msg").innerHTML = `<div class="msg msg-bad">${esc(e.message || "Não foi possível salvar")}</div>`; return null; }
+  };
+  $("nf-rasc").onclick = async () => { const r = await salva("rascunho"); if(r){ fechar(); toast("Rascunho salvo"); vNotificacoes(); } };
+  $("nf-ok").onclick = async () => { const bt = $("nf-ok"); bt.disabled = true; const r = await salva(quando === "agendar" ? "agendada" : "rascunho"); bt.disabled = false; if(!r) return;
+    fechar(); if(quando === "agendar"){ toast("Notificação agendada para " + dtH(r.enviar_em)); vNotificacoes(); } else enviaAgora(r); };
+}
+VIEWS.notificacoes = vNotificacoes;
+
+/* ===================== Painel · ANÚNCIOS com imagem 1080x1080 e vídeo até 30 s =====================
+   Mídia vai para a pasta "anuncios" do Supabase (leitura pública; envio só por quem pode editar Campanhas — conferido no banco).
+   Imagem: recortada ao centro em 1080x1080 e comprimida no navegador. Vídeo: MP4/WebM, até 30 s e 25 MB, com capa gerada. */
+const AD_LOC = [["feed", "Feed da comunidade"], ["explorar", "Explorar"], ["inicio", "Início (card discreto)"]];
+const AD_FMT = { texto: "Texto", imagem: "Imagem 1080×1080", video: "Vídeo até 30 s" };
+const AD_MAX_VIDEO = 25 * 1024 * 1024;
+const urlPub = path => SB2().storage.from("anuncios").getPublicUrl(path).data.publicUrl;
+async function sobeAnuncio(pasta, blob, ext, tipo){
+  const path = `${pasta}/${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+  const r = await SB2().storage.from("anuncios").upload(path, blob, { contentType: tipo, cacheControl: "31536000", upsert: false });
+  if(r.error) throw r.error; return urlPub(path);
+}
+/* imagem: recorte central 1:1, 1080 px, WebP (ou JPEG se o navegador não fizer WebP) */
+async function preparaImagem(file, lado = 1080){
+  if(!/^image\/(jpeg|png|webp)$/.test(file.type)) throw new Error("Use uma imagem JPG, PNG ou WebP.");
+  if(file.size > 15 * 1024 * 1024) throw new Error("Imagem muito grande (máximo 15 MB).");
+  const bmp = await createImageBitmap(file), q = Math.min(bmp.width, bmp.height), cv = document.createElement("canvas");
+  cv.width = cv.height = lado; const g = cv.getContext("2d"); g.imageSmoothingQuality = "high";
+  g.drawImage(bmp, (bmp.width - q) / 2, (bmp.height - q) / 2, q, q, 0, 0, lado, lado);
+  const avisos = []; if(bmp.width !== bmp.height) avisos.push("A imagem não era quadrada: recortamos o centro."); if(q < lado) avisos.push(`A imagem tem ${q} px; o ideal é 1080×1080 para ficar nítida.`);
+  let blob = await new Promise(ok => cv.toBlob(ok, "image/webp", .86)), ext = "webp", mime = "image/webp";
+  if(!blob || blob.type !== "image/webp"){ blob = await new Promise(ok => cv.toBlob(ok, "image/jpeg", .86)); ext = "jpg"; mime = "image/jpeg"; }
+  return { blob, ext, mime, avisos, url: URL.createObjectURL(blob) };
+}
+/* vídeo: confere tipo, tamanho e duração; tira uma capa para carregar leve */
+function preparaVideo(file){
+  return new Promise((ok, no) => {
+    if(!/^video\/(mp4|webm)$/.test(file.type)) return no(new Error("Use um vídeo MP4 ou WebM."));
+    if(file.size > AD_MAX_VIDEO) return no(new Error(`Vídeo muito pesado (${(file.size / 1048576).toFixed(1)} MB). O máximo é 25 MB: exporte em 720p ou 1080p.`));
+    const v = document.createElement("video"), u = URL.createObjectURL(file); v.muted = true; v.playsInline = true; v.preload = "auto"; v.src = u;
+    v.onerror = () => no(new Error("Não foi possível ler este vídeo."));
+    v.onloadedmetadata = () => { if(!isFinite(v.duration) || v.duration > 30.5) return no(new Error(`O vídeo tem ${Math.round(v.duration)} s. O máximo é 30 segundos.`)); v.currentTime = Math.min(.8, v.duration / 3); };
+    v.onseeked = () => { const w = Math.min(1080, v.videoWidth), h = Math.round(w * v.videoHeight / v.videoWidth), cv = document.createElement("canvas"); cv.width = w; cv.height = h; cv.getContext("2d").drawImage(v, 0, 0, w, h);
+      cv.toBlob(capa => ok({ file, capa, dur: v.duration, prop: +(v.videoWidth / v.videoHeight).toFixed(3), url: u, avisos: v.videoWidth < 720 ? ["Resolução baixa: o ideal é pelo menos 720 px de largura."] : [] }), "image/jpeg", .8); };
+  });
+}
+vCampanhas = function(){
+  const db = DB(), hoje = today();
+  const noAr = c => c.ativa && c.inicio <= hoje && (!c.fim || c.fim >= hoje);
+  $("adm-main").innerHTML = `
+    <div class="head"><div><h1>Anúncios</h1><p class="muted">Cards integrados ao Feed, Explorar e Início, com imagem, vídeo ou texto. Só aparecem para quem usa o plano grátis a partir do 31º dia, nunca durante treino, chat ou telas de segurança.</p></div><button class="btn btn-accent needs-edit" id="cp-new">+ Novo anúncio</button></div>
+    <div class="grid g3">${kpi("No ar agora", int(db.campanhas.filter(noAr).length), "", "campanhas", 1)}${kpi("Com imagem ou vídeo", int(db.campanhas.filter(c => c.midia).length))}${kpi("Pausados ou fora do período", int(db.campanhas.filter(c => !noAr(c)).length))}</div>
+    ${db.campanhas.length ? `<div class="adm-adlist">${db.campanhas.map(c => { const on = noAr(c); return `<div class="adm-adrow">
+      <span class="adm-adth">${c.formato === "imagem" && c.midia ? `<img src="${esc(c.midia)}" alt="" loading="lazy">` : c.formato === "video" && c.capa ? `<img src="${esc(c.capa)}" alt="" loading="lazy"><i>${aic("campanhas", 14)}</i>` : aic("campanhas", 20)}</span>
+      <span class="adm-adtx"><b>${esc(c.titulo || "(sem título)")}</b>${ex(c)}<small>${esc(anuNome(c.anunc) || "Sem anunciante")} · ${AD_FMT[c.formato || "texto"]} · ${(c.locais && c.locais.length ? c.locais : ["feed", "explorar"]).map(l => (AD_LOC.find(x => x[0] === l) || [, l])[1].split(" (")[0]).join(", ")}</small><small>${brD(c.inicio)}${c.fim ? " a " + brD(c.fim) : " em diante"} · ${GEN[c.genero] || "Todos"}${c.cidade ? " · " + esc(cidNome(c.cidade)) : ""}</small></span>
+      <span class="st ${on ? "ok" : c.ativa ? "warn" : "off"}">${on ? "No ar" : c.ativa ? "Fora do período" : "Pausado"}</span>
+      <span class="acts needs-edit"><button class="btn btn-line btn-sm" data-ed="${c.id}">Editar</button><button class="btn btn-line btn-sm" data-dup="${c.id}">Duplicar</button></span></div>`; }).join("")}</div>`
+    : `<div class="card adm-vazio"><span>${aic("campanhas", 28)}</span><b>Nenhum anúncio ainda</b><p class="muted">Cadastre um anunciante e crie o primeiro anúncio com imagem ou vídeo.</p><button class="btn btn-accent btn-sm needs-edit" id="cp-new2">Criar anúncio</button></div>`}`;
+  const n = $("cp-new"), n2 = $("cp-new2"); if(n) n.onclick = () => formCamp(); if(n2) n2.onclick = () => formCamp();
+  $("adm-main").querySelectorAll("[data-ed]").forEach(b => b.onclick = () => formCamp(db.campanhas.find(c => c.id === b.dataset.ed)));
+  $("adm-main").querySelectorAll("[data-dup]").forEach(b => b.onclick = () => { const c = db.campanhas.find(x => x.id === b.dataset.dup); db.campanhas.push({ ...c, id: F.uid(), titulo: (c.titulo || "Anúncio") + " (cópia)", ativa: false, exemplo: false }); save(); toast("Anúncio duplicado (pausado)"); rerender(); });
+};
+VIEWS.campanhas = vCampanhas;
+formCamp = function(c){
+  if(!DB().anunciantes.length){ toast("Cadastre um anunciante primeiro"); return ir("anunciantes"); }
+  c = c || { anunc: "", titulo: "", texto: "", destino: "whatsapp", botao: "Falar no WhatsApp", whats: "", msg: "Oi! Vi seu anúncio no CK Life.", insta: "", site: "", genero: "todos", idMin: "", idMax: "", cidade: "", inicio: today(), fim: "", ativa: true, formato: "imagem", locais: ["feed", "explorar"] };
+  const M = { formato: c.formato || (c.midia ? "imagem" : "texto"), midia: c.midia || "", capa: c.capa || "", prop: c.prop || 1, dur: c.dur || 0, novo: null }, locais = c.locais && c.locais.length ? c.locais : ["feed", "explorar"];
+  modal(c.id ? "Editar anúncio" : "Novo anúncio", `<div class="ad-form"><div class="formgrid">
+    <div class="field full"><label for="fc-a">Anunciante</label><select class="input" id="fc-a">${optAnu(c.anunc)}</select></div>
+    <div class="field full"><label>Formato</label><div class="seg-pills" id="fc-fmt">${Object.entries(AD_FMT).map(([k, n]) => `<button type="button" class="chip" data-f="${k}" aria-pressed="${M.formato === k}">${n}</button>`).join("")}</div></div>
+    <div class="field full" id="fc-mid"><label>Arquivo</label><div class="ad-up"><input type="file" id="fc-file" hidden><button type="button" class="btn btn-line" id="fc-pick">${aic("pdf", 16)} Escolher arquivo</button><span class="hint" id="fc-fh"></span></div><div id="fc-av"></div></div>
+    <div class="field full"><label for="fc-t">Título (opcional)</label><input class="input" id="fc-t" value="${esc(c.titulo)}" maxlength="70"></div>
+    <div class="field full"><label for="fc-x">Texto curto (opcional, até 140 letras)</label><textarea class="input" id="fc-x" maxlength="140">${esc(c.texto)}</textarea></div>
+    <div class="field"><label for="fc-d">O botão leva para</label><select class="input" id="fc-d">${Object.entries(DEST).map(([k, n]) => `<option value="${k}" ${c.destino === k ? "selected" : ""}>${n}</option>`).join("")}</select></div>
+    <div class="field"><label for="fc-b">Texto do botão (CTA)</label><input class="input" id="fc-b" value="${esc(c.botao)}" maxlength="28"></div>
+    <div class="field dz dz-whatsapp"><label for="fc-w">WhatsApp da empresa com DDD</label><input class="input" id="fc-w" value="${esc(c.whats)}" inputmode="tel"></div>
+    <div class="field dz dz-whatsapp"><label for="fc-m">Mensagem que já vem escrita</label><input class="input" id="fc-m" value="${esc(c.msg)}"></div>
+    <div class="field full dz dz-instagram"><label for="fc-i">@ do Instagram</label><input class="input" id="fc-i" value="${esc(c.insta)}"></div>
+    <div class="field full dz dz-site"><label for="fc-s">Endereço do site</label><input class="input" id="fc-s" value="${esc(c.site)}" placeholder="https://"></div>
+    <div class="field full"><label>Onde aparece</label><div class="seg-pills" id="fc-loc">${AD_LOC.map(([k, n]) => `<button type="button" class="chip" data-l="${k}" aria-pressed="${locais.includes(k)}">${n}</button>`).join("")}</div></div>
+    <div class="field"><label for="fc-g">Público</label><select class="input" id="fc-g"><option value="todos" ${c.genero === "todos" ? "selected" : ""}>Todos</option><option value="feminino" ${c.genero === "feminino" ? "selected" : ""}>Só mulheres</option><option value="masculino" ${c.genero === "masculino" ? "selected" : ""}>Só homens</option></select></div>
+    <div class="field"><label for="fc-c">Cidade</label><select class="input" id="fc-c">${optCid(c.cidade, true)}</select></div>
+    <div class="field"><label for="fc-i1">Idade mínima</label><input class="input num" id="fc-i1" value="${esc(c.idMin)}" inputmode="numeric"></div>
+    <div class="field"><label for="fc-i2">Idade máxima</label><input class="input num" id="fc-i2" value="${esc(c.idMax)}" inputmode="numeric"></div>
+    <div class="field"><label for="fc-ini">Começa em</label><input class="input" type="date" id="fc-ini" value="${esc(c.inicio)}"></div>
+    <div class="field"><label for="fc-fim">Termina em (opcional)</label><input class="input" type="date" id="fc-fim" value="${esc(c.fim)}"></div>
+    <label class="field full xf-chk"><input type="checkbox" id="fc-on" ${c.ativa ? "checked" : ""}> Anúncio ativo</label>
+  </div><aside class="ad-prev"><span class="eyebrow">Prévia no app</span><div id="fc-prev"></div></aside></div>
+  <div id="fc-msg"></div><div class="toolbar" style="justify-content:space-between">${c.id ? `<button class="btn btn-bad" id="fc-del">Excluir</button>` : "<span></span>"}<button class="btn btn-accent" id="fc-ok">Salvar anúncio</button></div>`);
+  $("mbox").classList.add("mbox-wide");
+  const dados = () => ({ anunc: val("fc-a"), titulo: val("fc-t"), texto: val("fc-x"), destino: val("fc-d"), botao: val("fc-b") || "Saiba mais", whats: val("fc-w"), msg: val("fc-m"), insta: val("fc-i"), site: val("fc-s"), genero: val("fc-g"), cidade: +val("fc-c") || "", idMin: +val("fc-i1") || "", idMax: +val("fc-i2") || "", inicio: val("fc-ini") || today(), fim: val("fc-fim"), ativa: val("fc-on"),
+    formato: M.formato, locais: [...$("fc-loc").querySelectorAll('[aria-pressed="true"]')].map(b => b.dataset.l) });
+  const prev = () => { const d = dados(), an = DB().anunciantes.find(a => a.id === d.anunc) || { nome: "Anunciante" };
+    const midia = M.novo ? M.novo.url : M.midia, capa = M.novo && M.novo.capaUrl ? M.novo.capaUrl : M.capa;
+    $("fc-prev").innerHTML = window.FV && window.FV.CKAD ? window.FV.CKAD.card({ ...d, midia, capa, prop: M.novo ? M.novo.prop : M.prop }, an) : (window.CKAD ? window.CKAD.card({ ...d, midia, capa, prop: M.novo ? M.novo.prop : M.prop }, an) : "");
+    const v = $("fc-prev").querySelector("video"); if(v){ v.src = v.dataset.src; v.preload = "metadata"; const p = $("fc-prev").querySelector(".adx-play"); const t = e => { e.preventDefault(); v.paused ? v.play() : v.pause(); }; if(p) p.onclick = t; v.onclick = t; v.onplay = () => v.closest(".adx").classList.add("tocando"); v.onpause = () => v.closest(".adx").classList.remove("tocando"); const s = $("fc-prev").querySelector(".adx-som"); if(s) s.onclick = e => { e.preventDefault(); v.muted = !v.muted; }; }
+    $("fc-prev").querySelectorAll("a").forEach(a => a.onclick = e => e.preventDefault()); };
+  const fmtUI = () => { $("fc-fmt").querySelectorAll("[data-f]").forEach(b => b.setAttribute("aria-pressed", b.dataset.f === M.formato)); $("fc-mid").hidden = M.formato === "texto";
+    $("fc-file").accept = M.formato === "video" ? "video/mp4,video/webm" : "image/jpeg,image/png,image/webp";
+    $("fc-fh").textContent = M.formato === "video" ? "MP4 ou WebM · até 30 s · até 25 MB" : "JPG, PNG ou WebP · recortamos em 1080×1080"; prev(); };
+  $("fc-fmt").querySelectorAll("[data-f]").forEach(b => b.onclick = () => { if(M.formato !== b.dataset.f){ M.formato = b.dataset.f; if(!(M.novo && M.novo.tipo === M.formato) && !(c.formato === M.formato && c.midia)) { M.novo = null; } } fmtUI(); });
+  $("fc-loc").querySelectorAll("[data-l]").forEach(b => b.onclick = () => { b.setAttribute("aria-pressed", b.getAttribute("aria-pressed") !== "true"); prev(); });
+  $("fc-pick").onclick = () => $("fc-file").click();
+  $("fc-file").onchange = async e => { const f = e.target.files[0]; e.target.value = ""; if(!f) return; $("fc-av").innerHTML = `<div class="skel" style="height:16px;width:60%"></div>`;
+    try{
+      if(M.formato === "video"){ const v = await preparaVideo(f); M.novo = { ...v, tipo: "video", capaUrl: v.capa ? URL.createObjectURL(v.capa) : "" }; }
+      else { const i = await preparaImagem(f); M.novo = { ...i, tipo: "imagem" }; }
+      $("fc-av").innerHTML = M.novo.avisos && M.novo.avisos.length ? `<div class="msg msg-warn">${M.novo.avisos.map(esc).join("<br>")}</div>` : `<div class="msg msg-ok">Arquivo pronto. Ele é enviado quando você salvar.</div>`; prev();
+    }catch(er){ $("fc-av").innerHTML = `<div class="msg msg-bad">${esc(er.message || "Arquivo inválido")}</div>`; }
+  };
+  ["fc-a", "fc-t", "fc-x", "fc-b", "fc-d"].forEach(id => $(id).addEventListener("input", prev));
+  const dz = () => $("mbox").querySelectorAll(".dz").forEach(e => e.hidden = !e.classList.contains("dz-" + val("fc-d")));
+  $("fc-d").addEventListener("change", dz); dz(); fmtUI();
+  $("fc-ok").onclick = async () => {
+    const d = dados(), temMidia = !!(M.novo || (c.midia && c.formato === M.formato));
+    const err = !d.anunc ? "Escolha o anunciante." : M.formato !== "texto" && !temMidia ? "Escolha o arquivo do anúncio." : M.formato === "texto" && !d.titulo ? "No formato texto, escreva o título." : !d.locais.length ? "Escolha pelo menos um lugar onde o anúncio aparece."
+      : d.destino === "whatsapp" && String(d.whats).replace(/\D/g, "").length < 10 ? "Informe o WhatsApp com DDD." : d.destino === "instagram" && !d.insta ? "Informe o @ do Instagram." : d.destino === "site" && !/^https?:\/\/|^[\w-]+\.[\w.-]+/.test(d.site) ? "Informe o endereço do site." : d.fim && d.fim < d.inicio ? "A data final é antes da inicial." : "";
+    if(err){ $("fc-msg").innerHTML = `<div class="msg msg-bad">${err}</div>`; return; }
+    const bt = $("fc-ok"); bt.disabled = true; bt.textContent = "Enviando…";
+    try{
+      if(M.novo){
+        if(!SB2()) throw new Error("Envio de mídia funciona no app oficial, com o banco conectado.");
+        if(M.novo.tipo === "imagem"){ d.midia = await sobeAnuncio("img", M.novo.blob, M.novo.ext, M.novo.mime); d.capa = ""; d.prop = 1; d.dur = 0; }
+        else { d.midia = await sobeAnuncio("video", M.novo.file, M.novo.file.type === "video/webm" ? "webm" : "mp4", M.novo.file.type); d.capa = M.novo.capa ? await sobeAnuncio("capa", M.novo.capa, "jpg", "image/jpeg") : ""; d.prop = M.novo.prop; d.dur = Math.round(M.novo.dur); }
+      } else if(M.formato === "texto"){ d.midia = ""; d.capa = ""; }
+      else { d.midia = c.midia; d.capa = c.capa || ""; d.prop = c.prop || 1; d.dur = c.dur || 0; }
+      if(c.id) Object.assign(c, d); else DB().campanhas.push({ id: F.uid(), ...d });
+      save(); fechar(); toast(c.id ? "Anúncio atualizado" : "Anúncio criado"); rerender();
+    }catch(er){ bt.disabled = false; bt.textContent = "Salvar anúncio"; $("fc-msg").innerHTML = `<div class="msg msg-bad">Não foi possível enviar: ${esc(er.message || er.error || "erro")}. Confira se o SQL da Central foi rodado.</div>`; }
+  };
+  const del = $("fc-del"); if(del) del.onclick = () => confirmar("Excluir este anúncio? Ele sai do app na hora.", () => { DB().campanhas = DB().campanhas.filter(x => x.id !== c.id); save(); toast("Anúncio excluído"); rerender(); });
+};
+
+/* ===================== Painel · NAVEGAÇÃO, DASHBOARD E BUSCA GLOBAL =====================
+   Menu em seções recolhíveis (computador: barra lateral; celular: gaveta com botão de menu — nada de rolar de lado).
+   Dashboard executivo com números reais. Busca global (Ctrl/Cmd + K) leva direto ao lugar certo. */
+AIC.menu = '<path d="M4 7h16M4 12h16M4 17h16"/>';
+AIC.busca = '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>';
+AIC.chev = '<path d="m9 6 6 6-6 6"/>';
+AIC.treinos = '<path d="M6 7v10M3 9v6M18 7v10M21 9v6M6 12h12"/>';
+AIC.conteudo = '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 13h8M8 16h5"/>';
+AIC.seguranca = AIC.seguranca || AIC.admins;
+AIC.relatorios = AIC.metricas;
+AIC.explorarg = '<circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/>';
+AIC.alerta = '<path d="M12 3 2 20h20z"/><path d="M12 10v4M12 17.5v.5"/>';
+/* arquitetura do menu: categoria > seção > telas */
+const MENU = [
+  ["Gestão", [["Usuárias", "alunos", ["alunos", "verificacoes", "ciclo"]], ["Treinos", "treinos", ["exercicios"]], ["Nutrição", "receitas", ["receitas"]], ["Conteúdo", "conteudo", ["avisos", "banners", "destaques", "categorias", "figurinhas"]], ["Comunidade", "comunidade", ["comunidade", "grupos", "moderacao"]]]],
+  ["Marketing", [["Notificações", "notificacoes", ["notificacoes"]], ["Anúncios", "campanhas", ["campanhas", "anunciantes"]], ["Clube e Explorar", "explorarg", ["parceiros", "cupons", "produtos", "empresas", "profissionais", "servicos", "agendamentos", "avaliacoes"]]]],
+  ["Dados", [["Financeiro", "financeiro", ["monetizacao", "financeiro"]], ["Relatórios", "relatorios", ["metricas", "explorarm"]]]],
+  ["Sistema", [["Segurança", "seguranca", ["seguranca", "admins"]], ["Configurações", "config", ["cidades", "segmentos", "config"]]]]
+];
+const MENU_NOME = { campanhas: "Anúncios", metricas: "Métricas de anúncios", explorarm: "Métricas do Explorar", alunos: "Lista de alunas", exercicios: "Exercícios e voz", receitas: "Receitas", monetizacao: "Assinaturas e planos", financeiro: "Financeiro e vendas", notificacoes: "Central de Notificações", comunidade: "Publicações" };
+let MENU_AB = {}; try{ MENU_AB = JSON.parse(localStorage.getItem("ck_adm_menu") || "{}"); }catch(e){}
+const grupoDe = s => { for(const [, gs] of MENU) for(const g of gs) if(g[2].includes(s)) return g; return null; };
+function montaMenu(nomeSec){
+  const NS = nomeSec || Object.fromEntries(SECOES), usados = new Set(MENU.flatMap(c => c[1].flatMap(g => g[2])));
+  const extra = GRUPOS.flatMap(g => g[1]).filter(k => !usados.has(k) && k !== "resumo" && podeVer(k));
+  const item = k => `<button class="adm-it" data-s="${k}"><span>${esc(MENU_NOME[k] || NS[k] || k)}</span></button>`;
+  const grupo = ([nome, ic, ks]) => { const vis = ks.filter(k => podeVer(k) && VIEWS[k]); if(!vis.length) return "";
+    if(vis.length === 1) return `<button class="adm-gh solo" data-s="${vis[0]}"><span class="ai">${aic(ic)}</span><span class="adm-gn">${esc(nome)}</span></button>`;
+    return `<div class="adm-g" data-g="${esc(nome)}"><button class="adm-gh" aria-expanded="false"><span class="ai">${aic(ic)}</span><span class="adm-gn">${esc(nome)}</span><span class="adm-chev">${aic("chev", 15)}</span></button><div class="adm-gi">${vis.map(item).join("")}</div></div>`; };
+  $("adm-tabs").innerHTML = `<button class="adm-busca-bt" id="adm-busca-bt" type="button">${aic("busca", 16)}<span>Buscar no painel</span><kbd>${/Mac|iPhone|iPad/.test(navigator.platform) ? "⌘" : "Ctrl"} K</kbd></button>
+    ${podeVer("resumo") ? `<button class="adm-gh solo adm-dash" data-s="resumo"><span class="ai">${aic("resumo")}</span><span class="adm-gn">Dashboard</span></button>` : ""}
+    ${MENU.map(([cat, gs]) => { const h = gs.map(grupo).join(""); return h ? `<span class="adm-cat">${cat}</span>${h}` : ""; }).join("")}
+    ${extra.length ? `<span class="adm-cat">Outros</span>${extra.map(k => `<button class="adm-gh solo" data-s="${k}"><span class="ai">${aic(k)}</span><span class="adm-gn">${esc(NS[k] || k)}</span></button>`).join("")}` : ""}`;
+  $("adm-tabs").querySelectorAll("[data-s]").forEach(b => b.onclick = () => { ir(b.dataset.s); fechaMenu(); });
+  $("adm-tabs").querySelectorAll(".adm-g > .adm-gh").forEach(b => b.onclick = () => { const g = b.parentNode, ab = !g.classList.contains("ab"); abreGrupo(g, ab); MENU_AB[g.dataset.g] = ab; try{ localStorage.setItem("ck_adm_menu", JSON.stringify(MENU_AB)); }catch(e){} });
+  $("adm-busca-bt").onclick = () => { fechaMenu(); abreBusca(); };
+  // topo do celular: botão de menu, título da tela e busca
+  const top = document.querySelector(".adm-top");
+  if(top && !$("adm-mb")){ top.insertAdjacentHTML("afterbegin", `<button class="adm-mb" id="adm-mb" aria-label="Abrir menu" aria-controls="adm-tabs" aria-expanded="false">${aic("menu", 22)}</button>`); top.insertAdjacentHTML("beforeend", `<span class="adm-cur" id="adm-cur"></span><button class="adm-sb" id="adm-sb" aria-label="Buscar">${aic("busca", 20)}</button><div class="adm-veu" id="adm-veu" hidden></div>`);
+    $("adm-mb").onclick = () => document.body.classList.contains("adm-menu-on") ? fechaMenu() : abreMenu(); $("adm-veu").onclick = fechaMenu; $("adm-sb").onclick = abreBusca; }
+}
+function abreGrupo(g, ab){ g.classList.toggle("ab", ab); g.querySelector(".adm-gh").setAttribute("aria-expanded", ab); }
+function abreMenu(){ document.body.classList.add("adm-menu-on"); $("adm-veu").hidden = false; $("adm-mb").setAttribute("aria-expanded", "true"); const on = $("adm-tabs").querySelector("button.on"); if(on) on.scrollIntoView({ block: "center" }); }
+function fechaMenu(){ document.body.classList.remove("adm-menu-on"); const v = $("adm-veu"); if(v) v.hidden = true; const m = $("adm-mb"); if(m) m.setAttribute("aria-expanded", "false"); }
+document.addEventListener("keydown", e => { if(e.key === "Escape" && document.body.classList.contains("adm-menu-on")) fechaMenu(); });
+const irUx = ir; ir = function(s){
+  irUx(s);
+  const t = $("adm-tabs"); if(!t) return;
+  t.querySelectorAll("[data-s]").forEach(b => b.classList.toggle("on", b.dataset.s === SEC));
+  t.querySelectorAll(".adm-g").forEach(g => { const tem = !!g.querySelector(`[data-s="${SEC}"]`); g.classList.toggle("tem", tem); abreGrupo(g, tem || !!MENU_AB[g.dataset.g]); });
+  const g = grupoDe(SEC), cur = $("adm-cur"); if(cur) cur.textContent = SEC === "resumo" ? "Dashboard" : (MENU_NOME[SEC] || (SECOES.find(x => x[0] === SEC) || [, ""])[1]);
+  if(history.replaceState && !location.hash.startsWith("#admin-" + SEC)) history.replaceState(null, "", "#admin-" + SEC);
+  subNav();
+};
+/* sub-navegação da seção (ex.: Usuárias → Lista, Verificações, Ciclo); volta sozinha se a tela for redesenhada */
+function subNav(){
+  const g = grupoDe(SEC); if(!g || $("adm-sub")) return; const vis = g[2].filter(k => podeVer(k) && VIEWS[k]); if(vis.length < 2) return;
+  const h = document.querySelector("#adm-main > .head"); if(!h) return;
+  h.insertAdjacentHTML("afterend", `<nav class="adm-sub" id="adm-sub" aria-label="${esc(g[0])}">${vis.map(k => `<button class="chip" data-sub="${k}" aria-pressed="${k === SEC}">${esc(MENU_NOME[k] || (SECOES.find(x => x[0] === k) || [, k])[1])}</button>`).join("")}</nav>`);
+  document.querySelectorAll("#adm-sub [data-sub]").forEach(b => b.onclick = () => ir(b.dataset.sub));
+}
+new MutationObserver(() => { if(!$("v-admin").hidden) subNav(); }).observe($("adm-main"), { childList: true });
+/* modal: sempre volta ao tamanho normal; "Esc" fecha */
+const modalUx = modal; modal = function(){ $("mbox").classList.remove("mbox-wide"); return modalUx.apply(this, arguments); };
+
+/* ---------- Busca global ---------- */
+let BUSCA_SEL = 0, BUSCA_R = [];
+function abreBusca(){
+  let b = $("adm-busca"); if(!b){ b = document.createElement("div"); b.id = "adm-busca"; b.className = "adm-busca"; b.innerHTML = `<div class="adm-bx" role="dialog" aria-modal="true" aria-label="Buscar no painel"><div class="adm-bi">${aic("busca", 18)}<input id="adm-bq" placeholder="Buscar alunas, anúncios, notificações, receitas, telas…" autocomplete="off"><kbd>Esc</kbd></div><div class="adm-br" id="adm-br"></div></div>`; document.body.appendChild(b);
+    b.onclick = e => { if(e.target === b) fechaBusca(); };
+    let t; $("adm-bq").oninput = () => { clearTimeout(t); t = setTimeout(buscaRoda, 120); };
+    $("adm-bq").onkeydown = e => { if(e.key === "ArrowDown"){ e.preventDefault(); BUSCA_SEL = Math.min(BUSCA_R.length - 1, BUSCA_SEL + 1); buscaPinta(); } else if(e.key === "ArrowUp"){ e.preventDefault(); BUSCA_SEL = Math.max(0, BUSCA_SEL - 1); buscaPinta(); } else if(e.key === "Enter"){ const r = BUSCA_R[BUSCA_SEL]; if(r){ fechaBusca(); r.ir(); } } else if(e.key === "Escape") fechaBusca(); }; }
+  b.hidden = false; document.body.classList.add("adm-busca-on"); $("adm-bq").value = ""; $("adm-bq").focus(); buscaRoda(); setTimeout(() => $("adm-bq").focus(), 20);
+}
+function fechaBusca(){ const b = $("adm-busca"); if(b) b.hidden = true; document.body.classList.remove("adm-busca-on"); }
+document.addEventListener("keydown", e => { if($("v-admin") && $("v-admin").hidden) return; if((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k"){ e.preventDefault(); abreBusca(); } else if(e.key === "/" && !/INPUT|TEXTAREA|SELECT/.test((document.activeElement || {}).tagName || "") && $("modal").hidden){ e.preventDefault(); abreBusca(); } });
+const sem = s => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+let BUSCA_POST = 0;
+function buscaRoda(){
+  const q = sem($("adm-bq").value.trim()), db = DB(), R = [], tem = x => !q || sem(x).includes(q);
+  const add = (tipo, ic, titulo, sub, fn) => R.push({ tipo, ic, titulo, sub, ir: fn });
+  SECOES.filter(([k]) => podeVer(k) && VIEWS[k]).forEach(([k, n]) => { const g = grupoDe(k), nome = k === "resumo" ? "Dashboard" : MENU_NOME[k] || n; if(tem(nome + " " + n + " " + (g ? g[0] : ""))) add("Tela", k, nome, g ? g[0] : "Painel", () => ir(k)); });
+  if(q.length >= 2){
+    if(podeVer("alunos")) db.users.filter(u => !u.soAdmin && tem(u.nome + " " + u.email + " " + (u.whats || ""))).slice(0, 8).forEach(u => add("Aluna", "alunos", u.nome || u.email, u.email, () => { AF.q = u.email; ir("alunos"); }));
+    if(podeVer("campanhas")) db.campanhas.filter(c => tem((c.titulo || "") + " " + anuNome(c.anunc))).slice(0, 5).forEach(c => add("Anúncio", "campanhas", c.titulo || "(sem título)", anuNome(c.anunc), () => { ir("campanhas"); formCamp(c); }));
+    if(podeVer("anunciantes")) db.anunciantes.filter(a => tem(a.nome)).slice(0, 4).forEach(a => add("Anunciante", "anunciantes", a.nome, cidNome(a.cidade), () => ir("anunciantes")));
+    if(podeVer("notificacoes") && NT_CACHE) NT_CACHE.filter(n => tem(n.titulo + " " + n.mensagem)).slice(0, 5).forEach(n => add("Notificação", "notificacoes", n.titulo, (NT_ST[n.status] || [n.status])[0], () => ir("notificacoes")));
+    if(podeVer("receitas")) F.receitas().filter(r => tem(r.nome)).slice(0, 5).forEach(r => add("Receita", "receitas", r.nome, `${r.kcal} kcal`, () => ir("receitas")));
+    if(podeVer("exercicios")) F.exercicios().filter(x => tem(x.nome)).slice(0, 5).forEach(x => add("Exercício", "exercicios", x.nome, "Treinos", () => ir("exercicios")));
+    [["pro", "Plano Pro", "Assinaturas e planos", "monetizacao"], ["kiwify", "Vendas Kiwify", "Financeiro", "financeiro"], ["denuncia", "Denúncias", "Comunidade", "moderacao"], ["verificacao", "Verificações de perfil", "Usuárias", "verificacoes"], ["lgpd", "LGPD e privacidade", "Segurança", "seguranca"]].forEach(([k, t, s, sec]) => { if(sem(t + " " + k).includes(q) && podeVer(sec) && VIEWS[sec]) add("Atalho", sec, t, s, () => ir(sec)); });
+  }
+  BUSCA_R = R.slice(0, 40); BUSCA_SEL = 0; buscaPinta();
+  // publicações da comunidade (banco), só com 3+ letras
+  if(q.length >= 3 && SB2() && podeVer("comunidade")){ const n = ++BUSCA_POST, termo = $("adm-bq").value.trim().replace(/[%_,()]/g, " ");
+    SB2().from("posts").select("id,nome,texto").ilike("texto", `%${termo}%`).order("criado", { ascending: false }).limit(5).then(r => { if(n !== BUSCA_POST || !r.data || !r.data.length) return; r.data.forEach(p => BUSCA_R.push({ tipo: "Publicação", ic: "comunidade", titulo: (p.texto || "").slice(0, 70), sub: p.nome, ir: () => ir("comunidade") })); buscaPinta(); }, () => {}); }
+}
+function buscaPinta(){
+  const box = $("adm-br"); if(!box) return;
+  box.innerHTML = BUSCA_R.length ? BUSCA_R.map((r, i) => `<button class="adm-bres ${i === BUSCA_SEL ? "sel" : ""}" data-i="${i}"><span class="ai">${aic(r.ic, 17)}</span><span class="adm-brt"><b>${esc(r.titulo)}</b><small>${esc(r.sub || "")}</small></span><em>${esc(r.tipo)}</em></button>`).join("") : `<div class="adm-bvazio">Nada encontrado. Tente nome, e-mail, título de anúncio ou de notificação.</div>`;
+  box.querySelectorAll("[data-i]").forEach(b => { b.onclick = () => { const r = BUSCA_R[+b.dataset.i]; fechaBusca(); r.ir(); }; b.onmousemove = () => { if(BUSCA_SEL !== +b.dataset.i){ BUSCA_SEL = +b.dataset.i; box.querySelectorAll(".adm-bres").forEach((x, j) => x.classList.toggle("sel", j === BUSCA_SEL)); } }; });
+  const s = box.querySelector(".sel"); if(s) s.scrollIntoView({ block: "nearest" });
+}
+
+/* ---------- Dashboard executivo (números reais; sem dado inventado) ---------- */
+let DASH = null, DASH_T = 0;
+const relT = s => { const d = (Date.now() - new Date(s).getTime()) / 6e4; return d < 1 ? "agora" : d < 60 ? `há ${Math.round(d)} min` : d < 1440 ? `há ${Math.round(d / 60)} h` : `há ${Math.round(d / 1440)} d`; };
+function vDashboard(){
+  const db = DB(), al = metricasAlunos(), ini = addD(today(), -29), hoje = today();
+  const treinos30 = db.users.reduce((a, u) => a + (u.treinos || []).filter(x => x.d >= ini).length, 0), treinosHoje = db.users.reduce((a, u) => a + (u.treinos || []).filter(x => x.d === hoje).length, 0);
+  const adsNoAr = db.campanhas.filter(c => c.ativa && c.inicio <= hoje && (!c.fim || c.fim >= hoje)).length;
+  const conv = al.total ? al.pagos / al.total : 0, mesAtras = db.pagamentos.filter(p => p.status !== "pago" && p.venc < hoje).length;
+  const D = DASH, h = new Date().getHours();
+  const alertas = [];
+  if(D){ if(D.denuncias_abertas) alertas.push(["bad", `${int(D.denuncias_abertas)} denúncia(s) aguardando análise`, "moderacao"]); if(D.verificacoes_pendentes) alertas.push(["warn", `${int(D.verificacoes_pendentes)} pedido(s) de verificação com selfie`, "verificacoes"]);
+    if(D.webhooks_erro_7d) alertas.push(["bad", `${int(D.webhooks_erro_7d)} pagamento(s) da Kiwify com erro nos últimos 7 dias`, "monetizacao"]); if(D.cron === false) alertas.push(["warn", "Agendador do banco desligado: notificações agendadas e lembretes de treino não saem", "notificacoes"]); }
+  if(mesAtras) alertas.push(["warn", `${int(mesAtras)} cobrança(s) de anunciante vencida(s)`, "financeiro"]);
+  const ICR = { venda: "financeiro", denuncia: "alerta", notificacao: "notificacoes", cadastro: "alunos" }, SECR = { venda: "financeiro", denuncia: "moderacao", notificacao: "notificacoes", cadastro: "alunos" };
+  $("adm-main").innerHTML = `
+    <div class="head dash-head"><div><span class="adm-ola">${h < 12 ? "Bom dia" : h < 18 ? "Boa tarde" : "Boa noite"}, ${esc(((ME && ME.nome) || "").split(" ")[0])} · ${new Date().toLocaleDateString("pt-BR", { weekday: "long", day: "numeric", month: "long" })}</span><h1>Dashboard</h1><p class="muted">O que está acontecendo no CK Life agora.</p></div>
+      <div class="toolbar">${podeEditar("notificacoes") ? `<button class="btn btn-accent btn-sm" id="dq-not">${aic("notificacoes", 15)} Nova notificação</button>` : ""}${podeEditar("campanhas") ? `<button class="btn btn-line btn-sm" id="dq-ad">Novo anúncio</button>` : ""}</div></div>
+    ${alertas.length ? `<div class="dash-alertas">${alertas.map(([k, t, s]) => `<button class="dash-al ${k}" data-ir="${s}"><span>${aic("alerta", 16)}</span>${esc(t)}<i>${aic("chev", 14)}</i></button>`).join("")}</div>` : D ? `<div class="dash-ok">${aic("admins", 16)} Nenhum alerta: denúncias, pagamentos e envios em dia.</div>` : ""}
+    <div class="dash-sec"><span class="adm-cat">Usuárias</span></div>
+    <div class="grid g4">
+      ${kpi("Total de usuárias", int(al.total), `+${int(al.novos7)} nos últimos 7 dias`, "alunos", 1)}
+      ${kpi("Ativas hoje", int(al.dau), `${int(al.wau)} na semana · ${int(al.mau)} no mês`, "resumo")}
+      ${kpi("Assinantes Pro", int(al.pagos), `Conversão ${pct(al.pagos, al.total)} · ${int(al.teste)} em teste`, "monetizacao")}
+      ${kpi("Vendas Pro no mês", money(vendasMes()), VENDAS ? `${(VENDAS || []).filter(v => vendaOk(v) && String(v.quando).slice(0, 7) === hoje.slice(0, 7)).length} venda(s) aprovadas` : "carregando…", "financeiro")}
+    </div>
+    <div class="dash-sec"><span class="adm-cat">Engajamento</span></div>
+    <div class="grid g4">
+      ${kpi("Treinos em 30 dias", int(treinos30), `${int(treinosHoje)} hoje`, "exercicios")}
+      ${kpi("Comunidade (7 dias)", D ? int(D.posts_7d) + " posts" : "-", D ? `${int(D.comentarios_7d)} comentários · ${int(D.curtidas_7d)} curtidas` : "ative o banco", "comunidade")}
+      ${kpi("Notificações (30 dias)", D ? int(D.notif_30d) : "-", D ? `${int(D.notif_enviados_30d)} entregas · ${int(D.notif_agendadas)} agendada(s)` : "", "notificacoes")}
+      ${kpi("Anúncios no ar", int(adsNoAr), `${int(db.anunciantes.filter(a => a.ativo).length)} anunciante(s) ativo(s)`, "campanhas")}
+    </div>
+    <div class="grid g2 dash-g">
+      <div class="card"><div class="sec-title"><h3>Alunas ativas por dia</h3><small class="muted">últimos 30 dias</small></div>${barChart(al.serie, "alunos", "alunas")}</div>
+      <div class="card"><div class="sec-title"><h3>Atividade recente</h3></div><div class="dash-rec" id="dash-rec">${D ? (D.recentes || []).slice(0, 8).map(r => `<button class="dash-ri" data-ir="${SECR[r.tipo] || "resumo"}"><span class="ai">${aic(ICR[r.tipo] || "resumo", 16)}</span><span><b>${esc(r.texto)}</b><small>${relT(r.quando)}</small></span></button>`).join("") || `<p class="muted" style="margin:0">Sem atividade recente.</p>` : `<div class="skel" style="height:14px;width:80%"></div><div class="skel" style="height:14px;width:60%;margin-top:12px"></div><div class="skel" style="height:14px;width:70%;margin-top:12px"></div>`}</div></div>
+    </div>`;
+  $("adm-main").querySelectorAll("[data-ir]").forEach(b => b.onclick = () => ir(podeVer(b.dataset.ir) ? b.dataset.ir : "resumo"));
+  const n = $("dq-not"); if(n) n.onclick = () => { ir("notificacoes"); setTimeout(() => formNotif(), 50); };
+  const a = $("dq-ad"); if(a) a.onclick = () => { ir("campanhas"); formCamp(); };
+  if(SB2() && Date.now() - DASH_T > 60000){ DASH_T = Date.now(); SB2().rpc("admin_painel_resumo").then(r => { if(r.data){ DASH = r.data; if(SEC === "resumo") vDashboard(); } }, () => {}); }
+}
+VIEWS.resumo = comVendas(vDashboard);
 
 window.ADMIN = { abrir };
 })();
