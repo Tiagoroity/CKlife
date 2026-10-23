@@ -303,7 +303,7 @@ ol.steps li::before{content:counter(s);width:28px;height:28px;border-radius:50%;
 .kv dd{margin:0;font-weight:700;text-align:right}
 
 /* Folhas e telas cheias */
-.sheet,.full{position:fixed;inset:0;z-index:20;background:var(--bg);overflow-y:auto;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);animation:sobe .22s ease-out}
+.sheet{position:fixed;inset:0;z-index:20;background:var(--bg);overflow-y:auto;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);animation:sobe .22s ease-out}
 @keyframes sobe{from{transform:translateY(24px)}to{transform:none}}
 .sheet-head{position:sticky;top:0;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:flex;align-items:center;gap:12px;padding:12px max(16px,env(safe-area-inset-right,0px)) 12px max(16px,env(safe-area-inset-left,0px));z-index:2}
 .sheet-head b{flex:1;min-width:0;font-family:var(--display);font-size:19px;line-height:1.1}
@@ -754,6 +754,65 @@ input[type=date].input::-webkit-date-and-time-value{text-align:left;margin:0}
 .rdet:has(>.ph)::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(6,24,19,.35) 0%,transparent 22%,transparent 42%,rgba(6,24,19,.88) 100%)}
 .rdet:has(>.ph) h2{text-shadow:0 2px 12px rgba(0,0,0,.45)}
 .rdet:has(>.ph) .tags .tag,.rdet:has(>.ph) .rdet-meta span{background:rgba(14,61,50,.62);backdrop-filter:blur(6px);color:#fff}
+
+/* ===== Painel do administrador · visual premium ===== */
+#v-admin{background:#F1F5EE;min-height:100vh}
+.adm-top{position:sticky;top:0;z-index:6;background:linear-gradient(160deg,#0E3D32 0%,#0B3229 60%,#082820 100%);color:#fff;border-bottom:0;display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"brand user" "tabs tabs";align-items:center;gap:6px 12px;padding:max(10px,env(safe-area-inset-top,0px)) 16px 0;box-shadow:0 10px 30px -18px rgba(0,0,0,.5)}
+.adm-brand{grid-area:brand;display:flex;align-items:center;gap:10px;min-width:0}
+.adm-brand .wordmark{color:#fff}
+.adm-brand .wordmark b{color:#B9DDB2}
+.adm-brand .wordmark small{color:rgba(255,255,255,.55)}
+.adm-user{grid-area:user;display:flex;align-items:center;gap:8px;min-width:0}
+.adm-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#3DDC6E,#2E7D5A);color:#062016;font-weight:800;display:grid;place-items:center;flex:0 0 auto}
+.adm-me{font-size:13px;color:rgba(255,255,255,.7);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px}
+.adm-top .btn-line{color:#fff;border-color:rgba(255,255,255,.28);background:rgba(255,255,255,.06)}
+.adm-tabs{grid-area:tabs;padding:6px 0 10px;gap:6px}
+.adm-tabs button{display:inline-flex;align-items:center;gap:8px;color:rgba(255,255,255,.72);border-radius:12px;padding:9px 14px;font-weight:700;transition:background .15s,color .15s}
+.adm-tabs button:hover{background:rgba(255,255,255,.08);color:#fff}
+.adm-tabs button.on{background:#F5F8EF;color:#0E3D32;box-shadow:0 6px 16px -8px rgba(0,0,0,.5)}
+.adm-tabs .ai{display:inline-grid;place-items:center;opacity:.9}
+.adm-tabs button.on .ai{color:#2E7D5A}
+.adm-grp{display:none}
+@media (max-width:640px){.adm-me{display:none}}
+@media (min-width:1024px){
+  #v-admin:not([hidden]){display:grid;grid-template-columns:264px minmax(0,1fr)}
+  .adm-top{height:100vh;overflow-y:auto;grid-template-columns:1fr;grid-template-rows:auto 1fr auto;grid-template-areas:"brand" "tabs" "user";padding:24px 14px 18px;align-items:start;box-shadow:none}
+  .adm-brand{padding:0 8px 18px;border-bottom:1px solid rgba(255,255,255,.08)}
+  .adm-tabs{flex-direction:column;overflow:visible;padding:10px 0;gap:2px}
+  .adm-tabs button{width:100%;justify-content:flex-start;padding:10px 12px;font-size:14.5px}
+  .adm-grp{display:block;margin:14px 12px 4px;font-size:10.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(185,221,178,.6)}
+  .adm-grp:first-child{margin-top:4px}
+  .adm-user{flex-wrap:wrap;padding:14px 8px 0;border-top:1px solid rgba(255,255,255,.08)}
+  .adm-me{flex:1;max-width:none}
+  main.adm{padding:28px 32px 60px;max-width:1240px;width:100%}
+}
+main.adm .head h1{font-size:34px;letter-spacing:-.02em}
+main.adm .head p{color:#66766d}
+main.adm .card{border-radius:20px;border:1px solid #E1EADB;background:#fff;box-shadow:0 1px 0 rgba(14,61,50,.03),0 14px 30px -24px rgba(14,61,50,.45)}
+main.adm .card h3{font-size:17px;letter-spacing:-.01em}
+.kpi{position:relative;border-radius:18px;border:1px solid #E1EADB;background:#fff;padding:16px;box-shadow:0 14px 30px -26px rgba(14,61,50,.5)}
+.kpi span{padding-right:44px;color:#66766d}
+.kpi b{font-size:28px;letter-spacing:-.01em;margin-top:6px}
+.kpi-i{position:absolute;top:14px;right:14px;width:36px;height:36px;border-radius:12px;background:#E8F2E6;color:#2E7D5A;display:grid;place-items:center}
+.kpi-hero{background:linear-gradient(135deg,#0E3D32,#2E7D5A);border:0;color:#fff;box-shadow:0 18px 34px -20px rgba(14,61,50,.8)}
+.kpi-hero span,.kpi-hero small{color:rgba(255,255,255,.75)}
+.kpi-hero b{color:#fff}
+.kpi-hero .kpi-i{background:rgba(255,255,255,.14);color:#fff}
+main.adm .tbl{border-radius:18px;border:1px solid #E1EADB;box-shadow:0 14px 30px -26px rgba(14,61,50,.45)}
+main.adm th{background:#F5F8EF;color:#5c6b63;font-weight:800}
+main.adm tbody tr{transition:background .12s}
+main.adm tbody tr:hover td{background:#F7FAF4}
+main.adm .acts{display:flex;gap:6px;flex-wrap:wrap}
+main.adm .toolbar .input,main.adm .toolbar select{min-height:44px;border-radius:12px}
+main.adm .msg-ok{border-radius:16px}
+.btn-pdf{display:inline-flex;align-items:center;gap:6px}
+.hbar .t i{background:linear-gradient(90deg,#2E7D5A,#3DDC6E)}
+.mbox{border-radius:24px;box-shadow:0 30px 80px -30px rgba(0,0,0,.6)}
+.mbox .mh h2{font-size:22px}
+.rl-prev:empty{display:none}
+.rl-ok{margin-top:12px;padding:14px;border-radius:16px;background:#E8F2E6;display:flex;flex-direction:column;gap:10px}
+.rl-ok b{color:#0E3D32;word-break:break-all}
+.ro-aviso{border-radius:14px}
 </style>
 
 <!-- Entrar / criar conta -->
@@ -833,14 +892,9 @@ input[type=date].input::-webkit-date-and-time-value{text-align:left;margin:0}
 <!-- Painel admin -->
 <div id="v-admin" hidden>
   <header class="adm-top">
-    <div class="wrap wrap-wide">
-      <span class="logo-slot"></span>
-      <div class="wordmark">CK <b>Life</b><small>Painel do administrador</small></div>
-      <span class="hint" id="adm-me"></span>
-      <button class="btn btn-line btn-sm" id="b-voltar-app" hidden>Ver app</button>
-      <button class="btn btn-line btn-sm" data-logout>Sair</button>
-    </div>
-    <div class="wrap wrap-wide"><nav class="adm-tabs" id="adm-tabs" aria-label="Áreas do painel"></nav></div>
+    <div class="adm-brand"><span class="logo-slot"></span><div class="wordmark">CK <b>Life</b><small>Painel do administrador</small></div></div>
+    <nav class="adm-tabs" id="adm-tabs" aria-label="Áreas do painel"></nav>
+    <div class="adm-user"><span class="adm-av" id="adm-av"></span><span class="adm-me" id="adm-me"></span><button class="btn btn-line btn-sm" id="b-voltar-app" hidden>Ver app</button><button class="btn btn-line btn-sm" data-logout>Sair</button></div>
   </header>
   <main class="wrap wrap-wide adm" id="adm-main"></main>
 </div>
@@ -3392,7 +3446,7 @@ function mostrarAnuncio(c){
 /* ---------- Início ---------- */
 try{ const th = localStorage.getItem(KEY + "_tema"); document.documentElement.dataset.theme = th || "light"; }catch(e){ document.documentElement.dataset.theme = "light"; }
 const PLANOS = PROGS.map(p => ({ id: p.id, nome: p.nome, nivel: p.nivel, obj: p.foco, treinos: p.dias }));
-window.FV = { nuvem: NU, get DB(){ return DB; }, set DB(v){ DB = v; }, save, semente, $, esc, int, brD, today, addD, idade, uid, hash, toast, copyText, show, receitas, exercicios, exById, PLANOS, BASE_REC, CATS, isPremium, metas, get ME(){ return ME; }, abrirApp, entrar, logout, linkCamp };
+window.FV = { OBJS, ic, nuvem: NU, get DB(){ return DB; }, set DB(v){ DB = v; }, save, semente, $, esc, int, brD, today, addD, idade, uid, hash, toast, copyText, show, receitas, exercicios, exById, PLANOS, BASE_REC, CATS, isPremium, metas, get ME(){ return ME; }, abrirApp, entrar, logout, linkCamp };
 window.addEventListener("hashchange", () => { fechaTudo(); entrar(); });
 async function iniciar(){ if(NU.ativo){ try{ await NU.iniciar(DB, modoAdmin(), telaNovaSenha); }catch(e){ console.warn(e); toast("Não conseguimos conectar. Confira sua internet."); } } if(!(location.hash.includes("type=recovery"))) entrar(); }
 if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", iniciar); else setTimeout(iniciar, 0);
@@ -3422,12 +3476,33 @@ const optAnu = (sel, todos) => (todos ? `<option value="">Todos os anunciantes</
 const save = () => F.save();
 
 /* ---------- Abrir / rotas ---------- */
+const AIC = {
+  resumo:'<path d="M4 13h6V4H4zM14 20h6v-9h-6zM4 20h6v-4H4zM14 4v4h6V4z"/>',
+  metricas:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+  anunciantes:'<path d="M3 21h18M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/>',
+  campanhas:'<path d="M3 11v3a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1z"/><path d="M15 9a4 4 0 0 1 0 6M18 6a8 8 0 0 1 0 12"/>',
+  parceiros:'<path d="M20 12v8H4v-8M2 7h20v5H2zM12 22V7M12 7S10 2 7 3s0 4 5 4zM12 7s2-5 5-4 0 4-5 4z"/>',
+  financeiro:'<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/>',
+  alunos:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18.5 14.8c1.6.8 2.7 2.6 3 5.2"/>',
+  profissionais:'<path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 14.4 7.2 17l.9-5.4L4.2 7.7l5.4-.8z"/>',
+  receitas:'<path d="M6 13.9A4 4 0 1 1 9 6.1 4.5 4.5 0 0 1 18 7a4 4 0 0 1 0 7"/><path d="M6 14h12v6H6z"/>',
+  exercicios:'<path d="M6 7v10M3 9v6M18 7v10M21 9v6M6 12h12"/>',
+  avisos:'<path d="M6 8a6 6 0 1 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10 21h4"/>',
+  cidades:'<path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
+  segmentos:'<path d="M12 2 2 7l10 5 10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>',
+  admins:'<path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5z"/><path d="m9 12 2 2 4-4"/>',
+  config:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',
+  pdf:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M12 18v-6M9 15l3 3 3-3"/>'
+};
+const aic = (k, s = 18) => `<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${AIC[k] || ""}</svg>`;
+const GRUPOS = [["Visão geral", ["resumo","metricas"]], ["Anúncios", ["anunciantes","campanhas","parceiros","financeiro"]], ["Conteúdo do app", ["alunos","profissionais","receitas","exercicios","avisos"]], ["Ajustes", ["cidades","segmentos","admins","config"]]];
 function abrir(){
   ME = F.ME; if(!ME || !ME.admin){ toast("Sua conta não é de administrador"); return; }
   PERM = ME.perms || { total: true };
   F.show("v-admin");
-  $("adm-me").textContent = ME.email;
-  $("adm-tabs").innerHTML = SECOES.filter(s => podeVer(s[0])).map(([k, n]) => `<button data-s="${k}">${n}</button>`).join("");
+  $("adm-me").textContent = ME.email; const av = $("adm-av"); if(av) av.textContent = (ME.nome || ME.email || "A").trim()[0].toUpperCase();
+  const nomeSec = Object.fromEntries(SECOES);
+  $("adm-tabs").innerHTML = GRUPOS.map(([g, ks]) => { const vis = ks.filter(k => podeVer(k)); return vis.length ? `<span class="adm-grp">${g}</span>` + vis.map(k => `<button data-s="${k}"><span class="ai">${aic(k)}</span><span>${nomeSec[k]}</span></button>`).join("") : ""; }).join("");
   $("adm-tabs").querySelectorAll("button").forEach(b => b.onclick = () => ir(b.dataset.s));
   const h = location.hash.replace("#admin", "").replace(/^[-/]/, "");
   ir(SECOES.some(s => s[0] === h) ? h : SEC);
@@ -3453,7 +3528,8 @@ const val = id => { const e = $(id); return e ? (e.type === "checkbox" ? e.check
 function confirmar(texto, ok){ modal("Confirmar", `<p style="margin:0">${esc(texto)}</p><div class="toolbar" style="justify-content:flex-end"><button class="btn btn-line" data-close>Cancelar</button><button class="btn btn-bad" id="cf-ok">Sim, continuar</button></div>`); $("cf-ok").onclick = () => { fechar(); ok(); }; }
 
 /* ---------- Gráficos ---------- */
-function kpi(t, v, s){ return `<div class="kpi"><span>${esc(t)}</span><b class="num">${v}</b>${s ? `<small>${s}</small>` : ""}</div>`; }
+function kpi(t, v, s, icone, destaque){ return `<div class="kpi${destaque ? " kpi-hero" : ""}${icone ? " kpi-ic" : ""}">${icone ? `<i class="kpi-i">${aic(icone, 20)}</i>` : ""}<span>${esc(t)}</span><b class="num">${v}</b>${s ? `<small>${s}</small>` : ""}</div>`; }
+let GID = 0;
 function barChart(rows, key, label){
   if(!rows.length) return `<div class="empty">Sem dados no período</div>`;
   const W = 640, H = 180, L = 36, B = 22, T = 8, max = Math.max(1, ...rows.map(r => r[key] || 0));
@@ -3462,13 +3538,13 @@ function barChart(rows, key, label){
   const y = v => T + (H - T - B) * (1 - v / nice);
   let g = "";
   [0, .5, 1].forEach(f => { const v = nice * f, yy = y(v); g += `<line x1="${L}" x2="${W}" y1="${yy}" y2="${yy}" stroke="var(--line)" stroke-width="1"/><text x="${L - 6}" y="${yy + 4}" text-anchor="end" font-size="11" fill="var(--muted)">${int(v)}</text>`; });
-  let bars = "";
+  let bars = ""; const gid = "bg" + (++GID);
   rows.forEach((r, i) => {
     const v = r[key] || 0, x = L + i * step + (step - bw) / 2, yy = y(v), h = Math.max(0, H - B - yy), rad = Math.min(4, bw / 2, h);
-    bars += `<g class="bh" data-tip="${esc(brD(r.dia))}: ${esc(int(v))} ${esc(label)}"><rect x="${L + i * step}" y="${T}" width="${step}" height="${H - T - B}" fill="transparent"/>${v ? `<path d="M${x},${H - B} V${yy + rad} Q${x},${yy} ${x + rad},${yy} H${x + bw - rad} Q${x + bw},${yy} ${x + bw},${yy + rad} V${H - B} Z" fill="var(--accent)"/>` : ""}</g>`;
+    bars += `<g class="bh" data-tip="${esc(brD(r.dia))}: ${esc(int(v))} ${esc(label)}"><rect x="${L + i * step}" y="${T}" width="${step}" height="${H - T - B}" fill="transparent"/>${v ? `<path d="M${x},${H - B} V${yy + rad} Q${x},${yy} ${x + rad},${yy} H${x + bw - rad} Q${x + bw},${yy} ${x + bw},${yy + rad} V${H - B} Z" fill="url(#${gid})"/>` : ""}</g>`;
   });
   const lab = [0, Math.floor(rows.length / 2), rows.length - 1].filter((v, i, a) => a.indexOf(v) === i).map(i => `<text x="${L + i * step + step / 2}" y="${H - 6}" text-anchor="middle" font-size="11" fill="var(--muted)">${esc(brD(rows[i].dia).slice(0, 5))}</text>`).join("");
-  return `<div class="chart"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(label)} por dia">${g}${bars}${lab}</svg><div class="tip"></div></div>`;
+  return `<div class="chart"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(label)} por dia"><defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3DDC6E"/><stop offset="1" stop-color="#2E7D5A"/></linearGradient></defs>${g}${bars}${lab}</svg><div class="tip"></div></div>`;
 }
 function tipMove(e){
   document.querySelectorAll(".chart .tip").forEach(t => t.style.opacity = 0);
@@ -3532,23 +3608,23 @@ function vResumo(){
     <div class="head"><div><h1>Resumo</h1><p class="muted">Visão geral do app e dos anúncios. Anúncios: últimos 30 dias.</p></div></div>
     ${temEx ? `<div class="msg msg-ok">O painel está com <b>dados de exemplo</b> (marcados com a etiqueta "exemplo") para você ver como fica. Apague em Configurações quando quiser começar do zero.</div>` : ""}
     <div class="grid g4">
-      ${kpi("Alunas cadastradas", int(al.total), `+${int(al.novos7)} nos últimos 7 dias`)}
-      ${kpi("Ativos hoje", int(al.dau), `${int(al.wau)} na semana · ${int(al.mau)} no mês`)}
-      ${kpi("Assinantes Premium", int(al.pagos), `${int(al.teste)} em teste grátis · ${int(al.cortesia)} cortesia`)}
-      ${kpi("Anunciantes ativos", int(anAt.length), `${int(ativas)} ${ativas === 1 ? "campanha no ar" : "campanhas no ar"}`)}
-      ${kpi("Impressões", int(t.imp), `Alcance: ${int(t.alc)} alunas`)}
-      ${kpi("Cliques", int(t.clk), `Taxa de clique: ${pct(t.clk, t.imp)}`)}
-      ${kpi("Receita prevista no mês", money(mrr + al.pagos * (db.config.premiumPreco || 0)), `Anúncios ${money(mrr)} · Premium ${money(al.pagos * (db.config.premiumPreco || 0))}`)}
-      ${kpi("Recebido no mês", money(rec), `A receber: ${money(ab)}`)}
+      ${kpi("Alunas cadastradas", int(al.total), `+${int(al.novos7)} nos últimos 7 dias`, "alunos", 1)}
+      ${kpi("Ativas hoje", int(al.dau), `${int(al.wau)} na semana · ${int(al.mau)} no mês`, "resumo")}
+      ${kpi("Assinantes Premium", int(al.pagos), `${int(al.teste)} em teste grátis · ${int(al.cortesia)} cortesia`, "profissionais")}
+      ${kpi("Anunciantes ativos", int(anAt.length), `${int(ativas)} ${ativas === 1 ? "campanha no ar" : "campanhas no ar"}`, "anunciantes")}
+      ${kpi("Impressões", int(t.imp), `Alcance: ${int(t.alc)} alunas`, "campanhas")}
+      ${kpi("Cliques", int(t.clk), `Taxa de clique: ${pct(t.clk, t.imp)}`, "metricas")}
+      ${kpi("Receita prevista no mês", money(mrr + al.pagos * (db.config.premiumPreco || 0)), `Anúncios ${money(mrr)} · Premium ${money(al.pagos * (db.config.premiumPreco || 0))}`, "financeiro", 1)}
+      ${kpi("Recebido no mês", money(rec), `A receber: ${money(ab)}`, "financeiro")}
     </div>
     <div class="grid g2">
       <div class="card"><h3>Impressões por dia</h3>${barChart(serie(ini, today(), d => ({ v: E.filter(e => e.t === "imp" && e.d === d).length })), "v", "impressões")}</div>
-      <div class="card"><h3>Alunos ativos por dia</h3>${barChart(al.serie, "alunos", "alunos")}</div>
+      <div class="card"><h3>Alunas ativas por dia</h3>${barChart(al.serie, "alunos", "alunas")}</div>
     </div>
     <div class="grid g2">
-      <div class="card"><h3>Alunos por cidade</h3>${hbars(contaPor(al.U, u => cidNome(u.cidade) || "Sem cidade").slice(0, 10))}</div>
+      <div class="card"><h3>Alunas por cidade</h3>${hbars(contaPor(al.U, u => cidNome(u.cidade) || "Sem cidade").slice(0, 10))}</div>
       <div class="card"><h3>Retenção</h3><div class="grid g3" style="margin-top:8px">${kpi("1 dia", fmtRet(al.r1))}${kpi("7 dias", fmtRet(al.r7))}${kpi("30 dias", fmtRet(al.r30))}</div>
-        <p class="hint" style="margin:10px 0 0">Dos alunos cadastrados há pelo menos N dias, quantos voltaram depois desse prazo.</p>
+        <p class="hint" style="margin:10px 0 0">Das alunas cadastradas há pelo menos N dias, quantos voltaram depois desse prazo.</p>
         <div class="grid g2" style="margin-top:10px">${kpi("Treinos nos últimos 30 dias", int(treinos30))}${kpi("Cupons entregues", int(db.cupons.length), `${int(db.cupons.filter(c => c.usado).length)} usados`)}</div></div>
     </div>`;
 }
@@ -3559,10 +3635,11 @@ function vAnunciantes(){
   $("adm-main").innerHTML = `
     <div class="head"><div><h1>Anunciantes</h1><p class="muted">Empresas que aparecem nos anúncios em tela cheia do app.</p></div><button class="btn btn-accent needs-edit" id="an-new">+ Novo anunciante</button></div>
     <div class="tbl"><table><thead><tr><th>Empresa</th><th>Segmento</th><th>Cidade</th><th>Plano</th><th>Valor/mês</th><th>Status</th><th></th></tr></thead><tbody>
-      ${db.anunciantes.map(a => `<tr><td><b>${esc(a.nome)}</b>${ex(a)}<br><small class="muted">${esc(a.contato || "")} ${esc(a.tel || "")}</small></td><td>${esc(segNome(a.seg))}</td><td>${esc(cidNome(a.cidade))}</td><td>${a.plano === "exclusivo" ? "Exclusivo no segmento" : "Comercial (rodízio)"}</td><td class="num">${money(a.valor)}</td><td><span class="st ${a.ativo ? "ok" : "off"}">${a.ativo ? "Ativo" : "Pausado"}</span></td><td><button class="btn btn-line btn-sm needs-edit" data-ed="${a.id}">Editar</button></td></tr>`).join("") || `<tr><td colspan="7" class="empty">Nenhum anunciante ainda.</td></tr>`}
+      ${db.anunciantes.map(a => `<tr><td><b>${esc(a.nome)}</b>${ex(a)}<br><small class="muted">${esc(a.contato || "")} ${esc(a.tel || "")}</small></td><td>${esc(segNome(a.seg))}</td><td>${esc(cidNome(a.cidade))}</td><td>${a.plano === "exclusivo" ? "Exclusivo no segmento" : "Comercial (rodízio)"}</td><td class="num">${money(a.valor)}</td><td><span class="st ${a.ativo ? "ok" : "off"}">${a.ativo ? "Ativo" : "Pausado"}</span></td><td><div class="acts"><button class="btn btn-line btn-sm btn-pdf" data-rel="${a.id}">${aic("pdf", 15)} Relatório</button><button class="btn btn-line btn-sm needs-edit" data-ed="${a.id}">Editar</button></div></td></tr>`).join("") || `<tr><td colspan="7" class="empty">Nenhum anunciante ainda.</td></tr>`}
     </tbody></table></div>`;
   const n = $("an-new"); if(n) n.onclick = () => formAnunc();
   $("adm-main").querySelectorAll("[data-ed]").forEach(b => b.onclick = () => formAnunc(db.anunciantes.find(a => a.id === b.dataset.ed)));
+  $("adm-main").querySelectorAll("[data-rel]").forEach(b => b.onclick = () => formRelatorio({ anunc: b.dataset.rel, dias: 30, cidade: "" }));
 }
 function formAnunc(a){
   a = a || { nome:"", seg:"", cidade:"", plano:"comercial", valor:"", contato:"", tel:"", obs:"", ativo:true };
@@ -3610,7 +3687,7 @@ function vCampanhas(){
 }
 function formCamp(c){
   if(!DB().anunciantes.length){ toast("Cadastre um anunciante primeiro"); return; }
-  c = c || { anunc:"", titulo:"", texto:"", destino:"whatsapp", botao:"Falar no WhatsApp", whats:"", msg:"Oi! Vi seu anúncio no Fit.", insta:"", site:"", genero:"todos", idMin:"", idMax:"", cidade:"", inicio: today(), fim:"", ativa:true };
+  c = c || { anunc:"", titulo:"", texto:"", destino:"whatsapp", botao:"Falar no WhatsApp", whats:"", msg:"Oi! Vi seu anúncio no CK Life.", insta:"", site:"", genero:"todos", idMin:"", idMax:"", cidade:"", inicio: today(), fim:"", ativa:true };
   modal(c.id ? "Editar campanha" : "Nova campanha", `<div class="formgrid">
     <div class="field full"><label for="fc-a">Anunciante</label><select class="input" id="fc-a">${optAnu(c.anunc)}</select></div>
     <div class="field full"><label for="fc-t">Título do anúncio (aparece em destaque)</label><input class="input" id="fc-t" value="${esc(c.titulo)}" maxlength="70"></div>
@@ -3652,16 +3729,16 @@ function vMetricas(){
   const porCamp = db.campanhas.filter(c => !MF.anunc || c.anunc === MF.anunc).map(c => { const r = resumoEv(E.filter(e => e.c === c.id)); return { c, ...r }; });
   $("adm-main").innerHTML = `
     <div class="head"><div><h1>Métricas dos anúncios</h1><p class="muted">Quem viu e quem clicou. Use para prestar contas ao anunciante.</p></div>
-      <div class="toolbar"><button class="btn btn-line btn-sm" id="mt-csv">Copiar planilha</button></div></div>
+      <div class="toolbar"><button class="btn btn-line btn-sm" id="mt-csv">Copiar planilha</button><button class="btn btn-accent btn-sm btn-pdf" id="mt-pdf">${aic("pdf", 16)} Relatório em PDF</button></div></div>
     <div class="toolbar"><select class="input" id="mt-d">${[7, 30, 90].map(n => `<option value="${n}" ${MF.dias === n ? "selected" : ""}>Últimos ${n} dias</option>`).join("")}</select><select class="input" id="mt-a">${optAnu(MF.anunc, true)}</select><select class="input" id="mt-c">${optCid(MF.cidade, true)}</select></div>
-    <div class="grid g4">${kpi("Impressões", int(t.imp))}${kpi("Alcance", int(t.alc), "alunos diferentes")}${kpi("Cliques", int(t.clk))}${kpi("Taxa de clique", pct(t.clk, t.imp))}</div>
+    <div class="grid g4">${kpi("Impressões", int(t.imp), "vezes que o anúncio apareceu", "campanhas", 1)}${kpi("Alcance", int(t.alc), "alunas diferentes", "alunos")}${kpi("Cliques", int(t.clk), "toques no botão do anúncio", "metricas")}${kpi("Taxa de clique", pct(t.clk, t.imp), "cliques ÷ impressões", "resumo")}</div>
     <div class="grid g2">
       <div class="card"><h3>Impressões por dia</h3>${barChart(serie(ini, today(), d => ({ v: imps.filter(e => e.d === d).length })), "v", "impressões")}</div>
       <div class="card"><h3>Cliques por dia</h3>${barChart(serie(ini, today(), d => ({ v: E.filter(e => e.t === "clk" && e.d === d).length })), "v", "cliques")}</div>
     </div>
     <div class="grid g3">
       <div class="card"><h3>Por faixa de idade</h3>${hbars(contaPor(unicos, u => faixa(F.idade(u.nasc)), faixaNomes))}</div>
-      <div class="card"><h3>Por gênero</h3>${hbars(contaPor(unicos, u => u.genero || "outro", { feminino: "Feminino", masculino: "Masculino", outro: "Outro" }))}</div>
+      <div class="card"><h3>Por objetivo</h3>${hbars(contaPor(unicos, u => objNome(u)))}</div>
       <div class="card"><h3>Por cidade</h3>${hbars(contaPor(unicos, u => cidNome(u.cidade) || "Sem cidade"))}</div>
     </div>
     <div class="card"><h3>Por campanha</h3><div class="tbl"><table><thead><tr><th>Campanha</th><th>Anunciante</th><th>Impressões</th><th>Alcance</th><th>Cliques</th><th>Taxa de clique</th></tr></thead><tbody>
@@ -3671,7 +3748,134 @@ function vMetricas(){
   $("mt-d").onchange = e => { MF.dias = +e.target.value; re(); };
   $("mt-a").onchange = e => { MF.anunc = e.target.value; re(); };
   $("mt-c").onchange = e => { MF.cidade = e.target.value; re(); };
+  $("mt-pdf").onclick = () => formRelatorio({ anunc: MF.anunc, dias: MF.dias, cidade: MF.cidade });
   $("mt-csv").onclick = () => planilha(["Campanha","Anunciante","Impressões","Alcance","Cliques","Taxa de clique"], porCamp.map(r => [r.c.titulo, anuNome(r.c.anunc), r.imp, r.alc, r.clk, pct(r.clk, r.imp)]), "Métricas");
+}
+
+/* ---------- Relatório em PDF para o anunciante ---------- */
+const objNome = u => { const o = (F.OBJS || []).find(x => x[0] === (u.perfil && u.perfil.objetivo)); return o ? o[1] : "Sem objetivo"; };
+let JSPDF = null;
+function carregaJsPDF(){
+  if(window.jspdf) return Promise.resolve(window.jspdf.jsPDF);
+  if(JSPDF) return JSPDF;
+  return JSPDF = new Promise((ok, no) => { const s = document.createElement("script"); s.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"; s.onload = () => ok(window.jspdf.jsPDF); s.onerror = () => { JSPDF = null; no(new Error("sem internet")); }; document.head.appendChild(s); });
+}
+function imgData(src){
+  // logo reduzida e com fundo claro: deixa o PDF leve para mandar no WhatsApp
+  return new Promise(ok => { const im = new Image(); im.onload = () => { try{ const k = Math.min(1, 260 / im.naturalHeight), c = document.createElement("canvas"); c.width = Math.round(im.naturalWidth * k); c.height = Math.round(im.naturalHeight * k); const x = c.getContext("2d"); x.fillStyle = "#F5F8EF"; x.fillRect(0, 0, c.width, c.height); x.drawImage(im, 0, 0, c.width, c.height); ok({ url: c.toDataURL("image/jpeg", .9), w: c.width, h: c.height }); }catch(e){ ok(null); } }; im.onerror = () => ok(null); im.src = src; });
+}
+function dadosRelatorio(o){
+  const db = DB(), fim = o.fim || today(), ini = o.ini || addD(fim, -((o.dias || 30) - 1));
+  const E = eventos(ini, fim, o.anunc, o.cidade), t = resumoEv(E), uOf = id => db.users.find(u => u.id === id) || {};
+  const imps = E.filter(e => e.t === "imp"), clks = E.filter(e => e.t === "clk"), unicos = [...new Set(imps.map(e => e.u))].map(uOf);
+  const dias = serie(ini, fim, d => ({ imp: imps.filter(e => e.d === d).length, clk: clks.filter(e => e.d === d).length }));
+  const camps = db.campanhas.filter(c => !o.anunc || c.anunc === o.anunc).map(c => ({ c, ...resumoEv(E.filter(e => e.c === c.id)) })).filter(r => r.imp || r.clk || (r.c.ativa && (!r.c.fim || r.c.fim >= ini)));
+  const an = db.anunciantes.find(a => a.id === o.anunc) || null;
+  const melhor = dias.reduce((m, d) => d.imp > (m ? m.imp : -1) ? d : m, null);
+  const noAr = dias.filter(d => d.imp).length;
+  return { ini, fim, E, t, unicos, dias, camps, an, melhor, noAr, cidade: o.cidade ? cidNome(o.cidade) : "" };
+}
+function formRelatorio(o){
+  modal("Relatório em PDF", `<p class="muted" style="margin:0 0 12px">Escolha o cliente e o período. O PDF sai com a marca CK Life, pronto para enviar.</p>
+    <div class="formgrid">
+      <div class="field full"><label for="rl-a">Cliente (anunciante)</label><select class="input" id="rl-a">${optAnu(o.anunc, true)}</select></div>
+      <div class="field"><label for="rl-i">De</label><input class="input" id="rl-i" type="date" value="${addD(today(), -((o.dias || 30) - 1))}"></div>
+      <div class="field"><label for="rl-f">Até</label><input class="input" id="rl-f" type="date" value="${today()}"></div>
+      <div class="field full"><label for="rl-c">Cidade</label><select class="input" id="rl-c">${optCid(o.cidade, true)}</select></div>
+      <div class="field full"><label for="rl-n">Observação para o cliente (opcional)</label><textarea class="input" id="rl-n" maxlength="400" placeholder="Ex.: Obrigado pela parceria! No próximo mês vamos testar um anúncio com cupom."></textarea></div>
+    </div>
+    <div class="chips" style="margin-top:10px">${[["Últimos 7 dias", 7], ["Últimos 30 dias", 30], ["Este mês", "mes"], ["Mês passado", "ant"]].map(([n, v]) => `<button class="chip" data-per="${v}" type="button">${n}</button>`).join("")}</div>
+    <div id="rl-prev" class="rl-prev"></div>
+    <div class="toolbar" style="margin-top:14px"><button class="btn btn-accent btn-pdf" id="rl-ok">${aic("pdf", 18)} Gerar PDF</button><span id="rl-st" class="hint"></span></div>`);
+  const prev = () => { const d = dadosRelatorio({ anunc: val("rl-a"), cidade: val("rl-c"), ini: val("rl-i"), fim: val("rl-f") }); $("rl-prev").innerHTML = `<div class="grid g4" style="margin-top:12px">${kpi("Impressões", int(d.t.imp))}${kpi("Alcance", int(d.t.alc))}${kpi("Cliques", int(d.t.clk))}${kpi("Taxa de clique", pct(d.t.clk, d.t.imp))}</div>`; };
+  ["rl-a", "rl-c", "rl-i", "rl-f"].forEach(id => $(id).onchange = prev); prev();
+  $("mbox").querySelectorAll("[data-per]").forEach(b => b.onclick = () => {
+    const v = b.dataset.per, h = today();
+    if(v === "mes"){ $("rl-i").value = h.slice(0, 8) + "01"; $("rl-f").value = h; }
+    else if(v === "ant"){ const p = new Date(h.slice(0, 8) + "01T12:00:00"); p.setDate(0); const f = p.toISOString().slice(0, 10); $("rl-i").value = f.slice(0, 8) + "01"; $("rl-f").value = f; }
+    else { $("rl-i").value = addD(h, -(+v - 1)); $("rl-f").value = h; }
+    prev();
+  });
+  $("rl-ok").onclick = async () => {
+    const bt = $("rl-ok"); if(val("rl-i") > val("rl-f")) return toast("A data inicial precisa ser antes da final");
+    bt.classList.add("carregando"); bt.disabled = true; $("rl-st").textContent = "Montando o relatório…";
+    try{
+      const r = await gerarPDF({ anunc: val("rl-a"), cidade: val("rl-c"), ini: val("rl-i"), fim: val("rl-f"), nota: val("rl-n") });
+      bt.classList.remove("carregando"); bt.disabled = false; $("rl-st").textContent = "";
+      const podeEnviar = navigator.canShare && navigator.canShare({ files: [r.file] });
+      $("rl-prev").insertAdjacentHTML("beforeend", `<div class="rl-ok"><b>PDF pronto: ${esc(r.nome)}</b><div class="toolbar"><button class="btn btn-accent btn-sm" id="rl-dl">Baixar PDF</button>${podeEnviar ? `<button class="btn btn-line btn-sm" id="rl-sh">Enviar (WhatsApp, e-mail…)</button>` : ""}</div></div>`);
+      $("rl-dl").onclick = () => r.baixar();
+      const sh = $("rl-sh"); if(sh) sh.onclick = () => navigator.share({ files: [r.file], title: r.nome, text: "Relatório de desempenho · CK Life" }).catch(() => {});
+      r.baixar(); toast("Relatório gerado");
+    }catch(e){ console.warn(e); bt.classList.remove("carregando"); bt.disabled = false; $("rl-st").textContent = ""; toast(/internet/.test(e.message) ? "Precisa de internet para gerar o PDF" : "Não deu para gerar o PDF. Tente de novo."); }
+  };
+}
+async function gerarPDF(o){
+  const jsPDF = await carregaJsPDF(), d = dadosRelatorio(o), logo = await imgData("img/logo.png");
+  const doc = new jsPDF({ unit: "mm", format: "a4" }), W = 210, H = 297, M = 16;
+  const VERDE = [14, 61, 50], MEIO = [46, 125, 90], CLARO = [123, 167, 122], SUAVE = [213, 231, 211], FUNDO = [245, 248, 239], TINTA = [23, 33, 29], CINZA = [110, 122, 116];
+  const cor = (c, tipo = "text") => tipo === "fill" ? doc.setFillColor(...c) : tipo === "draw" ? doc.setDrawColor(...c) : doc.setTextColor(...c);
+  const fonte = (tam, peso = "normal") => { doc.setFont("helvetica", peso); doc.setFontSize(tam); };
+  const nInt = v => int(v), dBR = s => brD(s);
+  const cliente = d.an ? d.an.nome : "Todos os anunciantes";
+  let y = 0;
+  const rodape = () => { const n = doc.getNumberOfPages(); for(let i = 1; i <= n; i++){ doc.setPage(i); cor(SUAVE, "draw"); doc.setLineWidth(.3); doc.line(M, H - 14, W - M, H - 14); fonte(8); cor(CINZA); doc.text("CK Life · Sua evolução, todos os dias.", M, H - 9); doc.text(`Gerado em ${dBR(today())}`, W / 2, H - 9, { align: "center" }); doc.text(`Página ${i} de ${n}`, W - M, H - 9, { align: "right" }); } };
+  const novaPag = alt => { if(y + alt > H - 22){ doc.addPage(); y = 20; } };
+  const titulo = (txt, sub) => { novaPag(18); fonte(13, "bold"); cor(VERDE); doc.text(txt, M, y); if(sub){ fonte(8.5); cor(CINZA); doc.text(sub, M, y + 5); y += 4; } y += 6; };
+  // capa
+  cor(VERDE, "fill"); doc.rect(0, 0, W, 56, "F"); cor(MEIO, "fill"); doc.rect(0, 56, W, 2.2, "F");
+  if(logo){ const lh = 26, lw = lh * logo.w / logo.h; cor([245, 248, 239], "fill"); doc.roundedRect(M - 2, 13, lw + 4, lh + 4, 4, 4, "F"); doc.addImage(logo.url, "JPEG", M, 15, lw, lh); }
+  const tx = logo ? M + 38 : M;
+  fonte(22, "bold"); cor([255, 255, 255]); doc.text("CK Life", tx, 26);
+  fonte(11); cor([185, 221, 178]); doc.text("Relatório de desempenho dos anúncios", tx, 34);
+  fonte(9); cor([230, 240, 232]); doc.text(`Período: ${dBR(d.ini)} a ${dBR(d.fim)}${d.cidade ? " · " + d.cidade : ""}`, tx, 42);
+  y = 72;
+  fonte(9); cor(CINZA); doc.text("PREPARADO PARA", M, y); y += 8;
+  fonte(20, "bold"); cor(TINTA); doc.text(doc.splitTextToSize(cliente, W - 2 * M)[0], M, y); y += 7;
+  if(d.an){ fonte(10); cor(CINZA); doc.text([segNome(d.an.seg), cidNome(d.an.cidade), d.an.plano === "exclusivo" ? "Plano exclusivo no segmento" : "Plano comercial"].filter(Boolean).join(" · "), M, y); y += 6; }
+  y += 4;
+  // resumo em uma frase
+  const freq = d.t.alc ? (d.t.imp / d.t.alc) : 0;
+  const frase = d.t.imp ? `Seu anúncio apareceu ${nInt(d.t.imp)} vezes para ${nInt(d.t.alc)} alunas diferentes (em média ${freq.toLocaleString("pt-BR", { maximumFractionDigits: 1 })} vezes cada) e recebeu ${nInt(d.t.clk)} ${d.t.clk === 1 ? "clique" : "cliques"}.` : "Ainda não houve exibições do anúncio neste período.";
+  cor(FUNDO, "fill"); cor(SUAVE, "draw"); doc.setLineWidth(.4); const fl = doc.splitTextToSize(frase, W - 2 * M - 12); doc.roundedRect(M, y, W - 2 * M, 8 + fl.length * 5.2, 3, 3, "FD"); fonte(10.5); cor(TINTA); doc.text(fl, M + 6, y + 7.5); y += 14 + fl.length * 5.2;
+  // números
+  const inv = d.an && +d.an.valor ? +d.an.valor * Math.max(1, Math.round((new Date(d.fim) - new Date(d.ini)) / 864e5 + 1) / 30) : 0;
+  const cards = [["Impressões", nInt(d.t.imp), "vezes que o anúncio apareceu"], ["Alcance", nInt(d.t.alc), "alunas diferentes"], ["Cliques", nInt(d.t.clk), "toques no botão"], ["Taxa de clique", pct(d.t.clk, d.t.imp), "cliques ÷ impressões"], ["Frequência", freq.toLocaleString("pt-BR", { maximumFractionDigits: 1 }), "vezes por aluna"], inv && d.t.clk ? ["Custo por clique", money(inv / d.t.clk), "estimado pelo plano"] : ["Dias no ar", nInt(d.noAr), "com exibições"]];
+  const cw = (W - 2 * M - 8) / 3, ch = 26;
+  cards.forEach(([n, v, s], i) => { const x = M + (i % 3) * (cw + 4), yy = y + Math.floor(i / 3) * (ch + 4); if(i === 0){ cor(VERDE, "fill"); doc.roundedRect(x, yy, cw, ch, 3, 3, "F"); } else { cor([255, 255, 255], "fill"); cor(SUAVE, "draw"); doc.roundedRect(x, yy, cw, ch, 3, 3, "FD"); } fonte(8.5, "bold"); cor(i === 0 ? [185, 221, 178] : CINZA); doc.text(n.toUpperCase(), x + 5, yy + 7); fonte(17, "bold"); cor(i === 0 ? [255, 255, 255] : TINTA); doc.text(String(v), x + 5, yy + 16.5); fonte(7.5); cor(i === 0 ? [214, 236, 220] : CINZA); doc.text(s, x + 5, yy + 22); });
+  y += 2 * (ch + 4) + 8;
+  // gráfico por dia
+  titulo("Impressões e cliques por dia", d.melhor && d.melhor.imp ? `Melhor dia: ${dBR(d.melhor.dia)}, com ${nInt(d.melhor.imp)} impressões.` : "");
+  novaPag(62);
+  const gx = M + 10, gy = y, gw = W - 2 * M - 10, gh = 48, max = Math.max(1, ...d.dias.map(x => x.imp)), step = gw / d.dias.length, bw = Math.max(.8, Math.min(6, step * .62));
+  cor([235, 240, 233], "draw"); doc.setLineWidth(.2); [0, .5, 1].forEach(f => { const yy = gy + gh - gh * f; doc.line(gx, yy, gx + gw, yy); fonte(7); cor(CINZA); doc.text(nInt(Math.round(max * f)), gx - 2, yy + 1, { align: "right" }); });
+  d.dias.forEach((x, i) => { const h = gh * x.imp / max, bx = gx + i * step + (step - bw) / 2; if(h > 0){ cor(MEIO, "fill"); doc.roundedRect(bx, gy + gh - h, bw, h, Math.min(1, bw / 2), Math.min(1, bw / 2), "F"); } });
+  // cliques: bolinha laranja com o número, só nos dias com clique
+  d.dias.forEach((x, i) => { if(x.clk){ const h = gh * x.imp / max, px = gx + i * step + step / 2, py = gy + gh - h - 4.2; cor([233, 132, 60], "fill"); doc.circle(px, py, 2.1, "F"); fonte(6, "bold"); cor([255, 255, 255]); doc.text(String(x.clk), px, py + .9, { align: "center" }); } });
+  fonte(7); cor(CINZA); [0, Math.floor(d.dias.length / 2), d.dias.length - 1].filter((v, i, a) => a.indexOf(v) === i).forEach(i => doc.text(dBR(d.dias[i].dia).slice(0, 5), gx + i * step + step / 2, gy + gh + 5, { align: "center" }));
+  y = gy + gh + 9; cor(MEIO, "fill"); doc.rect(M + 10, y - 2.4, 4, 3, "F"); fonte(8); cor(TINTA); doc.text("Impressões", M + 16, y); cor([233, 132, 60], "fill"); doc.circle(M + 44, y - 1, 1.6, "F"); cor(TINTA); doc.text("Cliques no dia", M + 47, y); y += 10;
+  // tabela por campanha
+  titulo("Resultado por campanha");
+  const cols = [["Campanha", 66], ["Destino", 26], ["Impressões", 24], ["Alcance", 22], ["Cliques", 18], ["Taxa", 22]];
+  const linha = (vals, cab, zebra) => { novaPag(9); let x = M; if(cab){ cor(VERDE, "fill"); doc.roundedRect(M, y - 5.2, W - 2 * M, 8, 1.5, 1.5, "F"); } else if(zebra){ cor(FUNDO, "fill"); doc.rect(M, y - 5.2, W - 2 * M, 8, "F"); } vals.forEach((v, i) => { fonte(cab ? 8 : 9, cab ? "bold" : "normal"); cor(cab ? [255, 255, 255] : TINTA); const txt = doc.splitTextToSize(String(v), cols[i][1] - 3)[0]; doc.text(txt, i > 1 ? x + cols[i][1] - 2 : x + 2, y, { align: i > 1 ? "right" : "left" }); x += cols[i][1]; }); y += 8; };
+  linha(cols.map(c => c[0]), true);
+  if(d.camps.length) d.camps.forEach((r, i) => linha([r.c.titulo, DEST[r.c.destino] || "", nInt(r.imp), nInt(r.alc), nInt(r.clk), pct(r.clk, r.imp)], false, i % 2)); else { fonte(9); cor(CINZA); doc.text("Nenhuma campanha com exibições no período.", M + 2, y); y += 8; }
+  y += 6;
+  // público
+  titulo("Quem viu seus anúncios", "Alunas únicas que viram o anúncio no período");
+  const blocos = [["Faixa de idade", contaPor(d.unicos, u => faixa(F.idade(u.nasc)), faixaNomes).filter(x => x.v)], ["Cidade", contaPor(d.unicos, u => cidNome(u.cidade) || "Sem cidade").slice(0, 6)], ["Objetivo no app", contaPor(d.unicos, u => objNome(u)).slice(0, 6)]];
+  novaPag(56); const bwid = (W - 2 * M - 8) / 3, y0 = y;
+  blocos.forEach(([nome, L], k) => { const x = M + k * (bwid + 4); let yy = y0; cor([255, 255, 255], "fill"); cor(SUAVE, "draw"); doc.roundedRect(x, yy - 5, bwid, 54, 3, 3, "FD"); fonte(9, "bold"); cor(VERDE); doc.text(nome, x + 4, yy + 1); yy += 7; const tot = L.reduce((a, b) => a + b.v, 0) || 1; if(!L.length){ fonte(8); cor(CINZA); doc.text("Sem dados", x + 4, yy + 2); } L.slice(0, 6).forEach(it => { fonte(7.5); cor(TINTA); doc.text(doc.splitTextToSize(it.nome, bwid - 22)[0], x + 4, yy + 2); fonte(7.5, "bold"); doc.text(Math.round(100 * it.v / tot) + "%", x + bwid - 4, yy + 2, { align: "right" }); cor([233, 240, 231], "fill"); doc.roundedRect(x + 4, yy + 3.5, bwid - 8, 1.8, .9, .9, "F"); cor(MEIO, "fill"); doc.roundedRect(x + 4, yy + 3.5, Math.max(1.8, (bwid - 8) * it.v / tot), 1.8, .9, .9, "F"); yy += 7.3; }); });
+  y = y0 + 56;
+  // observação
+  if(o.nota){ titulo("Observações"); const nl = doc.splitTextToSize(o.nota, W - 2 * M - 12); novaPag(nl.length * 5 + 12); cor(FUNDO, "fill"); doc.roundedRect(M, y - 4, W - 2 * M, nl.length * 5 + 8, 3, 3, "F"); fonte(10); cor(TINTA); doc.text(nl, M + 6, y + 2); y += nl.length * 5 + 10; }
+  // explicação dos termos
+  novaPag(26); fonte(8.5, "bold"); cor(VERDE); doc.text("Como ler este relatório", M, y); y += 5; fonte(8); cor(CINZA);
+  doc.text(doc.splitTextToSize("Impressões: quantas vezes o anúncio apareceu na tela. Alcance: quantas alunas diferentes viram. Cliques: quantas vezes tocaram no botão do anúncio (WhatsApp, Instagram ou site). Taxa de clique: cliques divididos pelas impressões.", W - 2 * M), M, y);
+  rodape();
+  const nome = `Relatorio-CKLife-${(cliente).normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-zA-Z0-9]+/g, "-").replace(/^-|-$/g, "")}-${d.ini}-a-${d.fim}.pdf`;
+  const blob = doc.output("blob"), file = new File([blob], nome, { type: "application/pdf" });
+  return { nome, file, baixar: () => { const u = URL.createObjectURL(blob), a = document.createElement("a"); a.href = u; a.download = nome; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 4000); } };
 }
 
 /* ---------- Alunos ---------- */
@@ -3688,16 +3892,16 @@ function vAlunos(){
     <div class="head"><div><h1>Alunas</h1><p class="muted">Quem usa o app, de onde é e com que frequência volta.</p></div><div class="toolbar"><button class="btn btn-accent btn-sm needs-edit" id="al-prem">Dar Premium cortesia</button><button class="btn btn-line btn-sm" id="al-csv">Copiar planilha</button></div></div>
     <div class="toolbar"><select class="input" id="al-c">${optCid(AF.cidade, true)}</select></div>
     <div class="grid g4">${kpi("Cadastrados", int(al.total), `+${int(al.novos7)} nos últimos 7 dias`)}${kpi("Ativos", int(al.dau), `hoje · ${int(al.wau)} na semana · ${int(al.mau)} no mês`)}${kpi("Premium pago", int(al.pagos))}${kpi("Em teste grátis", int(al.teste), `${int(al.cortesia)} com cortesia`)}</div>
-    <div class="card"><h3>Alunos ativos por dia</h3>${barChart(al.serie, "alunos", "alunos")}</div>
+    <div class="card"><h3>Alunas ativas por dia</h3>${barChart(al.serie, "alunos", "alunas")}</div>
     <div class="grid g3">
       <div class="card"><h3>Por cidade</h3>${hbars(contaPor(al.U, u => cidNome(u.cidade) || "Sem cidade"))}</div>
       <div class="card"><h3>Por faixa de idade</h3>${hbars(contaPor(al.U, u => faixa(F.idade(u.nasc)), faixaNomes))}</div>
       <div class="card"><h3>Por gênero</h3>${hbars(contaPor(al.U, u => u.genero || "outro", { feminino: "Feminino", masculino: "Masculino", outro: "Outro" }))}</div>
     </div>
-    <div class="card"><h3>Lista de alunos <span class="muted num" style="font-size:16px">(${L.length})</span></h3>
+    <div class="card"><h3>Lista de alunas <span class="muted num" style="font-size:16px">(${L.length})</span></h3>
       <div class="toolbar" style="margin-bottom:10px"><input class="input" id="al-q" placeholder="Buscar por nome, e-mail ou WhatsApp" value="${esc(AF.q)}"><select class="input" id="al-p"><option value="">Todos os planos</option><option value="pago" ${AF.plano === "pago" ? "selected" : ""}>Premium pago</option><option value="teste" ${AF.plano === "teste" ? "selected" : ""}>Teste grátis</option><option value="cortesia" ${AF.plano === "cortesia" ? "selected" : ""}>Cortesia</option><option value="gratis" ${AF.plano === "gratis" ? "selected" : ""}>Gratuito</option></select></div>
       <div class="tbl"><table><thead><tr><th>Nome</th><th>WhatsApp</th><th>E-mail</th><th>Cidade</th><th>Idade</th><th>Gênero</th><th>Cadastro</th><th>Plano</th><th>Treinos</th><th>Anúncios</th><th></th></tr></thead><tbody>
-        ${L.slice(0, 300).map(u => { const [s, k] = statusPrem(u); return `<tr><td><b>${esc(u.nome)}</b>${ex(u)}${u.admin ? ` <span class="st ok">admin</span>` : ""}${u.bloqueado ? ` <span class="st bad">pausado</span>` : ""}</td><td>${esc(u.whats || "")}</td><td>${esc(u.email)}</td><td>${esc(cidNome(u.cidade))}</td><td class="num">${F.idade(u.nasc) ?? "-"}</td><td>${GEN[u.genero] || "-"}</td><td class="num">${brD(u.criado)}</td><td><span class="st ${k}">${s}</span></td><td class="num">${(u.treinos || []).length}</td><td class="num">${int(imps[u.id] || 0)}</td><td><button class="btn btn-line btn-sm needs-edit" data-ed="${u.id}">Editar</button></td></tr>`; }).join("") || `<tr><td colspan="11" class="empty">Nenhum aluno encontrado.</td></tr>`}
+        ${L.slice(0, 300).map(u => { const [s, k] = statusPrem(u); return `<tr><td><b>${esc(u.nome)}</b>${ex(u)}${u.admin ? ` <span class="st ok">admin</span>` : ""}${u.bloqueado ? ` <span class="st bad">pausado</span>` : ""}</td><td>${esc(u.whats || "")}</td><td>${esc(u.email)}</td><td>${esc(cidNome(u.cidade))}</td><td class="num">${F.idade(u.nasc) ?? "-"}</td><td>${GEN[u.genero] || "-"}</td><td class="num">${brD(u.criado)}</td><td><span class="st ${k}">${s}</span></td><td class="num">${(u.treinos || []).length}</td><td class="num">${int(imps[u.id] || 0)}</td><td><button class="btn btn-line btn-sm needs-edit" data-ed="${u.id}">Editar</button></td></tr>`; }).join("") || `<tr><td colspan="11" class="empty">Nenhuma aluna encontrada.</td></tr>`}
       </tbody></table></div></div>`;
   $("al-c").onchange = e => { AF.cidade = e.target.value; rerender(); };
   $("al-p").onchange = e => { AF.plano = e.target.value; rerender(); };
@@ -3709,13 +3913,13 @@ function vAlunos(){
 const DURS = [["7","7 dias"],["30","30 dias"],["90","3 meses"],["180","6 meses"],["365","1 ano"],["vitalicio","Vitalício"]];
 function aplicaPrem(u, dur){ if(dur === "vitalicio") u.premium = { tipo: "vitalicio", ate: "9999-12-31" }; else { const base = F.isPremium(u) && u.premium.tipo !== "teste" && u.premium.ate !== "9999-12-31" ? u.premium.ate : today(); u.premium = { tipo: "cortesia", ate: addD(base, +dur) }; } }
 function formPremium(){
-  modal("Dar Premium cortesia", `<div class="field"><label for="pr-e">E-mail do aluno</label><input class="input" id="pr-e" type="email" placeholder="aluno@email.com"></div>
+  modal("Dar Premium cortesia", `<div class="field"><label for="pr-e">E-mail da aluna</label><input class="input" id="pr-e" type="email" placeholder="aluna@email.com"></div>
     <div class="field"><label for="pr-d">Por quanto tempo</label><select class="input" id="pr-d">${DURS.map(([k, n]) => `<option value="${k}" ${k === "30" ? "selected" : ""}>${n}</option>`).join("")}</select></div><div id="pr-msg"></div>
     <button class="btn btn-accent" id="pr-ok">Liberar Premium</button>`);
-  $("pr-ok").onclick = () => { const u = DB().users.find(x => x.email === val("pr-e").toLowerCase()); if(!u){ $("pr-msg").innerHTML = `<div class="msg msg-bad">Nenhum aluno com esse e-mail. Ele precisa criar a conta primeiro.</div>`; return; } aplicaPrem(u, val("pr-d")); save(); fechar(); toast("Premium liberado para " + u.nome); rerender(); };
+  $("pr-ok").onclick = () => { const u = DB().users.find(x => x.email === val("pr-e").toLowerCase()); if(!u){ $("pr-msg").innerHTML = `<div class="msg msg-bad">Nenhuma aluna com esse e-mail. Ela precisa criar a conta primeiro.</div>`; return; } aplicaPrem(u, val("pr-d")); save(); fechar(); toast("Premium liberado para " + u.nome); rerender(); };
 }
 function formAluno(u){
-  modal("Editar aluno", `<div class="formgrid">
+  modal("Editar aluna", `<div class="formgrid">
     <div class="field full"><label for="ua-n">Nome</label><input class="input" id="ua-n" value="${esc(u.nome)}"></div>
     <div class="field"><label for="ua-w">WhatsApp</label><input class="input" id="ua-w" value="${esc(u.whats || "")}"></div>
     <div class="field"><label for="ua-c">Cidade</label><select class="input" id="ua-c">${optCid(u.cidade)}</select></div>
@@ -3723,7 +3927,7 @@ function formAluno(u){
     <div class="field"><label for="ua-pd">Premium cortesia</label><select class="input" id="ua-pd"><option value="">Não mudar</option>${DURS.map(([k, n]) => `<option value="${k}">${n}</option>`).join("")}<option value="tirar">Tirar Premium</option></select></div>
     <div class="field"><span style="font-weight:700;font-size:13px">Situação atual</span><span class="st ${statusPrem(u)[1]}" style="align-self:flex-start">${statusPrem(u)[0]}</span></div>
     <label class="field full" style="flex-direction:row;align-items:center;gap:10px;font-weight:700"><input type="checkbox" id="ua-b" ${u.bloqueado ? "checked" : ""} style="width:20px;height:20px;accent-color:var(--bad)"> Pausar acesso desta conta</label>
-  </div><div id="ua-msg"></div><div class="toolbar" style="justify-content:space-between"><button class="btn btn-bad" id="ua-del">Excluir aluno</button><button class="btn btn-accent" id="ua-ok">Salvar</button></div>`);
+  </div><div id="ua-msg"></div><div class="toolbar" style="justify-content:space-between"><button class="btn btn-bad" id="ua-del">Excluir aluna</button><button class="btn btn-accent" id="ua-ok">Salvar</button></div>`);
   $("ua-ok").onclick = async () => {
     const s = F.nuvem && F.nuvem.ativo ? ($("ua-s").checked ? "x" : "") : val("ua-s"); if(s && !(F.nuvem && F.nuvem.ativo) && s.length < 6){ $("ua-msg").innerHTML = `<div class="msg msg-bad">A senha precisa ter pelo menos 6 caracteres.</div>`; return; }
     if(u.id === ME.id && val("ua-b")){ $("ua-msg").innerHTML = `<div class="msg msg-bad">Você não pode pausar a sua própria conta.</div>`; return; }
@@ -3733,7 +3937,7 @@ function formAluno(u){
     const pd = val("ua-pd"); if(pd === "tirar") u.premium = null; else if(pd) aplicaPrem(u, pd);
     save(); fechar(); toast(s && !(F.nuvem && F.nuvem.ativo) ? "Salvo. Passe a nova senha para a aluna." : "Aluna salva"); rerender();
   };
-  $("ua-del").onclick = () => { if(u.id === ME.id){ toast("Você não pode excluir a sua própria conta"); return; } confirmar(`Excluir ${u.nome}? O histórico dele será apagado.`, () => { const db = DB(); db.users = db.users.filter(x => x.id !== u.id); Object.keys(db.acessos).forEach(d => db.acessos[d] = db.acessos[d].filter(x => x !== u.id)); save(); toast("Aluno excluído"); rerender(); }); };
+  $("ua-del").onclick = () => { if(u.id === ME.id){ toast("Você não pode excluir a sua própria conta"); return; } confirmar(`Excluir ${u.nome}? O histórico dele será apagado.`, () => { const db = DB(); db.users = db.users.filter(x => x.id !== u.id); Object.keys(db.acessos).forEach(d => db.acessos[d] = db.acessos[d].filter(x => x !== u.id)); save(); toast("Aluna excluída"); rerender(); }); };
 }
 
 /* ---------- Profissionais ---------- */
@@ -3744,7 +3948,7 @@ function lerFoto(input, cb){
 function vProfissionais(){
   const L = DB().profissionais.slice().sort((a, b) => (a.ordem || 0) - (b.ordem || 0));
   $("adm-main").innerHTML = `
-    <div class="head"><div><h1>Profissionais</h1><p class="muted">Personal trainers e nutricionistas que aparecem no Perfil do aluno, com botão de WhatsApp.</p></div><button class="btn btn-accent needs-edit" id="pf-new">+ Novo profissional</button></div>
+    <div class="head"><div><h1>Profissionais</h1><p class="muted">Personal trainers e nutricionistas que aparecem no Perfil da aluna, com botão de WhatsApp.</p></div><button class="btn btn-accent needs-edit" id="pf-new">+ Novo profissional</button></div>
     <div class="tbl"><table><thead><tr><th>Nome</th><th>Tipo</th><th>WhatsApp</th><th>Descrição</th><th>Valor/sessão</th><th>Ordem</th><th>Status</th><th></th></tr></thead><tbody>
       ${L.map(p => `<tr><td><b>${esc(p.nome)}</b>${ex(p)}</td><td>${esc(p.tipo)}</td><td>${esc(p.whats)}</td><td class="wrapcell">${esc(p.desc || "")}</td><td class="num">${p.valor ? money(p.valor) : "-"}</td><td class="num">${p.ordem || 0}</td><td><span class="st ${p.ativo ? "ok" : "off"}">${p.ativo ? "Ativo" : "Oculto"}</span></td><td><button class="btn btn-line btn-sm needs-edit" data-ed="${p.id}">Editar</button></td></tr>`).join("") || `<tr><td colspan="8" class="empty">Nenhum profissional ainda.</td></tr>`}
     </tbody></table></div>`;
@@ -3778,7 +3982,7 @@ function formProf(p){
 function vParceiros(){
   const db = DB();
   $("adm-main").innerHTML = `
-    <div class="head"><div><h1>Lojas parceiras</h1><p class="muted">Prêmios dos alunos: a cada ${db.config.treinosParaCupom || 8} treinos concluídos o aluno ganha um cupom. A loja valida com o PIN.</p></div><button class="btn btn-accent needs-edit" id="pc-new">+ Novo parceiro</button></div>
+    <div class="head"><div><h1>Lojas parceiras</h1><p class="muted">Prêmios das alunas: a cada ${db.config.treinosParaCupom || 8} treinos concluídos a aluna ganha um cupom. A loja valida com o PIN.</p></div><button class="btn btn-accent needs-edit" id="pc-new">+ Novo parceiro</button></div>
     <div class="grid g3">${kpi("Parceiros ativos", int(db.parceiros.filter(p => p.ativo).length))}${kpi("Cupons entregues", int(db.cupons.length))}${kpi("Cupons usados", int(db.cupons.filter(c => c.usado).length), pct(db.cupons.filter(c => c.usado).length, db.cupons.length) + " de uso")}</div>
     <div class="tbl"><table><thead><tr><th>Loja</th><th>Cidade</th><th>Desconto</th><th>Validade</th><th>PIN</th><th>Cupons</th><th>Usados</th><th>Status</th><th></th></tr></thead><tbody>
       ${db.parceiros.map(p => { const cs = db.cupons.filter(c => c.parc === p.id), venc = p.validade && p.validade < today(); return `<tr><td><b>${esc(p.nome)}</b>${ex(p)}<br><small class="muted">${esc(p.end || "")}</small></td><td>${esc(cidNome(p.cidade))}</td><td class="num">${p.desconto}%</td><td>${p.validade ? brD(p.validade) : "-"}</td><td class="num">${esc(p.pin)}</td><td class="num">${cs.length}</td><td class="num">${cs.filter(c => c.usado).length}</td><td><span class="st ${!p.ativo ? "off" : venc ? "warn" : "ok"}">${!p.ativo ? "Pausado" : venc ? "Vencido" : "Ativo"}</span></td><td><button class="btn btn-line btn-sm needs-edit" data-ed="${p.id}">Editar</button></td></tr>`; }).join("") || `<tr><td colspan="9" class="empty">Nenhum parceiro ainda.</td></tr>`}
@@ -3903,7 +4107,7 @@ function vExercicios(){
     <div class="tbl"><table><thead><tr><th></th><th>Exercício</th><th>Grupo</th><th>Equipamento</th><th>Passos</th><th>Origem</th><th></th></tr></thead><tbody>
       ${L.map(e => { const extra = (DB().exercExtras || []).some(x => x.id === e.id); return `<tr><td><span class="exn th" style="width:48px;height:48px;display:block">${window.BONECO.thumb(e, "f")}</span></td><td><b>${esc(e.nome)}</b><br><small class="muted">${esc(window.BONECO.info(e).prim.map(m => window.BONECO.MUSC[m]).join(", "))}</small></td><td>${esc(e.grupo)}</td><td>${esc(e.equip)}</td><td class="num">${e.passos.length}</td><td>${extra ? "Seu" : "Padrão"}</td><td>${extra ? `<button class="btn btn-line btn-sm needs-edit" data-ed="${e.id}">Editar</button>` : ""}</td></tr>`; }).join("")}
     </tbody></table></div>
-    <div class="card"><h3>Planos de treino</h3><div class="tbl"><table><thead><tr><th>Plano</th><th>Nível</th><th>Objetivo</th><th>Treinos</th><th>Alunos usando</th></tr></thead><tbody>
+    <div class="card"><h3>Planos de treino</h3><div class="tbl"><table><thead><tr><th>Plano</th><th>Nível</th><th>Objetivo</th><th>Treinos</th><th>Alunas usando</th></tr></thead><tbody>
       ${F.PLANOS.map(p => `<tr><td><b>${esc(p.nome)}</b></td><td>${p.nivel}</td><td>${esc(p.obj)}</td><td>${p.treinos.map(t => esc(t.nome)).join(", ")}</td><td class="num">${DB().users.filter(u => u.plano === p.id).length}</td></tr>`).join("")}
     </tbody></table></div></div>`;
   const n = $("ex-new"); if(n) n.onclick = () => formEx();
@@ -3933,7 +4137,7 @@ function formEx(e){
 function vAvisos(){
   const L = DB().avisos.slice().reverse();
   $("adm-main").innerHTML = `
-    <div class="head"><div><h1>Avisos</h1><p class="muted">O aviso ativo mais recente aparece no topo da tela Hoje de todos os alunos.</p></div></div>
+    <div class="head"><div><h1>Avisos</h1><p class="muted">O aviso ativo mais recente aparece no topo da tela Início de todas as alunas.</p></div></div>
     <div class="card needs-edit"><h3>Novo aviso</h3><div class="formgrid"><div class="field full"><label for="av-t">Título</label><input class="input" id="av-t" maxlength="60"></div><div class="field full"><label for="av-x">Texto</label><textarea class="input" id="av-x" maxlength="240"></textarea></div></div><button class="btn btn-accent" id="av-ok" style="margin-top:12px">Publicar aviso</button></div>
     <div class="tbl"><table><thead><tr><th>Aviso</th><th>Data</th><th>Status</th><th></th></tr></thead><tbody>
       ${L.map(a => `<tr><td class="wrapcell"><b>${esc(a.titulo)}</b><br><small class="muted">${esc(a.texto)}</small></td><td class="num">${brD(a.d)}</td><td><span class="st ${a.ativo ? "ok" : "off"}">${a.ativo ? "Ativo" : "Arquivado"}</span></td><td><div class="acts needs-edit"><button class="btn btn-line btn-sm" data-tg="${a.id}">${a.ativo ? "Arquivar" : "Reativar"}</button><button class="btn btn-bad btn-sm" data-del="${a.id}">Excluir</button></div></td></tr>`).join("") || `<tr><td colspan="4" class="empty">Nenhum aviso.</td></tr>`}
@@ -3947,8 +4151,8 @@ function vAvisos(){
 function vCidades(){
   const db = DB();
   $("adm-main").innerHTML = `
-    <div class="head"><div><h1>Cidades</h1><p class="muted">Aparecem no cadastro do aluno e servem para segmentar anúncios.</p></div><button class="btn btn-accent needs-edit" id="ci-new">+ Nova cidade</button></div>
-    <div class="tbl"><table><thead><tr><th>Cidade</th><th>UF</th><th>Alunos</th><th>Anunciantes</th><th>Status</th><th></th></tr></thead><tbody>
+    <div class="head"><div><h1>Cidades</h1><p class="muted">Aparecem no cadastro da aluna e servem para segmentar anúncios.</p></div><button class="btn btn-accent needs-edit" id="ci-new">+ Nova cidade</button></div>
+    <div class="tbl"><table><thead><tr><th>Cidade</th><th>UF</th><th>Alunas</th><th>Anunciantes</th><th>Status</th><th></th></tr></thead><tbody>
       ${db.cidades.map(c => `<tr><td><b>${esc(c.nome)}</b></td><td>${esc(c.uf)}</td><td class="num">${db.users.filter(u => +u.cidade === +c.id).length}</td><td class="num">${db.anunciantes.filter(a => +a.cidade === +c.id).length}</td><td><span class="st ${c.ativa ? "ok" : "off"}">${c.ativa ? "Ativa" : "Inativa"}</span></td><td><button class="btn btn-line btn-sm needs-edit" data-tg="${c.id}">${c.ativa ? "Desativar" : "Ativar"}</button></td></tr>`).join("")}
     </tbody></table></div>`;
   const n = $("ci-new"); if(n) n.onclick = () => {
@@ -4006,8 +4210,9 @@ function vConfig(){
       <div class="field"><label for="cf-tc">Treinos para ganhar 1 cupom</label><input class="input num" id="cf-tc" value="${esc(c.treinosParaCupom)}" inputmode="numeric"></div>
       <div class="field full"><label for="cf-sp">Contato de suporte (aparece no app)</label><input class="input" id="cf-sp" value="${esc(c.suporte)}" placeholder="WhatsApp (65) 99999-9999"></div>
     </div><button class="btn btn-accent needs-edit" id="cf-ok" style="margin-top:12px">Salvar</button></div>
-    <div class="card"><h3>Dados de exemplo</h3><p style="margin:0 0 12px">${nEx ? `Há ${nEx} alunos, anunciantes, campanhas, parceiros e cobranças de exemplo para demonstrar o painel.` : "Os dados de exemplo já foram apagados."}</p>${nEx ? `<button class="btn btn-bad needs-edit" id="cf-clear">Apagar dados de exemplo</button>` : ""}</div>
-    <div class="card"><h3>Cópia de segurança</h3><p style="margin:0 0 12px">Os dados ficam salvos neste navegador. Copie a cópia de segurança e guarde num bloco de notas, ou cole uma cópia para restaurar.</p>
+    <div class="card" ${nEx ? "" : "hidden"}><h3>Dados de exemplo</h3><p style="margin:0 0 12px">${nEx ? `Há ${nEx} alunas, anunciantes, campanhas, parceiros e cobranças de exemplo para demonstrar o painel.` : "Os dados de exemplo já foram apagados."}</p>${nEx ? `<button class="btn btn-bad needs-edit" id="cf-clear">Apagar dados de exemplo</button>` : ""}</div>
+    ${F.nuvem && F.nuvem.ativo ? `<div class="card"><h3>Seus dados</h3><p style="margin:0">Tudo fica salvo com segurança no banco de dados (Supabase) e aparece em qualquer aparelho em que você entrar.</p></div>` : ""}
+    <div class="card" ${F.nuvem && F.nuvem.ativo ? "hidden" : ""}><h3>Cópia de segurança</h3><p style="margin:0 0 12px">Os dados ficam salvos neste navegador. Copie a cópia de segurança e guarde num bloco de notas, ou cole uma cópia para restaurar.</p>
       <div class="toolbar"><button class="btn btn-ink btn-sm" id="cf-bk">Copiar cópia de segurança</button><button class="btn btn-line btn-sm needs-edit" id="cf-rs">Restaurar de uma cópia</button></div></div>`;
   const ok = $("cf-ok"); if(ok) ok.onclick = () => { c.checkout = val("cf-ck"); c.premiumPreco = parseFloat(val("cf-pr").replace(",", ".")) || 0; c.treinosParaCupom = Math.max(1, +val("cf-tc") || 8); c.suporte = val("cf-sp"); save(); toast("Configurações salvas"); };
   const cl = $("cf-clear"); if(cl) cl.onclick = () => confirmar("Apagar todos os dados de exemplo? Suas contas reais continuam.", () => {
