@@ -529,7 +529,7 @@ function formProf(p){
 function vParceiros(){
   const db = DB();
   $("adm-main").innerHTML = `
-    <div class="head"><div><h1>Lojas parceiras</h1><p class="muted">Prêmios das alunas: a cada ${db.config.treinosParaCupom || 8} treinos concluídos a aluna ganha um cupom. A loja valida com o PIN.</p></div><button class="btn btn-accent needs-edit" id="pc-new">+ Novo parceiro</button></div>
+    <div class="head"><div><h1>Clube CK</h1><p class="muted">Lojas e parceiros com benefícios. A cada ${db.config.treinosParaCupom || 8} treinos a aluna ganha um cupom; com "cupom livre", ela pega direto no Clube CK. A loja valida com o PIN.</p></div><button class="btn btn-accent needs-edit" id="pc-new">+ Novo parceiro</button></div>
     <div class="grid g3">${kpi("Parceiros ativos", int(db.parceiros.filter(p => p.ativo).length))}${kpi("Cupons entregues", int(db.cupons.length))}${kpi("Cupons usados", int(db.cupons.filter(c => c.usado).length), pct(db.cupons.filter(c => c.usado).length, db.cupons.length) + " de uso")}</div>
     <div class="tbl"><table><thead><tr><th>Loja</th><th>Cidade</th><th>Desconto</th><th>Validade</th><th>PIN</th><th>Cupons</th><th>Usados</th><th>Status</th><th></th></tr></thead><tbody>
       ${db.parceiros.map(p => { const cs = db.cupons.filter(c => c.parc === p.id), venc = p.validade && p.validade < today(); return `<tr><td><b>${esc(p.nome)}</b>${ex(p)}<br><small class="muted">${esc(p.end || "")}</small></td><td>${esc(cidNome(p.cidade))}</td><td class="num">${p.desconto}%</td><td>${p.validade ? brD(p.validade) : "-"}</td><td class="num">${esc(p.pin)}</td><td class="num">${cs.length}</td><td class="num">${cs.filter(c => c.usado).length}</td><td><span class="st ${!p.ativo ? "off" : venc ? "warn" : "ok"}">${!p.ativo ? "Pausado" : venc ? "Vencido" : "Ativo"}</span></td><td><button class="btn btn-line btn-sm needs-edit" data-ed="${p.id}">Editar</button></td></tr>`; }).join("") || `<tr><td colspan="9" class="empty">Nenhum parceiro ainda.</td></tr>`}
@@ -779,7 +779,7 @@ function vConfig(){
 
 /* ---------- Comunidade: moderação ---------- */
 async function vComunidade(){
-  $("adm-main").innerHTML = `<div class="head"><div><h1>Comunidade</h1><p class="muted">Publicações das alunas na aba Juntas. Oculte ou exclua o que não combina com o espaço.</p></div><button class="btn btn-line btn-sm" id="cm-at">Atualizar</button></div><div id="cm-l" class="grid g2"><div class="card">Carregando…</div></div>`;
+  $("adm-main").innerHTML = `<div class="head"><div><h1>Comunidade</h1><p class="muted">Publicações das alunas na aba Comunidade. Oculte ou exclua o que não combina com o espaço.</p></div><button class="btn btn-line btn-sm" id="cm-at">Atualizar</button></div><div id="cm-l" class="grid g2"><div class="card">Carregando…</div></div>`;
   $("cm-at").onclick = rerender;
   let L = [];
   try{ L = await F.CM.carregar(true); }catch(e){ $("cm-l").innerHTML = `<div class="card"><b>A comunidade ainda não foi ativada no banco.</b><p class="muted" style="margin:6px 0 0">Rode o arquivo comunidade.sql no Supabase (SQL Editor) uma vez.</p></div>`; return; }
@@ -795,5 +795,6 @@ async function vComunidade(){
   $("adm-main").querySelectorAll("[data-dc]").forEach(b => b.onclick = async () => { const [pid, cid] = b.dataset.dc.split("|"), p = acha(pid), c = p.coments.find(x => x.id === cid); try{ await F.CM.apagaComent(p, c); toast("Comentário excluído"); rerender(); }catch(e){ toast("Não deu agora."); } });
 }
 const VIEWS = { resumo: vResumo, anunciantes: vAnunciantes, campanhas: vCampanhas, metricas: vMetricas, alunos: vAlunos, profissionais: vProfissionais, parceiros: vParceiros, financeiro: vFinanceiro, receitas: vReceitas, exercicios: vExercicios, avisos: vAvisos, comunidade: vComunidade, cidades: vCidades, segmentos: vSegmentos, admins: vAdmins, config: vConfig };
+/*ADMINXP*/
 window.ADMIN = { abrir };
 })();

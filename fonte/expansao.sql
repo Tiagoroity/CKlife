@@ -1,11 +1,30 @@
--- RASCUNHO: NÃO RODAR AINDA. Ver seção 5 do CK-LIFE-CONTEXTO-MESTRE.md (correções antes de rodar).
 -- =====================================================================
--- CK Life · Expansão (Explorar, agendamentos, avaliações, métricas, Meu Ciclo e chat)
--- Só ADICIONA coisas. Não apaga nada. Pode rodar de novo sem problema.
--- Cole no Supabase (SQL Editor > New query) e clique em Run.
+-- CK Life · Expansão: Explorar, agendamentos, avaliações, Meu Ciclo, chat
+-- e permissões do painel conferidas pelo banco.
+-- Só ADICIONA. Não apaga tabela, coluna nem registro. Pode rodar de novo.
+-- Supabase > SQL Editor > New query > colar tudo > Run.
 -- =====================================================================
 
--- 1) Catálogo do Explorar fica nas coleções do painel: libera a leitura para quem está logada
+-- 0) Permissão por área do painel, conferida no banco
+--    (acesso total, ou "editar" naquela área). Ler continua sendo de qualquer admin.
+create or replace function public.admin_pode(p_area text) returns boolean
+language sql stable security definer set search_path = public as $$
+  select exists (select 1 from admins where user_id = auth.uid()
+    and (coalesce((perms->>'total')::boolean, false) or perms->>p_area = 'editar'))
+$$;
+grant execute on function public.admin_pode(text) to authenticated;
+create or replace function public.area_colecao(p_nome text) returns text
+language sql immutable as $$
+  select case
+    when p_nome in ('parceiros','pins') then 'parceiros'
+    when p_nome = 'pagamentos' then 'financeiro'
+    when p_nome in ('receitasExtras','receitasOcultas') then 'receitas'
+    when p_nome = 'exercExtras' then 'exercicios'
+    when p_nome in ('config','freq') then 'config'
+    else p_nome end
+$$;
+
+-- 1) Coleções novas do catálogo: leitura liberada para quem está logada
 drop policy if exists colecoes_ler on public.colecoes;
 create policy colecoes_ler on public.colecoes for select to authenticated using (
   nome in ('cidades','segmentos','config','freq','anunciantes','campanhas','parceiros','profissionais','avisos','receitasExtras','exercExtras','receitasOcultas',
@@ -13,9 +32,39 @@ create policy colecoes_ler on public.colecoes for select to authenticated using 
   or (nome = 'cupons' and dados->>'user' = auth.uid()::text)
   or e_admin()
 );
-insert into public.colecoes (nome, id, dados) values ('cidades', '50', '{"id":50,"nome":"Barra do Garças","uf":"MT","ativa":true}') on conflict (nome, id) do nothing;
+drop policy if exists colecoes_criar_cupom on public.colecoes;
+create policy colecoes_criar_cupom on public.colecoes for insert to authenticated with check (
+  admin_pode(area_colecao(nome)) or (nome = 'cupons' and dados->>'user' = auth.uid()::text and coalesce((dados->>'usado')::boolean, false) = false)
+);
+drop policy if exists colecoes_mudar on public.colecoes;
+create policy colecoes_mudar on public.colecoes for update using (admin_pode(area_colecao(nome))) with check (admin_pode(area_colecao(nome)));
+drop policy if exists colecoes_apagar on public.colecoes;
+create policy colecoes_apagar on public.colecoes for delete using (admin_pode(area_colecao(nome)));
 
--- função de apoio (criada na comunidade; garante que existe)
+-- alunas: a própria aluna continua mexendo no que é dela; no painel, só quem pode editar "Alunas"
+drop policy if exists alunas_criar on public.alunas;
+create policy alunas_criar on public.alunas for insert with check (id = auth.uid() or admin_pode('alunos'));
+drop policy if exists alunas_mudar on public.alunas;
+create policy alunas_mudar on public.alunas for update using (id = auth.uid() or admin_pode('alunos'));
+drop policy if exists alunas_apagar on public.alunas;
+create policy alunas_apagar on public.alunas for delete using (admin_pode('alunos'));
+drop policy if exists admins_mudar on public.admins;
+create policy admins_mudar on public.admins for all using (admin_pode('admins')) with check (admin_pode('admins'));
+drop policy if exists posts_moderar on public.posts;
+create policy posts_moderar on public.posts for update to authenticated using (admin_pode('comunidade')) with check (admin_pode('comunidade'));
+
+-- imagens do catálogo (logo, capa, galeria, produtos, banners): pasta pública, só o painel envia
+insert into storage.buckets (id, name, public) values ('catalogo', 'catalogo', true) on conflict (id) do nothing;
+drop policy if exists catalogo_ler on storage.objects;
+create policy catalogo_ler on storage.objects for select using (bucket_id = 'catalogo');
+drop policy if exists catalogo_enviar on storage.objects;
+create policy catalogo_enviar on storage.objects for insert to authenticated with check (bucket_id = 'catalogo' and e_admin());
+drop policy if exists catalogo_trocar on storage.objects;
+create policy catalogo_trocar on storage.objects for update to authenticated using (bucket_id = 'catalogo' and e_admin());
+drop policy if exists catalogo_apagar on storage.objects;
+create policy catalogo_apagar on storage.objects for delete to authenticated using (bucket_id = 'catalogo' and e_admin());
+
+-- garante a função da comunidade (igual à do comunidade.sql)
 create or replace function public.pode_postar() returns boolean
 language sql stable security definer set search_path = public as $$
   select auth.uid() is not null and not exists (select 1 from alunas where id = auth.uid() and bloqueado)
@@ -32,17 +81,19 @@ create table if not exists public.agendamentos (
   preco numeric, modo text, local text,
   obs text check (char_length(coalesce(obs, '')) <= 500),
   status text not null default 'solicitado' check (status in ('solicitado','confirmado','concluido','cancelado','faltou')),
+  nota_adm text,
   criado timestamptz not null default now(), atualizado timestamptz not null default now()
 );
 create index if not exists agendamentos_user_idx on public.agendamentos (user_id, data);
+create index if not exists agendamentos_alvo_idx on public.agendamentos (alvo_tipo, alvo_id, data);
 alter table public.agendamentos enable row level security;
--- versão simples e segura: aluna só muda o status para cancelado
 create or replace function public.protege_agendamento() returns trigger
 language plpgsql security definer set search_path = public as $$
 declare novo text;
 begin
-  if e_admin() then new.atualizado := now(); return new; end if;
-  if tg_op = 'INSERT' then new.status := 'solicitado'; new.user_id := auth.uid(); new.atualizado := now(); return new; end if;
+  if admin_pode('agendamentos') then new.atualizado := now(); return new; end if;
+  if tg_op = 'INSERT' then new.status := 'solicitado'; new.user_id := auth.uid(); new.nota_adm := null; new.atualizado := now(); return new; end if;
+  -- a aluna só consegue cancelar o próprio agendamento
   novo := case when new.status = 'cancelado' then 'cancelado' else old.status end;
   new := old; new.status := novo; new.atualizado := now();
   return new;
@@ -54,9 +105,15 @@ create policy ag_ler on public.agendamentos for select to authenticated using (u
 drop policy if exists ag_criar on public.agendamentos;
 create policy ag_criar on public.agendamentos for insert to authenticated with check (user_id = auth.uid() and pode_postar());
 drop policy if exists ag_mudar on public.agendamentos;
-create policy ag_mudar on public.agendamentos for update to authenticated using (user_id = auth.uid() or e_admin());
+create policy ag_mudar on public.agendamentos for update to authenticated using (user_id = auth.uid() or admin_pode('agendamentos'));
 drop policy if exists ag_apagar on public.agendamentos;
-create policy ag_apagar on public.agendamentos for delete to authenticated using (e_admin());
+create policy ag_apagar on public.agendamentos for delete to authenticated using (admin_pode('agendamentos'));
+-- horários já ocupados (sem mostrar quem marcou)
+create or replace function public.horarios_ocupados(p_tipo text, p_id text, p_de date, p_ate date) returns table(data date, hora text)
+language sql stable security definer set search_path = public as $$
+  select data, hora from agendamentos where alvo_tipo = p_tipo and alvo_id = p_id and data between p_de and p_ate and status in ('solicitado','confirmado')
+$$;
+grant execute on function public.horarios_ocupados(text, text, date, date) to authenticated;
 
 -- 3) Avaliações (1 por aluna em cada lugar; empresa/profissional não edita)
 create table if not exists public.avaliacoes (
@@ -73,16 +130,18 @@ create table if not exists public.avaliacoes (
   criado timestamptz not null default now(),
   unique (alvo_tipo, alvo_id, user_id)
 );
+create index if not exists avaliacoes_alvo_idx on public.avaliacoes (alvo_tipo, alvo_id);
 alter table public.avaliacoes enable row level security;
 create or replace function public.protege_avaliacao() returns trigger
 language plpgsql security definer set search_path = public as $$
 begin
-  if e_admin() then return new; end if;
+  if admin_pode('avaliacoes') then return new; end if;
   if tg_op = 'INSERT' then
     new.user_id := auth.uid(); new.oculta := false; new.denuncias := 0;
     new.verificada := exists (select 1 from agendamentos a where a.user_id = auth.uid() and a.alvo_id = new.alvo_id and a.status = 'concluido');
   else
     new.verificada := old.verificada; new.oculta := old.oculta; new.denuncias := old.denuncias; new.user_id := old.user_id;
+    new.alvo_tipo := old.alvo_tipo; new.alvo_id := old.alvo_id;
   end if;
   return new;
 end $$;
@@ -93,30 +152,14 @@ create policy av_ler on public.avaliacoes for select to authenticated using (not
 drop policy if exists av_criar on public.avaliacoes;
 create policy av_criar on public.avaliacoes for insert to authenticated with check (user_id = auth.uid() and pode_postar());
 drop policy if exists av_mudar on public.avaliacoes;
-create policy av_mudar on public.avaliacoes for update to authenticated using (user_id = auth.uid() or e_admin());
+create policy av_mudar on public.avaliacoes for update to authenticated using (user_id = auth.uid() or admin_pode('avaliacoes'));
 drop policy if exists av_apagar on public.avaliacoes;
-create policy av_apagar on public.avaliacoes for delete to authenticated using (user_id = auth.uid() or e_admin());
+create policy av_apagar on public.avaliacoes for delete to authenticated using (user_id = auth.uid() or admin_pode('avaliacoes'));
 create or replace function public.denunciar_avaliacao(p_id uuid) returns void
 language sql security definer set search_path = public as $$ update avaliacoes set denuncias = denuncias + 1 where id = p_id and auth.uid() is not null $$;
 grant execute on function public.denunciar_avaliacao(uuid) to authenticated;
 
--- 4) Métricas de cliques (sem dados de saúde)
-create table if not exists public.cliques (
-  id bigserial primary key,
-  t text not null check (char_length(t) <= 40),
-  alvo_tipo text, alvo_id text,
-  u uuid default auth.uid(),
-  d date not null default current_date,
-  criado timestamptz not null default now()
-);
-create index if not exists cliques_d_idx on public.cliques (d);
-alter table public.cliques enable row level security;
-drop policy if exists cl_criar on public.cliques;
-create policy cl_criar on public.cliques for insert to authenticated with check (u = auth.uid());
-drop policy if exists cl_ler on public.cliques;
-create policy cl_ler on public.cliques for select to authenticated using (e_admin());
-
--- 5) Meu Ciclo: dados sensíveis. SÓ a própria aluna lê e grava. O painel NÃO tem acesso individual.
+-- 4) Meu Ciclo: dado sensível. SÓ a própria aluna lê e grava. O painel NÃO tem acesso individual.
 create table if not exists public.ciclo (
   user_id uuid primary key default auth.uid() references auth.users(id) on delete cascade,
   ativo boolean not null default true,
@@ -126,26 +169,26 @@ create table if not exists public.ciclo (
 alter table public.ciclo enable row level security;
 drop policy if exists ciclo_dono on public.ciclo;
 create policy ciclo_dono on public.ciclo for all to authenticated using (user_id = auth.uid()) with check (user_id = auth.uid());
--- números gerais para o painel, sem expor ninguém
+-- só números gerais para o painel, sem identificar ninguém
 create or replace function public.ciclo_resumo() returns json
 language plpgsql stable security definer set search_path = public as $$
 begin
-  if not e_admin() then return null; end if;
+  if not admin_pode('ciclo') and not exists (select 1 from admins where user_id = auth.uid() and perms ? 'ciclo') then return null; end if;
   return json_build_object(
     'ativas', (select count(*) from ciclo where ativo),
     'total', (select count(*) from ciclo),
-    'checkins_7d', (select count(*) from ciclo c, jsonb_object_keys(coalesce(c.dados->'checkins', '{}'::jsonb)) k where k >= to_char(current_date - 6, 'YYYY-MM-DD'))
+    'checkins_7d', (select count(*) from ciclo c, jsonb_object_keys(coalesce(c.dados->'checkins', '{}'::jsonb)) k where c.ativo and k >= to_char(current_date - 6, 'YYYY-MM-DD'))
   );
 end $$;
 grant execute on function public.ciclo_resumo() to authenticated;
 
--- 6) Chat entre alunas
+-- 5) Chat entre alunas (1 a 1)
 create table if not exists public.conversas (
   id uuid primary key default gen_random_uuid(),
   a uuid not null references auth.users(id) on delete cascade,
   b uuid not null references auth.users(id) on delete cascade,
   nome_a text, foto_a text, nome_b text, foto_b text,
-  ultima text, ultima_em timestamptz not null default now(),
+  ultima text, ultima_em timestamptz not null default now(), ultimo_autor uuid,
   lida_a timestamptz not null default now(), lida_b timestamptz,
   criado timestamptz not null default now(),
   unique (a, b), check (a <> b)
@@ -175,7 +218,7 @@ create policy mg_apagar on public.mensagens for delete to authenticated using (a
 create or replace function public.atualiza_conversa() returns trigger
 language plpgsql security definer set search_path = public as $$
 begin
-  update conversas set ultima = left(new.texto, 90), ultima_em = new.criado,
+  update conversas set ultima = left(new.texto, 90), ultima_em = new.criado, ultimo_autor = new.autor,
     lida_a = case when a = new.autor then new.criado else lida_a end,
     lida_b = case when b = new.autor then new.criado else lida_b end
   where id = new.conversa_id;

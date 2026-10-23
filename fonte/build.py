@@ -6,7 +6,10 @@ def monta(config, supa):
     h = base.replace("/*CSS*/", (s/"app.css").read_text()).replace("/*DATA*/", data)
     h = h.replace("/*CONFIG*/", config).replace("<!--SUPABASE-->", supa)
     for k, f in [("NUVEM","nuvem.js"),("SONS","sons.js"),("BONECO","boneco.js"),("FOTOS","fotos.js"),("APP","app.js"),("ADMIN","admin.js")]:
-        h = h.replace("/*%s*/" % k, (s/f).read_text())
+        txt = (s/f).read_text()
+        if f == "app.js": txt = txt.replace("/*EXPANSAO*/", (s/"expansao.js").read_text())
+        if f == "admin.js": txt = txt.replace("/*ADMINXP*/", (s/"admin-xp.js").read_text())
+        h = h.replace("/*%s*/" % k, txt)
     return h
 # 1) demonstração (Artifact): sem banco, dados no aparelho
 demo = monta("window.APP_CONFIG = {};", "")

@@ -567,10 +567,11 @@ function postHtml(p){
 function rJuntas(){
   ME.feedVisto = new Date().toISOString(); save(); marcaNovidade(false);
   $("t-juntas").innerHTML = `${capa("Comunidade", "Juntas somos mais fortes. Compartilhe e se inspire.", "", "img/ex-polichinelo.jpg")}
+    ${chatBotao()}
     <button class="composer" id="cm-nova">${avPost(ME.nome, ME.foto)}<span>Compartilhe sua conquista de hoje…</span><i>${ic("camera", 20)}</i></button>
     <div class="regras">${ic("heart", 15)} Um espaço de apoio: elogie, incentive e respeite todas.</div>
     <div id="feed" class="feed"><div class="post skel"></div><div class="post skel"></div></div>`;
-  $("cm-nova").onclick = () => abreComposer();
+  $("cm-nova").onclick = () => abreComposer(); ligaChatBotao();
   carregaFeed();
   clearInterval(FEED_T); FEED_T = setInterval(() => { if(TAB === "juntas" && document.visibilityState === "visible" && $("sheet").hidden && $("play").hidden) carregaFeed(true); }, 25000);
 }
@@ -590,6 +591,7 @@ function ligaPost(el, p, detalhe){
     try{ await CM.curtir(p, on); }catch(e){ toast("Não deu para curtir agora"); } };
   el.querySelector("[data-like]").onclick = like;
   const im = el.querySelector(".pimg"); if(im){ let t = 0; im.addEventListener("click", e => { const n = Date.now(); if(n - t < 320){ e.stopPropagation(); if(!(p.curtidas || []).includes(ME.id)) like(); im.classList.remove("bate"); void im.offsetWidth; im.classList.add("bate"); t = 0; return; } t = n; if(!detalhe) setTimeout(() => { if(t === n) abrePost(p); }, 330); }); }
+  const hd = el.querySelector("header"); if(hd && p.user !== ME.id){ hd.classList.add("xp-autor"); [hd.querySelector(".pav"), hd.querySelector(".pmeta b")].forEach(x => { if(x) x.onclick = e => { e.stopPropagation(); perfilPublico({ id: p.user, nome: p.nome, foto: p.foto }); }; }); }
   if(!detalhe) el.querySelectorAll("[data-abre]:not(.pimg)").forEach(b => b.onclick = () => abrePost(p, b.classList.contains("pcin")));
   const del = el.querySelector("[data-del]"); if(del) del.onclick = () => { if(!confirm("Excluir esta publicação?")) return; CM.apagaPost(p).then(() => { toast("Publicação excluída"); if(detalhe) fecharSheet(); carregaFeed(); }).catch(() => toast("Não deu para excluir agora")); };
 }
@@ -621,13 +623,16 @@ function abreComposer(texto0, blob0){
 }
 function marcaNovidade(on){ const b = $("nav") && $("nav").querySelector('[data-tab="juntas"]'); if(b) b.classList.toggle("novo", !!on); }
 function confereNovidade(){ CM.ultimo().then(u => { if(u && (!ME.feedVisto || u > ME.feedVisto) && TAB !== "juntas") marcaNovidade(true); }).catch(() => {}); }
-const TABS = [["inicio","Início"],["treinar","Treinos"],["juntas","Juntas"],["dieta","Nutrição"],["evolucao","Evolução"],["perfil","Perfil"]];
+/*EXPANSAO*/
+const TABS = [["inicio","Início"],["treinar","Treinos"],["juntas","Comunidade"],["explorar","Explorar"],["perfil","Perfil"],["dieta","Nutrição"],["evolucao","Evolução"]];
+const NAV = TABS.slice(0, 5), NAV_DE = { dieta: "treinar", evolucao: "perfil" };
 let TAB = "inicio";
-$("nav").innerHTML = TABS.map(([k, n]) => `<button role="tab" data-tab="${k}" aria-selected="false"><span class="ico">${ic(k, 21)}</span>${n}</button>`).join("");
+$("nav").innerHTML = NAV.map(([k, n]) => `<button role="tab" data-tab="${k}" aria-selected="false"><span class="ico">${ic(k, 21)}</span>${n}</button>`).join("");
 $("nav").querySelectorAll("[data-tab]").forEach(b => b.onclick = () => tab(b.dataset.tab));
 $("b-adm").innerHTML = ic("grid", 19);
 $("b-adm").onclick = () => window.ADMIN.abrir();
 function abrirApp(){
+  xpGarante();
   setTimeout(confereNovidade, 2500);
   show("v-app"); $("b-adm").hidden = true;
   if(location.hash === "#admin") history.replaceState(null, "", location.pathname);
@@ -636,10 +641,10 @@ function abrirApp(){
 function tab(t, sil){
   if(TAB !== t && !sil) SOM.tap();
   TAB = t;
-  $("nav").querySelectorAll("[data-tab]").forEach(b => b.setAttribute("aria-selected", b.dataset.tab === t));
+  $("nav").querySelectorAll("[data-tab]").forEach(b => b.setAttribute("aria-selected", b.dataset.tab === (NAV_DE[t] || t)));
   TABS.forEach(([k]) => $("t-" + k).hidden = k !== t);
   atualizaTopo(); const s = streak(); $("streak-chip").classList.toggle("viva", diasTreino().has(today())); $("streak-chip").innerHTML = `${ic("flame", 15)}${s}`; $("streak-chip").title = `${s} ${s === 1 ? "dia seguido" : "dias seguidos"} ativo`;
-  ({ inicio: rInicio, treinar: rTreinar, juntas: rJuntas, dieta: rDieta, evolucao: rEvolucao, perfil: rPerfil })[t]();
+  ({ inicio: rInicio, treinar: rTreinar, juntas: rJuntas, explorar: rExplorar, dieta: rDieta, evolucao: rEvolucao, perfil: rPerfil })[t]();
   window.scrollTo(0, 0);
 }
 const rerender = () => tab(TAB, true);
@@ -784,6 +789,7 @@ function rInicio(){
         <button class="btn" id="h-go">${ic("play", 16)} Começar treino</button></div>
         <div class="hfig">${window.BONECO.thumb(exById(T.steps[0].id), "f")}${foto(`img/treino-${p.id}.jpg`)}</div></div>`}
     ${cardPassos()}
+    <div id="xp-ini" class="xp-ini"></div>
     ${av ? `<div class="notice">${ic("speaker", 22)}<div><b>${esc(av.titulo)}</b><p>${esc(av.texto)}</p></div></div>` : ""}
     <div class="frase-dia"><span>${ic("star", 16)} Frase do dia</span><b>${esc(doDia(FRASES.concat(["Um treino de cada vez.", "Disciplina hoje, resultado amanhã.", "Seu corpo agradece cada minuto.", "Não precisa ser perfeito, precisa ser feito."])))}</b></div>
     <div><div class="sec-title"><h3>Sua evolução</h3><button class="link" id="h-evo">Ver tudo</button></div>
@@ -828,6 +834,7 @@ function rInicio(){
   $("h-rec").onclick = () => abrirReceita(rd.id);
   $("t-inicio").querySelectorAll("[data-obj]").forEach(b => b.onclick = () => abrirObjetivo(b.dataset.obj));
   $("t-inicio").querySelectorAll("[data-q]").forEach(b => b.onclick = () => abrirTreinoPreview(treinoRapido(QUICK.find(q => q.id === b.dataset.q))));
+  xpInicio();
   $("t-inicio").querySelectorAll("[data-cup]").forEach(b => b.onclick = () => { const i = +b.dataset.cup, antes = x.agua || 0; x.agua = antes === i + 1 ? i : i + 1; (x.agua > antes ? SOM.water : SOM.remove)(); save(); rInicio(); });
 }
 function abrirObjetivo(id){
@@ -893,7 +900,7 @@ function rTreinar(){
       <div class="chips scroll">${["", ...usados].map(g => `<button class="chip" data-g="${g}" aria-pressed="${EXF.m === g}">${g ? M[g] : "Todos os músculos"}</button>`).join("")}</div>
       <div class="list">${L.map(e => `<button class="exrow" data-ex="${e.id}">${thumbEx(e.id)}<span style="min-width:0"><b>${esc(e.nome)}</b><small>${esc(window.BONECO.info(e).prim.map(m => M[m]).join(", "))}</small><span class="tags" style="margin-top:4px"><span class="tag ${emCasa(e.id) ? "g" : ""}">${emCasa(e.id) ? esc(EQN[META[e.id].eq]) : "Academia"}</span></span></span><span class="muted">${ic("back", 16)}</span></button>`).join("") || `<div class="empty">Nenhum exercício encontrado.</div>`}</div>`;
   }
-  $("t-treinar").innerHTML = capa("Treinos", "Escolha seu treino e evolua todos os dias.", "", "img/ex-desenv.jpg") + seg + body;
+  $("t-treinar").innerHTML = areaSw("treinar") + capa("Treinos", "Escolha seu treino e evolua todos os dias.", "", "img/ex-desenv.jpg") + seg + body;
   $("t-treinar").querySelectorAll(".seg [data-v]").forEach(b => b.onclick = () => { TV = b.dataset.v; SOM.tap(); rTreinar(); });
   $("t-treinar").querySelectorAll("[data-prog]").forEach(b => b.onclick = () => abrirPrograma(b.dataset.prog));
   $("t-treinar").querySelectorAll("[data-l]").forEach(b => b.onclick = () => { TL = b.dataset.l; rTreinar(); });
@@ -1189,7 +1196,7 @@ const rTile = r => `<button class="rtile" data-rec="${r.id}">${rArt(r)}<b>${esc(
 const rCard = r => `<button class="rcard" data-rec="${r.id}"><span class="rthumb" style="--rc:${CORCAT[r.cat]}">${ic(ICCAT[r.cat] || "dieta", 26, 1.7)}${foto(`img/receita-${r.id}.jpg`)}</span><span style="min-width:0"><b>${esc(r.nome)}</b><small class="num">${r.kcal} kcal · ${r.p} g proteína · ${r.min} min</small><span class="tags" style="margin-top:4px"><span class="tag">${CATS[r.cat] || r.cat}</span>${recTags(r).slice(0, 1).map(k => `<span class="tag g">${TAGN[k]}</span>`).join("")}${(ME.favs || []).includes(r.id) ? `<span class="tag g">Favorita</span>` : ""}</span></span></button>`;
 function rDieta(){
   const seg = `<div class="seg" role="group">${[["receitas","Receitas"],["cardapio","Cardápio"],["diario","Meu dia"]].map(([k, n]) => `<button data-dv="${k}" aria-pressed="${DV === k}">${n}</button>`).join("")}</div>`;
-  $("t-dieta").innerHTML = capa("Nutrição", "Receitas para acompanhar sua evolução.") + seg + `<div id="d-body" class="tab-panel"></div>`;
+  $("t-dieta").innerHTML = areaSw("dieta") + capa("Nutrição", "Receitas para acompanhar sua evolução.") + seg + `<div id="d-body" class="tab-panel"></div>`;
   $("t-dieta").querySelectorAll("[data-dv]").forEach(b => b.onclick = () => { DV = b.dataset.dv; RV = "home"; SOM.tap(); rDieta(); });
   ({ receitas: rReceitas, cardapio: rCardapio, diario: rDiario })[DV]();
 }
@@ -1436,7 +1443,7 @@ function rEvolucao(){
   const ref = new Date(); ref.setDate(1); ref.setMonth(ref.getMonth() + CALM);
   const ano = ref.getFullYear(), mes = ref.getMonth(), ini = (new Date(ano, mes, 1).getDay() + 6) % 7, nd = new Date(ano, mes + 1, 0).getDate();
   const nomeMes = (s => s.charAt(0).toUpperCase() + s.slice(1))(ref.toLocaleDateString("pt-BR", { month: "long", year: "numeric" }));
-  $("t-evolucao").innerHTML = `
+  $("t-evolucao").innerHTML = `<button class="link xp-voltar" data-area="perfil">${ic("back", 15)} Perfil</button>
     ${capa("Sua evolução", frase(3), "", "img/ex-alongquad.jpg")}
     <div class="stats"><div class="stat"><b class="num">${T.length}</b><span>treinos</span></div><div class="stat"><b class="num">${int(min)}</b><span>minutos</span></div><div class="stat"><b class="num">${int(kcal)}</b><span>kcal gastas</span></div></div>
     ${(() => { const mesA = today().slice(0, 7), dA = new Date(); dA.setDate(1); dA.setMonth(dA.getMonth() - 1); const mesB = dA.toISOString().slice(0, 7); const A = T.filter(t => t.d.startsWith(mesA)), B = T.filter(t => t.d.startsWith(mesB)); const dif = A.length - B.length; const rec = recordeSeq(); return `<div class="mes-card"><div><span>Este mês</span><b class="num">${A.length} ${A.length === 1 ? "treino" : "treinos"}</b><small>${int(A.reduce((a, t) => a + (t.min || 0), 0))} min · ${int(A.reduce((a, t) => a + (t.kcal || 0), 0))} kcal</small></div><div class="mes-dif ${dif >= 0 ? "up" : "down"}">${B.length || A.length ? `${dif >= 0 ? "▲" : "▼"} ${Math.abs(dif)} vs. mês passado` : "Primeiro mês!"}</div><div class="mes-rec">${ic("flame", 16)} Recorde: <b>${rec} ${rec === 1 ? "dia seguido" : "dias seguidos"}</b></div></div>`; })()}
@@ -1483,6 +1490,7 @@ function rPerfil(){
     ${capa("", "", `<div class="hello" style="gap:14px"><button class="avatar avedit" id="p-foto" aria-label="Trocar foto do perfil" style="width:72px;height:72px;font-size:28px">${fotoAv(ME)}<i class="avcam">${ic("plus", 13, 3)}</i></button><div><h2 style="color:#fff">${esc(ME.nome)}</h2><div class="k" style="color:rgba(245,248,239,.8)">${esc(ME.email)}</div><span class="nivel-chip">${ic("star", 13)} Nível ${nv.nome}</span></div></div>`, "img/ex-panturrilha.jpg")}
     <div class="pstats"><div><b class="num">${int((ME.treinos || []).length)}</b><span>treinos</span></div><div><b class="num">${int((ME.treinos || []).reduce((a, t) => a + (t.min || 0), 0))}</b><span>minutos</span></div><div><b class="num">${streak()}</b><span>dias seguidos</span></div></div>
     ${nv.prox ? `<div class="card nivel-card"><div class="sec-title"><h3 style="font-size:16px">Próximo nível: ${nv.prox[1]}</h3><span class="muted num" style="font-size:13px">faltam ${nv.falta} ${nv.falta === 1 ? "treino" : "treinos"}</span></div><div class="prog" style="margin-top:10px"><i style="width:${nv.pct}%"></i></div><p class="hint" style="margin:8px 0 0">Membro desde ${brD(ME.criado || today())}</p></div>` : `<div class="card nivel-card"><h3 style="font-size:16px">Você chegou ao nível máximo 🏆</h3><p class="hint" style="margin:6px 0 0">Membro desde ${brD(ME.criado || today())}</p></div>`}
+    ${perfilXP()}
     <div class="today" style="--pc:${prem ? "#3DDC6E" : "#FFB23F"};min-height:0;grid-template-columns:1fr"><div><span class="eyebrow">${prem ? (ME.premium.tipo === "teste" ? "Premium · teste grátis" : "Premium") : "Plano gratuito"}</span>
       <h2 style="font-size:24px">${prem ? (ME.premium.tipo === "vitalicio" ? "Premium vitalício" : `Premium até ${brD(ME.premium.ate)}`) : "Treine sem anúncios"}</h2>
       <p>${prem ? "Sem anúncios e com tudo liberado." : "Assine o Premium e treine sem interrupções."}</p>
@@ -1504,15 +1512,15 @@ function rPerfil(){
     </div>
     <div class="card"><div class="sec-title"><h3>Meus cupons</h3><span class="muted num">${cups.filter(c => !c.usado).length} disponíveis</span></div>
       ${cups.length ? cups.map(c => { const pc = DB.parceiros.find(x => x.id === c.parc) || {}; return `<div class="coupon" style="margin-top:12px;${c.usado ? "opacity:.55;border-style:solid;border-color:var(--line)" : ""}"><b>${pc.desconto || ""}% na ${esc(pc.nome || "loja parceira")}</b><span class="hint">${esc(pc.end || "")}${pc.regras ? " · " + esc(pc.regras) : ""}</span><span class="code">${c.codigo}</span>${c.usado ? `<span class="st off" style="align-self:flex-start">Usado em ${brD(c.usadoEm)}</span>` : `<div class="toolbar"><input class="input" id="pin-${c.id}" inputmode="numeric" placeholder="PIN da loja" aria-label="PIN da loja" maxlength="6"><button class="btn btn-ink btn-sm" data-usar="${c.id}">Validar na loja</button></div><span class="hint">Mostre esta tela no caixa. O atendente digita o PIN da loja.</span>`}</div>`; }).join("") : `<p class="hint" style="margin:8px 0 0">A cada ${DB.config.treinosParaCupom || 8} treinos você ganha um cupom de desconto.</p>`}</div>
-    ${profs.length ? `<div class="card"><h3 style="margin-bottom:6px">Profissionais</h3><p class="hint" style="margin:0 0 6px">Personal trainers e nutricionistas parceiros.</p>
-      ${profs.map(x => `<div class="prof"><span class="avatar" style="width:52px;height:52px">${x.foto ? `<img src="${esc(x.foto)}" alt="">` : esc(x.nome.replace(/^Dra?\.\s*/, "")[0])}</span><span style="min-width:0"><b>${esc(x.nome)}</b><small>${esc(x.tipo)}${x.valor ? " · R$ " + int(x.valor) + "/sessão" : ""}</small></span><a class="btn btn-accent btn-sm" href="https://wa.me/55${String(x.whats).replace(/\D/g, "").replace(/^55/, "")}" target="_blank" rel="noopener">WhatsApp</a></div>`).join("")}</div>` : ""}
+    <div class="card" style="padding:6px 16px">${setRow("px-prof", "people", "Profissionais e academias", "Agende pelo Explorar")}</div>
     <div class="card" style="padding:6px 16px">
       ${setRow("p-conv", "share", "Convide uma amiga", "Treinar junto é mais gostoso")}
+      ${setRow("px-share", "flame", "Compartilhar minha sequência", "Você escolhe se quer postar na Comunidade")}
       ${linkSuporte() ? setRow("p-sup", "speaker", "Fale com o suporte", "Atendimento pelo WhatsApp") : ""}
       ${setRow("p-sair", "logout", "Sair da conta", "")}
     </div>
     ${DB.config.suporte ? `<p class="hint" style="text-align:center;margin:0">Suporte: ${esc(DB.config.suporte)}</p>` : ""}`;
-  $("p-foto").onclick = menuFoto;
+  $("p-foto").onclick = menuFoto; ligaPerfilXP();
   $("p-lemb").onclick = editaLembrete;
   $("p-dados").onclick = editaDados;
   $("p-conv").onclick = convidar;
@@ -1649,7 +1657,7 @@ function mostrarAnuncio(c){
 /* ---------- Início ---------- */
 try{ const th = localStorage.getItem(KEY + "_tema"); document.documentElement.dataset.theme = th || "light"; }catch(e){ document.documentElement.dataset.theme = "light"; }
 const PLANOS = PROGS.map(p => ({ id: p.id, nome: p.nome, nivel: p.nivel, obj: p.foco, treinos: p.dias }));
-window.FV = { OBJS, ic, CM, tempoAtras, nuvem: NU, get DB(){ return DB; }, set DB(v){ DB = v; }, save, semente, $, esc, int, brD, today, addD, idade, uid, hash, toast, copyText, show, receitas, exercicios, exById, PLANOS, BASE_REC, CATS, isPremium, metas, get ME(){ return ME; }, abrirApp, entrar, logout, linkCamp };
+window.FV = { OBJS, ic, CM, tempoAtras, nuvem: NU, get DB(){ return DB; }, set DB(v){ DB = v; }, save, semente, $, esc, int, brD, today, addD, idade, uid, hash, toast, copyText, show, receitas, exercicios, exById, PLANOS, BASE_REC, CATS, isPremium, metas, get ME(){ return ME; }, abrirApp, entrar, logout, linkCamp, XP, xpGarante, XCAT, xcats, lkWhats, lkInsta, lkSite, lkMapa, brl, XERR, STAG, modoTxt };
 window.addEventListener("hashchange", () => { fechaTudo(); entrar(); });
 async function iniciar(){ if(NU.ativo){ try{ await NU.iniciar(DB, modoAdmin(), telaNovaSenha); }catch(e){ console.warn(e); toast("Não conseguimos conectar. Confira sua internet."); } } if(!(location.hash.includes("type=recovery"))) entrar(); }
 if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", iniciar); else setTimeout(iniciar, 0);

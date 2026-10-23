@@ -11,7 +11,7 @@ N.sb = sb;
 const pad = n => String(n).padStart(2, "0");
 const hoje = () => { const d = new Date(); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; };
 const menosDias = n => { const d = new Date(); d.setDate(d.getDate() - n); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; };
-const LISTAS = ["cidades","segmentos","anunciantes","campanhas","parceiros","profissionais","avisos","receitasExtras","exercExtras","pagamentos","cupons"];
+const LISTAS = ["cidades","segmentos","anunciantes","campanhas","parceiros","profissionais","avisos","receitasExtras","exercExtras","pagamentos","cupons","empresas","servicos","produtos","banners","categorias"];
 const UNICOS = ["config","freq","receitasOcultas"];
 const COLS_USER = ["id","email","nome","whats","nasc","cidade","criado","ultimo","bloqueado","premium"];
 const FORA = new Set(["senha","admin","perms","adminDesde","exemplo","genero", ...COLS_USER]);
@@ -19,7 +19,7 @@ const J = x => JSON.stringify(x === undefined ? null : x);
 async function q(p){ const r = await p; if(r.error) throw r.error; return r.data; }
 
 N.vazio = () => ({ versao: 1, nuvem: true, criado: hoje(), config: { nomeApp: "CK Life", checkout: C.KIWIFY_URL || "", suporte: C.SUPORTE || "", treinosParaCupom: 8, premiumPreco: 19.9 }, freq: { cliques: 25, minutos: 4, intervalo: 3, maxDia: 6 },
-  users: [], eventos: [], acessos: {}, cidades: [], segmentos: [], anunciantes: [], campanhas: [], pagamentos: [], profissionais: [], parceiros: [], cupons: [], avisos: [], receitasExtras: [], receitasOcultas: [], exercExtras: [] });
+  users: [], eventos: [], acessos: {}, cidades: [], segmentos: [], anunciantes: [], campanhas: [], pagamentos: [], profissionais: [], parceiros: [], cupons: [], avisos: [], receitasExtras: [], receitasOcultas: [], exercExtras: [], empresas: [], servicos: [], produtos: [], banners: [], categorias: [] });
 
 /* linha da tabela <-> pessoa no app */
 function paraUser(r, adm){
@@ -96,6 +96,11 @@ N.sair = async () => { try{ await sb.auth.signOut(); }catch(e){} };
 N.reset = async email => { const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname }); return error ? traduz(error) : null; };
 N.novaSenha = async senha => { const { error } = await sb.auth.updateUser({ password: senha }); return error ? traduz(error) : null; };
 N.primeiroAdmin = async nome => !!(await q(sb.rpc("virar_primeiro_admin", { p_nome: nome })));
+N.subirImg = async (blob, pasta) => {
+  const path = `${pasta || "geral"}/${Date.now().toString(36)}${Math.random().toString(36).slice(2, 7)}.jpg`;
+  const up = await sb.storage.from("catalogo").upload(path, blob, { contentType: "image/jpeg", upsert: true }); if(up.error) throw up.error;
+  return sb.storage.from("catalogo").getPublicUrl(path).data.publicUrl;
+};
 N.validarCupom = async (id, pin) => !!(await q(sb.rpc("validar_cupom", { p_cupom: id, p_pin: pin })));
 function traduz(e){
   const m = (e && e.message) || String(e);
