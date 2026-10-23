@@ -332,3 +332,9 @@ formPerm = function(u){
 };
 let PAPEL_ESCOLHIDO = null;
 VIEWS.seguranca = vSeguranca; VIEWS.lgpd = () => { SEGA = "lgpd"; ir("seguranca"); }; VIEWS.incidentes = () => { SEGA = "incidentes"; ir("seguranca"); }; VIEWS.auditoria = () => { SEGA = "auditoria"; ir("seguranca"); }; VIEWS.documentos = () => { SEGA = "documentos"; ir("seguranca"); };
+/* menu do painel organizado por assunto */
+GRUPOS.length = 0;
+GRUPOS.push(["Métricas", ["resumo","metricas","explorarm"]], ["Usuárias", ["alunos","ciclo"]], ["Social e moderação", ["comunidade","moderacao"]],
+  ["Conteúdo", ["receitas","exercicios","avisos","banners","destaques","categorias"]],
+  ["Comercial", ["empresas","profissionais","servicos","agendamentos","avaliacoes","parceiros","cupons","produtos","anunciantes","campanhas","financeiro"]],
+  ["Proteção", ["seguranca"]], ["Configurações", ["cidades","segmentos","admins","config"]]);

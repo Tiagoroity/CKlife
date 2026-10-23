@@ -395,7 +395,7 @@ function abreComposer(texto0, blob0, extra){
   $("sheet-body").querySelectorAll("[data-tema]").forEach(b => b.onclick = () => { const t = $("cp-t"); t.value = b.dataset.tema + t.value; t.focus(); t.setSelectionRange(t.value.length, t.value.length); cont(); SOM.tap(); });
   const prev = async () => { $("cp-prev").innerHTML = blob ? `<img src="${await blobParaURL(blob)}" alt=""><button class="iconbtn sm" id="cp-x" aria-label="Tirar foto">${ic("close", 16)}</button>` : ""; const x = $("cp-x"); if(x) x.onclick = () => { blob = null; prev(); }; };
   prev();
-  $("cp-foto").onclick = async () => { const f = await escolheArquivo("image/*"); const b = await imagemValida(f, 1440); if(b){ blob = b; prev(); } };
+  $("cp-foto").onclick = async () => { const f = await escolheArquivo("image/*"); let b = await imagemValida(f, 1440); if(b) b = await escolheFiltro(b); if(b){ blob = b; prev(); } };
   $("cp-ok").onclick = async () => { const t = $("cp-t").value.trim(); if(!t && !blob && !cq) return toast("Escreva algo ou escolha uma foto"); if(ME.bloqueado) return toast("Sua conta está bloqueada");
     const b = $("cp-ok"); b.classList.add("carregando"); b.disabled = true;
     try{ await CM.publicar(t, blob, extra); SOM.done ? SOM.done() : SOM.check(); fecharSheet(); toast("Publicado no CK Life 💚"); window.scrollTo({ top: 0, behavior: "smooth" }); NOVO_POST = true; FD = { ...FD, cursor: null, fim: false }; if(TAB !== "juntas") tab("juntas"); else rJuntas(); }
@@ -518,7 +518,7 @@ async function carregaStories(){
 const CORES_ST = ["#0E3D32","#2E7D5A","#C2577B","#6C5FB5","#D08A2E","#17211D"];
 async function criarStory(){
   if(ME.bloqueado) return toast("Sua conta está bloqueada");
-  const f = await escolheArquivo("image/*"); const b = await imagemValida(f, 1920); if(!b) return;
+  const f = await escolheArquivo("image/*"); let b = await imagemValida(f, 1920); if(!b) return; b = await escolheFiltro(b); if(!b) return;
   let cor = CORES_ST[0];
   sheet("Novo Story", `<div class="so-stprev priv" id="sp-p"><img src="${await blobParaURL(b)}" alt=""><span id="sp-tx" class="so-sttx" hidden></span></div>
     <div class="field"><label for="sp-t">Texto sobre a foto (opcional)</label><input class="input" id="sp-t" maxlength="120" placeholder="Ex.: Treino feito! 💪"></div>
@@ -683,7 +683,7 @@ function desenhaMsgs(rolarFim){
   const perto = box.scrollHeight - box.scrollTop - box.clientHeight < 120;
   box.innerHTML = (CHAT.fim ? `<p class="xp-chat-aviso hint">${ic("shield", 13)} Conversa privada. Seja gentil e nunca envie senhas ou dados de cartão.</p>` : `<button class="link so-antigas" id="cv-ant">Ver mensagens anteriores</button>`) +
     (L.length ? L.map((m, i) => { const eu = m.autor === NU.uid, prox = L[i + 1], ultimaDela = !eu && (!prox || prox.autor !== m.autor), dia = i === 0 || L[i - 1].criado.slice(0, 10) !== m.criado.slice(0, 10);
-      return `${dia ? `<div class="so-dia">${new Date(m.criado).toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "short" })}</div>` : ""}<div class="xp-msgrow ${eu ? "eu" : ""}" data-mid="${m.id}">${!eu ? (ultimaDela ? avU(o) : `<span style="width:28px;flex:0 0 28px"></span>`) : ""}<div class="xp-msg ${eu ? "eu" : ""} ${m.tipo !== "texto" ? "midia" : ""}">${msgCorpo(m)}<small>${new Date(m.criado).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}${eu ? " " + stIcone(m) : ""}</small></div><button class="so-mop" data-op="${m.id}" aria-label="Opções da mensagem">${ic("dots", 14)}</button></div>${eu && m === ultMinha ? `<div class="so-sttxt">${stTexto(m)}</div>` : ""}`; }).join("")
+      return `${dia ? `<div class="so-dia">${new Date(m.criado).toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "short" })}</div>` : ""}<div class="xp-msgrow ${eu ? "eu" : ""}" data-mid="${m.id}">${!eu ? (ultimaDela ? avU(o) : `<span style="width:28px;flex:0 0 28px"></span>`) : ""}<div class="xp-msg ${eu ? "eu" : ""} ${m.tipo !== "texto" ? "midia" : ""}${m.tipo === "foto" && !m.texto && (m.fig || /\.png$/.test(m.midia || "")) ? " fig" : ""}">${msgCorpo(m)}<small>${new Date(m.criado).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}${eu ? " " + stIcone(m) : ""}</small></div><button class="so-mop" data-op="${m.id}" aria-label="Opções da mensagem">${ic("dots", 14)}</button></div>${eu && m === ultMinha ? `<div class="so-sttxt">${stTexto(m)}</div>` : ""}`; }).join("")
     : `<p class="empty">Comece a conversa com ${esc(nomeP(o).split(" ")[0])} 💚</p>`);
   ligaMidia(box, 600);
   const an = $("cv-ant"); if(an) an.onclick = () => carregaMsgs(L[0] && L[0].criado);
@@ -712,13 +712,13 @@ function fecharSheetSilencioso(){ const p = $("so-pop"); if(p) p.hidden = true; 
 function desenhaResp(){ const box = $("cv-resp"); if(!box) return; const r = CHAT && CHAT.resp; box.innerHTML = r ? `<div class="so-quote so-quote-in"><b>Respondendo ${r.autor === NU.uid ? "a você" : esc(nomeP(r.autor).split(" ")[0])}</b><span>${esc(r.tipo === "foto" ? "📷 Foto" : r.tipo === "audio" ? "🎤 Áudio" : (r.texto || "").slice(0, 80))}</span><button class="iconbtn sm" id="cv-rx" aria-label="Cancelar resposta">${ic("close", 13)}</button></div>` : ""; const x = $("cv-rx"); if(x) x.onclick = () => { CHAT.resp = null; desenhaResp(); }; }
 async function enviaMsg(c, d){
   if(ME.bloqueado) throw new Error("Sua conta está bloqueada");
-  const id = novoId(), base = { id, conversa_id: c.id, autor: NU.uid, tipo: d.tipo || "texto", texto: d.texto || null, criado: new Date().toISOString(), pend: true, previa: d.blob ? URL.createObjectURL(d.blob) : null, resposta_id: d.resposta_id || null, story_id: d.story_id || null, post_id: d.post_id || null, duracao: d.duracao || null };
+  const id = novoId(), base = { id, conversa_id: c.id, autor: NU.uid, tipo: d.tipo || "texto", texto: d.texto || null, criado: new Date().toISOString(), pend: true, previa: d.blob ? URL.createObjectURL(d.blob) : null, resposta_id: d.resposta_id || null, story_id: d.story_id || null, post_id: d.post_id || null, duracao: d.duracao || null, fig: d.mime === "image/png" };
   const aberto = CHAT && CHAT.c.id === c.id;
   if(aberto){ CHAT.msgs.push(base); desenhaMsgs(true); }
   try{
     let midia = null;
-    if(d.blob){ const ext = d.tipo === "audio" ? (/mp4|m4a|aac/.test(d.mime) ? "m4a" : /ogg/.test(d.mime) ? "ogg" : "webm") : "jpg";
-      const tipo = d.tipo === "audio" ? (ext === "m4a" ? "audio/mp4" : ext === "ogg" ? "audio/ogg" : "audio/webm") : "image/jpeg";
+    if(d.blob){ const ext = d.tipo === "audio" ? (/mp4|m4a|aac/.test(d.mime) ? "m4a" : /ogg/.test(d.mime) ? "ogg" : "webm") : d.mime === "image/png" ? "png" : "jpg";
+      const tipo = d.tipo === "audio" ? (ext === "m4a" ? "audio/mp4" : ext === "ogg" ? "audio/ogg" : "audio/webm") : ext === "png" ? "image/png" : "image/jpeg";
       midia = await sobe("chat", c.id, d.blob, ext, tipo); }
     const row = { id, conversa_id: c.id, autor: NU.uid, tipo: base.tipo, texto: base.texto, midia, duracao: base.duracao, resposta_id: base.resposta_id, story_id: base.story_id, post_id: base.post_id };
     const r = await q(SB().from("mensagens").insert(row).select());
@@ -772,7 +772,7 @@ function ligaAudio(el){
 function fotoChat(c){
   menuLeve([["camera", "Tirar foto agora", () => pegaFoto("environment")], ["image", "Escolher da galeria", () => pegaFoto(null)]]);
   async function pegaFoto(cap){
-    const f = await escolheArquivo("image/*", cap); if(!f) return; const b = await imagemValida(f, 1600); if(!b) return;
+    const f = await escolheArquivo("image/*", cap); if(!f) return; let b = await imagemValida(f, 1600); if(!b) return; b = await escolheFiltro(b); if(!b) return;
     const u = URL.createObjectURL(b); let box = $("so-prev"); if(!box){ box = document.createElement("div"); box.id = "so-prev"; box.className = "so-prev priv"; document.body.appendChild(box); }
     box.innerHTML = `<div class="so-prev-top"><button class="iconbtn" id="pv-x" aria-label="Cancelar">${ic("close", 20)}</button><b>Enviar para ${esc(nomeP(outroDe(c)).split(" ")[0])}</b></div><img src="${u}" alt="" draggable="false"><div class="so-prev-pe"><input class="input" id="pv-t" maxlength="500" placeholder="Escreva uma legenda (opcional)"><button class="btn btn-accent so-env" id="pv-ok" aria-label="Enviar foto">${ic("send", 18)}</button></div>`;
     box.hidden = false; const fecha = () => { box.hidden = true; box.innerHTML = ""; URL.revokeObjectURL(u); };

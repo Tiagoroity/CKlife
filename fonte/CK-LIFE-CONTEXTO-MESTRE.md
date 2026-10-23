@@ -572,3 +572,13 @@ Você vai continuar o desenvolvimento do CK Life, meu app de treino em casa para
 - App: src/meus-dados.js → Perfil › Privacidade › "Privacidade e meus dados" (documentos, baixar meus dados, pedidos com protocolo, autorizações, sair de todos os aparelhos). Meu Ciclo registra consentimento.
 - Limites reais: PWA não bloqueia nem detecta print; lista de aparelhos e falhas de login só nos logs do Supabase; limpeza de arquivos órfãos precisa da chave de serviço.
 - Pendências jurídicas: idade mínima, prazos de retenção, bases legais, textos de Termos/Privacidade, decisão sobre comunicação de incidentes.
+
+## EXPERIÊNCIA PREMIUM (23/10/2026)
+- src/experiencia.js: Início "Meu dia" (saudação contextual, check-in de humor/energia guardado SÓ no aparelho, Meu Ritmo 0–100 de consistência pessoal, sequência com marcos 3/7/15/30/50/100, card de recuperação quando energia baixa — sugere, não troca o treino; "Você estava vendo" do Explorar).
+- Desafios pessoais 7/21/30 dias (Treinos › Programas), sem ranking nem contagem de participantes (não temos número real ainda).
+- Momentos: "CK Moment" na celebração, novas conquistas (30 treinos, 50 e 100 dias), aniversário de jornada, botão "Adicionar aos Stories" (Story gerado automaticamente) na conquista e no fim do treino.
+- Perfil: Minha Jornada (linha do tempo) e coleção de conquistas (bloqueadas/desbloqueadas).
+- Comunidade: frase contextual na caixa de publicar. Explorar: sugestões de busca.
+- src/figurinhas.js: no chat, painel de emojis (com recentes), figurinhas CK (treino, humor, amigas), "Minhas" figurinhas criadas com foto (guardadas no aparelho), filtros de foto (Natural, Glow, Rosado, Dourado, Suave, Vivo, P&B) no chat, Stories e posts. Figurinha vai como PNG e aparece sem balão.
+- Admin: menu agrupado em Métricas, Usuárias, Social e moderação, Conteúdo, Comercial, Proteção, Configurações.
+- Pendentes: maquiagem virtual com detecção de rosto (precisa biblioteca de IA de rosto), grupos da comunidade, vídeo, notificações push.
