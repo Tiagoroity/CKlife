@@ -1731,6 +1731,16 @@ ul.xp-lista:not(:has(svg)) li::before{content:"•";color:var(--accent);font-wei
 .vf-grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}.vf-it{display:grid;gap:6px}
 .vf-foto{aspect-ratio:3/4;border-radius:14px;overflow:hidden;background:var(--surface-2);display:grid;place-items:center}.vf-foto img{width:100%;height:100%;object-fit:cover}
 .pexpl{overflow-x:hidden}.pex-top{overflow:hidden;width:100%}.pex-top img{max-width:100%}.pex-c{min-width:0;max-width:100%;box-sizing:border-box}.ex-txt{overflow-wrap:anywhere;min-width:0}.ex-bt{grid-template-columns:minmax(0,1fr) minmax(0,1.4fr)}
+
+/* 👑 coroa em cima da foto (CK Life Pro pago) */
+.cr{overflow:visible!important;position:relative}
+.capa .hello .avatar.cr{position:relative}
+.cr>img,.cr>.avf{border-radius:50%}
+.cr::after{content:"👑";position:absolute;top:-.62em;right:-.28em;font-size:max(14px,.95em);line-height:1;transform:rotate(22deg);filter:drop-shadow(0 1px 1.5px rgba(0,0,0,.35));pointer-events:none;z-index:4}
+.so-av.cr::after{font-size:34px;top:-18px;right:-8px}
+.pl-pro{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:1px solid rgba(201,162,39,.45);background:linear-gradient(135deg,rgba(201,162,39,.16),rgba(201,162,39,.05));border-radius:16px;padding:11px 14px;color:var(--ink);font:inherit;cursor:pointer}
+.pl-pro b{font-size:14.5px}.pl-pro small{display:block;color:var(--muted);font-size:12.5px}.pl-pro .pl-cr{font-size:24px}
+.pl-card.on.pago{box-shadow:0 0 0 2px #D4AF37,var(--shadow-sm)}.pl-card.on.pago .eyebrow{color:#F3D77A}
 </style>
 
 <!-- Entrar / criar conta -->
@@ -4469,7 +4479,7 @@ document.addEventListener("click", async e => { const b = e.target.closest && e.
 const temStory = u => STO.grupos.some(g => g.u === u && u !== (NU && NU.uid));
 const nomeP = (u, fb) => (PERFIS.get(u) || {}).nome || fb || "Aluna";
 const userP = u => (PERFIS.get(u) || {}).username || "";
-const avU = (u, nomeFb, fotoFb, cls) => { const p = PERFIS.get(u) || {}, f = p.foto_mini || fotoFb, n = p.nome || nomeFb; return `<span class="pav ${cls || ""}">${f ? `<img src="${esc(f)}" alt="" draggable="false">` : esc(String(n || "?").trim()[0] || "?").toUpperCase()}</span>`; };
+const avU = (u, nomeFb, fotoFb, cls) => { const p = PERFIS.get(u) || {}, f = p.foto_mini || fotoFb, n = p.nome || nomeFb; return `<span class="pav ${cls || ""}${coroaDe(u) ? " cr" : ""}">${f ? `<img src="${esc(f)}" alt="" draggable="false">` : esc(String(n || "?").trim()[0] || "?").toUpperCase()}</span>`; };
 
 /* ---------- Avisos discretos no topo ---------- */
 function aviso(html, onAbrir){
@@ -4524,7 +4534,7 @@ async function abrirPerfil(u){
   const cid = p.mostrar_cidade && p.cidade ? xcidNome(p.cidade) : "";
   sheet(meu ? "Meu perfil" : "Perfil", `<div class="so-perfil">
     <div class="so-capa priv" ${p.capa ? `data-m="${esc(p.capa)}"` : ""}></div>
-    <div class="so-ph"><span class="so-av priv" ${p.foto ? `data-m="${esc(p.foto)}"` : ""}>${p.foto_mini ? `<img src="${esc(p.foto_mini)}" alt="" draggable="false">` : esc((p.nome || "?")[0].toUpperCase())}</span></div>
+    <div class="so-ph"><span class="so-av priv${coroaDe(p.user_id) ? " cr" : ""}" ${p.foto ? `data-m="${esc(p.foto)}"` : ""}>${p.foto_mini ? `<img src="${esc(p.foto_mini)}" alt="" draggable="false">` : esc((p.nome || "?")[0].toUpperCase())}</span></div>
     <div class="so-id"><h2>${esc(p.nome)}${selosP(p.user_id)}</h2><p class="muted">@${esc(p.username)}${p.privado ? ` · ${ic("lock", 13)} privado` : ""}${c && c.me_segue && !meu ? ` · <span class="so-segue">segue você</span>` : ""}</p>
       ${p.bio ? `<p class="so-bio">${esc(p.bio)}</p>` : ""}
       <div class="xp-tags" style="justify-content:center">${cid ? `<i class="xp-tag">${ic("pin", 12)} ${esc(cid)}</i>` : ""}${p.mostrar_objetivo && p.objetivo ? `<i class="xp-tag ok">${esc(p.objetivo)}</i>` : ""}${(p.interesses || []).slice(0, 6).map(i => `<i class="xp-tag">${esc(i)}</i>`).join("")}</div></div>
@@ -6200,7 +6210,9 @@ const filtroLivre = k => pode("filtros_todos") || (DB.config.filtrosFree || ["or
 
 /* ---------- paywall (camada própria, por cima de qualquer tela) ---------- */
 const BENEF = [["👑", "Programas e treinos completos"], ["🥗", "Nutrição completa"], ["🌸", "Ciclo inteligente"], ["📊", "Evolução avançada"], ["✨", "Stickers e recursos criativos"], ["🎁", "Clube CK Pro"], ["✓", "Direito a pedir verificação"], ["🚫", "Sem anúncios"]];
+const pagou = () => !!(ENT.d && ENT.d.pro && !ENT.d.trial);
 async function paywall(contexto, preview){
+  if(pagou()) return sheet("👑 Você é CK Life Pro", `<div class="card"><b>Sua assinatura está ativa 💚</b><p class="hint" style="margin:6px 0 0">${ENT.d.fim ? "Pro até " + brD(String(ENT.d.fim).slice(0, 10)) + ". " : ""}Todos os recursos Pro estão liberados para você.</p></div>`);
   registraEvento("paywall_viewed", { contexto: contexto || "geral" });
   if(!souPro() || emTrial()){ try{ const o = await NU.sb.rpc("oferta_ativar", { p_contexto: contexto || "paywall" }); if(o && !o.error && o.data) { ENT.d = { ...(ENT.d || {}), oferta: o.data }; } }catch(e){} }
   const P = await carregaPlanos(), of = ENT.d && ENT.d.oferta, men = P.find(p => p.id === "pro_mensal") || {}, anu = P.find(p => p.id === "pro_anual") || {};
@@ -6268,13 +6280,14 @@ const rEvolucaoP = rEvolucao; rEvolucao = function(){ rEvolucaoP.apply(this, arg
   document.querySelectorAll("#t-evolucao [data-pw]").forEach(b => b.onclick = () => exigePro("graficos_avancados", "grafico_pro")); };
 /* fim do treino (Free): pode aparecer uma condição, nunca no meio do treino */
 const fimTreinoPl = fimTreino; fimTreino = function(parcial){ fimTreinoPl.apply(this, arguments); registraEvento("exercise_completed", { treino: PL && PL.T ? PL.T.nome : null });
-  if(parcial || souPro() || !NU.sb) return;
+  if(parcial || (souPro() && !emTrial()) || !NU.sb) return;
   NU.sb.rpc("oferta_ativar", { p_contexto: "treino_concluido" }).then(r => { const o = r && r.data; if(!o) return; ENT.d = { ...(ENT.d || {}), oferta: o }; const ok = $("fim-ok"); if(!ok || $("pw-fim")) return;
     ok.insertAdjacentHTML("afterend", `<button class="pw-mini" id="pw-fim"><span>👑 ${esc(o.titulo)}</span><small>${esc(o.subtitulo || "Ver condição especial")}</small></button>`); $("pw-fim").onclick = () => { NU.sb.rpc("oferta_evento", { p_id: o.id, p_tipo: "clique" }); registraEvento("offer_clicked", { campanha: o.campanha }); paywall("treino_concluido"); }; }, () => {}); };
 
 /* ---------- Início e Perfil: teste, último dia, oferta ---------- */
 function blocoPlano(onde){
   const d = ENT.d; if(!d) return "";
+  if(d.pro && !d.trial){ if(onde !== "inicio") return ""; return `<div class="pl-bloco"><button class="pl-pro" data-pro="1"><span class="pl-cr">👑</span><span><b>Você é CK Life Pro</b><small>${d.fim ? "Assinatura ativa até " + brD(String(d.fim).slice(0, 10)) : "Assinatura ativa"} · tudo liberado</small></span></button></div>`; }
   const of = d.oferta, dias = d.dias_restantes;
   let h = "";
   if(d.trial && dias != null) h += dias <= 1 ? `<div class="pl-ultimo"><b>Seu último dia de CK Life Pro 💚</b><p>Amanhã você continua usando o CK Life gratuitamente. Você <b>não perde</b> conta, amigas, mensagens, posts, Stories, conquistas, histórico, medidas, progresso, fotos e registros. Só os recursos Pro ficam bloqueados.</p><button class="btn btn-accent btn-sm" data-pw="1">Continuar com o Pro</button></div>`
@@ -6286,12 +6299,12 @@ function blocoPlano(onde){
 }
 setInterval(() => document.querySelectorAll(".pl-cont[data-fim]").forEach(e => { const f = new Date(e.dataset.fim).getTime() - agoraServ(); e.textContent = f <= 0 ? "Condição encerrada" : f > 864e5 && f < 864e5 * 2 ? "Sua condição especial termina amanhã." : "Termina em " + tempoRest(e.dataset.fim); }), 1000);
 const rInicioPl = rInicio; rInicio = function(){ rInicioPl.apply(this, arguments); const b = blocoPlano("inicio"), alvo = document.querySelector("#t-inicio .xe-dia"); if(b && alvo) alvo.insertAdjacentHTML("afterbegin", b);
-  document.querySelectorAll("#t-inicio [data-pw]").forEach(x => x.onclick = () => paywall("paywall"));
+  document.querySelectorAll("#t-inicio [data-pw]").forEach(x => x.onclick = () => paywall("paywall")); document.querySelectorAll("#t-inicio [data-pro]").forEach(x => x.onclick = () => tab("perfil"));
   const rec = document.querySelector("#t-inicio .xe-rec"); if(rec && !pode("sugestoes_energia")){ const bt = rec.querySelector("button"); if(bt){ bt.innerHTML = "👑 Treino adaptado à sua energia"; bt.onclick = e => { e.stopPropagation(); exigePro("sugestoes_energia", "recurso_pro"); }; } }
   anunciosInicio(); };
 const rPerfilPl = rPerfil; rPerfil = function(){ rPerfilPl.apply(this, arguments); const el = $("t-perfil"); if(!el || !ENT.d) return;
   const card = [...el.querySelectorAll(".today")].find(c => /Premium|anúncios/i.test(c.textContent)), d = ENT.d;
-  const html = `<div class="pl-card ${d.pro ? "on" : ""}"><span class="eyebrow">${d.pro ? (d.trial ? "👑 CK Life Pro · teste grátis" : "👑 CK Life Pro") : "CK Life Free"}</span>
+  const html = `<div class="pl-card ${d.pro ? "on" : ""}${d.pro && !d.trial ? " pago" : ""}"><span class="eyebrow">${d.pro ? (d.trial ? "👑 CK Life Pro · teste grátis" : "👑 CK Life Pro · assinante" + (d.plano === "pro_anual" ? " anual" : d.plano === "pro_mensal" ? " mensal" : "")) : "CK Life Free"}</span>
     <h2>${d.pro ? (d.trial ? `${d.dias_restantes} ${d.dias_restantes === 1 ? "dia" : "dias"} de Pro grátis` : d.fim ? `Pro até ${brD(String(d.fim).slice(0, 10))}` : "Pro ativo") : "Treino, comunidade e conquistas grátis"}</h2>
     <p>${d.pro ? (d.status === "canceled" ? "Assinatura cancelada: você continua Pro até o fim do período." : "Programas completos, nutrição, ciclo inteligente e sem anúncios.") : "Conheça o Pro: programas completos, nutrição, ciclo inteligente e sem anúncios."}</p>
     ${!d.pro || d.trial ? `<button class="btn btn-accent" data-pw="1">${d.oferta ? "Ver condição especial" : "Conhecer o CK Life Pro"}</button>` : ""}</div>${blocoPlano("perfil").replace(/pl-chip/g, "pl-chip pl-oculto")}`;
@@ -6334,11 +6347,14 @@ function anunciosInicio(){}
 const desenhaFeedPl = desenhaFeed; desenhaFeed = function(){ const r = desenhaFeedPl.apply(this, arguments); const ps = document.querySelectorAll("#feed > .post"); if(ps.length >= 6 && !document.querySelector("#t-juntas .ad-card")){ const h = anuncioHtml("feed"); if(h) ps[5].insertAdjacentHTML("afterend", h); } return r; };
 const rExplorarPl = rExplorar; rExplorar = function(){ rExplorarPl.apply(this, arguments); const b = $("xp-body"); if(b && !document.querySelector("#t-explorar .ad-card")){ const h = anuncioHtml("explorar"); if(h) b.insertAdjacentHTML("beforebegin", h); } };
 
+/* ---------- voltou para o app (ex.: depois de pagar): confere o plano de novo ---------- */
+document.addEventListener("visibilitychange", async () => { if(document.hidden || !(NU.ativo && NU.sb && NU.uid)) return; const antes = pagou(); await carregaPlano(true);
+  if(pagou() && ENT.d) ENT.d.oferta = null; if(antes !== pagou()){ if(pagou()){ $("pw") && $("pw").remove(); toast("👑 Bem-vinda ao CK Life Pro!"); } if(!$("v-app").hidden) rerender(); atualizaTopo(); } });
 /* ---------- carga inicial ---------- */
 { let n = 0; const t = setInterval(async () => { if(!(NU.ativo && NU.sb && NU.uid)){ if(++n > 60) clearInterval(t); return; } clearInterval(t);
-  await carregaPlano(true); if(emTrial() && NU.sb){ try{ const r = await NU.sb.rpc("oferta_ativar", { p_contexto: null }); if(r && r.data) ENT.d.oferta = r.data; }catch(e){} }
+  await carregaPlano(true); if(pagou()) ENT.d.oferta = null; if(emTrial() && NU.sb){ try{ const r = await NU.sb.rpc("oferta_ativar", { p_contexto: null }); if(r && r.data) ENT.d.oferta = r.data; }catch(e){} }
   try{ const r = await NU.sb.from("app_config").select("chave,valor").in("chave", ["treino_voz"]); (r.data || []).forEach(c => { if(c.chave === "treino_voz") ENT.cfgVoz = c.valor; }); }catch(e){}
-  if(ENT.d && !$("v-app").hidden) rerender(); }, 1500); }
+  if(ENT.d && !$("v-app").hidden){ rerender(); atualizaTopo(); } }, 1500); }
 
 
 /* ===================== TREINO: EXPLICAÇÃO POR VOZ ANTES DE CADA EXERCÍCIO =====================
@@ -6644,7 +6660,11 @@ function convidar(){
   else window.open("https://wa.me/?text=" + encodeURIComponent(txt + " " + url), "_blank", "noopener");
 }
 const linkSuporte = () => { const d = String(DB.config.suporte || "").replace(/\D/g, ""); return d.length >= 10 ? "https://wa.me/" + (d.length <= 11 ? "55" + d : d) + "?text=" + encodeURIComponent("Oi! Preciso de ajuda com o CK Life.") : ""; };
-function atualizaTopo(){ const a = $("top-av"); if(!a || !ME) return; a.innerHTML = fotoAv(ME); a.onclick = () => tab("perfil"); }
+/* 👑 em cima da foto: só quem PAGA o Pro (teste grátis não ganha coroa). Vem do servidor (perfis.pro_ate / meu_plano), nunca do app. */
+function coroaDe(u){ try{ const e = window.__ENT && window.__ENT.d;
+  if(u === "eu" || (ME && u === ME.id) || (typeof NU !== "undefined" && NU.uid && u === NU.uid)){ if(e) return !!(e.pro && !e.trial); u = NU.uid; }
+  const p = typeof PERFIS !== "undefined" ? PERFIS.get(u) : null; return !!(p && p.pro_ate && new Date(p.pro_ate) > new Date()); }catch(x){ return false; } }
+function atualizaTopo(){ const a = $("top-av"); if(!a || !ME) return; a.innerHTML = fotoAv(ME); a.classList.toggle("cr", coroaDe("eu")); a.onclick = () => tab("perfil"); }
 const DICAS_DIA = ["Beba um copo de água antes de cada refeição. Ajuda na saciedade.", "Durma de 7 a 8 horas: é no descanso que o músculo se recupera.", "Proteína em todas as refeições ajuda a manter a massa magra.", "Alongue 5 minutos depois do treino para soltar o corpo.", "Constância vence intensidade. Treinar 3x por semana já transforma.", "Prepare as marmitas no domingo e economize tempo na semana.", "Respire fundo e solte o ar na hora do esforço.", "Caminhar 20 minutos por dia já melhora o fôlego e o humor."];
 const doDia = L => L[Math.floor(Date.now() / 864e5) % L.length];
 const comeuAlgo = () => Object.values(ME.diario || {}).some(d => REFS.some(([k]) => (d[k] || []).length));
@@ -6705,7 +6725,7 @@ function rInicio(){
   const nivelN = { Iniciante: "Iniciante", "Intermediário": "Intermediário", Todos: "Todos os níveis" }[p.nivel] || p.nivel;
   const obj = objById(ME.perfil.objetivo), rd = receitaDoDia();
   $("t-inicio").innerHTML = `
-    <div class="capa"><img class="capa-foto" src="img/modelo.jpg" alt="" onerror="this.remove()"><button class="avatar" id="h-av" aria-label="Perfil">${fotoAv(ME)}</button><div class="capa-tx"><span class="hi">${saudacao()}, ${esc(ME.nome.split(" ")[0])} 👋</span><h1>Vamos evoluir hoje?</h1><p>${hojeFeito ? "Treino de hoje feito. " + frase() : "Seu treino está pronto."}</p></div></div>
+    <div class="capa"><img class="capa-foto" src="img/modelo.jpg" alt="" onerror="this.remove()"><button class="avatar${coroaDe("eu") ? " cr" : ""}" id="h-av" aria-label="Perfil">${fotoAv(ME)}</button><div class="capa-tx"><span class="hi">${saudacao()}, ${esc(ME.nome.split(" ")[0])} 👋</span><h1>Vamos evoluir hoje?</h1><p>${hojeFeito ? "Treino de hoje feito. " + frase() : "Seu treino está pronto."}</p></div></div>
     ${hojeFeito ? `<div class="today done"><div><span class="eyebrow">Treino de hoje concluído</span><h2>Você está mais perto do que ontem.</h2><p>${ultimo ? `${esc(ultimo.nome)} · ${ultimo.min} min · ${int(ultimo.kcal)} kcal` : ""}</p><div class="meta" style="margin-bottom:10px"><span>${ic("flame", 14)} ${s} ${s === 1 ? "dia seguido" : "dias seguidos"}</span></div><button class="btn btn-sm" id="h-extra">Quero treinar mais</button></div></div>`
     : `<div class="today"><div><span class="eyebrow">Treino de hoje</span><h2>${esc(T.nome)}</h2><p>Semana ${semana()} de ${p.semanas}</p>
         <div class="meta"><span>${ic("clock", 14)} ${minTreino(T)} min</span><span>${ic("bolt", 14)} ${nivelN}</span><span>${ic("flame", 14)} ~${kcalTreino(T)} kcal</span></div>
@@ -7411,7 +7431,7 @@ function rPerfil(){
   const profs = (DB.profissionais || []).filter(x => x.ativo).sort((a, b) => (a.ordem || 0) - (b.ordem || 0));
   const th = document.documentElement.dataset.theme || "light", nv = nivelAluna((ME.treinos || []).length);
   $("t-perfil").innerHTML = `
-    ${capa("", "", `<div class="hello" style="gap:14px"><button class="avatar avedit" id="p-foto" aria-label="Trocar foto do perfil" style="width:72px;height:72px;font-size:28px">${fotoAv(ME)}<i class="avcam">${ic("plus", 13, 3)}</i></button><div><h2 style="color:#fff">${esc(ME.nome)}</h2><div class="k" style="color:rgba(245,248,239,.8)">${esc(ME.email)}</div><span class="nivel-chip">${ic("star", 13)} Nível ${nv.nome}</span></div></div>`, "img/ex-panturrilha.jpg")}
+    ${capa("", "", `<div class="hello" style="gap:14px"><button class="avatar avedit${coroaDe("eu") ? " cr" : ""}" id="p-foto" aria-label="Trocar foto do perfil" style="width:72px;height:72px;font-size:28px">${fotoAv(ME)}<i class="avcam">${ic("plus", 13, 3)}</i></button><div><h2 style="color:#fff">${esc(ME.nome)}</h2><div class="k" style="color:rgba(245,248,239,.8)">${esc(ME.email)}</div><span class="nivel-chip">${ic("star", 13)} Nível ${nv.nome}</span></div></div>`, "img/ex-panturrilha.jpg")}
     <div class="pstats"><div><b class="num">${int((ME.treinos || []).length)}</b><span>treinos</span></div><div><b class="num">${int((ME.treinos || []).reduce((a, t) => a + (t.min || 0), 0))}</b><span>minutos</span></div><div><b class="num">${streak()}</b><span>${streak() === 1 ? "dia seguido" : "dias seguidos"}</span></div></div>
     ${nv.prox ? `<div class="card nivel-card"><div class="sec-title"><h3 style="font-size:16px">Próximo nível: ${nv.prox[1]}</h3><span class="muted num" style="font-size:13px">faltam ${nv.falta} ${nv.falta === 1 ? "treino" : "treinos"}</span></div><div class="prog" style="margin-top:10px"><i style="width:${nv.pct}%"></i></div><p class="hint" style="margin:8px 0 0">Membro desde ${brD(ME.criado || today())}</p></div>` : `<div class="card nivel-card"><h3 style="font-size:16px">Você chegou ao nível máximo 🏆</h3><p class="hint" style="margin:6px 0 0">Membro desde ${brD(ME.criado || today())}</p></div>`}
     ${perfilXP()}
@@ -7704,6 +7724,12 @@ function planilha(cab, linhas, nome){
 }
 
 /* ---------- Cálculos de alunos ---------- */
+/* Plano de cada aluna: vem do servidor (assinaturas: Kiwify, teste, cortesia). Sem banco, usa o Premium antigo. */
+let PLU = null, VENDAS = null, PLU_T = 0;
+function catPlano(u){ const s = PLU && PLU[u.id]; if(s){ if(!s.pro) return "gratis"; if(s.trial) return "teste"; return ["kiwify", "apple", "google"].includes(s.provider) ? "pago" : "cortesia"; }
+  if(!F.isPremium(u)) return "gratis"; return u.premium.tipo === "vitalicio" ? "cortesia" : u.premium.tipo; }
+const vendaOk = v => ["order_approved", "subscription_renewed"].includes(v.evento) && v.status === "processado";
+const vendasMes = (m = today().slice(0, 7)) => (VENDAS || []).filter(v => vendaOk(v) && String(v.quando).slice(0, 7) === m).reduce((s, v) => s + (+v.valor || 0), 0);
 function metricasAlunos(cidade){
   const db = DB(), U = db.users.filter(u => !u.soAdmin && (!cidade || +u.cidade === +cidade));
   const ids = new Set(U.map(u => u.id));
@@ -7714,9 +7740,9 @@ function metricasAlunos(cidade){
   return {
     U, total: U.length, novos7: U.filter(u => u.criado >= addD(today(), -6)).length,
     dau: acc(today()).length, wau: uni(ult(7)), mau: uni(ult(30)),
-    pagos: U.filter(u => F.isPremium(u) && u.premium.tipo === "pago").length,
-    teste: U.filter(u => F.isPremium(u) && u.premium.tipo === "teste").length,
-    cortesia: U.filter(u => F.isPremium(u) && (u.premium.tipo === "cortesia" || u.premium.tipo === "vitalicio")).length,
+    pagos: U.filter(u => catPlano(u) === "pago").length,
+    teste: U.filter(u => catPlano(u) === "teste").length,
+    cortesia: U.filter(u => catPlano(u) === "cortesia").length,
     serie: serie(addD(today(), -29), today(), d => ({ alunos: acc(d).length })),
     r1: ret(1), r7: ret(7), r30: ret(30)
   };
@@ -7745,11 +7771,11 @@ function vResumo(){
     <div class="grid g4">
       ${kpi("Alunas cadastradas", int(al.total), `+${int(al.novos7)} nos últimos 7 dias`, "alunos", 1)}
       ${kpi("Ativas hoje", int(al.dau), `${int(al.wau)} na semana · ${int(al.mau)} no mês`, "resumo")}
-      ${kpi("Assinantes Premium", int(al.pagos), `${int(al.teste)} em teste grátis · ${int(al.cortesia)} cortesia`, "profissionais")}
+      ${kpi("👑 Assinantes Pro", int(al.pagos), `${int(al.teste)} em teste grátis · ${int(al.cortesia)} cortesia`, "alunos")}
       ${kpi("Anunciantes ativos", int(anAt.length), `${int(ativas)} ${ativas === 1 ? "campanha no ar" : "campanhas no ar"}`, "anunciantes")}
       ${kpi("Impressões", int(t.imp), `Alcance: ${int(t.alc)} alunas`, "campanhas")}
       ${kpi("Cliques", int(t.clk), `Taxa de clique: ${pct(t.clk, t.imp)}`, "metricas")}
-      ${kpi("Receita prevista no mês", money(mrr + al.pagos * (db.config.premiumPreco || 0)), `Anúncios ${money(mrr)} · Premium ${money(al.pagos * (db.config.premiumPreco || 0))}`, "financeiro", 1)}
+      ${kpi("Receita do mês", money(mrr + vendasMes()), `Anúncios ${money(mrr)} · Vendas Pro ${money(vendasMes())}`, "financeiro", 1)}
       ${kpi("Recebido no mês", money(rec), `A receber: ${money(ab)}`, "financeiro")}
     </div>
     <div class="grid g2">
@@ -8015,18 +8041,21 @@ async function gerarPDF(o){
 
 /* ---------- Alunos ---------- */
 let AF = { q: "", cidade: "", plano: "" };
-const statusPrem = u => { if(!u.premium) return ["Gratuito", "off"]; if(u.premium.tipo === "vitalicio") return ["Vitalício", "ok"]; if(u.premium.ate < today()) return ["Gratuito", "off"]; return [{ pago: "Premium", teste: "Teste grátis", cortesia: "Cortesia" }[u.premium.tipo] + " até " + brD(u.premium.ate).slice(0, 5), u.premium.tipo === "teste" ? "warn" : "ok"]; };
+const statusPrem = u => { const s = PLU && PLU[u.id]; if(s && s.pro){ const ate = s.fim ? " até " + brD(String(s.fim).slice(0, 10)).slice(0, 5) : "";
+    if(s.trial) return ["Teste grátis" + ate, "warn"]; return [(["kiwify", "apple", "google"].includes(s.provider) ? "👑 Pro " + (s.plano === "pro_anual" ? "anual" : "mensal") : "Cortesia") + ate, "ok"]; }
+  if(s && !s.pro) return ["Gratuito", "off"];
+  if(!u.premium) return ["Gratuito", "off"]; if(u.premium.tipo === "vitalicio") return ["Vitalício", "ok"]; if(u.premium.ate < today()) return ["Gratuito", "off"]; return [{ pago: "Premium", teste: "Teste grátis", cortesia: "Cortesia" }[u.premium.tipo] + " até " + brD(u.premium.ate).slice(0, 5), u.premium.tipo === "teste" ? "warn" : "ok"]; };
 function vAlunos(){
   const db = DB(), al = metricasAlunos(AF.cidade);
   const imps = {}; db.eventos.forEach(e => { if(e.t === "imp") imps[e.u] = (imps[e.u] || 0) + 1; });
   let L = al.U;
   if(AF.q){ const q = AF.q.toLowerCase(); L = L.filter(u => (u.nome + " " + u.email + " " + (u.whats || "")).toLowerCase().includes(q)); }
-  if(AF.plano) L = L.filter(u => AF.plano === "gratis" ? !F.isPremium(u) : F.isPremium(u) && (AF.plano === "cortesia" ? ["cortesia","vitalicio"].includes(u.premium.tipo) : u.premium.tipo === AF.plano));
+  if(AF.plano) L = L.filter(u => catPlano(u) === AF.plano);
   L = L.slice().sort((a, b) => (b.criado || "").localeCompare(a.criado || ""));
   $("adm-main").innerHTML = `
     <div class="head"><div><h1>Alunas</h1><p class="muted">Quem usa o app, de onde é e com que frequência volta.</p></div><div class="toolbar"><button class="btn btn-accent btn-sm needs-edit" id="al-prem">Dar Premium cortesia</button><button class="btn btn-line btn-sm" id="al-csv">Copiar planilha</button></div></div>
     <div class="toolbar"><select class="input" id="al-c">${optCid(AF.cidade, true)}</select></div>
-    <div class="grid g4">${kpi("Cadastrados", int(al.total), `+${int(al.novos7)} nos últimos 7 dias`)}${kpi("Ativos", int(al.dau), `hoje · ${int(al.wau)} na semana · ${int(al.mau)} no mês`)}${kpi("Premium pago", int(al.pagos))}${kpi("Em teste grátis", int(al.teste), `${int(al.cortesia)} com cortesia`)}</div>
+    <div class="grid g4">${kpi("Cadastrados", int(al.total), `+${int(al.novos7)} nos últimos 7 dias`)}${kpi("Ativos", int(al.dau), `hoje · ${int(al.wau)} na semana · ${int(al.mau)} no mês`)}${kpi("👑 Pro pago", int(al.pagos))}${kpi("Em teste grátis", int(al.teste), `${int(al.cortesia)} com cortesia`)}</div>
     <div class="card"><h3>Alunas ativas por dia</h3>${barChart(al.serie, "alunos", "alunas")}</div>
     <div class="grid g3">
       <div class="card"><h3>Por cidade</h3>${hbars(contaPor(al.U, u => cidNome(u.cidade) || "Sem cidade"))}</div>
@@ -8034,7 +8063,7 @@ function vAlunos(){
       <div class="card"><h3>Por gênero</h3>${hbars(contaPor(al.U, u => u.genero || "outro", { feminino: "Feminino", masculino: "Masculino", outro: "Outro" }))}</div>
     </div>
     <div class="card"><h3>Lista de alunas <span class="muted num" style="font-size:16px">(${L.length})</span></h3>
-      <div class="toolbar" style="margin-bottom:10px"><input class="input" id="al-q" placeholder="Buscar por nome, e-mail ou WhatsApp" value="${esc(AF.q)}"><select class="input" id="al-p"><option value="">Todos os planos</option><option value="pago" ${AF.plano === "pago" ? "selected" : ""}>Premium pago</option><option value="teste" ${AF.plano === "teste" ? "selected" : ""}>Teste grátis</option><option value="cortesia" ${AF.plano === "cortesia" ? "selected" : ""}>Cortesia</option><option value="gratis" ${AF.plano === "gratis" ? "selected" : ""}>Gratuito</option></select></div>
+      <div class="toolbar" style="margin-bottom:10px"><input class="input" id="al-q" placeholder="Buscar por nome, e-mail ou WhatsApp" value="${esc(AF.q)}"><select class="input" id="al-p"><option value="">Todos os planos</option><option value="pago" ${AF.plano === "pago" ? "selected" : ""}>Pro pago</option><option value="teste" ${AF.plano === "teste" ? "selected" : ""}>Teste grátis</option><option value="cortesia" ${AF.plano === "cortesia" ? "selected" : ""}>Cortesia</option><option value="gratis" ${AF.plano === "gratis" ? "selected" : ""}>Gratuito</option></select></div>
       <div class="tbl"><table><thead><tr><th>Nome</th><th>WhatsApp</th><th>E-mail</th><th>Cidade</th><th>Idade</th><th>Gênero</th><th>Cadastro</th><th>Plano</th><th>Treinos</th><th>Anúncios</th><th></th></tr></thead><tbody>
         ${L.slice(0, 300).map(u => { const [s, k] = statusPrem(u); return `<tr><td><b>${esc(u.nome)}</b>${ex(u)}${u.admin ? ` <span class="st ok">admin</span>` : ""}${u.bloqueado ? ` <span class="st bad">pausado</span>` : ""}</td><td>${esc(u.whats || "")}</td><td>${esc(u.email)}</td><td>${esc(cidNome(u.cidade))}</td><td class="num">${F.idade(u.nasc) ?? "-"}</td><td>${GEN[u.genero] || "-"}</td><td class="num">${brD(u.criado)}</td><td><span class="st ${k}">${s}</span></td><td class="num">${(u.treinos || []).length}</td><td class="num">${int(imps[u.id] || 0)}</td><td><button class="btn btn-line btn-sm needs-edit" data-ed="${u.id}">Editar</button></td></tr>`; }).join("") || `<tr><td colspan="11" class="empty">Nenhuma aluna encontrada.</td></tr>`}
       </tbody></table></div></div>`;
@@ -9484,6 +9513,25 @@ formPerm = function(u){ formPermMon(u); const box = $("mbox").querySelector("[da
   box.parentNode.insertAdjacentHTML("beforeend", `<button class="btn btn-line btn-sm" data-papel3="financeiro">Financeiro</button><button class="btn btn-line btn-sm" data-papel3="verificacao">Revisor de verificação</button><button class="btn btn-line btn-sm" data-papel3="conteudo">Conteúdo e exercícios</button>`);
   const P3 = { financeiro: { monetizacao: "editar", metricas: "ver", financeiro: "ver" }, verificacao: { verificacoes: "editar" }, conteudo: { exercicios: "editar", receitas: "editar", figurinhas: "editar", avisos: "editar" } };
   $("mbox").querySelectorAll("[data-papel3]").forEach(b => b.onclick = () => { const p = P3[b.dataset.papel3]; $("pm-t").checked = false; $("pm-t").onchange(); $("pm-g").querySelectorAll("select").forEach(s => s.value = p[s.dataset.k] || ""); toast("Papel aplicado. Clique em Salvar permissões."); }); };
+/* ---------- Vendas e plano das alunas nas telas antigas (Resumo, Alunas, Financeiro) ---------- */
+async function carregaVendasAdm(forca){
+  if(!SB2() || (!forca && Date.now() - PLU_T < 60000)) return false; PLU_T = Date.now();
+  try{ const [a, b] = await Promise.all([SB2().rpc("admin_planos_usuarias"), SB2().rpc("admin_vendas", { p_limite: 300 })]); if(!a.error && a.data) PLU = a.data; if(!b.error && b.data) VENDAS = b.data; return true; }catch(e){ return false; }
+}
+const comVendas = v => function(){ v.apply(this, arguments); const sec = SEC; carregaVendasAdm().then(ok => { if(ok && SEC === sec) v.apply(this, arguments), posVendasAdm(); }); posVendasAdm(); };
+function posVendasAdm(){ if(SEC === "financeiro") blocoVendas(); }
+function blocoVendas(){
+  const h = document.querySelector("#adm-main .head"); if(!h || $("fi-vendas")) return;
+  if(!VENDAS) return h.insertAdjacentHTML("afterend", `<div class="card" id="fi-vendas"><h3>👑 Vendas do CK Life Pro</h3><p class="muted" style="margin:6px 0 0">${SB2() ? "Carregando… (se não aparecer, seu acesso não inclui Monetização ou falta rodar o ajuste do banco)" : "Funciona no app oficial, com o banco conectado."}</p></div>`);
+  const ok = VENDAS.filter(vendaOk), mes = today().slice(0, 7), tot = ok.reduce((s, v) => s + (+v.valor || 0), 0);
+  const ativos = PLU ? Object.values(PLU).filter(x => x.pro && !x.trial && ["kiwify", "apple", "google"].includes(x.provider)).length : 0;
+  const EV = { order_approved: "Compra aprovada", subscription_renewed: "Renovação", subscription_canceled: "Cancelamento", subscription_late: "Atrasada", order_refunded: "Reembolso", chargeback: "Chargeback", pix_created: "Pix gerado", billet_created: "Boleto gerado", order_rejected: "Recusada" };
+  h.insertAdjacentHTML("afterend", `<div class="card" id="fi-vendas"><div class="sec-title"><h3>👑 Vendas do CK Life Pro (Kiwify)</h3><button class="btn btn-line btn-sm" id="fv-csv">Copiar planilha</button></div>
+    <div class="grid g3" style="margin:10px 0">${kpi("Vendido no mês", money(vendasMes(mes)), `${ok.filter(v => String(v.quando).slice(0, 7) === mes).length} venda(s)`)}${kpi("Assinantes Pro ativos", int(ativos))}${kpi("Total vendido", money(tot), `${ok.length} venda(s) no total`)}</div>
+    <div class="tbl"><table><thead><tr><th>Quando</th><th>Aluna</th><th>Plano</th><th>Valor</th><th>Evento</th><th>Pedido</th></tr></thead><tbody>${VENDAS.filter(v => !["pix_created", "billet_created"].includes(v.evento)).slice(0, 100).map(v => `<tr><td class="num">${new Date(v.quando).toLocaleString("pt-BR")}</td><td><b>${esc(v.nome || "Sem conta ainda")}</b><br><small class="muted">${esc(v.email || "")}</small></td><td>${v.plano === "pro_anual" ? "Anual" : v.plano === "pro_mensal" ? "Mensal" : "-"}</td><td class="num">${v.valor != null ? money(v.valor) : "-"}</td><td><span class="st ${vendaOk(v) ? "ok" : v.status === "erro" ? "bad" : "warn"}">${esc(EV[v.evento] || v.evento)}</span>${v.erro ? `<br><small class="muted">${esc(v.erro)}</small>` : ""}</td><td><small>${esc(v.pedido || "")}</small></td></tr>`).join("") || `<tr><td colspan="6" class="empty">Nenhuma venda ainda.</td></tr>`}</tbody></table></div></div>`);
+  $("fv-csv").onclick = () => planilha(["Quando", "Aluna", "E-mail", "Plano", "Valor", "Evento", "Pedido"], VENDAS.map(v => [new Date(v.quando).toLocaleString("pt-BR"), v.nome || "", v.email || "", v.plano || "", v.valor != null ? String(v.valor).replace(".", ",") : "", EV[v.evento] || v.evento, v.pedido || ""]), "Vendas CK Life Pro");
+}
+VIEWS.resumo = comVendas(VIEWS.resumo); VIEWS.alunos = comVendas(VIEWS.alunos); VIEWS.financeiro = comVendas(VIEWS.financeiro);
 VIEWS.monetizacao = vMonetizacao; VIEWS.verificacoes = vVerificacoes; VIEWS.exercicios = vExerciciosVoz; VIEWS.cidades = vCidadesIBGE;
 
 window.ADMIN = { abrir };

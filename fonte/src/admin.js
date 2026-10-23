@@ -116,6 +116,12 @@ function planilha(cab, linhas, nome){
 }
 
 /* ---------- Cálculos de alunos ---------- */
+/* Plano de cada aluna: vem do servidor (assinaturas: Kiwify, teste, cortesia). Sem banco, usa o Premium antigo. */
+let PLU = null, VENDAS = null, PLU_T = 0;
+function catPlano(u){ const s = PLU && PLU[u.id]; if(s){ if(!s.pro) return "gratis"; if(s.trial) return "teste"; return ["kiwify", "apple", "google"].includes(s.provider) ? "pago" : "cortesia"; }
+  if(!F.isPremium(u)) return "gratis"; return u.premium.tipo === "vitalicio" ? "cortesia" : u.premium.tipo; }
+const vendaOk = v => ["order_approved", "subscription_renewed"].includes(v.evento) && v.status === "processado";
+const vendasMes = (m = today().slice(0, 7)) => (VENDAS || []).filter(v => vendaOk(v) && String(v.quando).slice(0, 7) === m).reduce((s, v) => s + (+v.valor || 0), 0);
 function metricasAlunos(cidade){
   const db = DB(), U = db.users.filter(u => !u.soAdmin && (!cidade || +u.cidade === +cidade));
   const ids = new Set(U.map(u => u.id));
@@ -126,9 +132,9 @@ function metricasAlunos(cidade){
   return {
     U, total: U.length, novos7: U.filter(u => u.criado >= addD(today(), -6)).length,
     dau: acc(today()).length, wau: uni(ult(7)), mau: uni(ult(30)),
-    pagos: U.filter(u => F.isPremium(u) && u.premium.tipo === "pago").length,
-    teste: U.filter(u => F.isPremium(u) && u.premium.tipo === "teste").length,
-    cortesia: U.filter(u => F.isPremium(u) && (u.premium.tipo === "cortesia" || u.premium.tipo === "vitalicio")).length,
+    pagos: U.filter(u => catPlano(u) === "pago").length,
+    teste: U.filter(u => catPlano(u) === "teste").length,
+    cortesia: U.filter(u => catPlano(u) === "cortesia").length,
     serie: serie(addD(today(), -29), today(), d => ({ alunos: acc(d).length })),
     r1: ret(1), r7: ret(7), r30: ret(30)
   };
@@ -157,11 +163,11 @@ function vResumo(){
     <div class="grid g4">
       ${kpi("Alunas cadastradas", int(al.total), `+${int(al.novos7)} nos últimos 7 dias`, "alunos", 1)}
       ${kpi("Ativas hoje", int(al.dau), `${int(al.wau)} na semana · ${int(al.mau)} no mês`, "resumo")}
-      ${kpi("Assinantes Premium", int(al.pagos), `${int(al.teste)} em teste grátis · ${int(al.cortesia)} cortesia`, "profissionais")}
+      ${kpi("👑 Assinantes Pro", int(al.pagos), `${int(al.teste)} em teste grátis · ${int(al.cortesia)} cortesia`, "alunos")}
       ${kpi("Anunciantes ativos", int(anAt.length), `${int(ativas)} ${ativas === 1 ? "campanha no ar" : "campanhas no ar"}`, "anunciantes")}
       ${kpi("Impressões", int(t.imp), `Alcance: ${int(t.alc)} alunas`, "campanhas")}
       ${kpi("Cliques", int(t.clk), `Taxa de clique: ${pct(t.clk, t.imp)}`, "metricas")}
-      ${kpi("Receita prevista no mês", money(mrr + al.pagos * (db.config.premiumPreco || 0)), `Anúncios ${money(mrr)} · Premium ${money(al.pagos * (db.config.premiumPreco || 0))}`, "financeiro", 1)}
+      ${kpi("Receita do mês", money(mrr + vendasMes()), `Anúncios ${money(mrr)} · Vendas Pro ${money(vendasMes())}`, "financeiro", 1)}
       ${kpi("Recebido no mês", money(rec), `A receber: ${money(ab)}`, "financeiro")}
     </div>
     <div class="grid g2">
@@ -427,18 +433,21 @@ async function gerarPDF(o){
 
 /* ---------- Alunos ---------- */
 let AF = { q: "", cidade: "", plano: "" };
-const statusPrem = u => { if(!u.premium) return ["Gratuito", "off"]; if(u.premium.tipo === "vitalicio") return ["Vitalício", "ok"]; if(u.premium.ate < today()) return ["Gratuito", "off"]; return [{ pago: "Premium", teste: "Teste grátis", cortesia: "Cortesia" }[u.premium.tipo] + " até " + brD(u.premium.ate).slice(0, 5), u.premium.tipo === "teste" ? "warn" : "ok"]; };
+const statusPrem = u => { const s = PLU && PLU[u.id]; if(s && s.pro){ const ate = s.fim ? " até " + brD(String(s.fim).slice(0, 10)).slice(0, 5) : "";
+    if(s.trial) return ["Teste grátis" + ate, "warn"]; return [(["kiwify", "apple", "google"].includes(s.provider) ? "👑 Pro " + (s.plano === "pro_anual" ? "anual" : "mensal") : "Cortesia") + ate, "ok"]; }
+  if(s && !s.pro) return ["Gratuito", "off"];
+  if(!u.premium) return ["Gratuito", "off"]; if(u.premium.tipo === "vitalicio") return ["Vitalício", "ok"]; if(u.premium.ate < today()) return ["Gratuito", "off"]; return [{ pago: "Premium", teste: "Teste grátis", cortesia: "Cortesia" }[u.premium.tipo] + " até " + brD(u.premium.ate).slice(0, 5), u.premium.tipo === "teste" ? "warn" : "ok"]; };
 function vAlunos(){
   const db = DB(), al = metricasAlunos(AF.cidade);
   const imps = {}; db.eventos.forEach(e => { if(e.t === "imp") imps[e.u] = (imps[e.u] || 0) + 1; });
   let L = al.U;
   if(AF.q){ const q = AF.q.toLowerCase(); L = L.filter(u => (u.nome + " " + u.email + " " + (u.whats || "")).toLowerCase().includes(q)); }
-  if(AF.plano) L = L.filter(u => AF.plano === "gratis" ? !F.isPremium(u) : F.isPremium(u) && (AF.plano === "cortesia" ? ["cortesia","vitalicio"].includes(u.premium.tipo) : u.premium.tipo === AF.plano));
+  if(AF.plano) L = L.filter(u => catPlano(u) === AF.plano);
   L = L.slice().sort((a, b) => (b.criado || "").localeCompare(a.criado || ""));
   $("adm-main").innerHTML = `
     <div class="head"><div><h1>Alunas</h1><p class="muted">Quem usa o app, de onde é e com que frequência volta.</p></div><div class="toolbar"><button class="btn btn-accent btn-sm needs-edit" id="al-prem">Dar Premium cortesia</button><button class="btn btn-line btn-sm" id="al-csv">Copiar planilha</button></div></div>
     <div class="toolbar"><select class="input" id="al-c">${optCid(AF.cidade, true)}</select></div>
-    <div class="grid g4">${kpi("Cadastrados", int(al.total), `+${int(al.novos7)} nos últimos 7 dias`)}${kpi("Ativos", int(al.dau), `hoje · ${int(al.wau)} na semana · ${int(al.mau)} no mês`)}${kpi("Premium pago", int(al.pagos))}${kpi("Em teste grátis", int(al.teste), `${int(al.cortesia)} com cortesia`)}</div>
+    <div class="grid g4">${kpi("Cadastrados", int(al.total), `+${int(al.novos7)} nos últimos 7 dias`)}${kpi("Ativos", int(al.dau), `hoje · ${int(al.wau)} na semana · ${int(al.mau)} no mês`)}${kpi("👑 Pro pago", int(al.pagos))}${kpi("Em teste grátis", int(al.teste), `${int(al.cortesia)} com cortesia`)}</div>
     <div class="card"><h3>Alunas ativas por dia</h3>${barChart(al.serie, "alunos", "alunas")}</div>
     <div class="grid g3">
       <div class="card"><h3>Por cidade</h3>${hbars(contaPor(al.U, u => cidNome(u.cidade) || "Sem cidade"))}</div>
@@ -446,7 +455,7 @@ function vAlunos(){
       <div class="card"><h3>Por gênero</h3>${hbars(contaPor(al.U, u => u.genero || "outro", { feminino: "Feminino", masculino: "Masculino", outro: "Outro" }))}</div>
     </div>
     <div class="card"><h3>Lista de alunas <span class="muted num" style="font-size:16px">(${L.length})</span></h3>
-      <div class="toolbar" style="margin-bottom:10px"><input class="input" id="al-q" placeholder="Buscar por nome, e-mail ou WhatsApp" value="${esc(AF.q)}"><select class="input" id="al-p"><option value="">Todos os planos</option><option value="pago" ${AF.plano === "pago" ? "selected" : ""}>Premium pago</option><option value="teste" ${AF.plano === "teste" ? "selected" : ""}>Teste grátis</option><option value="cortesia" ${AF.plano === "cortesia" ? "selected" : ""}>Cortesia</option><option value="gratis" ${AF.plano === "gratis" ? "selected" : ""}>Gratuito</option></select></div>
+      <div class="toolbar" style="margin-bottom:10px"><input class="input" id="al-q" placeholder="Buscar por nome, e-mail ou WhatsApp" value="${esc(AF.q)}"><select class="input" id="al-p"><option value="">Todos os planos</option><option value="pago" ${AF.plano === "pago" ? "selected" : ""}>Pro pago</option><option value="teste" ${AF.plano === "teste" ? "selected" : ""}>Teste grátis</option><option value="cortesia" ${AF.plano === "cortesia" ? "selected" : ""}>Cortesia</option><option value="gratis" ${AF.plano === "gratis" ? "selected" : ""}>Gratuito</option></select></div>
       <div class="tbl"><table><thead><tr><th>Nome</th><th>WhatsApp</th><th>E-mail</th><th>Cidade</th><th>Idade</th><th>Gênero</th><th>Cadastro</th><th>Plano</th><th>Treinos</th><th>Anúncios</th><th></th></tr></thead><tbody>
         ${L.slice(0, 300).map(u => { const [s, k] = statusPrem(u); return `<tr><td><b>${esc(u.nome)}</b>${ex(u)}${u.admin ? ` <span class="st ok">admin</span>` : ""}${u.bloqueado ? ` <span class="st bad">pausado</span>` : ""}</td><td>${esc(u.whats || "")}</td><td>${esc(u.email)}</td><td>${esc(cidNome(u.cidade))}</td><td class="num">${F.idade(u.nasc) ?? "-"}</td><td>${GEN[u.genero] || "-"}</td><td class="num">${brD(u.criado)}</td><td><span class="st ${k}">${s}</span></td><td class="num">${(u.treinos || []).length}</td><td class="num">${int(imps[u.id] || 0)}</td><td><button class="btn btn-line btn-sm needs-edit" data-ed="${u.id}">Editar</button></td></tr>`; }).join("") || `<tr><td colspan="11" class="empty">Nenhuma aluna encontrada.</td></tr>`}
       </tbody></table></div></div>`;

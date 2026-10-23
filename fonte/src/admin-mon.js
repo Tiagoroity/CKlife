@@ -213,4 +213,23 @@ formPerm = function(u){ formPermMon(u); const box = $("mbox").querySelector("[da
   box.parentNode.insertAdjacentHTML("beforeend", `<button class="btn btn-line btn-sm" data-papel3="financeiro">Financeiro</button><button class="btn btn-line btn-sm" data-papel3="verificacao">Revisor de verificação</button><button class="btn btn-line btn-sm" data-papel3="conteudo">Conteúdo e exercícios</button>`);
   const P3 = { financeiro: { monetizacao: "editar", metricas: "ver", financeiro: "ver" }, verificacao: { verificacoes: "editar" }, conteudo: { exercicios: "editar", receitas: "editar", figurinhas: "editar", avisos: "editar" } };
   $("mbox").querySelectorAll("[data-papel3]").forEach(b => b.onclick = () => { const p = P3[b.dataset.papel3]; $("pm-t").checked = false; $("pm-t").onchange(); $("pm-g").querySelectorAll("select").forEach(s => s.value = p[s.dataset.k] || ""); toast("Papel aplicado. Clique em Salvar permissões."); }); };
+/* ---------- Vendas e plano das alunas nas telas antigas (Resumo, Alunas, Financeiro) ---------- */
+async function carregaVendasAdm(forca){
+  if(!SB2() || (!forca && Date.now() - PLU_T < 60000)) return false; PLU_T = Date.now();
+  try{ const [a, b] = await Promise.all([SB2().rpc("admin_planos_usuarias"), SB2().rpc("admin_vendas", { p_limite: 300 })]); if(!a.error && a.data) PLU = a.data; if(!b.error && b.data) VENDAS = b.data; return true; }catch(e){ return false; }
+}
+const comVendas = v => function(){ v.apply(this, arguments); const sec = SEC; carregaVendasAdm().then(ok => { if(ok && SEC === sec) v.apply(this, arguments), posVendasAdm(); }); posVendasAdm(); };
+function posVendasAdm(){ if(SEC === "financeiro") blocoVendas(); }
+function blocoVendas(){
+  const h = document.querySelector("#adm-main .head"); if(!h || $("fi-vendas")) return;
+  if(!VENDAS) return h.insertAdjacentHTML("afterend", `<div class="card" id="fi-vendas"><h3>👑 Vendas do CK Life Pro</h3><p class="muted" style="margin:6px 0 0">${SB2() ? "Carregando… (se não aparecer, seu acesso não inclui Monetização ou falta rodar o ajuste do banco)" : "Funciona no app oficial, com o banco conectado."}</p></div>`);
+  const ok = VENDAS.filter(vendaOk), mes = today().slice(0, 7), tot = ok.reduce((s, v) => s + (+v.valor || 0), 0);
+  const ativos = PLU ? Object.values(PLU).filter(x => x.pro && !x.trial && ["kiwify", "apple", "google"].includes(x.provider)).length : 0;
+  const EV = { order_approved: "Compra aprovada", subscription_renewed: "Renovação", subscription_canceled: "Cancelamento", subscription_late: "Atrasada", order_refunded: "Reembolso", chargeback: "Chargeback", pix_created: "Pix gerado", billet_created: "Boleto gerado", order_rejected: "Recusada" };
+  h.insertAdjacentHTML("afterend", `<div class="card" id="fi-vendas"><div class="sec-title"><h3>👑 Vendas do CK Life Pro (Kiwify)</h3><button class="btn btn-line btn-sm" id="fv-csv">Copiar planilha</button></div>
+    <div class="grid g3" style="margin:10px 0">${kpi("Vendido no mês", money(vendasMes(mes)), `${ok.filter(v => String(v.quando).slice(0, 7) === mes).length} venda(s)`)}${kpi("Assinantes Pro ativos", int(ativos))}${kpi("Total vendido", money(tot), `${ok.length} venda(s) no total`)}</div>
+    <div class="tbl"><table><thead><tr><th>Quando</th><th>Aluna</th><th>Plano</th><th>Valor</th><th>Evento</th><th>Pedido</th></tr></thead><tbody>${VENDAS.filter(v => !["pix_created", "billet_created"].includes(v.evento)).slice(0, 100).map(v => `<tr><td class="num">${new Date(v.quando).toLocaleString("pt-BR")}</td><td><b>${esc(v.nome || "Sem conta ainda")}</b><br><small class="muted">${esc(v.email || "")}</small></td><td>${v.plano === "pro_anual" ? "Anual" : v.plano === "pro_mensal" ? "Mensal" : "-"}</td><td class="num">${v.valor != null ? money(v.valor) : "-"}</td><td><span class="st ${vendaOk(v) ? "ok" : v.status === "erro" ? "bad" : "warn"}">${esc(EV[v.evento] || v.evento)}</span>${v.erro ? `<br><small class="muted">${esc(v.erro)}</small>` : ""}</td><td><small>${esc(v.pedido || "")}</small></td></tr>`).join("") || `<tr><td colspan="6" class="empty">Nenhuma venda ainda.</td></tr>`}</tbody></table></div></div>`);
+  $("fv-csv").onclick = () => planilha(["Quando", "Aluna", "E-mail", "Plano", "Valor", "Evento", "Pedido"], VENDAS.map(v => [new Date(v.quando).toLocaleString("pt-BR"), v.nome || "", v.email || "", v.plano || "", v.valor != null ? String(v.valor).replace(".", ",") : "", EV[v.evento] || v.evento, v.pedido || ""]), "Vendas CK Life Pro");
+}
+VIEWS.resumo = comVendas(VIEWS.resumo); VIEWS.alunos = comVendas(VIEWS.alunos); VIEWS.financeiro = comVendas(VIEWS.financeiro);
 VIEWS.monetizacao = vMonetizacao; VIEWS.verificacoes = vVerificacoes; VIEWS.exercicios = vExerciciosVoz; VIEWS.cidades = vCidadesIBGE;

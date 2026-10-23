@@ -104,7 +104,7 @@ document.addEventListener("click", async e => { const b = e.target.closest && e.
 const temStory = u => STO.grupos.some(g => g.u === u && u !== (NU && NU.uid));
 const nomeP = (u, fb) => (PERFIS.get(u) || {}).nome || fb || "Aluna";
 const userP = u => (PERFIS.get(u) || {}).username || "";
-const avU = (u, nomeFb, fotoFb, cls) => { const p = PERFIS.get(u) || {}, f = p.foto_mini || fotoFb, n = p.nome || nomeFb; return `<span class="pav ${cls || ""}">${f ? `<img src="${esc(f)}" alt="" draggable="false">` : esc(String(n || "?").trim()[0] || "?").toUpperCase()}</span>`; };
+const avU = (u, nomeFb, fotoFb, cls) => { const p = PERFIS.get(u) || {}, f = p.foto_mini || fotoFb, n = p.nome || nomeFb; return `<span class="pav ${cls || ""}${coroaDe(u) ? " cr" : ""}">${f ? `<img src="${esc(f)}" alt="" draggable="false">` : esc(String(n || "?").trim()[0] || "?").toUpperCase()}</span>`; };
 
 /* ---------- Avisos discretos no topo ---------- */
 function aviso(html, onAbrir){
@@ -159,7 +159,7 @@ async function abrirPerfil(u){
   const cid = p.mostrar_cidade && p.cidade ? xcidNome(p.cidade) : "";
   sheet(meu ? "Meu perfil" : "Perfil", `<div class="so-perfil">
     <div class="so-capa priv" ${p.capa ? `data-m="${esc(p.capa)}"` : ""}></div>
-    <div class="so-ph"><span class="so-av priv" ${p.foto ? `data-m="${esc(p.foto)}"` : ""}>${p.foto_mini ? `<img src="${esc(p.foto_mini)}" alt="" draggable="false">` : esc((p.nome || "?")[0].toUpperCase())}</span></div>
+    <div class="so-ph"><span class="so-av priv${coroaDe(p.user_id) ? " cr" : ""}" ${p.foto ? `data-m="${esc(p.foto)}"` : ""}>${p.foto_mini ? `<img src="${esc(p.foto_mini)}" alt="" draggable="false">` : esc((p.nome || "?")[0].toUpperCase())}</span></div>
     <div class="so-id"><h2>${esc(p.nome)}${selosP(p.user_id)}</h2><p class="muted">@${esc(p.username)}${p.privado ? ` · ${ic("lock", 13)} privado` : ""}${c && c.me_segue && !meu ? ` · <span class="so-segue">segue você</span>` : ""}</p>
       ${p.bio ? `<p class="so-bio">${esc(p.bio)}</p>` : ""}
       <div class="xp-tags" style="justify-content:center">${cid ? `<i class="xp-tag">${ic("pin", 12)} ${esc(cid)}</i>` : ""}${p.mostrar_objetivo && p.objetivo ? `<i class="xp-tag ok">${esc(p.objetivo)}</i>` : ""}${(p.interesses || []).slice(0, 6).map(i => `<i class="xp-tag">${esc(i)}</i>`).join("")}</div></div>

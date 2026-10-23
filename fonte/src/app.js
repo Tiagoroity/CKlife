@@ -674,7 +674,11 @@ function convidar(){
   else window.open("https://wa.me/?text=" + encodeURIComponent(txt + " " + url), "_blank", "noopener");
 }
 const linkSuporte = () => { const d = String(DB.config.suporte || "").replace(/\D/g, ""); return d.length >= 10 ? "https://wa.me/" + (d.length <= 11 ? "55" + d : d) + "?text=" + encodeURIComponent("Oi! Preciso de ajuda com o CK Life.") : ""; };
-function atualizaTopo(){ const a = $("top-av"); if(!a || !ME) return; a.innerHTML = fotoAv(ME); a.onclick = () => tab("perfil"); }
+/* 👑 em cima da foto: só quem PAGA o Pro (teste grátis não ganha coroa). Vem do servidor (perfis.pro_ate / meu_plano), nunca do app. */
+function coroaDe(u){ try{ const e = window.__ENT && window.__ENT.d;
+  if(u === "eu" || (ME && u === ME.id) || (typeof NU !== "undefined" && NU.uid && u === NU.uid)){ if(e) return !!(e.pro && !e.trial); u = NU.uid; }
+  const p = typeof PERFIS !== "undefined" ? PERFIS.get(u) : null; return !!(p && p.pro_ate && new Date(p.pro_ate) > new Date()); }catch(x){ return false; } }
+function atualizaTopo(){ const a = $("top-av"); if(!a || !ME) return; a.innerHTML = fotoAv(ME); a.classList.toggle("cr", coroaDe("eu")); a.onclick = () => tab("perfil"); }
 const DICAS_DIA = ["Beba um copo de água antes de cada refeição. Ajuda na saciedade.", "Durma de 7 a 8 horas: é no descanso que o músculo se recupera.", "Proteína em todas as refeições ajuda a manter a massa magra.", "Alongue 5 minutos depois do treino para soltar o corpo.", "Constância vence intensidade. Treinar 3x por semana já transforma.", "Prepare as marmitas no domingo e economize tempo na semana.", "Respire fundo e solte o ar na hora do esforço.", "Caminhar 20 minutos por dia já melhora o fôlego e o humor."];
 const doDia = L => L[Math.floor(Date.now() / 864e5) % L.length];
 const comeuAlgo = () => Object.values(ME.diario || {}).some(d => REFS.some(([k]) => (d[k] || []).length));
@@ -735,7 +739,7 @@ function rInicio(){
   const nivelN = { Iniciante: "Iniciante", "Intermediário": "Intermediário", Todos: "Todos os níveis" }[p.nivel] || p.nivel;
   const obj = objById(ME.perfil.objetivo), rd = receitaDoDia();
   $("t-inicio").innerHTML = `
-    <div class="capa"><img class="capa-foto" src="img/modelo.jpg" alt="" onerror="this.remove()"><button class="avatar" id="h-av" aria-label="Perfil">${fotoAv(ME)}</button><div class="capa-tx"><span class="hi">${saudacao()}, ${esc(ME.nome.split(" ")[0])} 👋</span><h1>Vamos evoluir hoje?</h1><p>${hojeFeito ? "Treino de hoje feito. " + frase() : "Seu treino está pronto."}</p></div></div>
+    <div class="capa"><img class="capa-foto" src="img/modelo.jpg" alt="" onerror="this.remove()"><button class="avatar${coroaDe("eu") ? " cr" : ""}" id="h-av" aria-label="Perfil">${fotoAv(ME)}</button><div class="capa-tx"><span class="hi">${saudacao()}, ${esc(ME.nome.split(" ")[0])} 👋</span><h1>Vamos evoluir hoje?</h1><p>${hojeFeito ? "Treino de hoje feito. " + frase() : "Seu treino está pronto."}</p></div></div>
     ${hojeFeito ? `<div class="today done"><div><span class="eyebrow">Treino de hoje concluído</span><h2>Você está mais perto do que ontem.</h2><p>${ultimo ? `${esc(ultimo.nome)} · ${ultimo.min} min · ${int(ultimo.kcal)} kcal` : ""}</p><div class="meta" style="margin-bottom:10px"><span>${ic("flame", 14)} ${s} ${s === 1 ? "dia seguido" : "dias seguidos"}</span></div><button class="btn btn-sm" id="h-extra">Quero treinar mais</button></div></div>`
     : `<div class="today"><div><span class="eyebrow">Treino de hoje</span><h2>${esc(T.nome)}</h2><p>Semana ${semana()} de ${p.semanas}</p>
         <div class="meta"><span>${ic("clock", 14)} ${minTreino(T)} min</span><span>${ic("bolt", 14)} ${nivelN}</span><span>${ic("flame", 14)} ~${kcalTreino(T)} kcal</span></div>
@@ -1441,7 +1445,7 @@ function rPerfil(){
   const profs = (DB.profissionais || []).filter(x => x.ativo).sort((a, b) => (a.ordem || 0) - (b.ordem || 0));
   const th = document.documentElement.dataset.theme || "light", nv = nivelAluna((ME.treinos || []).length);
   $("t-perfil").innerHTML = `
-    ${capa("", "", `<div class="hello" style="gap:14px"><button class="avatar avedit" id="p-foto" aria-label="Trocar foto do perfil" style="width:72px;height:72px;font-size:28px">${fotoAv(ME)}<i class="avcam">${ic("plus", 13, 3)}</i></button><div><h2 style="color:#fff">${esc(ME.nome)}</h2><div class="k" style="color:rgba(245,248,239,.8)">${esc(ME.email)}</div><span class="nivel-chip">${ic("star", 13)} Nível ${nv.nome}</span></div></div>`, "img/ex-panturrilha.jpg")}
+    ${capa("", "", `<div class="hello" style="gap:14px"><button class="avatar avedit${coroaDe("eu") ? " cr" : ""}" id="p-foto" aria-label="Trocar foto do perfil" style="width:72px;height:72px;font-size:28px">${fotoAv(ME)}<i class="avcam">${ic("plus", 13, 3)}</i></button><div><h2 style="color:#fff">${esc(ME.nome)}</h2><div class="k" style="color:rgba(245,248,239,.8)">${esc(ME.email)}</div><span class="nivel-chip">${ic("star", 13)} Nível ${nv.nome}</span></div></div>`, "img/ex-panturrilha.jpg")}
     <div class="pstats"><div><b class="num">${int((ME.treinos || []).length)}</b><span>treinos</span></div><div><b class="num">${int((ME.treinos || []).reduce((a, t) => a + (t.min || 0), 0))}</b><span>minutos</span></div><div><b class="num">${streak()}</b><span>${streak() === 1 ? "dia seguido" : "dias seguidos"}</span></div></div>
     ${nv.prox ? `<div class="card nivel-card"><div class="sec-title"><h3 style="font-size:16px">Próximo nível: ${nv.prox[1]}</h3><span class="muted num" style="font-size:13px">faltam ${nv.falta} ${nv.falta === 1 ? "treino" : "treinos"}</span></div><div class="prog" style="margin-top:10px"><i style="width:${nv.pct}%"></i></div><p class="hint" style="margin:8px 0 0">Membro desde ${brD(ME.criado || today())}</p></div>` : `<div class="card nivel-card"><h3 style="font-size:16px">Você chegou ao nível máximo 🏆</h3><p class="hint" style="margin:6px 0 0">Membro desde ${brD(ME.criado || today())}</p></div>`}
     ${perfilXP()}

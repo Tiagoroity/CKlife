@@ -1700,3 +1700,13 @@ ul.xp-lista:not(:has(svg)) li::before{content:"•";color:var(--accent);font-wei
 .vf-grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}.vf-it{display:grid;gap:6px}
 .vf-foto{aspect-ratio:3/4;border-radius:14px;overflow:hidden;background:var(--surface-2);display:grid;place-items:center}.vf-foto img{width:100%;height:100%;object-fit:cover}
 .pexpl{overflow-x:hidden}.pex-top{overflow:hidden;width:100%}.pex-top img{max-width:100%}.pex-c{min-width:0;max-width:100%;box-sizing:border-box}.ex-txt{overflow-wrap:anywhere;min-width:0}.ex-bt{grid-template-columns:minmax(0,1fr) minmax(0,1.4fr)}
+
+/* 👑 coroa em cima da foto (CK Life Pro pago) */
+.cr{overflow:visible!important;position:relative}
+.capa .hello .avatar.cr{position:relative}
+.cr>img,.cr>.avf{border-radius:50%}
+.cr::after{content:"👑";position:absolute;top:-.62em;right:-.28em;font-size:max(14px,.95em);line-height:1;transform:rotate(22deg);filter:drop-shadow(0 1px 1.5px rgba(0,0,0,.35));pointer-events:none;z-index:4}
+.so-av.cr::after{font-size:34px;top:-18px;right:-8px}
+.pl-pro{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:1px solid rgba(201,162,39,.45);background:linear-gradient(135deg,rgba(201,162,39,.16),rgba(201,162,39,.05));border-radius:16px;padding:11px 14px;color:var(--ink);font:inherit;cursor:pointer}
+.pl-pro b{font-size:14.5px}.pl-pro small{display:block;color:var(--muted);font-size:12.5px}.pl-pro .pl-cr{font-size:24px}
+.pl-card.on.pago{box-shadow:0 0 0 2px #D4AF37,var(--shadow-sm)}.pl-card.on.pago .eyebrow{color:#F3D77A}

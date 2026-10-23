@@ -34,7 +34,9 @@ const filtroLivre = k => pode("filtros_todos") || (DB.config.filtrosFree || ["or
 
 /* ---------- paywall (camada própria, por cima de qualquer tela) ---------- */
 const BENEF = [["👑", "Programas e treinos completos"], ["🥗", "Nutrição completa"], ["🌸", "Ciclo inteligente"], ["📊", "Evolução avançada"], ["✨", "Stickers e recursos criativos"], ["🎁", "Clube CK Pro"], ["✓", "Direito a pedir verificação"], ["🚫", "Sem anúncios"]];
+const pagou = () => !!(ENT.d && ENT.d.pro && !ENT.d.trial);
 async function paywall(contexto, preview){
+  if(pagou()) return sheet("👑 Você é CK Life Pro", `<div class="card"><b>Sua assinatura está ativa 💚</b><p class="hint" style="margin:6px 0 0">${ENT.d.fim ? "Pro até " + brD(String(ENT.d.fim).slice(0, 10)) + ". " : ""}Todos os recursos Pro estão liberados para você.</p></div>`);
   registraEvento("paywall_viewed", { contexto: contexto || "geral" });
   if(!souPro() || emTrial()){ try{ const o = await NU.sb.rpc("oferta_ativar", { p_contexto: contexto || "paywall" }); if(o && !o.error && o.data) { ENT.d = { ...(ENT.d || {}), oferta: o.data }; } }catch(e){} }
   const P = await carregaPlanos(), of = ENT.d && ENT.d.oferta, men = P.find(p => p.id === "pro_mensal") || {}, anu = P.find(p => p.id === "pro_anual") || {};
@@ -102,13 +104,14 @@ const rEvolucaoP = rEvolucao; rEvolucao = function(){ rEvolucaoP.apply(this, arg
   document.querySelectorAll("#t-evolucao [data-pw]").forEach(b => b.onclick = () => exigePro("graficos_avancados", "grafico_pro")); };
 /* fim do treino (Free): pode aparecer uma condição, nunca no meio do treino */
 const fimTreinoPl = fimTreino; fimTreino = function(parcial){ fimTreinoPl.apply(this, arguments); registraEvento("exercise_completed", { treino: PL && PL.T ? PL.T.nome : null });
-  if(parcial || souPro() || !NU.sb) return;
+  if(parcial || (souPro() && !emTrial()) || !NU.sb) return;
   NU.sb.rpc("oferta_ativar", { p_contexto: "treino_concluido" }).then(r => { const o = r && r.data; if(!o) return; ENT.d = { ...(ENT.d || {}), oferta: o }; const ok = $("fim-ok"); if(!ok || $("pw-fim")) return;
     ok.insertAdjacentHTML("afterend", `<button class="pw-mini" id="pw-fim"><span>👑 ${esc(o.titulo)}</span><small>${esc(o.subtitulo || "Ver condição especial")}</small></button>`); $("pw-fim").onclick = () => { NU.sb.rpc("oferta_evento", { p_id: o.id, p_tipo: "clique" }); registraEvento("offer_clicked", { campanha: o.campanha }); paywall("treino_concluido"); }; }, () => {}); };
 
 /* ---------- Início e Perfil: teste, último dia, oferta ---------- */
 function blocoPlano(onde){
   const d = ENT.d; if(!d) return "";
+  if(d.pro && !d.trial){ if(onde !== "inicio") return ""; return `<div class="pl-bloco"><button class="pl-pro" data-pro="1"><span class="pl-cr">👑</span><span><b>Você é CK Life Pro</b><small>${d.fim ? "Assinatura ativa até " + brD(String(d.fim).slice(0, 10)) : "Assinatura ativa"} · tudo liberado</small></span></button></div>`; }
   const of = d.oferta, dias = d.dias_restantes;
   let h = "";
   if(d.trial && dias != null) h += dias <= 1 ? `<div class="pl-ultimo"><b>Seu último dia de CK Life Pro 💚</b><p>Amanhã você continua usando o CK Life gratuitamente. Você <b>não perde</b> conta, amigas, mensagens, posts, Stories, conquistas, histórico, medidas, progresso, fotos e registros. Só os recursos Pro ficam bloqueados.</p><button class="btn btn-accent btn-sm" data-pw="1">Continuar com o Pro</button></div>`
@@ -120,12 +123,12 @@ function blocoPlano(onde){
 }
 setInterval(() => document.querySelectorAll(".pl-cont[data-fim]").forEach(e => { const f = new Date(e.dataset.fim).getTime() - agoraServ(); e.textContent = f <= 0 ? "Condição encerrada" : f > 864e5 && f < 864e5 * 2 ? "Sua condição especial termina amanhã." : "Termina em " + tempoRest(e.dataset.fim); }), 1000);
 const rInicioPl = rInicio; rInicio = function(){ rInicioPl.apply(this, arguments); const b = blocoPlano("inicio"), alvo = document.querySelector("#t-inicio .xe-dia"); if(b && alvo) alvo.insertAdjacentHTML("afterbegin", b);
-  document.querySelectorAll("#t-inicio [data-pw]").forEach(x => x.onclick = () => paywall("paywall"));
+  document.querySelectorAll("#t-inicio [data-pw]").forEach(x => x.onclick = () => paywall("paywall")); document.querySelectorAll("#t-inicio [data-pro]").forEach(x => x.onclick = () => tab("perfil"));
   const rec = document.querySelector("#t-inicio .xe-rec"); if(rec && !pode("sugestoes_energia")){ const bt = rec.querySelector("button"); if(bt){ bt.innerHTML = "👑 Treino adaptado à sua energia"; bt.onclick = e => { e.stopPropagation(); exigePro("sugestoes_energia", "recurso_pro"); }; } }
   anunciosInicio(); };
 const rPerfilPl = rPerfil; rPerfil = function(){ rPerfilPl.apply(this, arguments); const el = $("t-perfil"); if(!el || !ENT.d) return;
   const card = [...el.querySelectorAll(".today")].find(c => /Premium|anúncios/i.test(c.textContent)), d = ENT.d;
-  const html = `<div class="pl-card ${d.pro ? "on" : ""}"><span class="eyebrow">${d.pro ? (d.trial ? "👑 CK Life Pro · teste grátis" : "👑 CK Life Pro") : "CK Life Free"}</span>
+  const html = `<div class="pl-card ${d.pro ? "on" : ""}${d.pro && !d.trial ? " pago" : ""}"><span class="eyebrow">${d.pro ? (d.trial ? "👑 CK Life Pro · teste grátis" : "👑 CK Life Pro · assinante" + (d.plano === "pro_anual" ? " anual" : d.plano === "pro_mensal" ? " mensal" : "")) : "CK Life Free"}</span>
     <h2>${d.pro ? (d.trial ? `${d.dias_restantes} ${d.dias_restantes === 1 ? "dia" : "dias"} de Pro grátis` : d.fim ? `Pro até ${brD(String(d.fim).slice(0, 10))}` : "Pro ativo") : "Treino, comunidade e conquistas grátis"}</h2>
     <p>${d.pro ? (d.status === "canceled" ? "Assinatura cancelada: você continua Pro até o fim do período." : "Programas completos, nutrição, ciclo inteligente e sem anúncios.") : "Conheça o Pro: programas completos, nutrição, ciclo inteligente e sem anúncios."}</p>
     ${!d.pro || d.trial ? `<button class="btn btn-accent" data-pw="1">${d.oferta ? "Ver condição especial" : "Conhecer o CK Life Pro"}</button>` : ""}</div>${blocoPlano("perfil").replace(/pl-chip/g, "pl-chip pl-oculto")}`;
@@ -168,8 +171,11 @@ function anunciosInicio(){}
 const desenhaFeedPl = desenhaFeed; desenhaFeed = function(){ const r = desenhaFeedPl.apply(this, arguments); const ps = document.querySelectorAll("#feed > .post"); if(ps.length >= 6 && !document.querySelector("#t-juntas .ad-card")){ const h = anuncioHtml("feed"); if(h) ps[5].insertAdjacentHTML("afterend", h); } return r; };
 const rExplorarPl = rExplorar; rExplorar = function(){ rExplorarPl.apply(this, arguments); const b = $("xp-body"); if(b && !document.querySelector("#t-explorar .ad-card")){ const h = anuncioHtml("explorar"); if(h) b.insertAdjacentHTML("beforebegin", h); } };
 
+/* ---------- voltou para o app (ex.: depois de pagar): confere o plano de novo ---------- */
+document.addEventListener("visibilitychange", async () => { if(document.hidden || !(NU.ativo && NU.sb && NU.uid)) return; const antes = pagou(); await carregaPlano(true);
+  if(pagou() && ENT.d) ENT.d.oferta = null; if(antes !== pagou()){ if(pagou()){ $("pw") && $("pw").remove(); toast("👑 Bem-vinda ao CK Life Pro!"); } if(!$("v-app").hidden) rerender(); atualizaTopo(); } });
 /* ---------- carga inicial ---------- */
 { let n = 0; const t = setInterval(async () => { if(!(NU.ativo && NU.sb && NU.uid)){ if(++n > 60) clearInterval(t); return; } clearInterval(t);
-  await carregaPlano(true); if(emTrial() && NU.sb){ try{ const r = await NU.sb.rpc("oferta_ativar", { p_contexto: null }); if(r && r.data) ENT.d.oferta = r.data; }catch(e){} }
+  await carregaPlano(true); if(pagou()) ENT.d.oferta = null; if(emTrial() && NU.sb){ try{ const r = await NU.sb.rpc("oferta_ativar", { p_contexto: null }); if(r && r.data) ENT.d.oferta = r.data; }catch(e){} }
   try{ const r = await NU.sb.from("app_config").select("chave,valor").in("chave", ["treino_voz"]); (r.data || []).forEach(c => { if(c.chave === "treino_voz") ENT.cfgVoz = c.valor; }); }catch(e){}
-  if(ENT.d && !$("v-app").hidden) rerender(); }, 1500); }
+  if(ENT.d && !$("v-app").hidden){ rerender(); atualizaTopo(); } }, 1500); }
