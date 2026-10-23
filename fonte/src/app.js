@@ -269,6 +269,7 @@ $("f-cad").addEventListener("submit", async e => {
   if($("c-senha").value !== $("c-senha2").value) return lmsg("As duas senhas estão diferentes.");
   if(DB.users.some(u => u.email === email)) return lmsg("Já existe uma conta com esse e-mail. Toque em Já tenho conta.");
   if(!v("c-nasc")) return lmsg("Informe sua data de nascimento.");
+  { const i = idade(v("c-nasc")), min = +(DB.config.idadeMinima || 18); if(i === null || i < min) return lmsg(`O CK Life é para maiores de ${min} anos.`); if(i > 110) return lmsg("Confira sua data de nascimento."); }
   const primeiro = false;
   let novoId = uid();
   if(NU.ativo){
