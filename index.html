@@ -903,6 +903,154 @@ main.adm .msg-ok{border-radius:16px}
 .field label{overflow-wrap:anywhere}
 .row4{grid-template-columns:repeat(4,minmax(0,1fr))!important}
 @media (max-width:520px){.row4{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+/* ===== Modo escuro: botões e etiquetas bem legíveis ===== */
+.today .btn{color:#0E3D32}
+:root[data-theme="dark"] .btn-accent,:root[data-theme="dark"] .chip[aria-pressed="true"]{background:#4ECB86;border-color:#4ECB86;color:#04170F;box-shadow:0 10px 24px -14px rgba(78,203,134,.6)}
+:root[data-theme="dark"] .btn-accent:active{background:#A8E6B4;color:#04170F}
+:root[data-theme="dark"] .btn-accent svg,:root[data-theme="dark"] .chip[aria-pressed="true"] svg{color:#04170F}
+:root[data-theme="dark"] .tag.c{background:color-mix(in srgb,var(--pc) 28%,transparent);color:color-mix(in srgb,var(--pc) 40%,#fff)}
+:root[data-theme="dark"] .tag.g{background:#1F5A45;color:#C9F2D3}
+:root[data-theme="dark"] .btn-line{border-color:#3A6F5C;color:#F5F8EF}
+:root[data-theme="dark"] .btn-soft{background:#1E4C3E;color:#F5F8EF}
+:root[data-theme="dark"] .link{color:#A8E6B4}
+.tag.c{color:color-mix(in srgb,var(--pc) 78%,#000)}
+
+/* ===== Perfil com foto ===== */
+.avf{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block}
+.avedit{position:relative;overflow:visible!important;padding:0;cursor:pointer;border:3px solid rgba(255,255,255,.35)}
+.avedit .avf{border-radius:50%}
+.avcam{position:absolute;right:-2px;bottom:-2px;width:26px;height:26px;border-radius:50%;background:#3DDC6E;color:#062016;display:grid;place-items:center;border:3px solid #0E3D32;font-style:normal}
+.hav{width:36px;height:36px;border-radius:50%;border:2px solid var(--surface-3);background:var(--grad);color:#fff;font-weight:800;font-size:15px;display:grid;place-items:center;overflow:hidden;padding:0;flex:0 0 auto;cursor:pointer}
+.nivel-chip{display:inline-flex;align-items:center;gap:5px;margin-top:8px;font-size:12.5px;font-weight:800;background:rgba(61,220,110,.2);color:#C9F2D3;border-radius:999px;padding:4px 10px}
+.pstats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.pstats div{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px 10px;text-align:center;box-shadow:var(--shadow-sm)}
+.pstats b{display:block;font-family:var(--display);font-size:26px;font-weight:800;color:var(--accent-strong);line-height:1}
+.pstats span{font-size:12.5px;color:var(--muted);font-weight:600}
+.fotobig{width:180px;height:180px;margin:6px auto 4px;border-radius:50%;overflow:hidden;background:var(--grad);display:grid;place-items:center;box-shadow:0 20px 40px -24px rgba(14,61,50,.7)}
+.fotobig img{width:100%;height:100%;object-fit:cover}
+.fotobig span{color:#fff;font-family:var(--display);font-size:72px;font-weight:800}
+.toast{display:flex;align-items:center;gap:10px;box-shadow:0 14px 34px -14px rgba(0,0,0,.5)}
+.toast .tk{width:22px;height:22px;border-radius:50%;background:#3DDC6E;color:#062016;display:grid;place-items:center;font-size:13px;font-weight:900;flex:0 0 auto}
+@media (min-width:1024px){#v-app .top .hav{order:-1}}
+.capa .hello .avedit{position:relative}
+
+/* ===== Início e evolução ===== */
+.passos .passo{display:flex;align-items:center;gap:12px;width:100%;border:0;background:none;padding:11px 2px;border-top:1px solid var(--line);font-weight:700;font-size:15px;color:var(--ink);text-align:left;cursor:pointer}
+.passos .passo>span:nth-child(2){flex:1}
+.passos .passo svg{color:var(--muted)}
+.passos .pk{width:24px;height:24px;border-radius:50%;border:2px solid var(--surface-3);display:grid;place-items:center;flex:0 0 auto;color:#fff}
+.passos .passo.ok{color:var(--muted);text-decoration:line-through;cursor:default}
+.passos .passo.ok .pk{background:var(--accent);border-color:var(--accent)}
+.frase-dia{border-radius:22px;padding:18px 20px;background:linear-gradient(135deg,#F5F8EF,#E3EFDF);border:1px solid #D5E7D3}
+.frase-dia span{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#2E7D5A}
+.frase-dia b{display:block;font-family:var(--display);font-size:22px;line-height:1.2;margin-top:6px;color:#0E3D32}
+:root[data-theme="dark"] .frase-dia{background:linear-gradient(135deg,#164034,#10362C);border-color:#245746}
+:root[data-theme="dark"] .frase-dia b{color:#F5F8EF}
+:root[data-theme="dark"] .frase-dia span{color:#A8E6B4}
+.meta-sem{margin:0 4px 10px;font-size:14px;color:var(--muted);font-weight:600;display:flex;align-items:center;gap:6px}
+.meta-sem.ok{color:var(--accent-strong)}
+.agua-mais{margin-top:12px;width:100%}
+.dica-dia{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:start;border-radius:20px;padding:16px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-sm)}
+.dica-dia>svg{color:var(--accent);margin-top:2px}
+.dica-dia b{display:block;font-size:15px}
+.dica-dia p{margin:3px 0 0;color:var(--muted);font-size:14px;line-height:1.45}
+.mes-card{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 12px;align-items:center;border-radius:22px;padding:18px;background:linear-gradient(135deg,#0E3D32,#2E7D5A);color:#fff;box-shadow:0 18px 34px -22px rgba(14,61,50,.8)}
+.mes-card span{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#B9DDB2}
+.mes-card b{display:block;font-family:var(--display);font-size:28px;line-height:1.1}
+.mes-card small{color:rgba(255,255,255,.75)}
+.mes-dif{font-weight:800;font-size:13px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.14);white-space:nowrap}
+.mes-dif.up{color:#C9F2D3}.mes-dif.down{color:#FFD3C8}
+.mes-rec{grid-column:1/-1;display:flex;align-items:center;gap:6px;font-size:14px;color:rgba(255,255,255,.85);border-top:1px solid rgba(255,255,255,.14);padding-top:10px}
+.mes-rec svg{color:#F0AE55}
+.streak.viva svg{animation:chama 1.6s ease-in-out infinite;transform-origin:50% 90%}
+@keyframes chama{0%,100%{transform:scale(1)}50%{transform:scale(1.18) rotate(-4deg)}}
+.tab-panel:not([hidden]){animation:entra .28s ease-out}
+@keyframes entra{from{opacity:.4;transform:translateY(8px)}to{opacity:1;transform:none}}
+.nav .ico{transition:background .25s ease,transform .25s ease}
+.nav button[aria-selected="true"] .ico{transform:translateY(-1px)}
+@media (prefers-reduced-motion:reduce){.tab-panel:not([hidden]),.streak.viva svg{animation:none}}
+
+.lb-nav{display:flex;gap:10px;align-items:center;font-size:14.5px;font-weight:600}
+.lb-nav input{width:20px;height:20px;accent-color:var(--accent)}
+.pnext{margin:6px 0 0;text-align:center;color:rgba(255,255,255,.7);font-size:13.5px}
+.pnext b{color:#fff}
+.tring.fim::before{background:conic-gradient(#F4A62A calc(var(--p) * 1%),rgba(255,255,255,.1) 0)}
+.confete{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:5}
+.play{position:fixed}
+.recorde{display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 12px;border-radius:999px;background:rgba(244,166,42,.18);color:#FFD9A0;font-weight:800;font-size:14px}
+/* ===== Comunidade (Juntas) ===== */
+.nav .wrap{grid-template-columns:repeat(6,minmax(0,1fr))}
+.nav button{font-size:11px;min-width:0}
+.nav .ico{width:44px}
+.nav button.novo .ico{position:relative}
+.nav button.novo .ico::after{content:"";position:absolute;top:3px;right:9px;width:9px;height:9px;border-radius:50%;background:#FF6B5B;border:2px solid var(--surface)}
+.composer{display:flex;align-items:center;gap:12px;width:100%;border:1px solid var(--line);background:var(--surface);border-radius:22px;padding:12px 14px;text-align:left;box-shadow:var(--shadow-sm);cursor:pointer}
+.composer span:nth-child(2){flex:1;color:var(--muted);font-weight:600}
+.composer i{color:var(--accent);font-style:normal;display:grid}
+.regras{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);padding:0 6px}
+.regras svg{color:#FF6B5B}
+.pav{width:42px;height:42px;border-radius:50%;overflow:hidden;flex:0 0 auto;background:var(--grad);color:#fff;font-weight:800;display:grid;place-items:center;font-size:17px}
+.pav img{width:100%;height:100%;object-fit:cover}
+.feed{display:flex;flex-direction:column;gap:16px}
+.post{background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:14px 14px 12px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;gap:10px}
+.post.skel{height:260px;background:linear-gradient(90deg,var(--surface) 0%,var(--surface-2) 50%,var(--surface) 100%);background-size:200% 100%;animation:skel 1.2s linear infinite}
+@keyframes skel{to{background-position:-200% 0}}
+.post header{display:flex;align-items:center;gap:10px}
+.pmeta{flex:1;min-width:0}
+.pmeta b{display:block;font-size:15.5px;line-height:1.2}
+.pmeta small{color:var(--muted);font-size:12.5px}
+.ptx{margin:0;font-size:15.5px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+.pimg{position:relative;margin:0 -14px;overflow:hidden;background:var(--surface-2);cursor:pointer}
+.pimg img{width:100%;max-height:520px;object-fit:cover;display:block}
+.pheart{position:absolute;inset:0;display:grid;place-items:center;color:#fff;opacity:0;pointer-events:none;font-style:normal;filter:drop-shadow(0 6px 18px rgba(0,0,0,.4))}
+.pheart svg{fill:#fff}
+.pimg.bate .pheart{animation:bate .8s ease-out}
+@keyframes bate{0%{opacity:0;transform:scale(.4)}25%{opacity:1;transform:scale(1.15)}60%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1)}}
+.pacts{display:flex;align-items:center;gap:6px}
+.pacts button{display:inline-flex;align-items:center;gap:6px;border:0;background:none;padding:6px 8px;border-radius:12px;color:var(--ink);font-weight:800;font-size:14.5px;cursor:pointer;min-height:40px}
+.pacts button:active{background:var(--surface-2)}
+.pacts .pl.on{color:#E8455B}
+.pacts .pl.on svg{fill:#E8455B}
+.pacts .pl.pop svg{animation:pop .35s ease-out}
+@keyframes pop{50%{transform:scale(1.35)}}
+.pquem{margin-left:auto;color:var(--muted);font-size:12.5px}
+.pc{margin:0;font-size:14.5px;line-height:1.4;overflow-wrap:anywhere}
+.pver{align-self:flex-start;font-size:14px}
+.pcin{display:flex;align-items:center;gap:10px;border:0;background:var(--surface-2);border-radius:999px;padding:6px 14px 6px 6px;color:var(--muted);font-weight:600;font-size:14px;cursor:pointer;text-align:left}
+.pcin .pav{width:30px;height:30px;font-size:13px}
+.empty-feed{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;padding:30px 20px;color:var(--muted)}
+.empty-feed svg{color:var(--accent)}
+.empty-feed b{color:var(--ink);font-size:17px}
+.empty-feed p{margin:0}
+.post-full{border:0;box-shadow:none;padding:0;background:none}
+.post-full .pimg{margin:0;border-radius:20px}
+.post-full .pimg img{max-height:none}
+.cmts{display:flex;flex-direction:column;gap:14px;padding-bottom:80px}
+.cmt{display:flex;gap:10px;align-items:flex-start}
+.cmt .pav{width:34px;height:34px;font-size:14px}
+.cmt p{margin:0;background:var(--surface-2);border-radius:16px;padding:8px 12px;font-size:14.5px;line-height:1.4;overflow-wrap:anywhere}
+.cmt small{display:block;color:var(--muted);font-size:12px;margin:3px 0 0 6px}
+.cdel{font-size:12px;padding:0}
+.cbar{position:sticky;bottom:0;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;padding:12px 0 calc(12px + env(safe-area-inset-bottom,0px));background:var(--bg);margin-top:-70px}
+.cbar .btn{min-height:48px;padding:0 16px}
+.cmp-top{display:flex;align-items:center;gap:10px}
+.cmp-tx{min-height:130px;font-size:16px;resize:vertical}
+.cp-prev{position:relative}
+.cp-prev img{width:100%;border-radius:18px;display:block;max-height:420px;object-fit:cover}
+.cp-prev .iconbtn{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.55);color:#fff;border:0}
+@media (min-width:1024px){.nav .wrap{grid-template-columns:none}.nav .ico{width:auto}.nav button.novo .ico::after{right:-4px;top:-2px}.feed,.composer,.regras{max-width:680px;width:100%;margin-inline:auto}}
+
+.cm-adm{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.cm-item{display:flex;flex-direction:column;gap:10px}
+.cm-item>img{width:100%;max-height:220px;object-fit:cover;border-radius:14px}
+.cm-item p{margin:6px 0 0;white-space:pre-wrap}
+.cm-item.oc{opacity:.6}
+.cm-c{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:14px;border-top:1px solid var(--line);padding-top:6px;margin-top:6px}
+
+.senha-w{position:relative;display:block}
+.senha-w .input{padding-right:88px;width:100%}
+.olho{position:absolute;right:8px;top:50%;transform:translateY(-50%);border:0;background:var(--surface-2);color:var(--accent-strong);font-weight:800;font-size:12.5px;border-radius:999px;padding:7px 11px;cursor:pointer}
+.adm-ola{display:block;font-size:14px;font-weight:700;color:#2E7D5A;margin-bottom:4px}
 </style>
 
 <!-- Entrar / criar conta -->
@@ -966,12 +1114,14 @@ main.adm .msg-ok{border-radius:16px}
       <span class="logo-slot"></span>
       <div class="wordmark">CK <b>Life</b></div>
       <span class="streak num" id="streak-chip" title="Dias seguidos treinando"></span>
+      <button class="hav" id="top-av" aria-label="Meu perfil"></button>
       <button class="iconbtn" id="b-adm" aria-label="Painel do administrador" hidden></button>
     </div>
   </header>
   <main class="wrap app">
     <section class="tab-panel" id="t-inicio"></section>
     <section class="tab-panel" id="t-treinar" hidden></section>
+    <section class="tab-panel" id="t-juntas" hidden></section>
     <section class="tab-panel" id="t-dieta" hidden></section>
     <section class="tab-panel" id="t-evolucao" hidden></section>
     <section class="tab-panel" id="t-perfil" hidden></section>
@@ -2204,7 +2354,7 @@ const yt = q => "https://www.youtube.com/results?search_query=" + encodeURICompo
 const norm = s => String(s).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 const DIAS_CURTO = ["D","S","T","Q","Q","S","S"];
 let toastT;
-function toast(m){ const t = $("toast"); t.textContent = m; t.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("show"), 2400); }
+function toast(m){ const t = $("toast"); t.innerHTML = `<span class="tk">✓</span><span></span>`; t.lastChild.textContent = m; t.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("show"), 2600); }
 function copyText(txt, ok){
   const done = () => toast(ok || "Copiado");
   const fb = () => { const a = document.createElement("textarea"); a.value = txt; a.setAttribute("readonly",""); a.style.position = "fixed"; a.style.opacity = "0"; document.body.appendChild(a); a.select(); try{ document.execCommand("copy"); done(); }catch(e){ toast("Não deu para copiar"); } a.remove(); };
@@ -2228,7 +2378,7 @@ const P = {
   play:'<path d="M7 4.5v15l12-7.5z" fill="currentColor" stroke="none"/>',
   pause:'<path d="M8 5v14M16 5v14" stroke-width="3"/>',
   prev:'<path d="M18 6l-8 6 8 6zM6 6v12"/>', next:'<path d="M6 6l8 6-8 6zM18 6v12"/>',
-  close:'<path d="M6 6l12 12M18 6L6 18"/>', back:'<path d="M15 5l-7 7 7 7"/>', chev:'<path d="M9 5l7 7-7 7"/>', share:'<path d="M12 3v12M7 8l5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/>', check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+  close:'<path d="M6 6l12 12M18 6L6 18"/>', back:'<path d="M15 5l-7 7 7 7"/>', chev:'<path d="M9 5l7 7-7 7"/>', share:'<path d="M12 3v12M7 8l5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/>', juntas:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.3-5.5 6.5-5.5s5.7 2 6.5 5.5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.5c2 .7 3.2 2.6 3.5 5.5"/>', heart:'<path d="M12 20.5s-7.5-4.6-9.3-9.4C1.5 7.8 3.6 4.5 7 4.5c2.1 0 3.6 1.1 5 3 1.4-1.9 2.9-3 5-3 3.4 0 5.5 3.3 4.3 6.6C19.5 15.9 12 20.5 12 20.5z"/>', chat:'<path d="M21 12a8.5 8.5 0 0 1-12.4 7.6L3 21l1.5-5.2A8.5 8.5 0 1 1 21 12z"/>', camera:'<path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.5" r="3.5"/>', send:'<path d="M4 12l16-8-6 16-2.5-6.5z"/>', check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
   clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>', bolt:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',
   chair:'<path d="M7 3v10h10V3M5 13h14M7 13v8M17 13v8"/>', mesa:'<path d="M3 8h18M5 8v12M19 8v12M3 8l2-3h14l2 3"/>', barra:'<path d="M3 5h18M7 5v4M17 5v4"/><circle cx="12" cy="14" r="2.5"/><path d="M12 16.5V21"/>', corda:'<path d="M5 4v6M19 4v6"/><path d="M5 10c0 8 14 8 14 0"/>',
   flame:'<path d="M12 2s5 4.6 5 10a5 5 0 0 1-10 0c0-2.2 1-3.9 2-5 0 1.6.8 3 2 3 0-3 1-6 1-8z" fill="currentColor" stroke="none"/>',
@@ -2410,12 +2560,14 @@ function modoAuth(cad){ $("tg-cad").setAttribute("aria-pressed", cad); $("tg-log
 $("tg-login").onclick = () => modoAuth(false);
 $("tg-cad").onclick = () => modoAuth(true);
 function showLogin(){
+  try{ const em = localStorage.getItem(KEY + "_email"); if(em && !$("l-email").value) $("l-email").value = em; }catch(e){}
   $("c-cid").innerHTML = DB.cidades.filter(c => c.ativa).map(c => `<option value="${c.id}">${esc(c.nome)}${c.uf ? " · " + esc(c.uf) : ""}</option>`).join("");
   show("v-login");
 }
 $("f-login").addEventListener("submit", async e => {
   e.preventDefault();
   const email = $("l-email").value.trim().toLowerCase(), s = $("l-senha").value;
+  try{ localStorage.setItem(KEY + "_email", email); }catch(e){}
   if(!email || !s) return lmsg("Preencha e-mail e senha.");
   if(NU.ativo){
     lmsg("Entrando…", true); const r = await NU.entrar(email, s); if(r.erro) return lmsg(r.erro);
@@ -2698,13 +2850,124 @@ function onboarding(){
 const sexoB = () => "f";
 
 /* ---------- Estrutura do app ---------- */
-const TABS = [["inicio","Início"],["treinar","Treinos"],["dieta","Nutrição"],["evolucao","Evolução"],["perfil","Perfil"]];
+/* ---------- Comunidade das alunas (aba Juntas) ---------- */
+const novoId = () => (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : uid() + uid();
+let FEED = [], FEED_ERRO = "", FEED_T = null;
+function miniFoto(src, S = 96){ return new Promise(ok => { if(!src) return ok(""); const im = new Image(); im.onload = () => { const c = document.createElement("canvas"); c.width = c.height = S; c.getContext("2d").drawImage(im, 0, 0, S, S); ok(c.toDataURL("image/jpeg", .8)); }; im.onerror = () => ok(""); im.src = src; }); }
+function comprimeImg(fonte, max = 1080){ return new Promise((ok, no) => { const im = new Image(); im.onload = () => { const k = Math.min(1, max / Math.max(im.width, im.height)), c = document.createElement("canvas"); c.width = Math.round(im.width * k); c.height = Math.round(im.height * k); c.getContext("2d").drawImage(im, 0, 0, c.width, c.height); c.toBlob(b => b ? ok(b) : no(new Error("img")), "image/jpeg", .82); }; im.onerror = () => no(new Error("img")); im.src = typeof fonte === "string" ? fonte : URL.createObjectURL(fonte); }); }
+const blobParaURL = b => new Promise(ok => { const r = new FileReader(); r.onload = () => ok(r.result); r.readAsDataURL(b); });
+const CM = {
+  nuvem: () => NU.ativo && NU.sb,
+  local(){ DB.posts = DB.posts || []; if(!NU.ativo && !DB.postsSemente){ DB.postsSemente = true; const ex = DB.users.filter(u => u.exemplo).slice(0, 4), h = Date.now();
+      const S = [["Primeira semana completa! Nunca achei que ia gostar tanto de treinar em casa 💚", "img/ex-agacho.jpg", 3], ["Panqueca de banana do app é perfeita pro café da manhã 😍", "img/receita-r1.jpg", 9], ["Glúteos em casa de hoje foi pesado, mas eu fiz!! Quem mais tá no programa?", "img/ex-ponte.jpg", 20], ["Meta da semana batida. Bora meninas, uma puxando a outra!", "", 30]];
+      S.forEach(([t, img, hrs], i) => { const u = ex[i] || { id: "ex" + i, nome: "Aluna" }; DB.posts.push({ id: novoId(), user: u.id, nome: u.nome, foto: "", texto: t, img, criado: new Date(h - hrs * 36e5).toISOString(), curtidas: ex.slice(0, 2 + i).map(x => x.id), coments: i === 2 ? [{ id: novoId(), user: (ex[0] || {}).id, nome: (ex[0] || {}).nome || "Aluna", foto: "", texto: "Eu tô! Semana 2 aqui 💪", criado: new Date(h - 18 * 36e5).toISOString() }] : [] }); }); save(); }
+    return DB.posts; },
+  async carregar(admin){
+    if(!CM.nuvem()) return CM.local().filter(p => admin || !p.oculto || p.user === ME.id).slice().sort((a, b) => b.criado.localeCompare(a.criado));
+    const sb = NU.sb, r = await sb.from("posts").select("*").order("criado", { ascending: false }).limit(80); if(r.error) throw r.error;
+    const ps = r.data || [], ids = ps.map(p => p.id); let cu = [], co = [];
+    if(ids.length){ const a = await sb.from("curtidas").select("*").in("post_id", ids), b = await sb.from("comentarios").select("*").in("post_id", ids); cu = a.data || []; co = b.data || []; }
+    return ps.map(p => ({ id: p.id, user: p.user_id, nome: p.nome, foto: p.foto, texto: p.texto, img: p.img, criado: p.criado, oculto: p.oculto, curtidas: cu.filter(c => c.post_id === p.id).map(c => c.user_id), coments: co.filter(c => c.post_id === p.id).sort((x, y) => String(x.criado).localeCompare(String(y.criado))).map(c => ({ id: c.id, user: c.user_id, nome: c.nome, foto: c.foto, texto: c.texto, criado: c.criado })) })).sort((a, b) => String(b.criado).localeCompare(String(a.criado)));
+  },
+  async publicar(texto, blob){
+    const id = novoId(), foto = await miniFoto(ME.foto), criado = new Date().toISOString();
+    if(!CM.nuvem()){ CM.local().push({ id, user: ME.id, nome: ME.nome, foto, texto, img: blob ? await blobParaURL(blob) : "", criado, curtidas: [], coments: [] }); save(); return; }
+    let img = ""; if(blob){ const path = `${NU.uid}/${id}.jpg`, up = await NU.sb.storage.from("posts").upload(path, blob, { contentType: "image/jpeg", upsert: true }); if(up.error) throw up.error; img = NU.sb.storage.from("posts").getPublicUrl(path).data.publicUrl; }
+    const r = await NU.sb.from("posts").insert({ id, user_id: NU.uid, nome: ME.nome, foto, texto, img }); if(r.error) throw r.error;
+  },
+  async curtir(p, on){
+    if(!CM.nuvem()){ const x = CM.local().find(y => y.id === p.id); if(x){ x.curtidas = (x.curtidas || []).filter(u => u !== ME.id); if(on) x.curtidas.push(ME.id); save(); } return; }
+    const r = on ? await NU.sb.from("curtidas").insert({ post_id: p.id, user_id: NU.uid }) : await NU.sb.from("curtidas").delete().eq("post_id", p.id).eq("user_id", NU.uid); if(r.error && !/duplicate/i.test(r.error.message || "")) throw r.error;
+  },
+  async comentar(p, texto){
+    const c = { id: novoId(), user: ME.id, nome: ME.nome, foto: await miniFoto(ME.foto, 64), texto, criado: new Date().toISOString() };
+    if(!CM.nuvem()){ const x = CM.local().find(y => y.id === p.id); x.coments = x.coments || []; x.coments.push(c); save(); return c; }
+    const r = await NU.sb.from("comentarios").insert({ id: c.id, post_id: p.id, user_id: NU.uid, nome: c.nome, foto: c.foto, texto }); if(r.error) throw r.error; return c;
+  },
+  async apagaPost(p){ if(!CM.nuvem()){ DB.posts = CM.local().filter(x => x.id !== p.id); save(); return; } const r = await NU.sb.from("posts").delete().eq("id", p.id); if(r.error) throw r.error; },
+  async apagaComent(p, c){ if(!CM.nuvem()){ const x = CM.local().find(y => y.id === p.id); if(x) x.coments = (x.coments || []).filter(k => k.id !== c.id); save(); return; } const r = await NU.sb.from("comentarios").delete().eq("id", c.id); if(r.error) throw r.error; },
+  async ocultar(p, v){ if(!CM.nuvem()){ const x = CM.local().find(y => y.id === p.id); if(x) x.oculto = v; save(); return; } const r = await NU.sb.from("posts").update({ oculto: v }).eq("id", p.id); if(r.error) throw r.error; },
+  async ultimo(){ if(!CM.nuvem()){ const L = CM.local(); return L.length ? L.map(p => p.criado).sort().pop() : ""; } const r = await NU.sb.from("posts").select("criado").order("criado", { ascending: false }).limit(1); return r.data && r.data[0] ? r.data[0].criado : ""; }
+};
+const tempoAtras = iso => { const s = (Date.now() - new Date(iso).getTime()) / 1000; if(s < 60) return "agora"; if(s < 3600) return `há ${Math.floor(s / 60)} min`; if(s < 86400) return `há ${Math.floor(s / 3600)} h`; if(s < 172800) return "ontem"; return new Date(iso).toLocaleDateString("pt-BR", { day: "2-digit", month: "short" }); };
+const avPost = (nome, foto) => `<span class="pav">${foto ? `<img src="${foto}" alt="">` : esc(String(nome || "?").trim()[0].toUpperCase())}</span>`;
+function postHtml(p){
+  const meu = p.user === ME.id, liked = (p.curtidas || []).includes(ME.id), nc = (p.coments || []).length, nl = (p.curtidas || []).length;
+  return `<article class="post" data-id="${p.id}">
+    <header>${avPost(p.nome, p.foto)}<div class="pmeta"><b>${esc(p.nome)}</b><small>${tempoAtras(p.criado)}${p.oculto ? " · oculto pela moderação" : ""}</small></div>${meu ? `<button class="iconbtn sm" data-del aria-label="Excluir publicação">${ic("close", 16)}</button>` : ""}</header>
+    ${p.texto ? `<p class="ptx">${esc(p.texto)}</p>` : ""}
+    ${p.img ? `<div class="pimg" data-abre><img src="${esc(p.img)}" alt="" loading="lazy"><i class="pheart">${ic("heart", 70)}</i></div>` : ""}
+    <div class="pacts"><button class="pl ${liked ? "on" : ""}" data-like aria-label="Curtir">${ic("heart", 22)}<span>${nl || ""}</span></button><button data-abre aria-label="Comentar">${ic("chat", 21)}<span>${nc || ""}</span></button>${nl ? `<small class="pquem">${liked ? (nl === 1 ? "Você curtiu" : `Você e mais ${nl - 1}`) : `${nl} ${nl === 1 ? "curtida" : "curtidas"}`}</small>` : ""}</div>
+    ${(p.coments || []).slice(-2).map(c => `<p class="pc"><b>${esc(c.nome.split(" ")[0])}</b> ${esc(c.texto)}</p>`).join("")}
+    ${nc > 2 ? `<button class="link pver" data-abre>Ver os ${nc} comentários</button>` : ""}
+    <button class="pcin" data-abre>${avPost(ME.nome, ME.foto)}<span>Escreva um comentário…</span></button>
+  </article>`;
+}
+function rJuntas(){
+  ME.feedVisto = new Date().toISOString(); save(); marcaNovidade(false);
+  $("t-juntas").innerHTML = `${capa("Comunidade", "Juntas somos mais fortes. Compartilhe e se inspire.", "", "img/ex-polichinelo.jpg")}
+    <button class="composer" id="cm-nova">${avPost(ME.nome, ME.foto)}<span>Compartilhe sua conquista de hoje…</span><i>${ic("camera", 20)}</i></button>
+    <div class="regras">${ic("heart", 15)} Um espaço de apoio: elogie, incentive e respeite todas.</div>
+    <div id="feed" class="feed"><div class="post skel"></div><div class="post skel"></div></div>`;
+  $("cm-nova").onclick = () => abreComposer();
+  carregaFeed();
+  clearInterval(FEED_T); FEED_T = setInterval(() => { if(TAB === "juntas" && document.visibilityState === "visible" && $("sheet").hidden && $("play").hidden) carregaFeed(true); }, 25000);
+}
+async function carregaFeed(silencio){
+  try{ FEED = await CM.carregar(); FEED_ERRO = ""; }
+  catch(e){ console.warn(e); FEED_ERRO = /PGRST205|42P01|does not exist|schema cache/i.test((e && (e.code + " " + e.message)) || "") ? "A comunidade está sendo preparada. Volte daqui a pouco!" : "Sem conexão agora. Puxe para atualizar daqui a pouco."; }
+  const f = $("feed"); if(!f) return;
+  if(FEED_ERRO){ f.innerHTML = `<div class="card empty-feed">${ic("people", 34)}<b>${FEED_ERRO}</b></div>`; return; }
+  if(!FEED.length){ f.innerHTML = `<div class="card empty-feed">${ic("people", 34)}<b>Seja a primeira a postar!</b><p>Conte como foi seu treino ou mostre sua receita favorita.</p></div>`; return; }
+  const y = window.scrollY; f.innerHTML = FEED.map(postHtml).join(""); if(silencio) window.scrollTo(0, y);
+  f.querySelectorAll(".post").forEach(el => ligaPost(el, FEED.find(p => p.id === el.dataset.id)));
+}
+function ligaPost(el, p, detalhe){
+  if(!p) return;
+  const like = async () => { const on = !(p.curtidas || []).includes(ME.id); p.curtidas = (p.curtidas || []).filter(u => u !== ME.id); if(on) p.curtidas.push(ME.id); if(on){ SOM.fav ? SOM.fav() : SOM.tap(); vibra(12); }
+    const b = el.querySelector("[data-like]"); b.classList.toggle("on", on); b.classList.remove("pop"); void b.offsetWidth; if(on) b.classList.add("pop"); b.querySelector("span").textContent = p.curtidas.length || "";
+    try{ await CM.curtir(p, on); }catch(e){ toast("Não deu para curtir agora"); } };
+  el.querySelector("[data-like]").onclick = like;
+  const im = el.querySelector(".pimg"); if(im){ let t = 0; im.addEventListener("click", e => { const n = Date.now(); if(n - t < 320){ e.stopPropagation(); if(!(p.curtidas || []).includes(ME.id)) like(); im.classList.remove("bate"); void im.offsetWidth; im.classList.add("bate"); t = 0; return; } t = n; if(!detalhe) setTimeout(() => { if(t === n) abrePost(p); }, 330); }); }
+  if(!detalhe) el.querySelectorAll("[data-abre]:not(.pimg)").forEach(b => b.onclick = () => abrePost(p, b.classList.contains("pcin")));
+  const del = el.querySelector("[data-del]"); if(del) del.onclick = () => { if(!confirm("Excluir esta publicação?")) return; CM.apagaPost(p).then(() => { toast("Publicação excluída"); if(detalhe) fecharSheet(); carregaFeed(); }).catch(() => toast("Não deu para excluir agora")); };
+}
+function abrePost(p, foca){
+  const lista = () => (p.coments || []).map(c => `<div class="cmt">${avPost(c.nome, c.foto)}<div><p><b>${esc(c.nome)}</b> ${esc(c.texto)}</p><small>${tempoAtras(c.criado)}${c.user === ME.id ? ` · <button class="link cdel" data-cdel="${c.id}">Excluir</button>` : ""}</small></div></div>`).join("") || `<p class="hint" style="margin:6px 0">Ainda sem comentários. Comece a conversa!</p>`;
+  sheet("Publicação", `<div class="post post-full" data-id="${p.id}">${postHtml(p).replace(/^<article[^>]*>|<\/article>$/g, "")}</div><div class="cmts" id="cmts">${lista()}</div>
+    <div class="cbar"><input class="input" id="cm-txt" maxlength="500" placeholder="Escreva um comentário…" autocomplete="off"><button class="btn btn-accent" id="cm-env" aria-label="Enviar">${ic("send", 18)}</button></div>`, () => { if(TAB === "juntas") carregaFeed(true); });
+  const el = $("sheet-body").querySelector(".post-full"); el.querySelectorAll(".pcin,.pver,.pc").forEach(x => x.remove()); ligaPost(el, p, true);
+  const ligaDel = () => $("cmts").querySelectorAll("[data-cdel]").forEach(b => b.onclick = () => { const c = p.coments.find(x => x.id === b.dataset.cdel); CM.apagaComent(p, c).then(() => { p.coments = p.coments.filter(x => x !== c); $("cmts").innerHTML = lista(); ligaDel(); }).catch(() => toast("Não deu para excluir agora")); });
+  ligaDel();
+  const env = async () => { const t = $("cm-txt").value.trim(); if(!t) return; $("cm-env").disabled = true; try{ const c = await CM.comentar(p, t); p.coments = p.coments || []; if(!p.coments.some(x => x.id === c.id)) p.coments.push(c); $("cm-txt").value = ""; $("cmts").innerHTML = lista(); ligaDel(); SOM.check(); const u = $("cmts").lastElementChild; if(u) u.scrollIntoView({ behavior: "smooth", block: "nearest" }); }catch(e){ toast("Não deu para comentar agora"); } $("cm-env").disabled = false; };
+  $("cm-env").onclick = env; $("cm-txt").onkeydown = e => { if(e.key === "Enter") env(); };
+  if(foca) setTimeout(() => $("cm-txt").focus(), 250);
+}
+function abreComposer(texto0, blob0){
+  let blob = blob0 || null;
+  sheet("Nova publicação", `<div class="cmp-top">${avPost(ME.nome, ME.foto)}<b>${esc(ME.nome)}</b></div>
+    <textarea class="input cmp-tx" id="cp-t" maxlength="1000" placeholder="Como foi seu treino hoje? Conte, inspire, comemore 💚">${esc(texto0 || "")}</textarea>
+    <div id="cp-prev" class="cp-prev"></div>
+    <div class="toolbar"><button class="btn btn-line" id="cp-foto">${ic("camera", 18)} Foto</button><span class="hint" id="cp-n"></span></div>
+    <button class="btn btn-accent btn-block btn-lg" id="cp-ok">Publicar</button>`);
+  const prev = async () => { $("cp-prev").innerHTML = blob ? `<img src="${await blobParaURL(blob)}" alt=""><button class="iconbtn sm" id="cp-x" aria-label="Tirar foto">${ic("close", 16)}</button>` : ""; const x = $("cp-x"); if(x) x.onclick = () => { blob = null; prev(); }; };
+  prev();
+  $("cp-foto").onclick = () => { const inp = document.createElement("input"); inp.type = "file"; inp.accept = "image/*"; inp.onchange = async () => { const f = inp.files && inp.files[0]; if(!f) return; try{ blob = await comprimeImg(f); prev(); }catch(e){ toast("Não deu para abrir essa foto"); } }; inp.click(); };
+  $("cp-ok").onclick = async () => { const t = $("cp-t").value.trim(); if(!t && !blob) return toast("Escreva algo ou escolha uma foto"); if(ME.bloqueado) return toast("Sua conta está bloqueada");
+    const b = $("cp-ok"); b.classList.add("carregando"); b.disabled = true;
+    try{ await CM.publicar(t, blob); SOM.done ? SOM.done() : SOM.check(); fecharSheet(); toast("Publicado na comunidade!"); if(TAB !== "juntas") tab("juntas"); else carregaFeed(); }
+    catch(e){ console.warn(e); toast(/PGRST205|42P01|schema cache/i.test(String(e && (e.code + e.message))) ? "A comunidade ainda está sendo preparada" : "Não deu para publicar agora"); b.classList.remove("carregando"); b.disabled = false; } };
+}
+function marcaNovidade(on){ const b = $("nav") && $("nav").querySelector('[data-tab="juntas"]'); if(b) b.classList.toggle("novo", !!on); }
+function confereNovidade(){ CM.ultimo().then(u => { if(u && (!ME.feedVisto || u > ME.feedVisto) && TAB !== "juntas") marcaNovidade(true); }).catch(() => {}); }
+const TABS = [["inicio","Início"],["treinar","Treinos"],["juntas","Juntas"],["dieta","Nutrição"],["evolucao","Evolução"],["perfil","Perfil"]];
 let TAB = "inicio";
 $("nav").innerHTML = TABS.map(([k, n]) => `<button role="tab" data-tab="${k}" aria-selected="false"><span class="ico">${ic(k, 21)}</span>${n}</button>`).join("");
 $("nav").querySelectorAll("[data-tab]").forEach(b => b.onclick = () => tab(b.dataset.tab));
 $("b-adm").innerHTML = ic("grid", 19);
 $("b-adm").onclick = () => window.ADMIN.abrir();
 function abrirApp(){
+  setTimeout(confereNovidade, 2500);
   show("v-app"); $("b-adm").hidden = true;
   if(location.hash === "#admin") history.replaceState(null, "", location.pathname);
   tab(TAB, true);
@@ -2714,8 +2977,8 @@ function tab(t, sil){
   TAB = t;
   $("nav").querySelectorAll("[data-tab]").forEach(b => b.setAttribute("aria-selected", b.dataset.tab === t));
   TABS.forEach(([k]) => $("t-" + k).hidden = k !== t);
-  const s = streak(); $("streak-chip").innerHTML = `${ic("flame", 15)}${s}`; $("streak-chip").title = `${s} ${s === 1 ? "dia seguido" : "dias seguidos"} ativo`;
-  ({ inicio: rInicio, treinar: rTreinar, dieta: rDieta, evolucao: rEvolucao, perfil: rPerfil })[t]();
+  atualizaTopo(); const s = streak(); $("streak-chip").classList.toggle("viva", diasTreino().has(today())); $("streak-chip").innerHTML = `${ic("flame", 15)}${s}`; $("streak-chip").title = `${s} ${s === 1 ? "dia seguido" : "dias seguidos"} ativo`;
+  ({ inicio: rInicio, treinar: rTreinar, juntas: rJuntas, dieta: rDieta, evolucao: rEvolucao, perfil: rPerfil })[t]();
   window.scrollTo(0, 0);
 }
 const rerender = () => tab(TAB, true);
@@ -2754,6 +3017,96 @@ function cardInstalar(){
       : PEDIDO_INSTALAR ? `<p>Um toque e o CK Life fica na sua tela inicial, como um app.</p>` : `<ol class="inst-passos"><li>Toque nos <b>três pontinhos</b> do navegador</li><li>Escolha <b>Instalar app</b> ou <b>Adicionar à tela inicial</b></li></ol>`;
   return `<div class="inst"><img src="img/icone-192.png" alt="" width="56" height="56" onerror="this.remove()"><div><b>Instale o CK Life no celular</b><span>Abre em tela cheia, mais rápido, e seu login fica salvo.</span></div>${passos}${PEDIDO_INSTALAR && !ehIOS() && !navInterno() ? `<button class="btn btn-accent btn-block" id="p-inst">Instalar agora</button>` : ""}</div>`;
 }
+/* ---------- Perfil: foto, nível e dados ---------- */
+const fotoAv = (u, cls = "") => u && u.foto ? `<img class="avf ${cls}" src="${u.foto}" alt="">` : esc(((u && u.nome) || "?").trim()[0].toUpperCase());
+const NIVEIS = [[0, "Começando"], [5, "Firme"], [15, "Constante"], [30, "Dedicada"], [60, "Imparável"]];
+const nivelAluna = n => { let atual = NIVEIS[0], prox = null; NIVEIS.forEach((x, i) => { if(n >= x[0]){ atual = x; prox = NIVEIS[i + 1] || null; } }); return { nome: atual[1], prox, falta: prox ? prox[0] - n : 0, pct: prox ? Math.round(100 * (n - atual[0]) / (prox[0] - atual[0])) : 100 }; };
+const mascaraTel = v => { const d = String(v).replace(/\D/g, "").slice(0, 11); if(d.length <= 2) return d ? `(${d}` : ""; if(d.length <= 6) return `(${d.slice(0, 2)}) ${d.slice(2)}`; if(d.length <= 10) return `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}`; return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`; };
+document.addEventListener("input", e => { if(e.target.matches && e.target.matches('input[inputmode="tel"]')){ const a = e.target.value, b = mascaraTel(a); if(a !== b) e.target.value = b; } });
+function escolheFoto(){
+  const inp = document.createElement("input"); inp.type = "file"; inp.accept = "image/*";
+  inp.onchange = () => { const f = inp.files && inp.files[0]; if(!f) return; const rd = new FileReader();
+    rd.onload = () => { const im = new Image(); im.onload = () => { const S = 320, c = document.createElement("canvas"); c.width = c.height = S; const x = c.getContext("2d"), m = Math.min(im.width, im.height); x.drawImage(im, (im.width - m) / 2, (im.height - m) / 2, m, m, 0, 0, S, S); ME.foto = c.toDataURL("image/jpeg", .82); save(); SOM.chime && SOM.chime(); toast("Foto do perfil atualizada"); rPerfil(); atualizaTopo(); }; im.onerror = () => toast("Não deu para abrir essa imagem"); im.src = rd.result; };
+    rd.readAsDataURL(f); };
+  inp.click();
+}
+function menuFoto(){
+  sheet("Foto do perfil", `<div class="fotobig">${ME.foto ? `<img src="${ME.foto}" alt="">` : `<span>${esc(ME.nome.trim()[0].toUpperCase())}</span>`}</div>
+    <button class="btn btn-accent btn-block btn-lg" id="ft-nova">${ic("perfil", 18)} ${ME.foto ? "Trocar foto" : "Escolher foto"}</button>
+    ${ME.foto ? `<button class="btn btn-line btn-block" id="ft-tira">Remover foto</button>` : ""}
+    <p class="hint" style="text-align:center;margin:0">Pode tirar uma foto agora ou escolher da galeria. Ela fica redonda e leve.</p>`);
+  $("ft-nova").onclick = () => { fecharSheet(); escolheFoto(); };
+  const t = $("ft-tira"); if(t) t.onclick = () => { delete ME.foto; save(); fecharSheet(); toast("Foto removida"); rPerfil(); atualizaTopo(); };
+}
+function editaDados(){
+  const cid = DB.cidades.filter(c => c.ativa || +c.id === +ME.cidade);
+  sheet("Meus dados", `<div class="formgrid">
+    <div class="field full"><label for="md-n">Nome</label><input class="input" id="md-n" value="${esc(ME.nome)}" autocomplete="name"></div>
+    <div class="field full"><label for="md-w">WhatsApp</label><input class="input" id="md-w" inputmode="tel" value="${esc(mascaraTel(ME.whats || ""))}" placeholder="(65) 99999-9999"></div>
+    <div class="field"><label for="md-d">Nascimento</label><input class="input" id="md-d" type="date" value="${esc(ME.nasc || "")}"></div>
+    <div class="field"><label for="md-c">Cidade</label><select class="input" id="md-c">${cid.map(c => `<option value="${c.id}" ${+c.id === +ME.cidade ? "selected" : ""}>${esc(c.nome)}</option>`).join("")}</select></div>
+    <div class="field full"><label>E-mail</label><input class="input" value="${esc(ME.email)}" disabled></div></div>
+    <button class="btn btn-accent btn-block btn-lg" id="md-ok">Salvar meus dados</button>`);
+  $("md-ok").onclick = () => { const n = $("md-n").value.trim(); if(!n) return toast("Digite seu nome"); ME.nome = n; ME.whats = $("md-w").value.trim(); ME.nasc = $("md-d").value || ME.nasc; ME.cidade = +$("md-c").value; save(); SOM.check(); fecharSheet(); toast("Dados salvos"); rPerfil(); atualizaTopo(); };
+}
+function convidar(){
+  const url = location.origin + location.pathname.replace(/admin\/?$/, ""), txt = "Estou treinando em casa com o CK Life 💚 Treinos guiados, receitas com voz e muito mais. Vem comigo!";
+  if(navigator.share) navigator.share({ title: "CK Life", text: txt, url }).catch(() => {});
+  else window.open("https://wa.me/?text=" + encodeURIComponent(txt + " " + url), "_blank", "noopener");
+}
+const linkSuporte = () => { const d = String(DB.config.suporte || "").replace(/\D/g, ""); return d.length >= 10 ? "https://wa.me/" + (d.length <= 11 ? "55" + d : d) + "?text=" + encodeURIComponent("Oi! Preciso de ajuda com o CK Life.") : ""; };
+function atualizaTopo(){ const a = $("top-av"); if(!a || !ME) return; a.innerHTML = fotoAv(ME); a.onclick = () => tab("perfil"); }
+const DICAS_DIA = ["Beba um copo de água antes de cada refeição. Ajuda na saciedade.", "Durma de 7 a 8 horas: é no descanso que o músculo se recupera.", "Proteína em todas as refeições ajuda a manter a massa magra.", "Alongue 5 minutos depois do treino para soltar o corpo.", "Constância vence intensidade. Treinar 3x por semana já transforma.", "Prepare as marmitas no domingo e economize tempo na semana.", "Respire fundo e solte o ar na hora do esforço.", "Caminhar 20 minutos por dia já melhora o fôlego e o humor."];
+const doDia = L => L[Math.floor(Date.now() / 864e5) % L.length];
+const comeuAlgo = () => Object.values(ME.diario || {}).some(d => REFS.some(([k]) => (d[k] || []).length));
+function passosIniciais(){
+  const L = [["foto", "Coloque sua foto", !!ME.foto], ["treino", "Faça seu primeiro treino", (ME.treinos || []).length > 0], ["refeicao", "Registre uma refeição", comeuAlgo()], ["agua", "Marque um copo de água", Object.values(ME.diario || {}).some(d => d.agua > 0)], ["lembrete", "Defina seu horário de treino", !!ME.lembrete], ["app", "Instale o app no celular", instalado() || !!ME.instalouApp]];
+  return { L, feitos: L.filter(x => x[2]).length };
+}
+function cardPassos(){
+  if(ME.passosOk) return ""; const { L, feitos } = passosIniciais(); if(feitos === L.length) return "";
+  return `<div class="card passos"><div class="sec-title"><h3 style="font-size:17px">Seus primeiros passos</h3><span class="muted num" style="font-size:13px">${feitos} de ${L.length}</span></div>
+    <div class="prog" style="margin:10px 0 6px"><i style="width:${100 * feitos / L.length}%"></i></div>
+    ${L.map(([k, n, ok]) => `<button class="passo ${ok ? "ok" : ""}" data-passo="${k}" ${ok ? "disabled" : ""}><span class="pk">${ok ? ic("check", 14, 3) : ""}</span><span>${n}</span>${ok ? "" : ic("chev", 16)}</button>`).join("")}
+    <button class="link" id="ps-x" style="margin-top:6px">Esconder</button></div>`;
+}
+/* ---------- Lembrete de treino (calendário do celular + aviso com o app aberto) ---------- */
+const DSEM = [["MO", "Seg"], ["TU", "Ter"], ["WE", "Qua"], ["TH", "Qui"], ["FR", "Sex"], ["SA", "Sáb"], ["SU", "Dom"]];
+function icsLembrete(dias, hora){
+  const [h, m] = hora.split(":").map(Number), d = new Date(); d.setHours(h, m, 0, 0); if(d < new Date()) d.setDate(d.getDate() + 1);
+  const p2 = n => String(n).padStart(2, "0"), dt = x => `${x.getFullYear()}${p2(x.getMonth() + 1)}${p2(x.getDate())}T${p2(x.getHours())}${p2(x.getMinutes())}00`;
+  const fim = new Date(d.getTime() + 30 * 6e4), url = location.origin + "/";
+  return ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//CK Life//Lembrete//PT", "CALSCALE:GREGORIAN", "BEGIN:VEVENT", `UID:cklife-treino-${Date.now()}@cklife`, `DTSTAMP:${dt(new Date())}`, `DTSTART:${dt(d)}`, `DTEND:${dt(fim)}`, `RRULE:FREQ=WEEKLY;BYDAY=${dias.join(",")}`, "SUMMARY:Hora de treinar 💚 CK Life", `DESCRIPTION:Seu treino de hoje está pronto. Abra o CK Life: ${url}`, `URL:${url}`, "BEGIN:VALARM", "ACTION:DISPLAY", "DESCRIPTION:Hora de treinar no CK Life", "TRIGGER:PT0M", "END:VALARM", "BEGIN:VALARM", "ACTION:DISPLAY", "DESCRIPTION:Seu treino começa em 10 minutos", "TRIGGER:-PT10M", "END:VALARM", "END:VEVENT", "END:VCALENDAR"].join("\r\n");
+}
+function editaLembrete(){
+  const L = ME.lembrete || { dias: ["MO", "WE", "FR"], hora: "07:00", nav: false };
+  sheet("Lembrete de treino", `<p class="lead" style="margin:0">Escolha os dias e o horário. O lembrete vai para o calendário do seu celular e avisa mesmo com o app fechado.</p>
+    <div><h4 style="margin-bottom:10px">Dias</h4><div class="chips" id="lb-d">${DSEM.map(([k, n]) => `<button class="chip" data-d="${k}" aria-pressed="${L.dias.includes(k)}">${n}</button>`).join("")}</div></div>
+    <div class="field"><label for="lb-h">Horário</label><input class="input" id="lb-h" type="time" value="${L.hora}"></div>
+    <button class="btn btn-accent btn-block btn-lg" id="lb-ok">${ic("calendar", 18)} Adicionar ao calendário do celular</button>
+    <label class="lb-nav"><input type="checkbox" id="lb-n" ${L.nav ? "checked" : ""}> Avisar também por notificação quando o app estiver aberto</label>
+    <p class="hint" style="margin:0">No iPhone, toque em <b>Adicionar todos</b> depois. No Android, escolha o app de calendário e toque em <b>Salvar</b>.</p>`);
+  $("lb-d").querySelectorAll("[data-d]").forEach(b => b.onclick = () => { b.setAttribute("aria-pressed", b.getAttribute("aria-pressed") !== "true"); SOM.tap(); });
+  $("lb-ok").onclick = async () => {
+    const dias = [...$("lb-d").querySelectorAll('[aria-pressed="true"]')].map(b => b.dataset.d), hora = $("lb-h").value || "07:00";
+    if(!dias.length) return toast("Escolha pelo menos um dia");
+    ME.lembrete = { dias, hora, nav: $("lb-n").checked }; save();
+    if(ME.lembrete.nav && "Notification" in window && Notification.permission === "default"){ try{ await Notification.requestPermission(); }catch(e){} }
+    const blob = new Blob([icsLembrete(dias, hora)], { type: "text/calendar;charset=utf-8" }), file = new File([blob], "lembrete-ck-life.ics", { type: "text/calendar" });
+    if(navigator.canShare && navigator.canShare({ files: [file] }) && /android/i.test(navigator.userAgent)) await navigator.share({ files: [file], title: "Lembrete CK Life" }).catch(() => {});
+    else { const u = URL.createObjectURL(blob), a = document.createElement("a"); a.href = u; a.download = "lembrete-ck-life.ics"; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 5000); }
+    SOM.chime && SOM.chime(); fecharSheet(); toast("Lembrete criado. Confirme no calendário."); if(TAB === "perfil") rPerfil(); else if(TAB === "inicio") rInicio();
+  };
+}
+// aviso com o app aberto, no horário escolhido
+setInterval(() => { try{
+  if(!ME || !ME.lembrete || !ME.lembrete.nav || !("Notification" in window) || Notification.permission !== "granted") return;
+  const n = new Date(), k = ["SU", "MO", "TU", "WE", "TH", "FR", "SA"][n.getDay()], hm = String(n.getHours()).padStart(2, "0") + ":" + String(n.getMinutes()).padStart(2, "0");
+  if(ME.lembrete.dias.includes(k) && hm === ME.lembrete.hora && ME.lembrete.ultimo !== today() && !diasTreino().has(today())){ ME.lembrete.ultimo = today(); save(); new Notification("Hora de treinar 💚", { body: "Seu treino de hoje está pronto no CK Life.", icon: "img/icone-192.png" }); }
+}catch(e){} }, 30000);
+/* olho para mostrar a senha em todos os campos de senha */
+function ligaOlhos(raiz){ (raiz || document).querySelectorAll('input[type="password"]:not([data-olho])').forEach(inp => { inp.dataset.olho = 1; const w = document.createElement("span"); w.className = "senha-w"; inp.parentNode.insertBefore(w, inp); w.appendChild(inp); const b = document.createElement("button"); b.type = "button"; b.className = "olho"; b.setAttribute("aria-label", "Mostrar senha"); b.textContent = "Mostrar"; b.onclick = () => { const v = inp.type === "password"; inp.type = v ? "text" : "password"; b.textContent = v ? "Ocultar" : "Mostrar"; b.setAttribute("aria-label", v ? "Ocultar senha" : "Mostrar senha"); }; w.appendChild(b); }); }
+new MutationObserver(() => ligaOlhos()).observe(document.body, { childList: true, subtree: true }); ligaOlhos();
 function rInicio(){
   const T = treinoDoDia(), p = progAtual(), feitos = diasTreino(), hojeFeito = feitos.has(today());
   const sem = semanaAtualDias(), nSem = sem.filter(d => feitos.has(d)).length, meta = ME.perfil.dias || 3;
@@ -2763,13 +3116,15 @@ function rInicio(){
   const nivelN = { Iniciante: "Iniciante", "Intermediário": "Intermediário", Todos: "Todos os níveis" }[p.nivel] || p.nivel;
   const obj = objById(ME.perfil.objetivo), rd = receitaDoDia();
   $("t-inicio").innerHTML = `
-    <div class="capa"><img class="capa-foto" src="img/modelo.jpg" alt="" onerror="this.remove()"><button class="avatar" id="h-av" aria-label="Perfil">${esc(ME.nome[0].toUpperCase())}</button><div class="capa-tx"><span class="hi">${saudacao()}, ${esc(ME.nome.split(" ")[0])} 👋</span><h1>Vamos evoluir hoje?</h1><p>${hojeFeito ? "Treino de hoje feito. " + frase() : "Seu treino está pronto."}</p></div></div>
+    <div class="capa"><img class="capa-foto" src="img/modelo.jpg" alt="" onerror="this.remove()"><button class="avatar" id="h-av" aria-label="Perfil">${fotoAv(ME)}</button><div class="capa-tx"><span class="hi">${saudacao()}, ${esc(ME.nome.split(" ")[0])} 👋</span><h1>Vamos evoluir hoje?</h1><p>${hojeFeito ? "Treino de hoje feito. " + frase() : "Seu treino está pronto."}</p></div></div>
     ${hojeFeito ? `<div class="today done"><div><span class="eyebrow">Treino de hoje concluído</span><h2>Você está mais perto do que ontem.</h2><p>${ultimo ? `${esc(ultimo.nome)} · ${ultimo.min} min · ${int(ultimo.kcal)} kcal` : ""}</p><div class="meta" style="margin-bottom:10px"><span>${ic("flame", 14)} ${s} ${s === 1 ? "dia" : "dias"} seguidos</span></div><button class="btn btn-sm" id="h-extra">Quero treinar mais</button></div></div>`
     : `<div class="today"><div><span class="eyebrow">Treino de hoje</span><h2>${esc(T.nome)}</h2><p>Semana ${semana()} de ${p.semanas}</p>
         <div class="meta"><span>${ic("clock", 14)} ${minTreino(T)} min</span><span>${ic("bolt", 14)} ${nivelN}</span><span>${ic("flame", 14)} ~${kcalTreino(T)} kcal</span></div>
         <button class="btn" id="h-go">${ic("play", 16)} Começar treino</button></div>
         <div class="hfig">${window.BONECO.thumb(exById(T.steps[0].id), "f")}${foto(`img/treino-${p.id}.jpg`)}</div></div>`}
+    ${cardPassos()}
     ${av ? `<div class="notice">${ic("speaker", 22)}<div><b>${esc(av.titulo)}</b><p>${esc(av.texto)}</p></div></div>` : ""}
+    <div class="frase-dia"><span>${ic("star", 16)} Frase do dia</span><b>${esc(doDia(FRASES.concat(["Um treino de cada vez.", "Disciplina hoje, resultado amanhã.", "Seu corpo agradece cada minuto.", "Não precisa ser perfeito, precisa ser feito."])))}</b></div>
     <div><div class="sec-title"><h3>Sua evolução</h3><button class="link" id="h-evo">Ver tudo</button></div>
       <div class="evo" style="margin-top:12px">
         <div><b class="num">${L.length}</b><span>treinos realizados</span></div>
@@ -2779,6 +3134,7 @@ function rInicio(){
       </div></div>
     <div class="card" style="padding:14px 12px">
       <div class="sec-title" style="padding:0 4px 10px"><h3 style="font-size:17px">Esta semana</h3><span class="muted num" style="font-size:14px">${nSem} de ${meta} treinos</span></div>
+      <p class="meta-sem ${nSem >= meta ? "ok" : ""}">${nSem >= meta ? `${ic("trophy", 15)} Meta da semana batida! Você é demais.` : `Falta${meta - nSem === 1 ? "" : "m"} ${meta - nSem} ${meta - nSem === 1 ? "treino" : "treinos"} para bater sua meta da semana.`}</p>
       <div class="week">${sem.map(d => { const dt = new Date(d + "T12:00:00"); return `<div class="wd ${feitos.has(d) ? "done" : ""} ${d === today() ? "hoje" : ""}"><span>${DIAS_CURTO[dt.getDay()]}</span><i>${feitos.has(d) ? ic("check", 16, 3) : dt.getDate()}</i></div>`; }).join("")}</div>
     </div>
     <div><div class="sec-title"><h3>Escolha seu objetivo</h3><span class="muted" style="font-size:13px">Atual: ${obj[1]}</span></div>
@@ -2791,7 +3147,9 @@ function rInicio(){
     <div class="card">
       <div class="sec-title"><span style="font-weight:700">${ic("drop", 16)} Água</span><span class="muted num" style="font-size:14px">${x.agua || 0} de ${m.agua} copos</span></div>
       <div class="water">${Array.from({ length: Math.max(m.agua, x.agua || 0) }, (_, i) => `<button class="cup ${i < (x.agua || 0) ? "on" : ""}" data-cup="${i}" aria-label="Copo ${i + 1}" data-mudo></button>`).join("")}</div>
+      <button class="btn btn-soft btn-sm agua-mais" id="h-agua" data-mudo>${ic("drop", 16)} + 1 copo de água</button>
     </div>
+    <div class="dica-dia">${ic("leaf", 20)}<div><b>Dica do dia</b><p>${esc(doDia(DICAS_DIA))}</p></div></div>
     <div class="card"><div class="sec-title"><h3>Cupons de desconto</h3><span class="muted num">${L.length % (DB.config.treinosParaCupom || 8)}/${DB.config.treinosParaCupom || 8}</span></div>
       <p class="hint" style="margin:6px 0 10px">A cada ${DB.config.treinosParaCupom || 8} treinos você ganha um cupom numa loja parceira.</p><div class="prog"><i style="width:${100 * (L.length % (DB.config.treinosParaCupom || 8)) / (DB.config.treinosParaCupom || 8)}%"></i></div></div>
     <p class="slogan">CK <b>Life</b> · Sua evolução, todos os dias.</p>`;
@@ -2801,6 +3159,10 @@ function rInicio(){
   $("h-evo").onclick = () => tab("evolucao");
   $("h-rap").onclick = () => { TV = "rapidos"; tab("treinar"); };
   $("h-dieta").onclick = () => { DV = "diario"; tab("dieta"); };
+  const ha = $("h-agua"); if(ha) ha.onclick = () => { x.agua = (x.agua || 0) + 1; SOM.water && SOM.water(); vibra(15); save(); toast(`${x.agua} ${x.agua === 1 ? "copo" : "copos"} hoje. Isso!`); rInicio(); };
+  const psx = $("ps-x"); if(psx) psx.onclick = () => { ME.passosOk = true; save(); rInicio(); };
+  $("t-inicio").querySelectorAll("[data-passo]").forEach(b => b.onclick = () => { const k = b.dataset.passo;
+    if(k === "foto") menuFoto(); else if(k === "treino") iniciaTreino(treinoDoDia()); else if(k === "refeicao"){ DV = "diario"; tab("dieta"); } else if(k === "agua"){ x.agua = (x.agua || 0) + 1; SOM.water && SOM.water(); save(); rInicio(); } else if(k === "lembrete") editaLembrete(); else if(k === "app"){ tab("perfil"); setTimeout(() => { const i = document.querySelector(".inst"); if(i) i.scrollIntoView({ behavior: "smooth", block: "center" }); else { ME.instalouApp = true; save(); } }, 300); } });
   $("h-card").onclick = () => { DV = "cardapio"; tab("dieta"); };
   $("h-rec").onclick = () => abrirReceita(rd.id);
   $("t-inicio").querySelectorAll("[data-obj]").forEach(b => b.onclick = () => abrirObjetivo(b.dataset.obj));
@@ -3000,7 +3362,7 @@ const mmss = n => { n = Math.max(0, n | 0); return String(Math.floor(n / 60)).pa
 function desenhaPlay(){
   const T = PL.T, s = T.steps[PL.i], e = exById(s.id), nx = T.steps[PL.i + 1];
   window.BONECO.stop();
-  const head = `<div class="phd"><button class="iconbtn" id="pl-x" aria-label="Sair do treino">${ic("close", 20)}</button>${segsHtml()}<span class="num pcount">${PL.i + 1}/${T.steps.length}</span></div>`;
+  const head = `<div class="phd"><button class="iconbtn" id="pl-x" aria-label="Sair do treino">${ic("close", 20)}</button>${segsHtml()}<span class="num pcount"><span id="pl-tt">${mmss(Math.round((Date.now() - PL.ini) / 1000))}</span> · ${PL.i + 1}/${T.steps.length}</span></div>`;
   const etapa = s.rodadas > 1 ? `Rodada ${s.rodada} de ${s.rodadas}` : s.series > 1 ? `Série ${s.serie} de ${s.series}` : "";
   if(PL.fase === "fim") return;
   if(PL.fase === "prep" || PL.fase === "rest"){
@@ -3029,6 +3391,7 @@ function desenhaPlay(){
           ${s.modo === "t" ? `<button class="pmain" id="pl-main" data-mudo aria-label="${PL.pausa ? "Continuar" : "Pausar"}">${PL.pausa ? ic("play", 30) : ic("pause", 30)}</button>` : `<button class="pmain ok" id="pl-main" data-mudo aria-label="Concluí">${ic("check", 30, 3)}</button>`}
           <button class="iconbtn" id="pl-next" aria-label="Pular exercício">${ic("next", 22)}</button></div>
         ${s.modo === "r" ? `<p class="phint">Toque no ✓ quando terminar as ${s.val} repetições</p>` : ""}
+        ${nx ? `<p class="pnext">A seguir: <b>${esc(exById(nx.id).nome)}</b></p>` : `<p class="pnext">Último exercício 💪</p>`}
       </div></div>`;
     window.BONECO.mount($("pl-stage"), e, { paused: PL.pausa, onFrame: f => {
       const c = $("pl-cue"); if(c && c.textContent !== f.cue) c.textContent = f.cue;
@@ -3043,6 +3406,8 @@ function desenhaPlay(){
 }
 function atualizaPlay(){
   const s = PL.T.steps[PL.i];
+  const tt = $("pl-tt"); if(tt) tt.textContent = mmss(Math.round((Date.now() - PL.ini) / 1000));
+  const rg = $("pl-ring"); if(rg) rg.classList.toggle("fim", PL.rem <= 5);
   const t = $("pl-t"); if(t){ t.textContent = mmss(PL.rem); const r = $("pl-ring"); if(r && PL.tot) r.style.setProperty("--p", (100 * (1 - PL.rem / PL.tot)).toFixed(1)); }
   const b = $("pl-big"); if(b && s.modo === "t"){ b.textContent = mmss(PL.rem); const pg = $("pl-prog"); if(pg) pg.style.width = (100 * (1 - PL.rem / s.val)) + "%"; }
   const c = document.querySelector(".segs i.c"); if(c && s.modo === "t") c.style.setProperty("--p", (100 * (1 - PL.rem / s.val)) + "%");
@@ -3084,6 +3449,14 @@ async function cartaoConquista(o){
   x.fillStyle = "#B9DDB2"; x.font = `700 40px ${F2}`; x.fillText("Sua evolução, todos os dias.", 80, H - 120);
   return new Promise(ok => c.toBlob(ok, "image/jpeg", .9));
 }
+function confete(alvo){
+  if(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const c = document.createElement("canvas"); c.className = "confete"; alvo.appendChild(c); const x = c.getContext("2d"), W = c.width = alvo.clientWidth, H = c.height = alvo.clientHeight;
+  const cores = ["#3DDC6E", "#B9DDB2", "#FFD166", "#F4A62A", "#FFFFFF", "#7BA77A"], P = Array.from({ length: 140 }, () => ({ x: Math.random() * W, y: -20 - Math.random() * H * .5, vx: (Math.random() - .5) * 3, vy: 2 + Math.random() * 3.5, r: 4 + Math.random() * 5, a: Math.random() * 6, va: (Math.random() - .5) * .3, c: cores[Math.floor(Math.random() * cores.length)] }));
+  let t0 = performance.now();
+  const f = now => { const dt = Math.min(2, (now - t0) / 16); t0 = now; x.clearRect(0, 0, W, H); let vivos = 0; P.forEach(p => { p.x += p.vx * dt; p.y += p.vy * dt; p.vy += .04 * dt; p.a += p.va * dt; if(p.y < H + 20){ vivos++; x.save(); x.translate(p.x, p.y); x.rotate(p.a); x.fillStyle = p.c; x.fillRect(-p.r / 2, -p.r / 3, p.r, p.r * .66); x.restore(); } }); if(vivos && c.isConnected) requestAnimationFrame(f); else c.remove(); };
+  requestAnimationFrame(f);
+}
 function fimTreino(parcial){
   clearInterval(PL.int); window.BONECO.stop(); PL.fase = "fim";
   const T = PL.T, min = Math.max(1, Math.round((Date.now() - PL.ini) / 60000)), kcal = Math.round(PL.kcal), antes = medalhas().filter(m => m.ok).map(m => m.id);
@@ -3094,20 +3467,22 @@ function fimTreino(parcial){
   if(ME.treinos.length % meta === 0) ganhou = darCupom();
   save();
   const novas = medalhas().filter(m => m.ok && !antes.includes(m.id));
+  const recorde = !parcial && ME.treinos.length > 2 && min >= Math.max(...ME.treinos.slice(0, -1).map(t => t.min || 0)) && min > 0;
   SOM.done(); vibra([100, 60, 100]);
   falar(parcial ? "Treino salvo. Cada minuto conta!" : `Treino concluído! Parabéns, ${ME.nome.split(" ")[0]}. Você está mais perto do que ontem.`);
   if(ganhou || novas.length) setTimeout(SOM.coupon, 1100);
   $("play").innerHTML = `<div class="pc" style="overflow-y:auto;padding-top:20px"><div class="done-hero">
     <div class="medalbig">${ic("trophy", 54, 1.8)}</div>
-    <h2 style="font-size:34px;color:#fff;margin-top:8px">${parcial ? "Treino salvo" : "Treino concluído!"}</h2><p style="color:#E6EFE4;margin:0">Parabéns! Você deu mais um passo para a sua melhor versão.</p><p style="color:#B9DDB2;margin:0;font-weight:700">${frase(min)}</p>
+    <h2 style="font-size:34px;color:#fff;margin-top:8px">${parcial ? "Treino salvo" : "Treino concluído!"}</h2><p style="color:#E6EFE4;margin:0">Parabéns! Você deu mais um passo para a sua melhor versão.</p>${recorde ? `<div class="recorde">${ic("trophy", 16)} Seu treino mais longo até hoje!</div>` : ""}<p style="color:#B9DDB2;margin:0;font-weight:700">${frase(min)}</p>
     <p style="color:#8B9690;margin:0">${esc(T.nome)}</p>
     <div class="done-stats"><div>${ic("clock", 22)}<span><b class="num">${min} min</b><small>Tempo total</small></span></div><div>${ic("flame", 22)}<span><b class="num">${kcal}</b><small>Calorias gastas</small></span></div><div>${ic("treinar", 22)}<span><b class="num">${PL.feitos.size}</b><small>Exercícios</small></span></div><div>${ic("trophy", 22)}<span><b class="num">${Math.round(100 * PL.feitos.size / T.steps.length)}%</b><small>Concluído</small></span></div></div>
     <p style="color:#B9DDB2;margin:0;font-weight:700">${streak()} ${streak() === 1 ? "dia seguido" : "dias seguidos"} treinando</p>
     ${novas.map(m => `<div class="nx" style="max-width:none">${`<span class="exn" style="background:radial-gradient(circle at 30% 30%,#FFE08A,#FFB23F);color:#3a2200;width:56px;height:56px;border-radius:50%">${ic(m.ic, 26)}</span>`}<span><b>Nova conquista: ${esc(m.nome)}</b><small>${esc(m.desc)}</small></span></div>`).join("")}
     ${ganhou ? `<div class="coupon" style="width:100%;border-color:#3DDC6E"><b>Você ganhou um cupom!</b><span>${ganhou.desconto}% na ${esc(ganhou.loja)}</span><span class="code">${ganhou.codigo}</span></div>` : ""}
     ${parcial ? "" : `<p style="color:#cfd6d2;margin:10px 0 0;font-weight:600">Como foi o treino?</p><div class="rate"><button data-r="-1">Fácil</button><button data-r="0" aria-pressed="true">Na medida</button><button data-r="1">Difícil</button></div>`}
-    <button class="btn btn-accent btn-lg btn-block" id="fim-ok" style="margin-top:8px">Ver minha evolução</button><button class="btn btn-share btn-block" id="fim-share">${ic("share", 18)} Compartilhar conquista</button><button class="btn btn-line btn-block" id="fim-out">Fazer outro treino</button>
+    <button class="btn btn-accent btn-lg btn-block" id="fim-ok" style="margin-top:8px">Ver minha evolução</button><button class="btn btn-share btn-block" id="fim-share">${ic("share", 18)} Compartilhar conquista</button><button class="btn btn-share btn-block" id="fim-post">${ic("juntas", 18)} Postar na comunidade</button><button class="btn btn-line btn-block" id="fim-out">Fazer outro treino</button>
   </div></div>`;
+  if(!parcial) confete($("play"));
   let rate = 0;
   $("play").querySelectorAll("[data-r]").forEach(b => b.onclick = () => { rate = +b.dataset.r; $("play").querySelectorAll("[data-r]").forEach(x => x.setAttribute("aria-pressed", x === b)); });
   const sai = dest => {
@@ -3115,6 +3490,7 @@ function fimTreino(parcial){
     fimPlay(); tab(dest);
   };
   $("fim-ok").onclick = () => sai(parcial ? "inicio" : "evolucao");
+  $("fim-post").onclick = async () => { const b = $("fim-post"); b.classList.add("carregando"); b.disabled = true; let blob = null; try{ blob = await comprimeImg(await blobParaURL(await cartaoConquista({ T, min, kcal, dias: streak(), nome: ME.nome.split(" ")[0], parcial })), 1080); }catch(e){} b.classList.remove("carregando"); b.disabled = false; sai("juntas"); setTimeout(() => abreComposer(`Treino concluído: ${T.nome} em ${min} min 💪`, blob), 350); };
   $("fim-share").onclick = async () => {
     const b = $("fim-share"); b.classList.add("carregando"); b.disabled = true;
     try{
@@ -3393,6 +3769,7 @@ function medalhas(){
   ];
 }
 let CALM = 0;
+function recordeSeq(){ const D = [...diasTreino()].sort(); let best = 0, cur = 0, prev = null; D.forEach(d => { cur = prev && addD(prev, 1) === d ? cur + 1 : 1; best = Math.max(best, cur); prev = d; }); return best; }
 function rEvolucao(){
   const T = ME.treinos || [], min = T.reduce((a, t) => a + (t.min || 0), 0), kcal = T.reduce((a, t) => a + (t.kcal || 0), 0), feitos = diasTreino(), M = medalhas();
   const ref = new Date(); ref.setDate(1); ref.setMonth(ref.getMonth() + CALM);
@@ -3401,6 +3778,7 @@ function rEvolucao(){
   $("t-evolucao").innerHTML = `
     ${capa("Sua evolução", frase(3), "", "img/ex-alongquad.jpg")}
     <div class="stats"><div class="stat"><b class="num">${T.length}</b><span>treinos</span></div><div class="stat"><b class="num">${int(min)}</b><span>minutos</span></div><div class="stat"><b class="num">${int(kcal)}</b><span>kcal gastas</span></div></div>
+    ${(() => { const mesA = today().slice(0, 7), dA = new Date(); dA.setDate(1); dA.setMonth(dA.getMonth() - 1); const mesB = dA.toISOString().slice(0, 7); const A = T.filter(t => t.d.startsWith(mesA)), B = T.filter(t => t.d.startsWith(mesB)); const dif = A.length - B.length; const rec = recordeSeq(); return `<div class="mes-card"><div><span>Este mês</span><b class="num">${A.length} ${A.length === 1 ? "treino" : "treinos"}</b><small>${int(A.reduce((a, t) => a + (t.min || 0), 0))} min · ${int(A.reduce((a, t) => a + (t.kcal || 0), 0))} kcal</small></div><div class="mes-dif ${dif >= 0 ? "up" : "down"}">${B.length || A.length ? `${dif >= 0 ? "▲" : "▼"} ${Math.abs(dif)} vs. mês passado` : "Primeiro mês!"}</div><div class="mes-rec">${ic("flame", 16)} Recorde: <b>${rec} ${rec === 1 ? "dia seguido" : "dias seguidos"}</b></div></div>`; })()}
     <div class="card"><div class="sec-title"><h3>${nomeMes}</h3><span style="display:flex;gap:6px"><button class="iconbtn sm" id="cal-p" aria-label="Mês anterior">${ic("back", 16)}</button><button class="iconbtn sm" id="cal-n" aria-label="Próximo mês" ${CALM >= 0 ? "disabled" : ""} style="transform:rotate(180deg)">${ic("back", 16)}</button></span></div>
       <div class="cal" style="margin-top:12px">${["S","T","Q","Q","S","S","D"].map(d => `<span class="wh">${d}</span>`).join("")}${Array.from({ length: ini }, () => `<span class="o"></span>`).join("")}${Array.from({ length: nd }, (_, k) => { const d = `${ano}-${pad(mes + 1)}-${pad(k + 1)}`; return `<span class="${feitos.has(d) ? "f" : ""} ${d === today() ? "h" : ""}">${k + 1}</span>`; }).join("")}</div>
       <p class="hint" style="margin:10px 0 0">${[...feitos].filter(d => d.startsWith(`${ano}-${pad(mes + 1)}`)).length} dias treinados neste mês · sequência atual de ${streak()} ${streak() === 1 ? "dia" : "dias"}</p></div>
@@ -3439,15 +3817,18 @@ const sw = on => `<span class="sw" role="switch" aria-checked="${!!on}"></span>`
 function rPerfil(){
   const m = metas(ME), p = ME.perfil, prem = isPremium(ME), cups = (DB.cupons || []).filter(c => c.user === ME.id).reverse();
   const profs = (DB.profissionais || []).filter(x => x.ativo).sort((a, b) => (a.ordem || 0) - (b.ordem || 0));
-  const th = document.documentElement.dataset.theme || "light";
+  const th = document.documentElement.dataset.theme || "light", nv = nivelAluna((ME.treinos || []).length);
   $("t-perfil").innerHTML = `
-    ${capa("", "", `<div class="hello" style="gap:14px"><span class="avatar" style="width:64px;height:64px;font-size:26px">${esc(ME.nome[0].toUpperCase())}</span><div><h2 style="color:#fff">${esc(ME.nome)}</h2><div class="k" style="color:rgba(245,248,239,.8)">${esc(ME.email)}</div></div></div>`, "img/ex-panturrilha.jpg")}
+    ${capa("", "", `<div class="hello" style="gap:14px"><button class="avatar avedit" id="p-foto" aria-label="Trocar foto do perfil" style="width:72px;height:72px;font-size:28px">${fotoAv(ME)}<i class="avcam">${ic("plus", 13, 3)}</i></button><div><h2 style="color:#fff">${esc(ME.nome)}</h2><div class="k" style="color:rgba(245,248,239,.8)">${esc(ME.email)}</div><span class="nivel-chip">${ic("star", 13)} Nível ${nv.nome}</span></div></div>`, "img/ex-panturrilha.jpg")}
+    <div class="pstats"><div><b class="num">${int((ME.treinos || []).length)}</b><span>treinos</span></div><div><b class="num">${int((ME.treinos || []).reduce((a, t) => a + (t.min || 0), 0))}</b><span>minutos</span></div><div><b class="num">${streak()}</b><span>dias seguidos</span></div></div>
+    ${nv.prox ? `<div class="card nivel-card"><div class="sec-title"><h3 style="font-size:16px">Próximo nível: ${nv.prox[1]}</h3><span class="muted num" style="font-size:13px">faltam ${nv.falta} ${nv.falta === 1 ? "treino" : "treinos"}</span></div><div class="prog" style="margin-top:10px"><i style="width:${nv.pct}%"></i></div><p class="hint" style="margin:8px 0 0">Membro desde ${brD(ME.criado || today())}</p></div>` : `<div class="card nivel-card"><h3 style="font-size:16px">Você chegou ao nível máximo 🏆</h3><p class="hint" style="margin:6px 0 0">Membro desde ${brD(ME.criado || today())}</p></div>`}
     <div class="today" style="--pc:${prem ? "#3DDC6E" : "#FFB23F"};min-height:0;grid-template-columns:1fr"><div><span class="eyebrow">${prem ? (ME.premium.tipo === "teste" ? "Premium · teste grátis" : "Premium") : "Plano gratuito"}</span>
       <h2 style="font-size:24px">${prem ? (ME.premium.tipo === "vitalicio" ? "Premium vitalício" : `Premium até ${brD(ME.premium.ate)}`) : "Treine sem anúncios"}</h2>
       <p>${prem ? "Sem anúncios e com tudo liberado." : "Assine o Premium e treine sem interrupções."}</p>
       ${!prem || ME.premium.tipo === "teste" ? (DB.config.checkout ? `<a class="btn btn-accent" style="margin-top:14px" href="${esc(DB.config.checkout)}" target="_blank" rel="noopener">Assinar por R$ ${String(DB.config.premiumPreco || 19.9).replace(".", ",")}/mês</a>` : "") : ""}</div></div>
     ${cardInstalar()}
     <div class="card" style="padding:6px 16px">
+      ${setRow("p-dados", "perfil", "Meus dados", `${esc(mascaraTel(ME.whats || "")) || "Nome, WhatsApp e cidade"}`)}
       ${setRow("p-plano", "target", "Meu plano de treino", `${esc(progAtual().nome)} · ${p.dias} dias por semana`)}
       ${setRow("p-obj", "target", "Meu objetivo", objById(p.objetivo)[1])}
       ${setRow("p-pref", "home", "Meu treino em casa", `${p.tempo} min · ${(p.itens || []).length ? (p.itens || []).map(i => EQN[i]).join(", ") : "sem equipamento"}`)}
@@ -3455,6 +3836,7 @@ function rPerfil(){
       ${setRow("p-peso", "scale", "Registrar peso", `Atual: ${String(p.peso).replace(".", ",")} kg`)}
     </div>
     <div class="card" style="padding:6px 16px">
+      ${setRow("p-lemb", "clock", "Lembrete de treino", ME.lembrete ? `${ME.lembrete.dias.map(d => (DSEM.find(x => x[0] === d) || [])[1]).join(", ")} às ${ME.lembrete.hora}` : "Defina dias e horário")}
       ${setRow("p-voz", "speaker", "Voz do treinador", ME.voz === false ? "Desligada" : `Ligada${VOZ.v ? " · " + esc(VOZ.v.name.replace(/\s*\(.*\)/, "")) : ""}`)}
       ${setRow("p-som", "bolt", "Sons", "Sino, bipes e efeitos", sw(SOM.on))}
       ${setRow("p-tema", "moon", "Tema", th === "light" ? "Claro" : "Escuro", `<span class="seg" style="padding:3px"><span style="padding:6px 12px;border-radius:999px;font-size:13px;font-weight:700;${th !== "light" ? "background:var(--surface);" : "color:var(--muted)"}">Escuro</span><span style="padding:6px 12px;border-radius:999px;font-size:13px;font-weight:700;${th === "light" ? "background:var(--surface);" : "color:var(--muted)"}">Claro</span></span>`)}
@@ -3464,9 +3846,16 @@ function rPerfil(){
     ${profs.length ? `<div class="card"><h3 style="margin-bottom:6px">Profissionais</h3><p class="hint" style="margin:0 0 6px">Personal trainers e nutricionistas parceiros.</p>
       ${profs.map(x => `<div class="prof"><span class="avatar" style="width:52px;height:52px">${x.foto ? `<img src="${esc(x.foto)}" alt="">` : esc(x.nome.replace(/^Dra?\.\s*/, "")[0])}</span><span style="min-width:0"><b>${esc(x.nome)}</b><small>${esc(x.tipo)}${x.valor ? " · R$ " + int(x.valor) + "/sessão" : ""}</small></span><a class="btn btn-accent btn-sm" href="https://wa.me/55${String(x.whats).replace(/\D/g, "").replace(/^55/, "")}" target="_blank" rel="noopener">WhatsApp</a></div>`).join("")}</div>` : ""}
     <div class="card" style="padding:6px 16px">
+      ${setRow("p-conv", "share", "Convide uma amiga", "Treinar junto é mais gostoso")}
+      ${linkSuporte() ? setRow("p-sup", "speaker", "Fale com o suporte", "Atendimento pelo WhatsApp") : ""}
       ${setRow("p-sair", "logout", "Sair da conta", "")}
     </div>
     ${DB.config.suporte ? `<p class="hint" style="text-align:center;margin:0">Suporte: ${esc(DB.config.suporte)}</p>` : ""}`;
+  $("p-foto").onclick = menuFoto;
+  $("p-lemb").onclick = editaLembrete;
+  $("p-dados").onclick = editaDados;
+  $("p-conv").onclick = convidar;
+  const psu = $("p-sup"); if(psu) psu.onclick = () => window.open(linkSuporte(), "_blank", "noopener");
   $("p-plano").onclick = () => abrirPrograma(progAtual().id);
   $("p-pref").onclick = editaPreferencias;
   $("p-obj").onclick = () => abrirObjetivo(p.objetivo);
@@ -3599,7 +3988,7 @@ function mostrarAnuncio(c){
 /* ---------- Início ---------- */
 try{ const th = localStorage.getItem(KEY + "_tema"); document.documentElement.dataset.theme = th || "light"; }catch(e){ document.documentElement.dataset.theme = "light"; }
 const PLANOS = PROGS.map(p => ({ id: p.id, nome: p.nome, nivel: p.nivel, obj: p.foco, treinos: p.dias }));
-window.FV = { OBJS, ic, nuvem: NU, get DB(){ return DB; }, set DB(v){ DB = v; }, save, semente, $, esc, int, brD, today, addD, idade, uid, hash, toast, copyText, show, receitas, exercicios, exById, PLANOS, BASE_REC, CATS, isPremium, metas, get ME(){ return ME; }, abrirApp, entrar, logout, linkCamp };
+window.FV = { OBJS, ic, CM, tempoAtras, nuvem: NU, get DB(){ return DB; }, set DB(v){ DB = v; }, save, semente, $, esc, int, brD, today, addD, idade, uid, hash, toast, copyText, show, receitas, exercicios, exById, PLANOS, BASE_REC, CATS, isPremium, metas, get ME(){ return ME; }, abrirApp, entrar, logout, linkCamp };
 window.addEventListener("hashchange", () => { fechaTudo(); entrar(); });
 async function iniciar(){ if(NU.ativo){ try{ await NU.iniciar(DB, modoAdmin(), telaNovaSenha); }catch(e){ console.warn(e); toast("Não conseguimos conectar. Confira sua internet."); } } if(!(location.hash.includes("type=recovery"))) entrar(); }
 if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", iniciar); else setTimeout(iniciar, 0);
@@ -3614,7 +4003,7 @@ const money = v => (Number(v) || 0).toLocaleString("pt-BR", { style: "currency",
 const pct = (a, b) => b ? (100 * a / b).toLocaleString("pt-BR", { maximumFractionDigits: 1 }) + "%" : "0%";
 const GEN = { feminino: "Feminino", masculino: "Masculino", outro: "Outro", todos: "Todos" };
 const DEST = { whatsapp: "WhatsApp", instagram: "Instagram", site: "Site" };
-const SECOES = [["resumo","Resumo"],["anunciantes","Anunciantes"],["campanhas","Campanhas"],["metricas","Métricas"],["alunos","Alunas"],["profissionais","Profissionais"],["parceiros","Parceiros"],["financeiro","Financeiro"],["receitas","Receitas"],["exercicios","Exercícios"],["avisos","Avisos"],["cidades","Cidades"],["segmentos","Segmentos"],["admins","Admins"],["config","Configurações"]];
+const SECOES = [["resumo","Resumo"],["anunciantes","Anunciantes"],["campanhas","Campanhas"],["metricas","Métricas"],["alunos","Alunas"],["profissionais","Profissionais"],["parceiros","Parceiros"],["financeiro","Financeiro"],["receitas","Receitas"],["exercicios","Exercícios"],["avisos","Avisos"],["comunidade","Comunidade"],["cidades","Cidades"],["segmentos","Segmentos"],["admins","Admins"],["config","Configurações"]];
 let SEC = "resumo", ME = null, PERM = { total: true };
 const podeVer = s => PERM.total || PERM[s] === "ver" || PERM[s] === "editar";
 const podeEditar = s => PERM.total || PERM[s] === "editar";
@@ -3645,10 +4034,11 @@ const AIC = {
   segmentos:'<path d="M12 2 2 7l10 5 10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>',
   admins:'<path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5z"/><path d="m9 12 2 2 4-4"/>',
   config:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',
+  comunidade:'<path d="M21 12a8.5 8.5 0 0 1-12.4 7.6L3 21l1.5-5.2A8.5 8.5 0 1 1 21 12z"/><path d="M8 11h8M8 14.5h5"/>',
   pdf:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M12 18v-6M9 15l3 3 3-3"/>'
 };
 const aic = (k, s = 18) => `<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${AIC[k] || ""}</svg>`;
-const GRUPOS = [["Visão geral", ["resumo","metricas"]], ["Anúncios", ["anunciantes","campanhas","parceiros","financeiro"]], ["Conteúdo do app", ["alunos","profissionais","receitas","exercicios","avisos"]], ["Ajustes", ["cidades","segmentos","admins","config"]]];
+const GRUPOS = [["Visão geral", ["resumo","metricas"]], ["Anúncios", ["anunciantes","campanhas","parceiros","financeiro"]], ["Conteúdo do app", ["alunos","comunidade","profissionais","receitas","exercicios","avisos"]], ["Ajustes", ["cidades","segmentos","admins","config"]]];
 function abrir(){
   ME = F.ME; if(!ME || !ME.admin){ toast("Sua conta não é de administrador"); return; }
   PERM = ME.perms || { total: true };
@@ -3758,7 +4148,7 @@ function vResumo(){
   const treinos30 = db.users.reduce((a, u) => a + (u.treinos || []).filter(x => x.d >= ini).length, 0);
   const temEx = db.users.some(u => u.exemplo) || db.anunciantes.some(a => a.exemplo);
   $("adm-main").innerHTML = `
-    <div class="head"><div><h1>Resumo</h1><p class="muted">Visão geral do app e dos anúncios. Anúncios: últimos 30 dias.</p></div></div>
+    <div class="head"><div><span class="adm-ola">${(h => h < 12 ? "Bom dia" : h < 18 ? "Boa tarde" : "Boa noite")(new Date().getHours())}, ${esc(((ME && ME.nome) || "").split(" ")[0])} · ${new Date().toLocaleDateString("pt-BR", { weekday: "long", day: "numeric", month: "long" })}</span><h1>Resumo</h1><p class="muted">Visão geral do app e dos anúncios. Anúncios: últimos 30 dias.</p></div></div>
     ${temEx ? `<div class="msg msg-ok">O painel está com <b>dados de exemplo</b> (marcados com a etiqueta "exemplo") para você ver como fica. Apague em Configurações quando quiser começar do zero.</div>` : ""}
     <div class="grid g4">
       ${kpi("Alunas cadastradas", int(al.total), `+${int(al.novos7)} nos últimos 7 dias`, "alunos", 1)}
@@ -4297,7 +4687,7 @@ function vAvisos(){
     </tbody></table></div>`;
   const ok = $("av-ok"); if(ok) ok.onclick = () => { const t = val("av-t"), x = val("av-x"); if(!t || !x) return toast("Preencha título e texto"); DB().avisos.push({ id: F.uid(), titulo: t, texto: x, d: today(), ativo: true }); save(); toast("Aviso publicado"); rerender(); };
   $("adm-main").querySelectorAll("[data-tg]").forEach(b => b.onclick = () => { const a = DB().avisos.find(x => x.id === b.dataset.tg); a.ativo = !a.ativo; save(); rerender(); });
-  $("adm-main").querySelectorAll("[data-del]").forEach(b => b.onclick = () => { DB().avisos = DB().avisos.filter(x => x.id !== b.dataset.del); save(); rerender(); });
+  $("adm-main").querySelectorAll("[data-del]").forEach(b => b.onclick = () => confirmar("Excluir este aviso?", () => { DB().avisos = DB().avisos.filter(x => x.id !== b.dataset.del); save(); toast("Aviso excluído"); rerender(); }));
 }
 
 /* ---------- Cidades, segmentos e admins ---------- */
@@ -4383,7 +4773,24 @@ function vConfig(){
   };
 }
 
-const VIEWS = { resumo: vResumo, anunciantes: vAnunciantes, campanhas: vCampanhas, metricas: vMetricas, alunos: vAlunos, profissionais: vProfissionais, parceiros: vParceiros, financeiro: vFinanceiro, receitas: vReceitas, exercicios: vExercicios, avisos: vAvisos, cidades: vCidades, segmentos: vSegmentos, admins: vAdmins, config: vConfig };
+/* ---------- Comunidade: moderação ---------- */
+async function vComunidade(){
+  $("adm-main").innerHTML = `<div class="head"><div><h1>Comunidade</h1><p class="muted">Publicações das alunas na aba Juntas. Oculte ou exclua o que não combina com o espaço.</p></div><button class="btn btn-line btn-sm" id="cm-at">Atualizar</button></div><div id="cm-l" class="grid g2"><div class="card">Carregando…</div></div>`;
+  $("cm-at").onclick = rerender;
+  let L = [];
+  try{ L = await F.CM.carregar(true); }catch(e){ $("cm-l").innerHTML = `<div class="card"><b>A comunidade ainda não foi ativada no banco.</b><p class="muted" style="margin:6px 0 0">Rode o arquivo comunidade.sql no Supabase (SQL Editor) uma vez.</p></div>`; return; }
+  const tot = { p: L.length, c: L.reduce((a, p) => a + (p.coments || []).length, 0), k: L.reduce((a, p) => a + (p.curtidas || []).length, 0) };
+  $("cm-l").outerHTML = `<div class="grid g3">${kpi("Publicações", int(tot.p), "", "comunidade", 1)}${kpi("Comentários", int(tot.c), "", "comunidade")}${kpi("Curtidas", int(tot.k), "", "profissionais")}</div>
+    <div class="cm-adm">${L.map(p => `<div class="card cm-item ${p.oculto ? "oc" : ""}" data-id="${p.id}">${p.img ? `<img src="${esc(p.img)}" alt="" loading="lazy">` : ""}<div><b>${esc(p.nome)}</b> <small class="muted">${F.tempoAtras(p.criado)} · ${(p.curtidas || []).length} curtidas · ${(p.coments || []).length} comentários${p.oculto ? " · <span class='st warn'>oculto</span>" : ""}</small>
+      ${p.texto ? `<p>${esc(p.texto)}</p>` : ""}
+      ${(p.coments || []).map(c => `<div class="cm-c"><span><b>${esc(c.nome)}:</b> ${esc(c.texto)}</span><button class="btn btn-line btn-sm needs-edit" data-dc="${p.id}|${c.id}">Excluir</button></div>`).join("")}
+      <div class="acts needs-edit" style="margin-top:8px"><button class="btn btn-line btn-sm" data-oc="${p.id}">${p.oculto ? "Mostrar de novo" : "Ocultar"}</button><button class="btn btn-bad btn-sm" data-dp="${p.id}">Excluir</button></div></div></div>`).join("") || `<div class="card">Nenhuma publicação ainda.</div>`}</div>`;
+  const acha = id => L.find(p => p.id === id);
+  $("adm-main").querySelectorAll("[data-oc]").forEach(b => b.onclick = async () => { const p = acha(b.dataset.oc), v = !p.oculto; try{ await F.CM.ocultar(p, v); toast(v ? "Publicação ocultada" : "Publicação visível de novo"); rerender(); }catch(e){ toast("Não deu agora. Tente de novo."); } });
+  $("adm-main").querySelectorAll("[data-dp]").forEach(b => b.onclick = () => { const p = acha(b.dataset.dp); confirmar(`Excluir a publicação de ${p.nome}? Isso não pode ser desfeito.`, async () => { try{ await F.CM.apagaPost(p); toast("Publicação excluída"); rerender(); }catch(e){ toast("Não deu agora. Tente de novo."); } }); });
+  $("adm-main").querySelectorAll("[data-dc]").forEach(b => b.onclick = async () => { const [pid, cid] = b.dataset.dc.split("|"), p = acha(pid), c = p.coments.find(x => x.id === cid); try{ await F.CM.apagaComent(p, c); toast("Comentário excluído"); rerender(); }catch(e){ toast("Não deu agora."); } });
+}
+const VIEWS = { resumo: vResumo, anunciantes: vAnunciantes, campanhas: vCampanhas, metricas: vMetricas, alunos: vAlunos, profissionais: vProfissionais, parceiros: vParceiros, financeiro: vFinanceiro, receitas: vReceitas, exercicios: vExercicios, avisos: vAvisos, comunidade: vComunidade, cidades: vCidades, segmentos: vSegmentos, admins: vAdmins, config: vConfig };
 window.ADMIN = { abrir };
 })();
 </script>
