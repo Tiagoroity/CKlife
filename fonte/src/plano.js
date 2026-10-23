@@ -24,7 +24,7 @@ function limite(f, padrao){ const l = ENT.d && ENT.d.limites ? ENT.d.limites[f] 
 function registraEvento(nome, props){ if(NU.ativo && NU.sb && NU.uid) NU.sb.rpc("registra_evento", { p_nome: nome, p_props: props || null }).then(() => {}, () => {}); }
 const brlP = v => "R$ " + Number(v || 0).toFixed(2).replace(".", ",");
 /* regras de conteúdo (sem número espalhado: limites vêm de recursos) */
-const PROG_FREE_PADRAO = ["comecando", "hiit", "gluteos", "mobilidade"];
+const PROG_FREE_PADRAO = ["anual", "comecando", "hiit", "gluteos", "mobilidade"];
 const progGratis = id => (DB.config.programasFree || PROG_FREE_PADRAO).includes(id);
 function progLiberado(id){ return !id || progGratis(id) || pode("programas_completos"); }
 function receitaLivre(id){ const pl = (DB.receitasPlano || {})[id]; if(pl) return pl === "free" || pode("receitas_todas"); if(pode("receitas_todas")) return true; const L = BASE_REC; const i = L.findIndex(r => r.id === id); return i < 0 || i % 3 === 0; }

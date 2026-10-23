@@ -167,7 +167,7 @@ function semente(){
     cidades: [ {id:1,nome:"Cuiabá",uf:"MT",ativa:true}, {id:2,nome:"Várzea Grande",uf:"MT",ativa:true}, {id:3,nome:"Rondonópolis",uf:"MT",ativa:true}, {id:4,nome:"Sinop",uf:"MT",ativa:true}, {id:5,nome:"Outra cidade",uf:"",ativa:true} ],
     segmentos: [ {id:1,nome:"Academia",ativo:true}, {id:2,nome:"Suplementos",ativo:true}, {id:3,nome:"Restaurante saudável",ativo:true}, {id:4,nome:"Moda fitness",ativo:true}, {id:5,nome:"Clínica e estética",ativo:true} ],
     anunciantes: [], campanhas: [], pagamentos: [], profissionais: [], parceiros: [], cupons: [], avisos: [],
-    receitasExtras: [], receitasOcultas: [], exercExtras: [], exercAjustes: [], receitasPlano: {}
+    receitasExtras: [], receitasOcultas: [], exercExtras: [], exercAjustes: [], receitasPlano: {}, modulos: {}
   };
   db.anunciantes = [
     { id:"an1", nome:"Academia Força Total", seg:1, cidade:1, plano:"exclusivo", valor:450, contato:"Marcos", tel:"(65) 99811-2201", obs:"", ativo:true, exemplo:true },
@@ -678,6 +678,11 @@ const linkSuporte = () => { const d = String(DB.config.suporte || "").replace(/\
 function coroaDe(u){ try{ const e = window.__ENT && window.__ENT.d;
   if(u === "eu" || (ME && u === ME.id) || (typeof NU !== "undefined" && NU.uid && u === NU.uid)){ if(e) return !!(e.pro && !e.trial); u = NU.uid; }
   const p = typeof PERFIS !== "undefined" ? PERFIS.get(u) : null; return !!(p && p.pro_ate && new Date(p.pro_ate) > new Date()); }catch(x){ return false; } }
+/* Módulos do app que o painel liga/desliga (Configurações > Módulos do app; coleção "modulos"). Padrão: ligado. "Novo" por 14 dias após ligar. */
+const MOD_INFO = { perto: "Perto de você", online: "Atendimento online", servicos: "Serviços e agendamentos", clube: "Clube CK", cupons: "Cupons por treino", loja: "Loja CK" };
+function modOn(k){ const m = DB.modulos || {}; return !(m[k] && m[k].on === false); }
+function modNovo(k){ const m = (DB.modulos || {})[k]; return !!(m && m.on !== false && m.desde && m.desde >= addD(today(), -14)); }
+const explorarOn = () => ["perto", "online", "servicos", "clube", "loja"].some(modOn);
 function atualizaTopo(){ const a = $("top-av"); if(!a || !ME) return; a.innerHTML = fotoAv(ME); a.classList.toggle("cr", coroaDe("eu")); a.onclick = () => tab("perfil"); }
 const DICAS_DIA = ["Beba um copo de água antes de cada refeição. Ajuda na saciedade.", "Durma de 7 a 8 horas: é no descanso que o músculo se recupera.", "Proteína em todas as refeições ajuda a manter a massa magra.", "Alongue 5 minutos depois do treino para soltar o corpo.", "Constância vence intensidade. Treinar 3x por semana já transforma.", "Prepare as marmitas no domingo e economize tempo na semana.", "Respire fundo e solte o ar na hora do esforço.", "Caminhar 20 minutos por dia já melhora o fôlego e o humor."];
 const doDia = L => L[Math.floor(Date.now() / 864e5) % L.length];
@@ -1089,7 +1094,7 @@ function fimTreino(parcial){
   ME.treinos.push({ d: today(), h: new Date().getHours(), nome: T.nome, prog: T.prog || null, plano: T.prog || null, dia: T.di, rapido: T.rapido || null, min, kcal, exs: PL.feitos.size, parcial: !!parcial });
   if(T.prog && ME.prog && T.prog === ME.prog.id && !parcial) ME.prog.feitos = (ME.prog.feitos || 0) + 1;
   const meta = DB.config.treinosParaCupom || 8; let ganhou = null;
-  if(ME.treinos.length % meta === 0) ganhou = darCupom();
+  if(modOn("cupons") && ME.treinos.length % meta === 0) ganhou = darCupom();
   save();
   setTimeout(() => { try{ checaConquistas(); }catch(e){ console.warn(e); } }, 1600);
   const novas = medalhas().filter(m => m.ok && !antes.includes(m.id));

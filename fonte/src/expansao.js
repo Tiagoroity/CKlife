@@ -258,13 +258,18 @@ function abreBanner(b){
 /* ---------- EXPLORAR ---------- */
 let XS = { sec: "inicio", q: "", cat: "", modo: "" };
 const XSECS = [["inicio","Destaques"],["academias","Academias"],["profissionais","Profissionais"],["servicos","Serviços"],["clube","Clube CK"],["loja","Loja"]];
+/* seção do Explorar ↔ módulo do painel */
+const SEC_MOD = { academias: ["perto"], profissionais: ["perto", "online"], servicos: ["servicos"], clube: ["clube"], loja: ["loja"] };
+const secOn = k => k === "inicio" || (SEC_MOD[k] || []).some(modOn);
+const secNovo = k => (SEC_MOD[k] || []).some(modNovo);
 function rExplorar(){
   xpGarante();
+  if(!secOn(XS.sec)) XS.sec = "inicio";
   const tmp = XCID != null && +XCID !== +ME.cidade;
   $("t-explorar").innerHTML = `${capa("Explorar", "Academias, profissionais, benefícios e produtos para a sua evolução.", "", "img/ex-skater.jpg")}
     <div class="xp-cid">${ic("pin", 18)}<span>${tmp ? "Vendo agora" : "Minha cidade"}: <b>${esc(xcidNome(cidadeVer()) || "escolha")}</b></span>${tmp ? `<button class="link" id="xc-volta">Voltar</button>` : ""}<button class="btn btn-line btn-sm" id="xc-alt">Alterar</button></div>
     <div class="search">${ic("search", 18)}<input class="input" id="xq" type="search" placeholder="Buscar academia, profissional, serviço ou produto" value="${esc(XS.q)}" autocomplete="off"></div>
-    <div class="chips scroll">${XSECS.map(([k, n]) => `<button class="chip" data-xs="${k}" aria-pressed="${!XS.q && XS.sec === k}">${n}</button>`).join("")}</div>
+    <div class="chips scroll">${XSECS.filter(([k]) => secOn(k)).map(([k, n]) => `<button class="chip" data-xs="${k}" aria-pressed="${!XS.q && XS.sec === k}">${n}${secNovo(k) ? ` <i class="xp-novo">Novo</i>` : ""}</button>`).join("")}</div>
     <div id="xp-body" class="xp-body"></div>`;
   $("xc-alt").onclick = () => escolheCidade(rExplorar);
   const v = $("xc-volta"); if(v) v.onclick = () => { XCID = null; rExplorar(); };
@@ -273,7 +278,9 @@ function rExplorar(){
   xpCorpo();
   medias().then(() => { if(TAB === "explorar" && $("xp-body")) xpCorpo(); });
 }
-const secTit = (t, sec, n) => `<div class="sec-title"><h3>${t}</h3>${sec && n > 3 ? `<button class="link" data-xver="${sec}">Ver tudo</button>` : ""}</div>`;
+const secTit = (t, sec, n, mod) => `<div class="sec-title"><h3>${t}${mod && modNovo(mod) ? ` <i class="xp-novo">Novo</i>` : ""}</h3>${sec && n > 1 ? `<button class="link xp-vt" data-xver="${sec}">Ver todos${n > 2 ? ` (${n})` : ""} ${ic("back", 14, 2.4)}</button>` : ""}</div>`;
+/* carrossel: mostra parte do próximo card (dá para ver que tem mais) e termina num card "Ver todos" */
+const fila = (cards, sec, n) => `<div class="hscroll xp-row">${cards.join("")}${n > cards.length || n > 2 ? `<button class="xp-card xp-mais" data-xver="${sec}"><span>${ic("plus", 22, 2.2)}</span><b>Ver todos</b><small>${n} ${n === 1 ? "opção" : "opções"}</small></button>` : ""}</div>`;
 const vazio = (txt, extra) => `<div class="card empty xp-vazio">${ic("explorar", 32, 1.6)}<b>${txt}</b>${extra || ""}</div>`;
 const grade = L => `<div class="xp-grid">${L.join("")}</div>`;
 const chipsCat = (L, cur) => L.length > 1 ? `<div class="chips scroll">${["", ...L].map(c => `<button class="chip" data-xcat="${esc(c)}" aria-pressed="${norm(cur) === norm(c)}">${c ? esc(c) : "Todas"}</button>`).join("")}</div>` : "";
@@ -283,24 +290,26 @@ function xpCorpo(){
   let h = "";
   if(XS.q){
     const q = norm(XS.q), tem = x => norm([x.nome, x.tipo, x.cat, x.desc, x.marca, x.bairro, x.modalidades, x.beneficio].filter(Boolean).join(" ")).includes(q);
-    const E = L_emp().filter(tem), Pf = L_prof().filter(tem), S = L_serv().filter(s => tem(s) || tem(donoDe(s) || {})), Pr = L_prod().filter(tem), C = L_parc().filter(tem);
+    const E = modOn("perto") ? L_emp().filter(tem) : [], Pf = L_prof().filter(p => ((eOnline(p) && modOn("online")) || (ePresencial(p) && modOn("perto"))) && tem(p)), S = modOn("servicos") ? L_serv().filter(s => tem(s) || tem(donoDe(s) || {})) : [], Pr = modOn("loja") ? L_prod().filter(tem) : [], C = modOn("clube") ? L_parc().filter(tem) : [];
     const n = E.length + Pf.length + S.length + Pr.length + C.length;
     h = n ? `${E.length ? secTit("Academias e lugares") + grade(E.map(cardEmp)) : ""}${Pf.length ? secTit("Profissionais") + grade(Pf.map(cardProf)) : ""}${S.length ? secTit("Serviços") + S.map(servRow).join("") : ""}${C.length ? secTit("Clube CK") + grade(C.map(cardParc)) : ""}${Pr.length ? secTit("Loja") + grade(Pr.map(cardProd)) : ""}`
       : vazio(`Nada encontrado para “${esc(XS.q)}”.`, `<p>Tente outra palavra ou veja os destaques.</p>`);
   } else if(XS.sec === "inicio"){
-    const E = L_emp(), perto = [...E.map(cardEmp), ...L_prof("presencial").filter(p => p.cidade && +p.cidade === +cidadeVer()).map(cardProf)];
-    const on = L_prof("online"), C = L_parc(), Pr = L_prod();
-    h = `${bannersHtml("explorar")}
-      ${secTit("Perto de você", "academias", perto.length)}${perto.length ? `<div class="hscroll xp-row">${perto.slice(0, 10).join("")}</div>` : vazio(`Ainda não temos parceiros em ${cid}.`, `<p>Enquanto isso, veja o atendimento online, que vale para todo o Brasil.</p>`)}
-      ${secTit("Atendimento online", "profissionais", on.length)}${on.length ? `<div class="hscroll xp-row">${on.slice(0, 10).map(cardProf).join("")}</div>` : vazio("Ainda não temos profissionais online.")}
-      ${secTit("Clube CK", "clube", C.length)}${C.length ? `<div class="hscroll xp-row">${C.slice(0, 10).map(cardParc).join("")}</div>` : vazio(`Ainda não temos benefícios em ${cid}.`)}
-      ${secTit("Loja CK", "loja", Pr.length)}${Pr.length ? `<div class="hscroll xp-row">${Pr.slice(0, 10).map(cardProd).join("")}</div>` : vazio("A loja está sendo preparada.")}`;
+    const E = modOn("perto") ? L_emp() : [], perto = modOn("perto") ? [...E.map(cardEmp), ...L_prof("presencial").filter(p => p.cidade && +p.cidade === +cidadeVer()).map(cardProf)] : [];
+    const on = modOn("online") ? L_prof("online") : [], C = modOn("clube") ? L_parc() : [], Pr = modOn("loja") ? L_prod() : [];
+    // módulo ligado mas sem nada cadastrado: a seção não aparece (nada de "vazio" na tela inicial do Explorar)
+    const blocos = [perto.length ? secTit("Perto de você", "academias", perto.length, "perto") + fila(perto.slice(0, 10), "academias", perto.length) : "",
+      on.length ? secTit("Atendimento online", "profissionais:online", on.length, "online") + fila(on.slice(0, 10).map(cardProf), "profissionais:online", on.length) : "",
+      C.length ? secTit("Clube CK", "clube", C.length, "clube") + fila(C.slice(0, 10).map(cardParc), "clube", C.length) : "",
+      Pr.length ? secTit("Loja CK", "loja", Pr.length, "loja") + fila(Pr.slice(0, 10).map(cardProd), "loja", Pr.length) : ""].join("");
+    h = `${bannersHtml("explorar")}${blocos || vazio("Novidades chegando por aqui", `<p>Em breve: parceiros, profissionais e benefícios do CK Life na sua cidade.</p>`)}`;
   } else if(XS.sec === "academias"){
     const E = L_emp(), cats = xcats("empresa").filter(c => E.some(e => mesmaCat(e.tipo, c))), L = XS.cat ? E.filter(e => mesmaCat(e.tipo, XS.cat)) : E;
     h = `${chipsCat(cats, XS.cat)}${L.length ? grade(L.map(cardEmp)) : vazio(`Ainda não temos academias parceiras em ${cid}.`, `<button class="btn btn-line btn-sm" data-xcid>Ver outra cidade</button>`)}`;
   } else if(XS.sec === "profissionais"){
+    if(!modOn("online")) XS.modo = "presencial"; else if(!modOn("perto")) XS.modo = "online";
     const B = L_prof(XS.modo), cats = xcats("prof").filter(c => B.some(p => mesmaCat(p.tipo, c))), L = XS.cat ? B.filter(p => mesmaCat(p.tipo, XS.cat)) : B;
-    h = `<div class="seg seg-sm">${[["","Todos"],["presencial","Presencial"],["online","Online"]].map(([k, n]) => `<button data-xmodo="${k}" aria-pressed="${XS.modo === k}">${n}</button>`).join("")}</div>${chipsCat(cats, XS.cat)}
+    h = `${modOn("perto") && modOn("online") ? `<div class="seg seg-sm">${[["","Todos"],["presencial","Presencial"],["online","Online"]].map(([k, n]) => `<button data-xmodo="${k}" aria-pressed="${XS.modo === k}">${n}</button>`).join("")}</div>` : ""}${chipsCat(cats, XS.cat)}
       ${L.length ? grade(L.map(cardProf)) : vazio(XS.modo === "presencial" ? `Ainda não temos profissionais presenciais em ${cid}.` : "Nenhum profissional encontrado.", XS.modo !== "online" ? `<button class="btn btn-line btn-sm" data-xmodo-on>Ver atendimento online</button>` : "")}`;
   } else if(XS.sec === "servicos"){
     const B = L_serv(), L = XS.modo ? B.filter(s => (s.modo || "presencial") === XS.modo || s.modo === "ambos") : B;
@@ -315,7 +324,7 @@ function xpCorpo(){
   }
   el.innerHTML = h;
   ligaCards(el);
-  el.querySelectorAll("[data-xver]").forEach(b => b.onclick = () => { XS.sec = b.dataset.xver; XS.cat = ""; XS.modo = b.dataset.xver === "profissionais" && b.closest(".xp-body") && b.parentNode.textContent.includes("online") ? "online" : ""; rExplorar(); });
+  el.querySelectorAll("[data-xver]").forEach(b => b.onclick = () => { const [sec, modo] = b.dataset.xver.split(":"); XS.sec = sec; XS.cat = ""; XS.modo = modo || (sec === "profissionais" && !modOn("perto") ? "online" : ""); SOM.tap(); rExplorar(); window.scrollTo({ top: 0, behavior: "smooth" }); });
   el.querySelectorAll("[data-xcat]").forEach(b => b.onclick = () => { XS.cat = b.dataset.xcat; SOM.tap(); xpCorpo(); });
   el.querySelectorAll("[data-xmodo]").forEach(b => b.onclick = () => { XS.modo = b.dataset.xmodo; XS.cat = ""; SOM.tap(); xpCorpo(); });
   el.querySelectorAll("[data-xmodo-on]").forEach(b => b.onclick = () => { XS.sec = "profissionais"; XS.modo = "online"; XS.cat = ""; rExplorar(); });

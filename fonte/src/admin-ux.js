@@ -15,7 +15,7 @@ const MENU = [
   ["Gestão", [["Usuárias", "alunos", ["alunos", "verificacoes", "ciclo"]], ["Treinos", "treinos", ["exercicios"]], ["Nutrição", "receitas", ["receitas"]], ["Conteúdo", "conteudo", ["avisos", "banners", "destaques", "categorias", "figurinhas"]], ["Comunidade", "comunidade", ["comunidade", "grupos", "moderacao"]]]],
   ["Marketing", [["Notificações", "notificacoes", ["notificacoes"]], ["Anúncios", "campanhas", ["campanhas", "anunciantes"]], ["Clube e Explorar", "explorarg", ["parceiros", "cupons", "produtos", "empresas", "profissionais", "servicos", "agendamentos", "avaliacoes"]]]],
   ["Dados", [["Financeiro", "financeiro", ["monetizacao", "financeiro"]], ["Relatórios", "relatorios", ["metricas", "explorarm"]]]],
-  ["Sistema", [["Segurança", "seguranca", ["seguranca", "admins"]], ["Configurações", "config", ["cidades", "segmentos", "config"]]]]
+  ["Sistema", [["Segurança", "seguranca", ["seguranca", "admins"]], ["Configurações", "config", ["modulos", "cidades", "segmentos", "config"]]]]
 ];
 const MENU_NOME = { campanhas: "Anúncios", metricas: "Métricas de anúncios", explorarm: "Métricas do Explorar", alunos: "Lista de alunas", exercicios: "Exercícios e voz", receitas: "Receitas", monetizacao: "Assinaturas e planos", financeiro: "Financeiro e vendas", notificacoes: "Central de Notificações", comunidade: "Publicações" };
 let MENU_AB = {}; try{ MENU_AB = JSON.parse(localStorage.getItem("ck_adm_menu") || "{}"); }catch(e){}
