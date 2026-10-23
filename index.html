@@ -2085,7 +2085,10 @@ function traduz(e){
 }
 
 /* gravação: só o que mudou, alguns instantes depois da última alteração */
-let tm = null, rodando = false, deNovo = false, avisar = null;
+let tm = null, rodando = false, deNovo = false, avisar = null, FALHAS = 0, AVISADO = 0;
+const reTenta = () => { if(FALHAS && N._db && !rodando){ clearTimeout(tm); tm = setTimeout(() => grava(N._db), 300); } };
+window.addEventListener("online", reTenta);
+document.addEventListener("visibilitychange", () => { if(document.visibilityState === "visible") reTenta(); });
 N.aoErro = f => avisar = f;
 N.salvar = DB => { N._db = DB; clearTimeout(tm); tm = setTimeout(() => grava(DB), 700); };
 // grava na hora quando a aluna sai do app, troca de aba ou bloqueia o celular
@@ -2143,10 +2146,16 @@ async function grava(DB){
     const acc = []; Object.entries(DB.acessos || {}).forEach(([d, L]) => L.forEach(id => { const k = d + "|" + id; if(!s.acc.has(k)){ s.acc.add(k); if(id === N.uid) acc.push({ dia: d, user_id: id }); } }));
     if(acc.length) ops.push(q(sb.from("acessos").upsert(acc, { ignoreDuplicates: true })));
     await Promise.all(ops);
+    FALHAS = 0;
   }catch(e){
-    console.warn("Erro ao salvar", e); if(avisar) avisar(e);
+    console.warn("Erro ao salvar (vai tentar de novo)", e);
     Object.assign(s, antes, { ev: s.ev });
-    clearTimeout(tm); tm = setTimeout(() => grava(DB), 4000);
+    FALHAS++;
+    // celular em segundo plano ou tela bloqueada corta o envio: tenta de novo em silêncio.
+    // Só avisa se a internet realmente caiu, ou se falhar várias vezes seguidas com o app aberto.
+    const offline = navigator.onLine === false, visivel = document.visibilityState === "visible";
+    if(avisar && visivel && (offline || FALHAS >= 4) && Date.now() - AVISADO > 120000){ AVISADO = Date.now(); avisar(e); }
+    clearTimeout(tm); tm = setTimeout(() => grava(DB), Math.min(60000, 3000 * Math.pow(2, Math.min(FALHAS - 1, 5))));
   }
   rodando = false;
   if(deNovo){ deNovo = false; grava(DB); }
