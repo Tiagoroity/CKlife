@@ -1452,6 +1452,14 @@ ul.xp-lista:not(:has(svg)) li::before{content:"•";color:var(--accent);font-wei
 :root[data-theme="dark"] .xp-msg.eu .so-st1,:root[data-theme="dark"] .xp-msg.eu .so-st2{color:rgba(4,23,15,.6)}
 :root[data-theme="dark"] .xp-msg.eu .so-st3{color:#0B5FA5}
 .so-sttxt{font-weight:600}
+/* Comunidade: revisão de experiência */
+.pimg img{width:100%;max-height:min(125vw,640px);object-fit:cover;display:block}
+.so-gi span{display:grid;place-items:center;width:100%;height:100%;background:linear-gradient(140deg,#0E3D32,#2E7D5A);color:#fff;font-weight:700;font-size:12px;padding:10px;text-align:center;line-height:1.3}
+.so-sv-img img{object-fit:cover}
+.so-story.pausado .so-sv-top,.so-story.pausado .so-sv-pe,.so-story.pausado .so-sv-barras{opacity:0;transition:opacity .2s}
+.so-sv-pe{gap:10px}
+.so-st-av>i{cursor:pointer}
+.so-st.meu .so-st-av>i{width:24px;height:24px}
 </style>
 
 <!-- Entrar / criar conta -->
@@ -4158,7 +4166,7 @@ async function carregaPerfis(ids){
 }
 async function sincFotoPerfil(){ // chamada quando a aluna troca a foto pelo Perfil antigo
   await detectaSocial(); if(!SO.on()) return; try{ await garantePerfil(); const foto = ME.foto ? await sobe("perfil", NU.uid, await (await fetch(ME.foto)).blob(), "jpg", "image/jpeg") : null;
-    const mini = ME.foto ? await miniFoto(ME.foto, 96) : null; EU = (await q(SB().from("perfis").update({ foto, foto_mini: mini }).eq("user_id", NU.uid).select()))[0]; PERFIS.set(NU.uid, EU); }catch(e){ console.warn(e); }
+    const mini = ME.foto ? await miniFoto(ME.foto, 96) : null; const rr = await q(SB().from("perfis").update({ foto, foto_mini: mini }).eq("user_id", NU.uid).select()); EU = (rr && rr[0]) || { ...EU, foto, foto_mini: mini }; PERFIS.set(NU.uid, EU); }catch(e){ console.warn(e); }
 }
 const nomeP = (u, fb) => (PERFIS.get(u) || {}).nome || fb || "Aluna";
 const userP = u => (PERFIS.get(u) || {}).username || "";
@@ -4322,9 +4330,9 @@ function editarPerfil(){
       if(novaFoto){ up.foto = await sobe("perfil", NU.uid, novaFoto, "jpg", "image/jpeg"); up.foto_mini = await miniFoto(await blobParaURL(novaFoto), 96); ME.foto = await blobParaURL(await corteQuadrado(novaFoto, 320)); }
       if(novaCapa) up.capa = await sobe("perfil", NU.uid, novaCapa, "jpg", "image/jpeg"); else if(tiraCapa) up.capa = null;
       const r = await SB().from("perfis").update(up).eq("user_id", NU.uid).select();
-      if(r.error){ if(/perfis_username|duplicate/i.test(r.error.message)) throw new Error("Esse nome de usuária acabou de ser usado. Escolha outro."); throw r.error; }
-      EU = r.data[0]; PERFIS.set(NU.uid, EU); if(nome !== ME.nome){ ME.nome = nome; } save(); atualizaTopo(); SOM.check(); toast("Perfil atualizado 💚"); abrirPerfil(NU.uid);
-    }catch(e){ console.warn(e); toast(e.message && !/fetch|network/i.test(e.message) && e.message.length < 90 && !e.code ? e.message : /mime|size|payload/i.test(String(e.message)) ? "A foto não foi aceita (tipo ou tamanho). Tente outra." : ERR_MSG(e)); bt.disabled = false; bt.classList.remove("carregando"); }
+      if(r.error){ if(/perfis_username|duplicate/i.test(r.error.message)){ const er = new Error("Esse nome de usuária acabou de ser usado. Escolha outro."); er.nosso = true; throw er; } throw r.error; }
+      EU = (r.data && r.data[0]) || (await q(SB().from("perfis").select("*").eq("user_id", NU.uid)))[0] || { ...EU, ...up }; PERFIS.set(NU.uid, EU); if(nome !== ME.nome){ ME.nome = nome; } save(); atualizaTopo(); SOM.check(); toast("Perfil atualizado 💚"); abrirPerfil(NU.uid);
+    }catch(e){ console.warn(e); toast(e.nosso ? e.message : /mime|size|payload|too large/i.test(String(e.message)) ? "A foto não foi aceita (tipo ou tamanho). Tente outra." : ERR_MSG(e)); bt.disabled = false; bt.classList.remove("carregando"); }
   };
 }
 async function compartilharPerfil(p){
@@ -4418,7 +4426,7 @@ function abrePost(p, foca){
   const ligaDel = () => { $("cmts").querySelectorAll("[data-cdel]").forEach(b => b.onclick = () => { const c = p.coments.find(x => x.id === b.dataset.cdel); CM.apagaComent(p, c).then(() => { p.coments = p.coments.filter(x => x !== c); $("cmts").innerHTML = lista(); ligaDel(); }).catch(() => toast("Não deu para excluir agora")); });
     $("cmts").querySelectorAll("[data-cden]").forEach(b => b.onclick = () => denunciar("comentario", b.dataset.cden, () => abrePost(p))); };
   ligaDel();
-  const env = async () => { const t = $("cm-txt").value.trim(); if(!t) return; $("cm-env").disabled = true; try{ const c = await CM.comentar(p, t); p.coments = p.coments || []; if(!p.coments.some(x => x.id === c.id)) p.coments.push(c); $("cm-txt").value = ""; $("cmts").innerHTML = lista(); ligaDel(); SOM.check(); }catch(e){ toast(ERR_MSG(e)); } $("cm-env").disabled = false; };
+  const env = async () => { const t = $("cm-txt").value.trim(); if(!t) return; $("cm-env").disabled = true; try{ const c = await CM.comentar(p, t); p.coments = p.coments || []; if(!p.coments.some(x => x.id === c.id)) p.coments.push(c); $("cm-txt").value = ""; $("cmts").innerHTML = lista(); ligaDel(); SOM.check(); const sp = el.querySelector("[data-abre] span"); if(sp) sp.textContent = p.coments.length; const ul = $("cmts").lastElementChild; if(ul) ul.scrollIntoView({ behavior: "smooth", block: "nearest" }); }catch(e){ toast(ERR_MSG(e)); } $("cm-env").disabled = false; };
   $("cm-env").onclick = env; $("cm-txt").onkeydown = e => { if(e.key === "Enter") env(); };
   if(foca) setTimeout(() => $("cm-txt").focus(), 250);
 }
@@ -4526,7 +4534,7 @@ async function carregaStories(){
   const meu = STO.grupos.find(g => g.u === NU.uid);
   row.innerHTML = `<button class="so-st meu ${meu ? "tem" : ""}" id="st-novo"><span class="so-st-av ${meu ? "visto" : ""}">${avU(NU.uid, ME.nome, ME.foto)}<i>${ic("plus", 12, 3)}</i></span><small>Seu Story</small></button>` +
     STO.grupos.filter(g => g.u !== NU.uid).map(g => `<button class="so-st" data-su="${g.u}"><span class="so-st-av ${g.novo ? "novo" : "visto"}">${avU(g.u)}</span><small>${esc(nomeP(g.u).split(" ")[0])}</small></button>`).join("");
-  $("st-novo").onclick = () => meu ? menuAcoes([["image", "Ver meu Story", () => { fecharSheet(); verStories(NU.uid); }], ["plus", "Criar novo Story", () => { fecharSheet(); criarStory(); }]]) : criarStory();
+  $("st-novo").onclick = e => { if(meu && !e.target.closest(".so-st-av > i")) verStories(NU.uid); else criarStory(); };
   row.querySelectorAll("[data-su]").forEach(b => b.onclick = () => verStories(b.dataset.su));
 }
 const CORES_ST = ["#0E3D32","#2E7D5A","#C2577B","#6C5FB5","#D08A2E","#17211D"];
@@ -4570,7 +4578,7 @@ async function mostraStory(){
     <div class="so-sv-top"><button class="so-sv-quem" id="sv-perfil">${avU(g.u)}<span><b>${esc(nomeP(g.u))}</b><small>${tempoAtras(s.criado)}</small></span></button><button class="iconbtn" id="sv-mais" aria-label="Opções">${ic("dots", 18)}</button><button class="iconbtn" id="sv-x" aria-label="Fechar">${ic("close", 18)}</button></div>
     <div class="so-sv-img"><img data-m="${esc(s.midia)}" alt="" draggable="false"></div>
     <button class="so-sv-nav ant" id="sv-ant" aria-label="Anterior"></button><button class="so-sv-nav prox" id="sv-prox" aria-label="Próximo"></button>
-    <div class="so-sv-pe">${meu ? `<button class="btn btn-soft btn-sm" id="sv-vistas">${ic("perfil", 15)} Quem viu</button>` : `<input class="input" id="sv-resp" maxlength="500" placeholder="Responder a ${esc(nomeP(g.u).split(" ")[0])}…"><button class="btn btn-accent" id="sv-env" aria-label="Enviar">${ic("send", 17)}</button>`}</div>`;
+    <div class="so-sv-pe">${meu ? `<button class="btn btn-soft btn-sm" id="sv-vistas">${ic("perfil", 15)} <span id="sv-nv">Quem viu</span></button><button class="btn btn-soft btn-sm" id="sv-novo">${ic("plus", 15)} Novo</button>` : `<input class="input" id="sv-resp" maxlength="500" placeholder="Responder a ${esc(nomeP(g.u).split(" ")[0])}…"><button class="btn btn-accent" id="sv-env" aria-label="Enviar">${ic("send", 17)}</button>`}</div>`;
   const img = box.querySelector(".so-sv-img img");
   const us = await urls([s.midia], 300); if(!SV) return;
   if(!us[0]){ img.replaceWith(Object.assign(document.createElement("p"), { className: "so-sv-falha", textContent: "Este Story não está mais disponível." })); }
@@ -4582,12 +4590,20 @@ async function mostraStory(){
   const passo = t => { if(!SV) return; if(SV.pausa){ ini = t - gasto; SV.raf = requestAnimationFrame(passo); return; } gasto = t - ini; barra.style.width = Math.min(100, gasto / DUR * 100) + "%"; if(gasto >= DUR) return avanca(1); SV.raf = requestAnimationFrame(passo); };
   SV.raf = requestAnimationFrame(passo);
   const avanca = d => { if(!SV) return; SV.si += d; if(SV.si < 0){ SV.gi--; if(SV.gi < 0) return fechaStory(); SV.si = 0; } else if(SV.si >= g.ss.length){ SV.gi++; SV.si = 0; if(SV.gi >= STO.grupos.length) return fechaStory(); } mostraStory(); };
-  $("sv-ant").onclick = () => avanca(-1); $("sv-prox").onclick = () => avanca(1); $("sv-x").onclick = fechaStory;
+  const solto = () => SV && SV.solto && Date.now() - SV.solto < 450;
+  $("sv-ant").onclick = () => { if(!solto()) avanca(-1); }; $("sv-prox").onclick = () => { if(!solto()) avanca(1); }; $("sv-x").onclick = fechaStory;
   $("sv-perfil").onclick = () => { fechaStory(); abrirPerfil(g.u); };
   $("sv-mais").onclick = () => { SV.pausa = true;
     const itens = meu ? [["trash", "Excluir este Story", async () => { if(!confirm("Excluir este Story?")) return; try{ await q(SB().from("stories").delete().eq("id", s.id)); SB().storage.from("social").remove([s.midia]); toast("Story excluído"); fecharSheet(); fechaStory(); }catch(e){ toast(ERR_MSG(e)); } }, 1]]
       : [["flag", "Denunciar Story", () => { fechaStory(); denunciar("story", s.id); }, 1], ["ban", "Bloquear " + nomeP(g.u).split(" ")[0], async () => { fechaStory(); if(await bloquear(g.u, nomeP(g.u))){ fecharSheet(); rJuntas(); } }, 1]];
     menuAcoes(itens); sheetClose = () => { if(SV) SV.pausa = false; }; };
+  if(meu){ SB().from("story_vistas").select("user_id", { count: "exact", head: true }).eq("story_id", s.id).then(r => { const e = $("sv-nv"); if(e && r.count != null) e.textContent = r.count ? `Visto por ${r.count}` : "Ninguém viu ainda"; }); }
+  const nv = $("sv-novo"); if(nv) nv.onclick = () => { fechaStory(); criarStory(); };
+  const area = box.querySelector(".so-sv-img"); let y0 = null, segura = null;
+  box.onpointerdown = ev => { if(ev.target.closest("button,input")) return; y0 = ev.clientY; segura = setTimeout(() => { if(SV) SV.pausa = true; box.classList.add("pausado"); }, 180); };
+  box.onpointerup = ev => { clearTimeout(segura); const dy = y0 == null ? 0 : ev.clientY - y0; y0 = null; if(box.classList.contains("pausado")){ box.classList.remove("pausado"); if(SV){ SV.pausa = false; SV.solto = Date.now(); } } if(dy > 90){ if(SV) SV.solto = Date.now(); fechaStory(); } };
+  box.onpointercancel = () => { clearTimeout(segura); box.classList.remove("pausado"); if(SV) SV.pausa = false; };
+  void area;
   const vi = $("sv-vistas"); if(vi) vi.onclick = async () => { SV.pausa = true; let L = []; try{ L = await q(SB().from("story_vistas").select("user_id,criado").eq("story_id", s.id).order("criado", { ascending: false })); }catch(e){} await carregaPerfis(L.map(v => v.user_id));
     sheet(`Visto por ${L.length}`, L.map(v => `<div class="so-pessoa">${avU(v.user_id)}<span><b>${esc(nomeP(v.user_id))}</b><small>${tempoAtras(v.criado)}</small></span></div>`).join("") || `<p class="empty">Ninguém viu ainda.</p>`, () => { if(SV) SV.pausa = false; }); };
   const rp = $("sv-resp"); if(rp){ rp.onfocus = () => SV.pausa = true; rp.onblur = () => { if(SV) SV.pausa = false; };
@@ -4920,7 +4936,7 @@ function checaConquistas(){
   if(!novas.length) return;
   novas.forEach(c => ME.conq[c[0]] = today()); save();
   if(SO.on()) garantePerfil().then(async () => { const lista = CONQ.filter(c => ME.conq[c[0]]).map(c => ({ k: c[0], d: ME.conq[c[0]] }));
-    try{ EU = (await q(SB().from("perfis").update({ conquistas: lista }).eq("user_id", NU.uid).select()))[0]; }catch(e){}
+    try{ const rr = await q(SB().from("perfis").update({ conquistas: lista }).eq("user_id", NU.uid).select()); if(rr && rr[0]) EU = rr[0]; }catch(e){}
     novas.forEach(c => SB().from("notificacoes").insert({ user_id: NU.uid, tipo: "conquista", ref: c[0], texto: `Parabéns: ${c[4].toLowerCase()} ${c[3]}` }).then(() => {})); }).catch(() => {});
   if(primeira && n > 1) return;   // quem já tinha histórico: registra sem festa retroativa
   celebrar(novas[novas.length - 1]);

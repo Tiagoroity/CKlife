@@ -53,7 +53,7 @@ class Q {
         else { if(this.t === "alunas" && !r.premium) r.premium = { tipo: "teste", ate: "2099-01-01" }; T.push(r); } });
       salva(); return { data: this.ret ? out : null, error: null };
     }
-    if(this.op === "update"){ T.forEach((r, i) => { if(this.f.every(f => f(r))) T[i] = { ...r, ...this.v }; }); salva(); return { data: null, error: null }; }
+    if(this.op === "update"){ const out = []; T.forEach((r, i) => { if(this.f.every(f => f(r))){ T[i] = { ...r, ...this.v }; out.push(T[i]); } }); salva(); return { data: this.ret ? JSON.parse(JSON.stringify(out)) : null, error: null }; }
     if(this.op === "delete"){ db[this.t] = T.filter(r => !this.f.every(f => f(r))); salva(); return { data: null, error: null }; }
   }
 }

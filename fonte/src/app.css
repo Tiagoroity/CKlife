@@ -1430,3 +1430,11 @@ ul.xp-lista:not(:has(svg)) li::before{content:"•";color:var(--accent);font-wei
 :root[data-theme="dark"] .xp-msg.eu .so-st1,:root[data-theme="dark"] .xp-msg.eu .so-st2{color:rgba(4,23,15,.6)}
 :root[data-theme="dark"] .xp-msg.eu .so-st3{color:#0B5FA5}
 .so-sttxt{font-weight:600}
+/* Comunidade: revisão de experiência */
+.pimg img{width:100%;max-height:min(125vw,640px);object-fit:cover;display:block}
+.so-gi span{display:grid;place-items:center;width:100%;height:100%;background:linear-gradient(140deg,#0E3D32,#2E7D5A);color:#fff;font-weight:700;font-size:12px;padding:10px;text-align:center;line-height:1.3}
+.so-sv-img img{object-fit:cover}
+.so-story.pausado .so-sv-top,.so-story.pausado .so-sv-pe,.so-story.pausado .so-sv-barras{opacity:0;transition:opacity .2s}
+.so-sv-pe{gap:10px}
+.so-st-av>i{cursor:pointer}
+.so-st.meu .so-st-av>i{width:24px;height:24px}
