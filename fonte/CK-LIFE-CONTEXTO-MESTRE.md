@@ -529,3 +529,23 @@ Você vai continuar o desenvolvimento do CK Life, meu app de treino em casa para
 
 5) A GRANDE EXPANSÃO já foi implementada e publicada (commit 8b9235f): navegação em 5 áreas, Explorar, agendamentos, avaliações, favoritos, Clube CK, loja, banners, métricas, Meu Ciclo, chat e módulos do painel. O expansao.sql já foi rodado no Supabase e o teste real passou. Siga a seção 25-B do documento mestre e atualize o documento ao final de cada fase.
 ```
+
+---
+
+## CHECKPOINT · REDE SOCIAL (23/10/2026) — EM ANDAMENTO
+
+**Status:** banco pronto e testado; app ainda NÃO ligado (o site no ar continua com a comunidade anterior, funcionando).
+
+### Pronto
+- `fonte/social.sql` (= `ck-life/social.sql`): perfis (username único), seguidores (público/privado com pedido), bloqueios, denúncias + `moderacao_log`, Stories 24h (expiração no banco), `story_vistas`, chat ampliado (foto, áudio, resposta, Story, post, `entregue_em`/`lida_em`, apagar para mim), notificações por gatilho (sem duplicar), salvos, bucket PRIVADO `social` (10 MB, só imagem/áudio), funções `social_pode_ler/gravar`, RPCs `username_livre`, `perfil_contagens`, `marcar_entregues`, `marcar_lidas`, `nao_lidas`, `ocultar_mensagem`, `denuncia_conteudo`, `moderar`; tempo real (publicação `supabase_realtime`).
+- **89 testes de segurança passando** em Postgres 16 local (`fonte/testes-banco/`: `rodar.sh`, `supabase_base.sql`, `testes.sql`), incluindo os 8 cenários obrigatórios (C não abre chat/arquivo de A↔B, sem login nada abre, Story privado negado a não seguidora, Story vencido some, bloqueio no banco, admin só vê o conteúdo denunciado).
+- `fonte/src/social.js` escrito (perfil social, editar perfil, seguir/pedidos, bloquear/denunciar, feed com abas e paginação, Stories com visualizações e resposta, chat com foto/áudio/status com corações/tempo real, central de notificações, conquistas com cartão e compartilhamento nativo). **Ainda não testado nem ligado ao build.**
+
+### Próximos passos (na ordem)
+1. Ligar `social.js`: marcador `/*SOCIAL*/` logo após `/*EXPANSAO*/` no `app.js` + `build.py`; remover do `app.js` as versões antigas de `postHtml`, `rJuntas`, `carregaFeed`, `ligaPost`, `abrePost`, `abreComposer` (cópia em scratchpad `comunidade_antiga.js`); remover do `expansao.js` o chat antigo (`XP.chat`, `listaConversas`, `perfilPublico`, `abreConversa`, `chatBotao`, `ligaChatBotao`, `confereChat`, `privacidade`).
+2. Ganchos: `abrirApp` → `iniciaSocial()`; `fimTreino` → `setTimeout(checaConquistas, 900)`; `escolheFoto` (Perfil) → `sincFotoPerfil()`; `CM.carregar` incluir `midia` e `conquista` no mapeamento; badge `#top-not-n` opcional no topo.
+3. CSS das classes `so-*` (perfil, stories, viewer, chat, notificações, celebração, menus, aviso).
+4. Ampliar `mock-supabase.js` (tabelas novas, rpcs, storage com createSignedUrls, `channel` sem efeito) e testar no `teste-nuvem.html` com duas contas; auditoria de layout 320/375/1366 e modo escuro; regressão completa.
+5. Painel: seção **Denúncias** (`moderacao`) em `admin-xp.js` usando `denuncia_conteudo` e `moderar`, com histórico.
+6. Entregar `social.sql` ao Tiago em partes para rodar no Supabase; depois publicar o app.
+7. Limitações a documentar: PWA no navegador não permite bloquear/detectar print de forma real (não implementado, sem aviso falso); vídeo em Stories fica para depois; fotos antigas da comunidade continuam no bucket público `posts` (migração futura); limpeza de arquivos de Stories vencidos (ficam inacessíveis pelo banco, apagar depois).
