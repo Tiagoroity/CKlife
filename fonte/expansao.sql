@@ -111,7 +111,7 @@ create policy ag_apagar on public.agendamentos for delete to authenticated using
 -- horários já ocupados (sem mostrar quem marcou)
 create or replace function public.horarios_ocupados(p_tipo text, p_id text, p_de date, p_ate date) returns table(data date, hora text)
 language sql stable security definer set search_path = public as $$
-  select data, hora from agendamentos where alvo_tipo = p_tipo and alvo_id = p_id and data between p_de and p_ate and status in ('solicitado','confirmado')
+  select ag.data, ag.hora from agendamentos ag where ag.alvo_tipo = p_tipo and ag.alvo_id = p_id and ag.data between p_de and p_ate and ag.status in ('solicitado','confirmado')
 $$;
 grant execute on function public.horarios_ocupados(text, text, date, date) to authenticated;
 
