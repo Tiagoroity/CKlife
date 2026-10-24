@@ -7741,14 +7741,21 @@ const TUDO = [
   ["juntas", "Comunidade", "juntas", "#5B6CD9", () => tab("juntas")],
   ["lembrete", "Lembretes", "clock", "#65736C", () => editaLembrete()]
 ];
-const tudoHtml = () => { const L = TUDO.filter(x => !x[5] || x[5]()); return `<section class="tudo" aria-label="Tudo do CK Life"><div class="sec-title"><h3>Tudo do CK Life</h3></div>
+/* completam a última linha da grade (nunca fica buraco): convidar amiga, favoritos, perfil */
+const TUDO_EXTRA = [
+  ["convidar", "Convidar", "share", "#E5484D", () => convidar()],
+  ["favoritos", "Favoritos", "heart", "#E07B39", () => meusFavoritos()],
+  ["perfil", "Meu perfil", "perfil", "#2E7D5A", () => tab("perfil")]
+];
+const tudoLista = () => { const L = TUDO.filter(x => !x[5] || x[5]()); let i = 0; while(L.length % 4 && i < TUDO_EXTRA.length) L.push(TUDO_EXTRA[i++]); return L; };
+const tudoHtml = () => { const L = tudoLista(); return `<section class="tudo" aria-label="Tudo do CK Life"><div class="sec-title"><h3>Tudo do CK Life</h3></div>
   <div class="tudo-g">${L.map(([k, n, i, c, , , nv]) => `<button class="tudo-i" data-tudo="${k}" style="--tc:${c}"><span class="tudo-ic">${ic(i, 24, 2)}</span><span class="tudo-n">${n}</span>${nv && nv() ? `<i class="xp-novo">Novo</i>` : ""}</button>`).join("")}</div></section>`; };
 const rInicioTudo = rInicio; rInicio = function(){
   rInicioTudo.apply(this, arguments);
   const box = $("t-inicio"); if(!box || box.querySelector(".tudo")) return;
   const ref = box.querySelector(".sd") || box.querySelector(".capa"); if(!ref) return;
   ref.insertAdjacentHTML("afterend", tudoHtml());
-  box.querySelectorAll("[data-tudo]").forEach(b => b.onclick = () => { const x = TUDO.find(t => t[0] === b.dataset.tudo); if(!x) return; SOM.tap && SOM.tap(); try{ x[4](); }catch(e){ console.warn(e); } });
+  box.querySelectorAll("[data-tudo]").forEach(b => b.onclick = () => { const x = TUDO.concat(TUDO_EXTRA).find(t => t[0] === b.dataset.tudo); if(!x) return; SOM.tap && SOM.tap(); try{ x[4](); }catch(e){ console.warn(e); } });
 };
 /* o Cabelo descobre se está liberado depois de carregar: atualiza a grade quando isso acontecer */
 { let n = 0; const t = setInterval(() => { if(typeof cabOn === "function" && cabOn()){ clearInterval(t); const g = document.querySelector("#t-inicio .tudo"); if(g && !g.querySelector('[data-tudo="cabelo"]') && TAB === "inicio"){ g.remove(); rInicio(); } } else if(++n > 30) clearInterval(t); }, 2000); }
