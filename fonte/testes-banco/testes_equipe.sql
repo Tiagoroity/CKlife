@@ -40,3 +40,10 @@ reset role;
 insert into posts (id, user_id, nome, texto, criado) select 'eeeeeeee-0000-0000-0000-0000000000e3', user_id, nome, 'oi', now() - interval '2 hours' from equipe_membros limit 1;
 select equipe_tick();
 select ok((select count(*) from comentarios where post_id = 'eeeeeeee-0000-0000-0000-0000000000e3') = 0, 'equipe não comenta em post da equipe');
+-- fotos e 24 horas
+select ok((select count(*) from perfis p join equipe_membros m on m.user_id = p.user_id where p.foto_mini like 'img/equipe/%.jpg') = 50, 'as 50 com foto');
+select ok((select hora_ini = 0 and hora_fim = 24 from equipe_config where id = 1), 'rodando 24 horas');
+insert into posts (id, user_id, nome, texto, criado) values ('eeeeeeee-0000-0000-0000-0000000000e9', :A, 'Ana Real', 'Mais um treino', now() - interval '2 hours');
+select equipe_tick();
+select ok((select c.foto from comentarios c join equipe_membros m on m.user_id = c.user_id where c.post_id = 'eeeeeeee-0000-0000-0000-0000000000e9') like 'img/equipe/%', 'comentário novo sai com a foto');
+select ok((select count(*) from comentarios c join equipe_membros m on m.user_id = c.user_id where c.foto is null) = 0, 'comentários antigos ganharam a foto');

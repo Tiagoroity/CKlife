@@ -2376,3 +2376,4 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
 /* painel é sempre claro: o modo escuro do app não pode deixar texto claro em fundo claro */
 #v-admin .btn-line{border-color:#CFDCCB;color:#17211D}
 #v-admin .adm-top .btn-line{color:#fff;border-color:rgba(255,255,255,.28);background:rgba(255,255,255,.06)}
+.eq-av{overflow:hidden}.eq-av img{width:100%;height:100%;object-fit:cover}

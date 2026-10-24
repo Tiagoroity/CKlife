@@ -2407,6 +2407,7 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
 /* painel é sempre claro: o modo escuro do app não pode deixar texto claro em fundo claro */
 #v-admin .btn-line{border-color:#CFDCCB;color:#17211D}
 #v-admin .adm-top .btn-line{color:#fff;border-color:rgba(255,255,255,.28);background:rgba(255,255,255,.06)}
+.eq-av{overflow:hidden}.eq-av img{width:100%;height:100%;object-fit:cover}
 </style>
 
 <!-- Entrar / criar conta -->
@@ -12488,7 +12489,7 @@ async function vEquipe(){
         <label>Curtidas por perfil/dia <input class="input" id="eq-mk" type="number" min="0" max="300" value="${c.max_curt_dia}"></label>
         <button class="btn btn-accent btn-sm" id="eq-salva">Salvar horário e limites</button></div></div>
     <div class="nb-sec">Perfis da equipe (${M.length})</div>
-    <div class="card eq-lista">${M.map(m => `<div class="eq-m ${m.ativo ? "" : "off"}"><span class="eq-av">${esc((m.nome || "?")[0])}</span><span class="eq-n"><b>${esc(m.nome)}</b><small>@${esc(m.username || "")} · 24h: ${int(m.coment_24h)} coment. · ${int(m.curt_24h)} curt. · total ${int(m.total)}</small></span>
+    <div class="card eq-lista">${M.map(m => `<div class="eq-m ${m.ativo ? "" : "off"}"><span class="eq-av">${m.foto_mini ? `<img src="${esc(m.foto_mini)}" alt="" loading="lazy">` : esc((m.nome || "?")[0])}</span><span class="eq-n"><b>${esc(m.nome)}</b><small>@${esc(m.username || "")} · 24h: ${int(m.coment_24h)} coment. · ${int(m.curt_24h)} curt. · total ${int(m.total)}</small></span>
       <button class="mod-sw" role="switch" data-eq="${m.user_id}" aria-checked="${!!m.ativo}" aria-label="${m.ativo ? "Desligar" : "Ligar"} ${esc(m.nome)}"><i></i></button></div>`).join("") || `<p class="muted">Nenhum perfil criado.</p>`}</div>
     <div class="nb-sec">Histórico (últimas 60 ações)</div>
     <div class="card eq-log">${(d.log || []).map(l => `<div class="eq-l"><span class="num">${new Date(l.criado).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}</span><span><b>${esc(l.nome || "")}</b> ${eqAcao[l.acao] || esc(l.acao)}${l.texto && l.acao === "comentou" ? `: “${esc(l.texto)}”` : ""}</span></div>`).join("") || `<p class="muted">Nada ainda. A equipe age a cada 5 minutos, no horário escolhido, em posts e Stories de alunas reais.</p>`}</div>`;
