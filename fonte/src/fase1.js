@@ -1,20 +1,7 @@
 /* ===================== FASE 1 · FOCO =====================
-   Menu com 5 abas (Explorar vira o botão "Loja" no topo), cartão "Seu dia" no Início,
+   Cartão "Seu dia" no Início (a aba Explorar continua no menu),
    loja de produtos mais forte (achadinhos, indicação por contexto, promoções, compartilhar)
    e comemoração com a meta da semana no fim do treino. Nada é apagado: só reorganizado. */
-
-/* ---------- Menu: 5 abas + Loja no topo ---------- */
-// roda depois do app inteiro carregar (NAV e TAB são criados mais abaixo no arquivo)
-setTimeout(() => { const NAV5 = NAV.filter(([k]) => k !== "explorar");
-$("nav").innerHTML = NAV5.map(([k, n]) => `<button role="tab" data-tab="${k}" aria-selected="${k === (NAV_DE[TAB] || TAB)}"><span class="ico">${ic(k, 21)}</span>${n}</button>`).join("");
-$("nav").querySelectorAll("[data-tab]").forEach(b => b.onclick = () => tab(b.dataset.tab));
-}, 0);
-setTimeout(() => { const sc = $("streak-chip"); if(!sc || $("b-loja")) return;
-  sc.insertAdjacentHTML("beforebegin", `<button class="iconbtn loja-top" id="b-loja" aria-label="Loja e benefícios" title="Loja e benefícios">${ic("bag", 19)}</button>`);
-  $("b-loja").onclick = () => { XS.sec = modOn("loja") ? "loja" : "inicio"; XS.q = ""; XS.cat = ""; tab("explorar"); }; }, 0);
-const lojaTop = () => { const b = $("b-loja"); if(b) b.hidden = !explorarOn(); };
-const aplicaModulosF1 = aplicaModulos; aplicaModulos = function(){ aplicaModulosF1.apply(this, arguments); lojaTop(); };
-setTimeout(lojaTop, 400); setInterval(lojaTop, 30000);
 
 /* ---------- Anúncio: nunca para quem paga (o servidor já bloqueia; aqui é a segunda trava) ---------- */
 const anuncioHtmlF1 = anuncioHtml; anuncioHtml = function(){ if(typeof pagou === "function" && pagou()) return ""; return anuncioHtmlF1.apply(this, arguments); };
@@ -112,14 +99,13 @@ const fimTreinoF1 = fimTreino; fimTreino = function(parcial){
   return r;
 };
 
-/* Explorar com o marketplace desligado: vira "Loja e benefícios" (mesma tela, título e busca certos) */
+/* Explorar com o marketplace desligado: texto e busca falam de loja e benefícios */
 const soLoja = () => !modOn("perto") && !modOn("online") && !modOn("servicos");
 const rExplorarF1 = rExplorar; rExplorar = function(){
   const r = rExplorarF1.apply(this, arguments);
   const box = $("t-explorar"); if(!box) return r;
-  if(soLoja()){ const c = box.querySelector(".capa"); if(c){ const h = c.querySelector("h1"), p = c.querySelector("p"); if(h) h.textContent = "Loja e benefícios"; if(p) p.textContent = modOn("clube") ? "Produtos escolhidos pela CK e vantagens do Clube para você." : "Produtos escolhidos pela CK para o seu dia a dia."; }
+  if(soLoja()){ const c = box.querySelector(".capa"); if(c){ const h = c.querySelector("h1"), p = c.querySelector("p"); if(p) p.textContent = modOn("clube") ? "Produtos escolhidos pela CK e vantagens do Clube para você." : "Produtos escolhidos pela CK para o seu dia a dia."; }
     const q = $("xq"); if(q) q.placeholder = "Buscar produto ou benefício";
     if(!modOn("clube")){ const cid = box.querySelector(".xp-cid"); if(cid) cid.remove(); } }
   return r;
 };
-const tabF1 = tab; tab = function(t){ const r = tabF1.apply(this, arguments); const b = $("b-loja"); if(b) b.classList.toggle("on", TAB === "explorar"); return r; };
