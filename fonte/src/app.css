@@ -2201,3 +2201,16 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
 /* posts: um pouco mais de respiro e acabamento */
 #t-juntas .post{border-radius:22px;box-shadow:0 10px 30px -24px rgba(14,61,50,.45)}
 #t-juntas .post .pacts button.on svg{fill:#E5484D;color:#E5484D}
+/* grade "Tudo do CK Life" num cartão, igual ao Seu dia e à Sua semana */
+.tudo.card{padding:16px 10px 12px}
+.tudo-h{padding:0 6px 4px}
+.tudo-h b{display:block;font-size:18px;line-height:1.2;margin-top:2px}
+#t-inicio .tudo-g,.tudo-g{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px 2px;margin-top:12px}
+.tudo-i{gap:6px;padding:2px 0}
+#t-inicio.ini2 .tudo-ic,.tudo-ic{width:54px;height:54px;border-radius:17px}
+.tudo-n{font-size:12px;line-height:1.15;font-weight:650;white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;min-height:2.3em;padding:0 2px;color:var(--ink)}
+@media (max-width:350px){#t-inicio.ini2 .tudo-ic,.tudo-ic{width:48px;height:48px;border-radius:15px}.tudo-n{font-size:11px}}
+@media (min-width:700px){#t-inicio .tudo-g,.tudo-g{grid-template-columns:repeat(6,minmax(0,1fr))}}
+.tudo-n{font-size:11.5px;letter-spacing:-.01em;padding:0}
+@media (max-width:350px){.tudo-n{font-size:10.5px}}
+.tudo-n{min-height:0}

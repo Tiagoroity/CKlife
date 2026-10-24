@@ -114,7 +114,7 @@ const rExplorarF1 = rExplorar; rExplorar = function(){
 if(!P.pente) P.pente = '<path d="M4 7h16"/><path d="M6 7v9M9 7v9M12 7v9M15 7v9M18 7v9"/><path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2"/>';
 const TUDO = [
   ["treinos", "Treinos", "treinar", "#2E7D5A", () => { TV = "programas"; tab("treinar"); }],
-  ["anual", "Plano do ano", "calendar", "#0E3D32", () => abrirPrograma("anual"), () => PROGS.some(p => p.id === "anual")],
+  ["anual", "Plano anual", "calendar", "#0E3D32", () => abrirPrograma("anual"), () => PROGS.some(p => p.id === "anual")],
   ["cardapio", "Cardápio", "bowl", "#E0A21B", () => { DV = "cardapio"; tab("dieta"); }],
   ["receitas", "Receitas", "chef", "#E07B39", () => { DV = "receitas"; tab("dieta"); }],
   ["ciclo", "Meu Ciclo", "ciclo", "#C2557A", () => abrirCiclo(), () => typeof abrirCiclo === "function"],
@@ -133,7 +133,7 @@ const TUDO_EXTRA = [
   ["perfil", "Meu perfil", "perfil", "#2E7D5A", () => tab("perfil")]
 ];
 const tudoLista = () => { const L = TUDO.filter(x => !x[5] || x[5]()); let i = 0; while(L.length % 4 && i < TUDO_EXTRA.length) L.push(TUDO_EXTRA[i++]); return L; };
-const tudoHtml = () => { const L = tudoLista(); return `<section class="tudo" aria-label="Tudo do CK Life"><div class="sec-title"><h3>Tudo do CK Life</h3></div>
+const tudoHtml = () => { const L = tudoLista(); return `<section class="tudo card" aria-label="Tudo do CK Life"><div class="tudo-h"><span class="eyebrow">Atalhos</span><b>Tudo do CK Life</b></div>
   <div class="tudo-g">${L.map(([k, n, i, c, , , nv]) => `<button class="tudo-i" data-tudo="${k}" style="--tc:${c}"><span class="tudo-ic">${ic(i, 24, 2)}</span><span class="tudo-n">${n}</span>${nv && nv() ? `<i class="xp-novo">Novo</i>` : ""}</button>`).join("")}</div></section>`; };
 const rInicioTudo = rInicio; rInicio = function(){
   rInicioTudo.apply(this, arguments);
