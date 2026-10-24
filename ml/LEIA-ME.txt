@@ -1,0 +1,3 @@
+Reconhecimento de corpo usado pela câmera que conta repetições.
+MediaPipe Tasks Vision 0.10.14 e modelo pose_landmarker_lite (Google) — licença Apache-2.0.
+Roda 100% no aparelho da aluna; nenhuma imagem é enviada.

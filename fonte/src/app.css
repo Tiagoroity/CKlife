@@ -2148,3 +2148,20 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
 .turma-tx{min-width:0;display:flex;flex-direction:column;gap:2px}
 .turma-tx b{font-size:15.5px;line-height:1.25}
 .turma-tx small{color:var(--muted);font-size:12.5px}
+
+/* ===== Câmera que conta repetições ===== */
+.cam-bt{display:inline-flex;align-items:center;gap:8px;align-self:center;margin:4px auto 2px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);color:#fff;border-radius:999px;padding:9px 16px;font:inherit;font-weight:700;font-size:14.5px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.cam-bt .xp-novo{margin-left:2px}
+.cam-ov{position:absolute;inset:0;z-index:1;background:#000;overflow:hidden}
+.cam-ov video,.cam-ov canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.cam-ov video{transform:scaleX(-1)}
+.cam-top{position:absolute;left:12px;right:12px;top:calc(env(safe-area-inset-top,0px) + 64px);display:flex;align-items:center;gap:8px;z-index:2}
+.cam-st{flex:1;min-width:0;background:rgba(0,0,0,.55);color:#fff;font-weight:700;font-size:14px;border-radius:14px;padding:9px 12px;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.cam-x{background:rgba(0,0,0,.55);color:#fff;border-color:transparent}
+.cam-meter{position:absolute;right:12px;top:42%;width:10px;height:120px;border-radius:99px;background:rgba(255,255,255,.2);overflow:hidden;z-index:2;display:flex;align-items:flex-end}
+.cam-meter i{display:block;width:100%;height:0;background:linear-gradient(0deg,#3DDC6E,#B9DDB2);border-radius:99px;transition:height .12s linear}
+.cam-dica{position:absolute;left:16px;right:40px;top:44%;margin:0;text-align:center;color:#fff;font-family:var(--display);font-weight:800;font-size:24px;line-height:1.15;text-shadow:0 2px 12px rgba(0,0,0,.7);z-index:2;opacity:0}
+.cam-dica.pisca{animation:camDica 2.6s ease both}
+@keyframes camDica{0%{opacity:0;transform:translateY(8px)}12%{opacity:1;transform:none}80%{opacity:1}100%{opacity:0}}
+.cam-av{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;color:var(--accent)}
+.cam-av p,.cam-av ul{color:var(--ink);text-align:left;width:100%}
