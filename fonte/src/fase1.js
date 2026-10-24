@@ -156,7 +156,6 @@ function abreNoSheet(tit, node){
 /* cada item vira um cartãozinho: [seletor, ícone, cor, título, subtítulo, ação] */
 const CTX_INI = [
   [".xe-rec", "bolt", "#F4A62A", n => "Hoje, algo mais leve", n => txt(n, "#xe-leve").replace(/^.*·\s*/, "") || "Treino leve sugerido", n => { const b = n.querySelector("#xe-leve"); if(b) b.click(); }],
-  [".notice", "speaker", "#2E7D5A", n => txt(n, "b") || "Aviso", n => txt(n, "p"), n => sheet(txt(n, "b") || "Aviso", `<p style="font-size:16px;line-height:1.5">${esc(txt(n, "p"))}</p>`)],
   [".card.passos", "check", "#2E7D5A", n => "Primeiros passos", n => { const f = [...n.querySelectorAll(".passo:not(.ok) span:last-child")][0]; return `${txt(n, ".sec-title .num")}${f ? " · Próximo: " + f.textContent.trim() : ""}`; }, n => abreNoSheet("Primeiros passos", n)],
   [".pa-conv", "calendar", "#0E3D32", n => txt(n, "b") || "Plano do ano CK", n => "52 semanas sem repetir treino", n => abreNoSheet("Plano do ano CK", n)],
   [".xp-cic-card", "ciclo", "#C2557A", n => "Meu Ciclo", n => txt(n, "small"), n => abrirCiclo()],
@@ -190,7 +189,7 @@ function organizaInicio(){
     }));
     [...row.children].sort((a, b) => +a.dataset.pvk - +b.dataset.pvk).forEach(c => row.appendChild(c));
     row.querySelectorAll(".pv-c").forEach(c => c.onclick = () => { const it = CTX_INI[+c.dataset.pvk], n = box.querySelector(`[data-pv="${c.dataset.pvid}"]`); SOM.tap && SOM.tap(); if(n) try{ it[5](n); }catch(e){ console.warn(e); } });
-    pv.hidden = !row.children.length;
+    pv.hidden = true; // "Pra você agora" saiu do Início (a grade Tudo do CK Life leva aos mesmos lugares); os blocos seguem na gaveta
     // xp-ini sem nada visível (banners do Início continuam aparecendo se houver)
     const xi = $("xp-ini"); if(xi) xi.hidden = !xi.children.length;
     // 3) Sua semana: calendário + sequência + ritmo + evolução num cartão só
@@ -204,20 +203,32 @@ function organizaInicio(){
     const evo = $("h-evo"); if(evo){ const d = evo.closest("#t-inicio > *"); if(d && d !== sem) guarda(d); }
     box.querySelectorAll(".xe-rit, .xe-seq-tx").forEach(guarda);
     const xd = box.querySelector(".xe-dia"); if(xd && !xd.children.length) guarda(xd);
+    // 3b) "Você é CK Life Pro" sai do Início: vira a coroinha no topo, ao lado do foguinho
+    box.querySelectorAll(".pl-bloco").forEach(b => { if(b.querySelector(".pl-pro")) guarda(b); });
+    proTopo();
     // 4) treinos rápidos saem do Início (ficam na aba Treinos e no "Mais um?")
     const rap = $("h-rap"); if(rap){ const t = rap.closest(".sec-title"), hs = t && t.nextElementSibling; guarda(t); if(hs && hs.classList.contains("hscroll")) guarda(hs); }
     // 5) receita compacta
     const rh = box.querySelector(".rhero"); if(rh) rh.classList.add("rhero-mini");
     // 6) ordem final
     const recT = $("h-card") && $("h-card").closest(".sec-title");
-    const ordem = [capa, sd, pv, box.querySelector(".tudo"), xi && !xi.hidden ? xi : null, sem, recT, rh, box.querySelector(".pr-fila")].filter(Boolean);
+    const aviso = box.querySelector(":scope > .notice"); if(aviso) aviso.classList.add("aviso-fino");
+    const ordem = [capa, aviso, sd, pv, box.querySelector(".tudo"), xi && !xi.hidden ? xi : null, sem, recT, rh, box.querySelector(".pr-fila")].filter(Boolean);
     const fim = [...box.querySelectorAll(":scope > .ad-card, :scope > .slogan")];
     const resto = [...box.children].filter(e => !ordem.includes(e) && !fim.includes(e) && e !== gav && e !== xi && !e.classList.contains("xe-dia"));
     [...ordem, ...resto, ...fim, gav].forEach(e => box.appendChild(e));
-    if(xd && xd.children.length) sd ? sd.after(xd) : null;
+    if(xd){ if(xd.children.length && sd) sd.after(xd); else if(!xd.children.length) guarda(xd); }
   } finally { ORG = false; }
 }
 const rInicioOrg = rInicio; rInicio = function(){ const r = rInicioOrg.apply(this, arguments); organizaInicio(); return r; };
 /* coisas que chegam depois (ciclo, cabelo, novidades, convite do plano): reorganiza de novo */
 { let tm = null; const ob = new MutationObserver(() => { if(ORG) return; clearTimeout(tm); tm = setTimeout(() => { if(TAB === "inicio") organizaInicio(); }, 120); });
   const liga = () => { const b = $("t-inicio"); if(b) ob.observe(b, { childList: true, subtree: true }); else setTimeout(liga, 500); }; setTimeout(liga, 0); }
+
+/* coroinha Pro no topo (só para quem paga); toque abre o status da assinatura */
+function proTopo(){
+  const sc = $("streak-chip"); if(!sc) return; let b = $("b-pro"); const pro = typeof pagou === "function" && pagou();
+  if(!pro){ if(b) b.remove(); return; }
+  if(!b){ sc.insertAdjacentHTML("beforebegin", `<button class="pro-top" id="b-pro" aria-label="Você é CK Life Pro" title="Você é CK Life Pro"><i class='ckc' aria-hidden='true'></i></button>`); b = $("b-pro"); b.onclick = () => { SOM.tap && SOM.tap(); paywall(); }; }
+}
+setInterval(proTopo, 5000); setTimeout(proTopo, 1500);
