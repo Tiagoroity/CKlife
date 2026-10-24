@@ -42,7 +42,7 @@ const figImg = (id, cls) => { const f = (FCAT.L || []).find(x => x.id === id); r
 document.addEventListener("DOMContentLoaded", () => {});
 new MutationObserver(() => { const L = document.querySelectorAll("img[data-figid]"); if(!L.length) return; catalogo().then(C => L.forEach(i => { const f = C.find(x => x.id === i.dataset.figid); if(f){ i.src = f.arquivo; i.removeAttribute("data-figid"); } })); }).observe(document.documentElement, { childList: true, subtree: true });
 const eVideo = p => /\.(mp4|webm|mov)$/i.test(p || "");
-const midiaPronta = path => { const m = MID.get(path); return m && m.t > Date.now() ? `src="${esc(m.u)}" data-m="${esc(path)}" data-mok="1"` : `data-m="${esc(path)}"`; };
+const midiaPronta = path => { const m = MID.get(path); return (m && m.t > Date.now() ? `src="${esc(m.u)}" data-m="${esc(path)}" data-mok="1"` : `data-m="${esc(path)}"`) + ` decoding="async"`; };
 function ligaMidia(root, segs){
   const els = [...(root || document).querySelectorAll("[data-m]:not([data-mok])")]; if(!els.length) return;
   urls(els.map(e => e.dataset.m), segs).then(us => els.forEach((e, i) => { e.dataset.mok = 1;
@@ -77,7 +77,7 @@ async function selfieNova(f){
     const t = new Uint8Array(await f.slice(0, 131072).arrayBuffer()); let s = ""; for(let i = 0; i < t.length; i++) s += t[i] > 31 && t[i] < 127 ? String.fromCharCode(t[i]) : " ";
     return /front camera|frontal|front-facing|selfie/i.test(s); }catch(e){ return false; }
 }
-function espelhaBlob(b){ return new Promise(ok => { const u = URL.createObjectURL(b), im = new Image(); im.onload = () => { const c = document.createElement("canvas"); c.width = im.width; c.height = im.height; const x = c.getContext("2d"); x.translate(c.width, 0); x.scale(-1, 1); x.drawImage(im, 0, 0); URL.revokeObjectURL(u); c.toBlob(r => ok(r || b), "image/jpeg", .92); }; im.onerror = () => { URL.revokeObjectURL(u); ok(b); }; im.src = u; }); }
+function espelhaBlob(b){ return new Promise(ok => { const u = URL.createObjectURL(b), im = new Image(); im.onload = () => { const c = document.createElement("canvas"); c.width = im.width; c.height = im.height; const x = c.getContext("2d"); x.translate(c.width, 0); x.scale(-1, 1); x.drawImage(im, 0, 0); URL.revokeObjectURL(u); c.toBlob(r => ok(r || b), "image/jpeg", .88); }; im.onerror = () => { URL.revokeObjectURL(u); ok(b); }; im.src = u; }); }
 function corteQuadrado(blob, S){ return new Promise((ok, no) => { const u = URL.createObjectURL(blob), im = new Image(); im.onload = () => { const c = document.createElement("canvas"); c.width = c.height = S; const m = Math.min(im.width, im.height); c.getContext("2d").drawImage(im, (im.width - m) / 2, (im.height - m) / 2, m, m, 0, 0, S, S); URL.revokeObjectURL(u); c.toBlob(b => b ? ok(b) : no(), "image/jpeg", .86); }; im.onerror = no; im.src = u; }); }
 
 /* ---------- Perfis ---------- */

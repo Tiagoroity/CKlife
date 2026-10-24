@@ -145,7 +145,7 @@ function escolheFiltro(blob, titulo){
       box.querySelectorAll("[data-fl]").forEach(b => { const m = document.createElement("canvas"); m.width = mini.width; m.height = mini.height; m.getContext("2d").drawImage(mini, 0, 0); aplicaFiltro(m, b.dataset.fl); b.querySelector("img").src = m.toDataURL("image/jpeg", .7); });
       vibra(8); mostra(); };
     $("fl-esp").onclick = () => transforma(false); $("fl-gir").onclick = () => transforma(true);
-    $("fl-ok").onclick = () => { const temMk = MK.rosto && (MK.batom || MK.blush); if(esc0 === "original" && !temMk && !mudou) return sai(blob); const cv = aplicaFiltro(paraCanvas(src, 2048), esc0); if(temMk) aplicaMaquiagem(cv, MK); cv.toBlob(b => sai(b || blob), "image/jpeg", .92); };
+    $("fl-ok").onclick = () => { const temMk = MK.rosto && (MK.batom || MK.blush); if(esc0 === "original" && !temMk && !mudou) return sai(blob); const cv = aplicaFiltro(paraCanvas(src, 2048), esc0); if(temMk) aplicaMaquiagem(cv, MK); cv.toBlob(b => sai(b || blob), "image/jpeg", .88); };
   });
 }
 
