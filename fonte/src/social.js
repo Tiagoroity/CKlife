@@ -706,6 +706,8 @@ function msgCorpo(m){
   if(m.tipo === "post") h += `<button class="so-mpost" data-post="${m.post_id}">${ic("image", 16)} <span>Publicação compartilhada</span></button>`;
   if(m.pend && m.tipo === "foto") h += `<div class="so-mfoto so-enviando"><img src="${m.previa}" alt=""><i class="so-spin"></i></div>`;
   else if(m.pend && m.tipo === "audio") h += `<div class="so-aud so-enviando"><i class="so-spin pq"></i><small>Enviando áudio…</small></div>`;
+  else if(m.pend && m.tipo === "video") h += `<div class="so-mvid so-enviando">${m.previa ? `<video src="${m.previa}" muted playsinline preload="metadata"></video>` : ""}<span class="so-mvid-env"><i class="so-spin"></i> Enviando vídeo…</span></div>`;
+  else if(m.tipo === "video") h += `<div class="so-mvid priv"><video data-m="${esc(m.midia)}" playsinline controls preload="metadata" controlslist="nodownload" disablepictureinpicture></video></div>`;
   else if(m.tipo === "foto") h += `<button class="so-mfoto priv" data-ver="${esc(m.midia)}"><img data-m="${esc(m.midia)}" alt="Foto" draggable="false"></button>`;
   if(m.tipo === "audio" && !m.pend) h += `<div class="so-aud" data-aud="${esc(m.midia)}" data-dur="${m.duracao || 0}"><button class="iconbtn sm" aria-label="Tocar áudio">${ic("play", 16)}</button><i><b></b></i><small>${fmtDur(m.duracao)}</small></div>`;
   if(m.texto && m.tipo !== "post") h += `<p>${esc(m.texto)}</p>`; else if(m.tipo === "post" && m.texto) h += `<p class="hint">${esc(m.texto)}</p>`;
@@ -751,8 +753,8 @@ async function enviaMsg(c, d){
   if(aberto){ CHAT.msgs.push(base); desenhaMsgs(true); }
   try{
     let midia = null;
-    if(d.blob){ const ext = d.tipo === "audio" ? (/mp4|m4a|aac/.test(d.mime) ? "m4a" : /ogg/.test(d.mime) ? "ogg" : "webm") : d.mime === "image/png" ? "png" : d.mime === "image/webp" ? "webp" : "jpg";
-      const tipo = d.tipo === "audio" ? (ext === "m4a" ? "audio/mp4" : ext === "ogg" ? "audio/ogg" : "audio/webm") : ext === "png" ? "image/png" : ext === "webp" ? "image/webp" : "image/jpeg";
+    if(d.blob){ const ext = d.tipo === "audio" ? (/mp4|m4a|aac/.test(d.mime) ? "m4a" : /ogg/.test(d.mime) ? "ogg" : "webm") : d.tipo === "video" ? (/quicktime/.test(d.mime) ? "mov" : /webm/.test(d.mime) ? "webm" : "mp4") : d.mime === "image/png" ? "png" : d.mime === "image/webp" ? "webp" : "jpg";
+      const tipo = d.tipo === "audio" ? (ext === "m4a" ? "audio/mp4" : ext === "ogg" ? "audio/ogg" : "audio/webm") : d.tipo === "video" ? (ext === "mov" ? "video/quicktime" : ext === "webm" ? "video/webm" : "video/mp4") : ext === "png" ? "image/png" : ext === "webp" ? "image/webp" : "image/jpeg";
       midia = await sobe("chat", c.id, d.blob, ext, tipo); }
     const row = { id, conversa_id: c.id, autor: NU.uid, tipo: base.tipo, texto: base.texto, midia, duracao: base.duracao, resposta_id: base.resposta_id, story_id: base.story_id, post_id: base.post_id };
     const r = await q(SB().from("mensagens").insert(row).select());

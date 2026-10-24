@@ -2251,7 +2251,7 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
 :root[data-theme="dark"] .xp-msg.eu:not(.fig)::before{border-left-color:#1F5C40}
 :root[data-theme="dark"] .xp-msg.eu:not(.fig) small{color:#B7D9C6!important}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .xp-msg.eu:not(.fig){background:#1F5C40;color:#EAF7EF}:root:not([data-theme="light"]) .xp-msg.eu:not(.fig)::before{border-left-color:#1F5C40}:root:not([data-theme="light"]) .xp-msg.eu:not(.fig) small{color:#B7D9C6!important}}
-.so-dia{align-self:center;background:var(--surface);color:var(--muted);font-size:12px;font-weight:700;border-radius:10px;padding:4px 10px;box-shadow:0 1px 1.5px rgba(0,0,0,.1)}
+.so-dia{align-self:center;background:var(--surface);color:var(--muted);font-size:12px;font-weight:700;border-radius:10px;padding:4px 10px;box-shadow:0 1px 1.5px rgba(0,0,0,.1);text-transform:none}
 .so-dia::first-letter{text-transform:uppercase}
 /* barra de digitar: campo arredondado e botões redondos */
 .so-cin .input{border-radius:999px;padding-left:16px}
@@ -2301,3 +2301,9 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
 .so-grade{gap:3px;border-radius:14px;overflow:hidden}
 .so-grade .so-gi{border-radius:0!important}
 .fl-gira{flex:0 0 auto;width:38px;height:38px;background:rgba(255,255,255,.12)!important;border-color:transparent!important;color:#fff!important}
+/* vídeo no chat */
+.so-mvid{position:relative;width:240px;max-width:100%;border-radius:14px;overflow:hidden;background:#000}
+.so-mvid video{display:block;width:100%;max-height:360px;object-fit:cover}
+.so-mvid.so-enviando video{opacity:.55}
+.so-mvid-env{position:absolute;left:0;right:0;bottom:8px;display:flex;align-items:center;justify-content:center;gap:6px;color:#fff;font-size:12.5px;font-weight:700;text-shadow:0 1px 4px rgba(0,0,0,.6)}
+.so-mvid:not(.so-enviando) .so-mvid-env{display:none}

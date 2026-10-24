@@ -134,3 +134,30 @@ const abrirGrupoC2 = abrirGrupo; abrirGrupo = async function(g){
   }catch(e){ console.warn(e); }
   return r;
 };
+
+/* ---------- FOTO e VÍDEO no chat (melhor qualidade possível) ---------- */
+fotoChat = function(c){
+  menuLeve([["camera", "Tirar foto agora", () => pegaFotoChat(c, "environment")], ["image", "Escolher foto da galeria", () => pegaFotoChat(c, null)],
+    ["play", "Gravar vídeo (até 1 min)", () => pegaVideoChat(c, "environment")], ["play", "Escolher vídeo da galeria", () => pegaVideoChat(c, null)]]);
+};
+function prevChat(c, midiaHtml, envia, limpa){
+  let box = $("so-prev"); if(!box){ box = document.createElement("div"); box.id = "so-prev"; box.className = "so-prev priv"; document.body.appendChild(box); }
+  box.innerHTML = `<div class="so-prev-top"><button class="iconbtn" id="pv-x" aria-label="Cancelar">${ic("close", 20)}</button><b>Enviar para ${esc(nomeP(outroDe(c)).split(" ")[0])}</b></div>${midiaHtml}<div class="so-prev-pe"><input class="input" id="pv-t" maxlength="500" placeholder="Escreva uma legenda (opcional)"><button class="btn btn-accent so-env" id="pv-ok" aria-label="Enviar">${ic("send", 20)}</button></div>`;
+  box.hidden = false; const fecha = () => { box.querySelectorAll("video").forEach(v => v.pause()); box.hidden = true; box.innerHTML = ""; limpa && limpa(); };
+  $("pv-x").onclick = fecha;
+  $("pv-ok").onclick = () => { const t = $("pv-t").value.trim(); fecha(); envia(t || null); };
+  $("pv-t").onkeydown = e => { if(e.key === "Enter") $("pv-ok").click(); };
+}
+async function pegaFotoChat(c, cap){
+  const f = await escolheArquivo("image/*", cap); if(!f) return; let b = await imagemValida(f, 2048); if(!b) return; b = await escolheFiltro(b); if(!b) return;
+  const u = URL.createObjectURL(b);
+  prevChat(c, `<img src="${u}" alt="" draggable="false">`, t => enviaMsg(c, { tipo: "foto", blob: b, texto: t }).catch(() => {}), () => URL.revokeObjectURL(u));
+}
+async function pegaVideoChat(c, cap){
+  const f = await escolheArquivo("video/*", cap); if(!f) return;
+  const v = await videoValido(f, 60); if(!v) return; // até 1 minuto e 50 MB; vai do jeito que o celular entregou (sem reduzir)
+  const dur = await new Promise(ok => { const el = document.createElement("video"), u = URL.createObjectURL(v); el.preload = "metadata"; el.onloadedmetadata = () => { URL.revokeObjectURL(u); ok(Math.round(el.duration || 0)); }; el.onerror = () => { URL.revokeObjectURL(u); ok(null); }; el.src = u; });
+  const u = URL.createObjectURL(v);
+  prevChat(c, `<video src="${u}" playsinline controls autoplay muted loop style="max-width:100%;max-height:70vh;border-radius:16px;background:#000"></video>`,
+    t => enviaMsg(c, { tipo: "video", blob: v, mime: v.type || "video/mp4", texto: t, duracao: dur != null ? Math.min(300, dur) : null }).catch(() => {}), () => URL.revokeObjectURL(u));
+}

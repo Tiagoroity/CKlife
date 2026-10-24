@@ -2282,7 +2282,7 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
 :root[data-theme="dark"] .xp-msg.eu:not(.fig)::before{border-left-color:#1F5C40}
 :root[data-theme="dark"] .xp-msg.eu:not(.fig) small{color:#B7D9C6!important}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .xp-msg.eu:not(.fig){background:#1F5C40;color:#EAF7EF}:root:not([data-theme="light"]) .xp-msg.eu:not(.fig)::before{border-left-color:#1F5C40}:root:not([data-theme="light"]) .xp-msg.eu:not(.fig) small{color:#B7D9C6!important}}
-.so-dia{align-self:center;background:var(--surface);color:var(--muted);font-size:12px;font-weight:700;border-radius:10px;padding:4px 10px;box-shadow:0 1px 1.5px rgba(0,0,0,.1)}
+.so-dia{align-self:center;background:var(--surface);color:var(--muted);font-size:12px;font-weight:700;border-radius:10px;padding:4px 10px;box-shadow:0 1px 1.5px rgba(0,0,0,.1);text-transform:none}
 .so-dia::first-letter{text-transform:uppercase}
 /* barra de digitar: campo arredondado e botões redondos */
 .so-cin .input{border-radius:999px;padding-left:16px}
@@ -2332,6 +2332,12 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
 .so-grade{gap:3px;border-radius:14px;overflow:hidden}
 .so-grade .so-gi{border-radius:0!important}
 .fl-gira{flex:0 0 auto;width:38px;height:38px;background:rgba(255,255,255,.12)!important;border-color:transparent!important;color:#fff!important}
+/* vídeo no chat */
+.so-mvid{position:relative;width:240px;max-width:100%;border-radius:14px;overflow:hidden;background:#000}
+.so-mvid video{display:block;width:100%;max-height:360px;object-fit:cover}
+.so-mvid.so-enviando video{opacity:.55}
+.so-mvid-env{position:absolute;left:0;right:0;bottom:8px;display:flex;align-items:center;justify-content:center;gap:6px;color:#fff;font-size:12.5px;font-weight:700;text-shadow:0 1px 4px rgba(0,0,0,.6)}
+.so-mvid:not(.so-enviando) .so-mvid-env{display:none}
 </style>
 
 <!-- Entrar / criar conta -->
@@ -5683,6 +5689,8 @@ function msgCorpo(m){
   if(m.tipo === "post") h += `<button class="so-mpost" data-post="${m.post_id}">${ic("image", 16)} <span>Publicação compartilhada</span></button>`;
   if(m.pend && m.tipo === "foto") h += `<div class="so-mfoto so-enviando"><img src="${m.previa}" alt=""><i class="so-spin"></i></div>`;
   else if(m.pend && m.tipo === "audio") h += `<div class="so-aud so-enviando"><i class="so-spin pq"></i><small>Enviando áudio…</small></div>`;
+  else if(m.pend && m.tipo === "video") h += `<div class="so-mvid so-enviando">${m.previa ? `<video src="${m.previa}" muted playsinline preload="metadata"></video>` : ""}<span class="so-mvid-env"><i class="so-spin"></i> Enviando vídeo…</span></div>`;
+  else if(m.tipo === "video") h += `<div class="so-mvid priv"><video data-m="${esc(m.midia)}" playsinline controls preload="metadata" controlslist="nodownload" disablepictureinpicture></video></div>`;
   else if(m.tipo === "foto") h += `<button class="so-mfoto priv" data-ver="${esc(m.midia)}"><img data-m="${esc(m.midia)}" alt="Foto" draggable="false"></button>`;
   if(m.tipo === "audio" && !m.pend) h += `<div class="so-aud" data-aud="${esc(m.midia)}" data-dur="${m.duracao || 0}"><button class="iconbtn sm" aria-label="Tocar áudio">${ic("play", 16)}</button><i><b></b></i><small>${fmtDur(m.duracao)}</small></div>`;
   if(m.texto && m.tipo !== "post") h += `<p>${esc(m.texto)}</p>`; else if(m.tipo === "post" && m.texto) h += `<p class="hint">${esc(m.texto)}</p>`;
@@ -5728,8 +5736,8 @@ async function enviaMsg(c, d){
   if(aberto){ CHAT.msgs.push(base); desenhaMsgs(true); }
   try{
     let midia = null;
-    if(d.blob){ const ext = d.tipo === "audio" ? (/mp4|m4a|aac/.test(d.mime) ? "m4a" : /ogg/.test(d.mime) ? "ogg" : "webm") : d.mime === "image/png" ? "png" : d.mime === "image/webp" ? "webp" : "jpg";
-      const tipo = d.tipo === "audio" ? (ext === "m4a" ? "audio/mp4" : ext === "ogg" ? "audio/ogg" : "audio/webm") : ext === "png" ? "image/png" : ext === "webp" ? "image/webp" : "image/jpeg";
+    if(d.blob){ const ext = d.tipo === "audio" ? (/mp4|m4a|aac/.test(d.mime) ? "m4a" : /ogg/.test(d.mime) ? "ogg" : "webm") : d.tipo === "video" ? (/quicktime/.test(d.mime) ? "mov" : /webm/.test(d.mime) ? "webm" : "mp4") : d.mime === "image/png" ? "png" : d.mime === "image/webp" ? "webp" : "jpg";
+      const tipo = d.tipo === "audio" ? (ext === "m4a" ? "audio/mp4" : ext === "ogg" ? "audio/ogg" : "audio/webm") : d.tipo === "video" ? (ext === "mov" ? "video/quicktime" : ext === "webm" ? "video/webm" : "video/mp4") : ext === "png" ? "image/png" : ext === "webp" ? "image/webp" : "image/jpeg";
       midia = await sobe("chat", c.id, d.blob, ext, tipo); }
     const row = { id, conversa_id: c.id, autor: NU.uid, tipo: base.tipo, texto: base.texto, midia, duracao: base.duracao, resposta_id: base.resposta_id, story_id: base.story_id, post_id: base.post_id };
     const r = await q(SB().from("mensagens").insert(row).select());
@@ -8554,6 +8562,33 @@ const abrirGrupoC2 = abrirGrupo; abrirGrupo = async function(g){
   }catch(e){ console.warn(e); }
   return r;
 };
+
+/* ---------- FOTO e VÍDEO no chat (melhor qualidade possível) ---------- */
+fotoChat = function(c){
+  menuLeve([["camera", "Tirar foto agora", () => pegaFotoChat(c, "environment")], ["image", "Escolher foto da galeria", () => pegaFotoChat(c, null)],
+    ["play", "Gravar vídeo (até 1 min)", () => pegaVideoChat(c, "environment")], ["play", "Escolher vídeo da galeria", () => pegaVideoChat(c, null)]]);
+};
+function prevChat(c, midiaHtml, envia, limpa){
+  let box = $("so-prev"); if(!box){ box = document.createElement("div"); box.id = "so-prev"; box.className = "so-prev priv"; document.body.appendChild(box); }
+  box.innerHTML = `<div class="so-prev-top"><button class="iconbtn" id="pv-x" aria-label="Cancelar">${ic("close", 20)}</button><b>Enviar para ${esc(nomeP(outroDe(c)).split(" ")[0])}</b></div>${midiaHtml}<div class="so-prev-pe"><input class="input" id="pv-t" maxlength="500" placeholder="Escreva uma legenda (opcional)"><button class="btn btn-accent so-env" id="pv-ok" aria-label="Enviar">${ic("send", 20)}</button></div>`;
+  box.hidden = false; const fecha = () => { box.querySelectorAll("video").forEach(v => v.pause()); box.hidden = true; box.innerHTML = ""; limpa && limpa(); };
+  $("pv-x").onclick = fecha;
+  $("pv-ok").onclick = () => { const t = $("pv-t").value.trim(); fecha(); envia(t || null); };
+  $("pv-t").onkeydown = e => { if(e.key === "Enter") $("pv-ok").click(); };
+}
+async function pegaFotoChat(c, cap){
+  const f = await escolheArquivo("image/*", cap); if(!f) return; let b = await imagemValida(f, 2048); if(!b) return; b = await escolheFiltro(b); if(!b) return;
+  const u = URL.createObjectURL(b);
+  prevChat(c, `<img src="${u}" alt="" draggable="false">`, t => enviaMsg(c, { tipo: "foto", blob: b, texto: t }).catch(() => {}), () => URL.revokeObjectURL(u));
+}
+async function pegaVideoChat(c, cap){
+  const f = await escolheArquivo("video/*", cap); if(!f) return;
+  const v = await videoValido(f, 60); if(!v) return; // até 1 minuto e 50 MB; vai do jeito que o celular entregou (sem reduzir)
+  const dur = await new Promise(ok => { const el = document.createElement("video"), u = URL.createObjectURL(v); el.preload = "metadata"; el.onloadedmetadata = () => { URL.revokeObjectURL(u); ok(Math.round(el.duration || 0)); }; el.onerror = () => { URL.revokeObjectURL(u); ok(null); }; el.src = u; });
+  const u = URL.createObjectURL(v);
+  prevChat(c, `<video src="${u}" playsinline controls autoplay muted loop style="max-width:100%;max-height:70vh;border-radius:16px;background:#000"></video>`,
+    t => enviaMsg(c, { tipo: "video", blob: v, mime: v.type || "video/mp4", texto: t, duracao: dur != null ? Math.min(300, dur) : null }).catch(() => {}), () => URL.revokeObjectURL(u));
+}
 
 const TABS = [["inicio","Início"],["treinar","Treinos"],["dieta","Nutrição"],["juntas","Comunidade"],["explorar","Explorar"],["perfil","Perfil"],["evolucao","Evolução"]];
 const NAV = TABS.slice(0, 6), NAV_DE = { evolucao: "perfil" };
