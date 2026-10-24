@@ -109,3 +109,31 @@ const rExplorarF1 = rExplorar; rExplorar = function(){
     if(!modOn("clube")){ const cid = box.querySelector(".xp-cid"); if(cid) cid.remove(); } }
   return r;
 };
+
+/* ---------- Início: grade "Tudo do CK Life" (atalhos para tudo que o app tem) ---------- */
+if(!P.pente) P.pente = '<path d="M4 7h16"/><path d="M6 7v9M9 7v9M12 7v9M15 7v9M18 7v9"/><path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2"/>';
+const TUDO = [
+  ["treinos", "Treinos", "treinar", "#2E7D5A", () => { TV = "programas"; tab("treinar"); }],
+  ["anual", "Plano do ano", "calendar", "#0E3D32", () => abrirPrograma("anual"), () => PROGS.some(p => p.id === "anual")],
+  ["cardapio", "Cardápio", "bowl", "#E0A21B", () => { DV = "cardapio"; tab("dieta"); }],
+  ["receitas", "Receitas", "chef", "#E07B39", () => { DV = "receitas"; tab("dieta"); }],
+  ["ciclo", "Meu Ciclo", "ciclo", "#C2557A", () => abrirCiclo(), () => typeof abrirCiclo === "function"],
+  ["cabelo", "Cabelo", "pente", "#8A5CC2", () => abreCabelo(), () => typeof cabOn === "function" && cabOn()],
+  ["desafios", "Desafios", "trophy", "#D4A017", () => { TV = "programas"; tab("treinar"); setTimeout(() => { const d = document.querySelector("#t-treinar .xe-desafios"); if(d) d.scrollIntoView({ behavior: "smooth", block: "start" }); }, 350); }],
+  ["evolucao", "Evolução", "evolucao", "#3D8BD9", () => tab("evolucao")],
+  ["loja", "Loja", "bag", "#2E7D5A", () => { XS.sec = "loja"; XS.q = ""; XS.cat = ""; tab("explorar"); }, () => modOn("loja"), () => modNovo("loja")],
+  ["clube", "Clube CK", "gift", "#B5527E", () => { XS.sec = "clube"; XS.q = ""; XS.cat = ""; tab("explorar"); }, () => modOn("clube"), () => modNovo("clube")],
+  ["juntas", "Comunidade", "juntas", "#5B6CD9", () => tab("juntas")],
+  ["lembrete", "Lembretes", "clock", "#65736C", () => editaLembrete()]
+];
+const tudoHtml = () => { const L = TUDO.filter(x => !x[5] || x[5]()); return `<section class="tudo" aria-label="Tudo do CK Life"><div class="sec-title"><h3>Tudo do CK Life</h3></div>
+  <div class="tudo-g">${L.map(([k, n, i, c, , , nv]) => `<button class="tudo-i" data-tudo="${k}" style="--tc:${c}"><span class="tudo-ic">${ic(i, 24, 2)}</span><span class="tudo-n">${n}</span>${nv && nv() ? `<i class="xp-novo">Novo</i>` : ""}</button>`).join("")}</div></section>`; };
+const rInicioTudo = rInicio; rInicio = function(){
+  rInicioTudo.apply(this, arguments);
+  const box = $("t-inicio"); if(!box || box.querySelector(".tudo")) return;
+  const ref = box.querySelector(".sd") || box.querySelector(".capa"); if(!ref) return;
+  ref.insertAdjacentHTML("afterend", tudoHtml());
+  box.querySelectorAll("[data-tudo]").forEach(b => b.onclick = () => { const x = TUDO.find(t => t[0] === b.dataset.tudo); if(!x) return; SOM.tap && SOM.tap(); try{ x[4](); }catch(e){ console.warn(e); } });
+};
+/* o Cabelo descobre se está liberado depois de carregar: atualiza a grade quando isso acontecer */
+{ let n = 0; const t = setInterval(() => { if(typeof cabOn === "function" && cabOn()){ clearInterval(t); const g = document.querySelector("#t-inicio .tudo"); if(g && !g.querySelector('[data-tudo="cabelo"]') && TAB === "inicio"){ g.remove(); rInicio(); } } else if(++n > 30) clearInterval(t); }, 2000); }
