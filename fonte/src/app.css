@@ -2307,3 +2307,43 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
 .so-mvid.so-enviando video{opacity:.55}
 .so-mvid-env{position:absolute;left:0;right:0;bottom:8px;display:flex;align-items:center;justify-content:center;gap:6px;color:#fff;font-size:12.5px;font-weight:700;text-shadow:0 1px 4px rgba(0,0,0,.6)}
 .so-mvid:not(.so-enviando) .so-mvid-env{display:none}
+
+/* ===== Painel · Números do negócio ===== */
+.nb-sec{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:22px 0 10px}
+.nb-ret .nb-rt{display:flex;flex-direction:column;gap:4px;padding:16px}
+.nb-rt b{font-family:var(--display);font-size:34px;line-height:1;color:var(--accent-strong)}
+.nb-rt small{color:var(--muted);font-size:12.5px}
+.nb-exp{margin:0 0 12px;font-size:13.5px}
+.nb-tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.nb-tbl{width:100%;min-width:440px;border-collapse:separate;border-spacing:4px;font-size:13.5px}
+.nb-tbl th{font-size:11.5px;color:var(--muted);font-weight:700;text-align:center;padding:4px}
+.nb-tbl th:first-child,.nb-sem{text-align:left}
+.nb-tbl td{padding:9px 6px;border-radius:8px;text-align:center}
+.nb-c{font-weight:800}
+.nb-fun{display:flex;flex-direction:column;gap:14px;padding:16px}
+.nb-fl-t{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.nb-fl-t b{font-size:14.5px}
+.nb-fl-t span{font-size:13.5px;font-weight:700}
+.nb-fl-t small{color:var(--muted);font-weight:500}
+.nb-bar{display:block;height:10px;border-radius:99px;background:var(--surface-2);overflow:hidden}
+.nb-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#2E7D5A,#7BA77A)}
+.nb-graf{padding:16px}
+.nb-bars{display:flex;align-items:flex-end;gap:3px;height:140px}
+.nb-bars span{flex:1;height:100%;display:flex;align-items:flex-end;min-width:0}
+.nb-bars i{display:block;width:100%;min-height:2px;border-radius:4px 4px 0 0;background:linear-gradient(0deg,#2E7D5A,#7BA77A)}
+.nb-eixo{display:flex;justify-content:space-between;margin-top:6px;color:var(--muted)}
+
+/* ===== Painel no celular: nada de texto passando por cima do ícone ===== */
+.kpi-ic>span:first-of-type{display:block;padding-right:44px}
+.kpi b{max-width:100%;overflow-wrap:anywhere}
+@media (max-width:560px){
+  .kpi{padding:14px 12px}
+  .kpi-i{top:12px;right:12px;width:32px;height:32px;border-radius:10px}
+  .kpi b{font-size:clamp(19px,6.2vw,26px);margin-top:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .kpi small{display:block;font-size:12px;line-height:1.35}
+  .nb-tbl{min-width:0;border-spacing:3px;font-size:12px}
+  .nb-tbl th{font-size:10.5px;padding:3px 1px}
+  .nb-tbl td{padding:8px 2px}
+}
+.kpi-ic>span:first-of-type{min-height:34px}
+@media (max-width:440px){.kpi-ic .kpi-i,#v-admin .kpi-ic .kpi-i{display:none!important}.kpi-ic>span:first-of-type,#v-admin .kpi span{padding-right:0!important;min-height:0}}

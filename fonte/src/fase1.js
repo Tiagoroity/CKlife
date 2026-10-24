@@ -173,7 +173,7 @@ function organizaInicio(){
   try{
     box.classList.add("ini2");
     let gav = box.querySelector(".ini-gaveta"); if(!gav){ gav = document.createElement("div"); gav.className = "ini-gaveta"; gav.hidden = true; box.appendChild(gav); }
-    const guarda = n => { if(n && n.parentNode !== gav) gav.appendChild(n); };
+    const guarda = n => { if(!n || n === gav || n.parentNode === gav || n.contains(gav) || gav.contains(n)) return; gav.appendChild(n); }; // nunca guarda a própria gaveta
     const capa = box.querySelector(".capa"), sd = box.querySelector(".sd");
     // 1) check-in dentro do topo
     const ck = box.querySelector(".xe-ck, .xe-ck-ok"); if(ck && capa && ck.parentNode !== capa){ ck.classList.add("capa-ck"); capa.appendChild(ck); }
@@ -200,14 +200,14 @@ function organizaInicio(){
       sem.insertAdjacentHTML("beforeend", `<div class="ss"><span><b class="num">🔥 ${s}</b><small>${s === 1 ? "dia seguido" : "dias seguidos"}</small></span>${r ? `<span><b class="num">${r.v}</b><small>Meu Ritmo</small></span>` : ""}<span><b class="num">${L.length}</b><small>treinos</small></span><span><b class="num">${int(min)}</b><small>minutos</small></span></div><button class="link ss-ev" id="ss-ev">Ver minha evolução ${ic("chev", 14, 2.4)}</button>`);
       $("ss-ev").onclick = () => tab("evolucao");
     }
-    const evo = $("h-evo"); if(evo){ const d = evo.closest("#t-inicio > *"); if(d && d !== sem) guarda(d); }
+    const evo = $("h-evo"); if(evo && !gav.contains(evo)){ const d = evo.closest("#t-inicio > *"); if(d && d !== sem && d !== gav) guarda(d); }
     box.querySelectorAll(".xe-rit, .xe-seq-tx").forEach(guarda);
     const xd = box.querySelector(".xe-dia"); if(xd && !xd.children.length) guarda(xd);
     // 3b) "Você é CK Life Pro" sai do Início: vira a coroinha no topo, ao lado do foguinho
     box.querySelectorAll(".pl-bloco").forEach(b => { if(b.querySelector(".pl-pro")) guarda(b); });
     proTopo();
     // 4) treinos rápidos saem do Início (ficam na aba Treinos e no "Mais um?")
-    const rap = $("h-rap"); if(rap){ const t = rap.closest(".sec-title"), hs = t && t.nextElementSibling; guarda(t); if(hs && hs.classList.contains("hscroll")) guarda(hs); }
+    const rap = $("h-rap"); if(rap && !gav.contains(rap)){ const t = rap.closest(".sec-title"), hs = t && t.nextElementSibling; guarda(t); if(hs && hs.classList.contains("hscroll")) guarda(hs); }
     // 5) receita compacta
     const rh = box.querySelector(".rhero"); if(rh) rh.classList.add("rhero-mini");
     // 6) ordem final
