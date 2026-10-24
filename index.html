@@ -2201,6 +2201,37 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
 #t-inicio .notice.aviso-fino b{font-size:14.5px}
 .pro-top{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;border:1px solid color-mix(in srgb,#F4B740 55%,transparent);background:radial-gradient(circle at 35% 30%,#FFF4CF,#FFE08A);box-shadow:0 4px 12px -6px rgba(244,166,42,.8);padding:0;flex:0 0 auto}
 .pro-top .ckc{width:20px;height:20px}
+
+/* ===== Comunidade: correção das figurinhas no chat (o nome .fig colidia com outra grade do app) ===== */
+.xp-msg.fig{display:flex!important;flex-direction:column;align-items:flex-end;grid-template-columns:none!important;gap:4px;text-align:right;color:var(--ink)!important}
+.xp-msgrow:not(.eu) .xp-msg.fig{align-items:flex-start;text-align:left}
+.xp-msg.fig>small{background:var(--surface-2);color:var(--muted);border:0;margin:0;opacity:1}
+.xp-msg.fig .so-st1,.xp-msg.fig .so-st2{color:var(--muted)!important}
+.xp-msg.fig .so-st3{color:#E0475B!important}
+
+/* ===== Comunidade 2.0 ===== */
+#t-juntas:has(.cm-nav) #cm-chat{display:none}
+.cm-nav{position:sticky;top:calc(var(--topbar-h,60px));z-index:5;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:18px;padding:4px;box-shadow:var(--shadow-sm)}
+.cm-nav button{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;border:0;background:none;color:var(--muted);font:inherit;font-size:12px;font-weight:700;padding:7px 2px;border-radius:14px;min-width:0}
+.cm-nav button span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cm-nav button.on{background:var(--accent-soft);color:var(--accent-strong)}
+.cm-nb{position:absolute;top:3px;right:calc(50% - 20px);min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:#E5484D;color:#fff;font-style:normal;font-size:11px;font-weight:800;display:grid;place-items:center;line-height:1}
+.cm-atal{gap:8px;margin-top:-4px}
+.cm-atal button{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:8px 14px;font:inherit;font-size:13.5px;font-weight:700}
+.cm-atal button i{font-style:normal;font-size:16px}
+.cm-pdia{display:grid;grid-template-columns:44px minmax(0,1fr);align-items:center;gap:12px;padding:14px;border-radius:20px;background:linear-gradient(135deg,color-mix(in srgb,#C2577B 14%,var(--surface)),color-mix(in srgb,#F4B740 12%,var(--surface)));border:1px solid color-mix(in srgb,#C2577B 25%,transparent)}
+.cm-pdia-em{font-size:30px;line-height:1;text-align:center}
+.cm-pdia-tx{min-width:0;display:flex;flex-direction:column;gap:2px}
+.cm-pdia-tx b{font-size:15.5px;line-height:1.3}
+.cm-pdia-tx small{color:var(--muted);font-size:12.5px}
+.cm-pdia-tx small:empty{display:none}
+.cm-pdia-bt{grid-column:2;display:flex;align-items:center;gap:8px}
+.cm-pdia-bt .btn{flex:0 0 auto}
+.cm-pdia-bt .iconbtn{margin-left:auto}
+#t-juntas:has(.cm-nav) .so-grupos{display:none}
+/* posts: um pouco mais de respiro e acabamento */
+#t-juntas .post{border-radius:22px;box-shadow:0 10px 30px -24px rgba(14,61,50,.45)}
+#t-juntas .post .pacts button.on svg{fill:#E5484D;color:#E5484D}
 </style>
 
 <!-- Entrar / criar conta -->
@@ -8241,7 +8272,8 @@ function camAviso(ok){
   sheet("Contar com a câmera", `<div class="cam-av">${ic("camera", 34, 1.6)}<p><b>A câmera conta suas repetições e dá dicas de postura.</b></p>
     <ul class="ing"><li>Apoie o celular no chão ou numa mesa, a uns <b>2 passos</b> de você.</li><li>Seu <b>corpo inteiro</b> precisa aparecer. Em flexão e ponte, fique <b>de lado</b>.</li><li>Lugar bem iluminado ajuda muito.</li></ul>
     <p class="hint">${ic("lock", 13)} Tudo acontece só no seu celular: nenhuma imagem é gravada, salva ou enviada. As dicas são automáticas e não substituem um profissional. Sentiu dor, pare.</p></div>
-    <button class="btn btn-accent btn-block btn-lg" id="cam-ok">${ic("camera", 18)} Ligar a câmera</button>`);
+    <button class="btn btn-accent btn-block btn-lg" id="cam-ok">${ic("camera", 18)} Ligar a câmera</button>`, () => { $("sheet").style.zIndex = ""; });
+  $("sheet").style.zIndex = 40; // por cima da tela do treino (que fica na camada 30)
   $("cam-ok").onclick = () => { fecharSheet(); ok(); };
 }
 /* sair do treino ou terminar: desliga a câmera */
@@ -8267,6 +8299,75 @@ const rPerfilCam = rPerfil; rPerfil = function(){ const r = rPerfilCam.apply(thi
   const on = !ME.camOff; ref.insertAdjacentHTML("afterend", setRow("p-cam", "camera", "Câmera nos treinos", on ? "Botão para contar repetições pela câmera" : "Desligada", sw(on)));
   $("p-cam").onclick = () => { ME.camOff = !ME.camOff; save(); SOM.tap && SOM.tap(); toast(ME.camOff ? "Câmera desligada nos treinos" : "Câmera ligada: o botão aparece nos exercícios compatíveis"); rPerfil(); };
   return r; };
+
+/* ===================== COMUNIDADE 2.0 =====================
+   Menu próprio (Feed · Grupos · Mensagens · Amigas) com contador de não lidas,
+   Pergunta do dia (puxa conversa todo dia; contagem real de respostas) e atalhos para postar.
+   Nada de ranking de corpo, nada de número inventado. */
+
+const PERG_DIA = [
+  ["💪", "Qual treino você fez hoje? Conta pra gente!"],
+  ["🎧", "Qual música não pode faltar no seu treino?"],
+  ["🥗", "Qual foi sua receita favorita desta semana?"],
+  ["💚", "O que te motivou a começar a se cuidar?"],
+  ["☀️", "Você prefere treinar de manhã, à tarde ou à noite?"],
+  ["🏆", "Conta uma pequena vitória sua desta semana."],
+  ["😅", "Qual exercício você mais ama (ou mais odeia)?"],
+  ["🌙", "Como você se cuida nos dias de pouca energia?"],
+  ["🍌", "Qual seu lanche preferido antes do treino?"],
+  ["🌱", "Deixe um recado para quem está começando hoje."],
+  ["💧", "Qual seu truque para beber mais água?"],
+  ["🎯", "Qual meta você quer bater este mês?"],
+  ["💇‍♀️", "Qual seu penteado favorito para treinar?"],
+  ["🏠", "Treino em casa: qual seu cantinho preferido?"],
+  ["😴", "Quantas horas você tem dormido? Alguma dica de sono?"],
+  ["👟", "Qual roupa ou tênis te deixa com vontade de treinar?"],
+  ["🧘‍♀️", "O que você faz para relaxar depois de um dia puxado?"],
+  ["📅", "Como você organiza sua semana para não faltar treino?"],
+  ["🍳", "Qual café da manhã te dá energia?"],
+  ["✨", "Uma frase que te motiva. Compartilha com a gente!"],
+  ["🤝", "Marque (ou conte sobre) a amiga que treina com você."],
+  ["📸", "Mostre seu pós-treino de hoje!"]
+];
+const pergHoje = () => doDia(PERG_DIA);
+const ATALHOS_POST = [["💪", "Treino", "💪 Treino de hoje: "], ["🥗", "Receita", "🥗 Receita que eu amo: "], ["🏆", "Conquista", "🏆 Conquista: "], ["💬", "Pergunta", "💬 Pergunta pra vocês: "]];
+
+/* ---------- menu da Comunidade ---------- */
+function comNav(){
+  const box = $("t-juntas"); if(!box || box.querySelector(".cm-nav") || !SO.on()) return;
+  const head = box.querySelector(".so-head"); if(!head) return;
+  head.insertAdjacentHTML("afterend", `<nav class="cm-nav" aria-label="Comunidade">
+    <button class="on" data-cn="feed">${ic("home", 17)}<span>Feed</span></button>
+    <button data-cn="grupos">${ic("people", 17)}<span>Grupos</span></button>
+    <button data-cn="msgs">${ic("chat", 17)}<span>Mensagens</span><i class="cm-nb" id="cm-nav-msg" hidden></i></button>
+    <button data-cn="amigas">${ic("search", 17)}<span>Amigas</span></button></nav>`);
+  box.querySelectorAll("[data-cn]").forEach(b => b.onclick = () => { SOM.tap && SOM.tap(); const k = b.dataset.cn;
+    if(k === "feed") return window.scrollTo({ top: 0, behavior: "smooth" });
+    if(k === "grupos") return typeof todosGrupos === "function" ? todosGrupos() : toast("Grupos chegando em breve 💚");
+    if(k === "msgs") return listaConversas();
+    if(k === "amigas") return encontrarMulheres(); });
+  comBadge();
+}
+function comBadge(){ const n = Object.values(typeof NAOLIDAS === "object" && NAOLIDAS ? NAOLIDAS : {}).reduce((a, b) => a + (+b || 0), 0), e = $("cm-nav-msg"); if(e){ e.hidden = !n; e.textContent = n > 9 ? "9+" : n; } }
+const atualizaBadgesC2 = atualizaBadges; atualizaBadges = async function(){ const r = await atualizaBadgesC2.apply(this, arguments); comBadge(); return r; };
+
+/* ---------- Pergunta do dia + atalhos para postar ---------- */
+function comPergunta(){
+  const box = $("t-juntas"), comp = $("cm-nova"); if(!box || !comp || box.querySelector(".cm-atal")) return;
+  comp.insertAdjacentHTML("afterend", `<div class="cm-atal hscroll">${ATALHOS_POST.map(([e, n], i) => `<button data-at="${i}"><i>${e}</i>${n}</button>`).join("")}</div>`);
+  box.querySelectorAll("[data-at]").forEach(b => b.onclick = () => abreComposer(ATALHOS_POST[+b.dataset.at][2]));
+  if(ME.pdiaOk === today()) return;
+  const [em, pq] = pergHoje();
+  box.querySelector(".cm-atal").insertAdjacentHTML("afterend", `<div class="cm-pdia"><span class="cm-pdia-em">${em}</span><div class="cm-pdia-tx"><span class="eyebrow">Pergunta do dia</span><b>${esc(pq)}</b><small id="cm-pdia-n"></small></div>
+    <div class="cm-pdia-bt"><button class="btn btn-accent btn-sm" id="cm-pdia-r">Responder</button><button class="iconbtn sm" id="cm-pdia-x" aria-label="Fechar">${ic("close", 14)}</button></div></div>`);
+  $("cm-pdia-r").onclick = () => abreComposer(`${em} ${pq}\n`);
+  $("cm-pdia-x").onclick = () => { ME.pdiaOk = today(); save(); const c = box.querySelector(".cm-pdia"); if(c) c.remove(); };
+  // contagem real de quem já respondeu hoje (só aparece a partir de 2)
+  if(SO.on()) (async () => { try{ const r = await SB().from("posts").select("id", { count: "exact", head: true }).ilike("texto", `%${pq.slice(0, 40).replace(/[%_]/g, "")}%`).gte("criado", today() + "T00:00:00");
+    const n = r.count || 0, el = $("cm-pdia-n"); if(el && n >= 2) el.textContent = `${int(n)} mulheres já responderam hoje`; }catch(e){} })();
+}
+
+const rJuntasC2 = rJuntas; rJuntas = function(){ const r = rJuntasC2.apply(this, arguments); try{ comNav(); comPergunta(); }catch(e){ console.warn(e); } return r; };
 
 const TABS = [["inicio","Início"],["treinar","Treinos"],["dieta","Nutrição"],["juntas","Comunidade"],["explorar","Explorar"],["perfil","Perfil"],["evolucao","Evolução"]];
 const NAV = TABS.slice(0, 6), NAV_DE = { evolucao: "perfil" };

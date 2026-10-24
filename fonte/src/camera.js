@@ -197,7 +197,8 @@ function camAviso(ok){
   sheet("Contar com a câmera", `<div class="cam-av">${ic("camera", 34, 1.6)}<p><b>A câmera conta suas repetições e dá dicas de postura.</b></p>
     <ul class="ing"><li>Apoie o celular no chão ou numa mesa, a uns <b>2 passos</b> de você.</li><li>Seu <b>corpo inteiro</b> precisa aparecer. Em flexão e ponte, fique <b>de lado</b>.</li><li>Lugar bem iluminado ajuda muito.</li></ul>
     <p class="hint">${ic("lock", 13)} Tudo acontece só no seu celular: nenhuma imagem é gravada, salva ou enviada. As dicas são automáticas e não substituem um profissional. Sentiu dor, pare.</p></div>
-    <button class="btn btn-accent btn-block btn-lg" id="cam-ok">${ic("camera", 18)} Ligar a câmera</button>`);
+    <button class="btn btn-accent btn-block btn-lg" id="cam-ok">${ic("camera", 18)} Ligar a câmera</button>`, () => { $("sheet").style.zIndex = ""; });
+  $("sheet").style.zIndex = 40; // por cima da tela do treino (que fica na camada 30)
   $("cam-ok").onclick = () => { fecharSheet(); ok(); };
 }
 /* sair do treino ou terminar: desliga a câmera */
