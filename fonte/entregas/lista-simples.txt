@@ -1,0 +1,49 @@
+1. rabo-alto — Rabo alto: cabelo liso longo, no alto da cabeça. Acessório: elástico rosa, scrunchie rosa.
+2. rabo-medio — Rabo médio: cabelo liso longo, na altura do meio da cabeça. Acessório: elástico rosa.
+3. rabo-baixo — Rabo baixo: cabelo liso longo, na nuca. Acessório: elástico rosa, scrunchie rosa.
+4. rabo-segmentado — Rabo segmentado: cabelo liso longo, no alto e depois prenda elásticos a cada palmo. Acessório: elástico rosa.
+5. bubble-ponytail — Bubble ponytail: cabelo liso longo, no alto e afofe entre os elásticos. Acessório: elástico rosa.
+6. coque-alto — Coque alto: cabelo liso longo, no alto da cabeça. Acessório: elástico rosa, grampos.
+7. coque-baixo — Coque baixo: cabelo liso longo, na nuca. Acessório: elástico rosa, grampos.
+8. coque-despojado — Coque despojado: cabelo liso longo, no alto, sem precisar de acabamento. Acessório: scrunchie rosa.
+9. meio-preso — Meio preso: cabelo liso longo. Acessório: elástico rosa, presilhas rosa.
+10. tranca-simples — Trança simples: cabelo liso longo, depois de prender um rabo baixo. Acessório: elástico rosa.
+11. tranca-lateral — Trança lateral: cabelo liso longo, levando tudo para um dos lados. Acessório: elástico rosa.
+12. duas-trancas — Duas tranças: cabelo liso longo, dividindo o cabelo ao meio. Acessório: elástico rosa.
+13. tranca-embutida — Trança embutida: cabelo liso longo, pegando mechas novas a cada cruzada. Acessório: elástico rosa.
+14. rabo-com-tranca — Rabo com trança: cabelo liso longo, no alto e trance o comprimento. Acessório: elástico rosa.
+15. preso-com-faixa — Preso com faixa: cabelo liso longo. Acessório: faixa esportiva amarela, elástico rosa.
+16. presilhas-laterais — Presilhas laterais: cabelo liso curto. Acessório: presilhas rosa.
+17. puff-alto — Puff alto: cabelo cacheado longo. Acessório: faixa esportiva amarela, scrunchie rosa.
+18. puff-baixo — Puff baixo: cabelo cacheado longo. Acessório: scrunchie rosa.
+19. abacaxi — Abacaxi: cabelo cacheado longo. Acessório: scrunchie rosa.
+20. abacaxi-baixo — Abacaxi baixo: cabelo cacheado longo. Acessório: scrunchie rosa.
+21. dois-puffs — Dois puffs: cabelo cacheado longo. Acessório: scrunchie rosa, elástico rosa.
+22. coque-cacheado-alto — Coque cacheado alto: cabelo cacheado longo, no alto da cabeça. Acessório: scrunchie rosa, grampos.
+23. coque-baixo-cacheado — Coque baixo cacheado: cabelo cacheado longo, na nuca. Acessório: scrunchie rosa, grampos.
+24. meio-preso-cacheado — Meio preso cacheado: cabelo cacheado longo. Acessório: scrunchie rosa, presilhas rosa.
+25. rabo-alto-cacheado — Rabo alto cacheado: cabelo cacheado longo, no alto da cabeça. Acessório: scrunchie rosa.
+26. rabo-baixo-cacheado — Rabo baixo cacheado: cabelo cacheado longo, na nuca. Acessório: scrunchie rosa.
+27. faixa-esportiva — Faixa esportiva: cabelo cacheado curto. Acessório: faixa esportiva amarela.
+28. trancas-frontais — Tranças frontais: cabelo cacheado longo, só na parte da frente. Acessório: elástico rosa, grampos.
+29. scrunchie-alto — Scrunchie alto: cabelo cacheado longo. Acessório: scrunchie rosa.
+30. afro-puff — Afro puff: cabelo crespo (afro) longo. Acessório: faixa esportiva amarela, scrunchie rosa.
+31. puff-com-faixa — Puff com faixa: cabelo crespo (afro) longo. Acessório: faixa esportiva amarela.
+32. puff-baixo-crespo — Puff baixo crespo: cabelo crespo (afro) longo. Acessório: scrunchie rosa.
+33. dois-puffs-crespo — Dois puffs crespo: cabelo crespo (afro) longo. Acessório: scrunchie rosa, elástico rosa.
+34. coque-alto-crespo — Coque alto crespo: cabelo crespo (afro) longo, no alto da cabeça. Acessório: faixa esportiva amarela, grampos.
+35. coque-baixo-crespo — Coque baixo crespo: cabelo crespo (afro) longo, na nuca. Acessório: faixa esportiva amarela, grampos.
+36. twists-presos — Twists presos: cabelo crespo (afro) longo, reunindo os twists. Acessório: elástico rosa, scrunchie rosa.
+37. box-braids-em-rabo — Box braids em rabo: cabelo crespo (afro) longo, reunindo as tranças no alto. Acessório: elástico rosa.
+38. box-braids-em-coque — Box braids em coque: cabelo crespo (afro) longo, reunindo as tranças no alto. Acessório: elástico rosa, grampos.
+39. preso-lateral — Preso lateral: cabelo crespo (afro) longo, em um dos lados, na altura da orelha. Acessório: scrunchie rosa.
+40. trancas-com-faixa — Tranças com faixa: cabelo crespo (afro) longo. Acessório: faixa esportiva amarela.
+41. faixa-no-curto — Faixa no curto: cabelo liso curto. Acessório: faixa esportiva amarela.
+42. bandana — Bandana: cabelo liso curto. Acessório: bandana rosa.
+43. presilhas-no-curto — Presilhas no curto: cabelo liso curto. Acessório: presilhas rosa.
+44. mini-rabo — Mini rabo: cabelo liso curto, na nuca, o que alcançar. Acessório: elástico rosa.
+45. mini-coque — Mini coque: cabelo liso curto, no alto, o que alcançar. Acessório: elástico rosa, grampos.
+46. meio-preso-curto — Meio preso curto: cabelo liso curto. Acessório: elástico rosa, presilhas rosa.
+47. grampos-cruzados — Grampos cruzados: cabelo liso curto. Acessório: grampos.
+48. tranca-frontal — Trança frontal: cabelo liso curto, só na mecha da frente. Acessório: elástico rosa, grampos.
+49. twist-frontal — Twist frontal: cabelo crespo (afro) curto. Acessório: grampos.
