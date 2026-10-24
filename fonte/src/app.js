@@ -1247,7 +1247,7 @@ function rCardapio(){
   const pt = x => String(x).replace(".", ",") + (x === 1 ? " porção" : " porções");
   $("d-body").innerHTML = `${painelCardapio(tot, m, alvo, itens)}
     ${itens.map(x => `<div class="meal"><div class="meal-h"><h4>${x.n}</h4><span class="num">${int(x.r.kcal * x.porc)} kcal</span></div>
-      <button class="exrow" data-rec="${x.r.id}" style="grid-template-columns:56px minmax(0,1fr)"><span class="rthumb" style="--rc:${CORCAT[x.r.cat]};width:56px;height:56px">${ic(ICCAT[x.r.cat], 24, 1.7)}</span><span style="min-width:0"><b>${esc(x.r.nome)}</b><small class="num">${pt(x.porc)} · ${int(x.r.p * x.porc)} g proteína · ${x.r.min} min</small></span></button>
+      <button class="exrow" data-rec="${x.r.id}" style="grid-template-columns:56px minmax(0,1fr)"><span class="rthumb" style="--rc:${CORCAT[x.r.cat]};width:56px;height:56px">${ic(ICCAT[x.r.cat], 24, 1.7)}${fotoP(`img/receita-${x.r.id}.jpg`)}</span><span style="min-width:0"><b>${esc(x.r.nome)}</b><small class="num">${pt(x.porc)} · ${int(x.r.p * x.porc)} g proteína · ${x.r.min} min</small></span></button>
       <div class="meal-act"><button class="btn btn-soft btn-sm" data-troca="${x.k}">${ic("repeat", 15)} Trocar</button><button class="btn btn-soft btn-sm" data-cook="${x.r.id}">${ic("chef", 15)} Cozinhar</button><button class="btn btn-accent btn-sm" data-comi="${x.k}">${ic("check", 15, 3)} Comi</button></div></div>`).join("")}
     <div class="card"><h3 style="margin-bottom:8px">Dicas para você</h3><ul class="ing">${DICAS[alvo].map(d => `<li>${esc(d)}</li>`).join("")}</ul></div>`;
   $("d-body").querySelectorAll("[data-rec]").forEach(b => b.onclick = () => abrirReceita(b.dataset.rec));
