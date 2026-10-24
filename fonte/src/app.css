@@ -2133,3 +2133,18 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
 #t-inicio.ini2 .capa .capa-ck .xe-hum button{gap:2px;min-height:0;padding:7px 2px;border-radius:14px}
 #t-inicio.ini2 .capa .capa-ck .xe-hum button i{font-size:21px}
 #t-inicio.ini2 .capa .capa-ck .xe-hum small{font-size:11.5px}
+
+/* ===== Fase 2: dia ajustado e turma ===== */
+.ck2-h{font-size:16px;margin:16px 0 8px}
+.aj-box{display:flex;gap:12px;align-items:flex-start;background:linear-gradient(135deg,color-mix(in srgb,#F4B740 16%,var(--surface)),var(--surface));border:1px solid color-mix(in srgb,#F4B740 40%,transparent);border-radius:16px;padding:12px 14px;color:var(--ink)}
+.aj-box > svg{flex:0 0 auto;color:#C98A12;margin-top:2px}
+.aj-box b{display:block;font-size:15px}
+.aj-box small{display:block;color:var(--muted);font-size:13px;line-height:1.4;margin-top:2px}
+.aj-box .link{margin-top:6px;padding:0;font-size:13.5px}
+.aj-tag{color:#C98A12;font-weight:700}
+.turma{display:grid;grid-template-columns:44px minmax(0,1fr) auto;align-items:center;gap:12px;background:linear-gradient(135deg,color-mix(in srgb,#5B6CD9 14%,var(--surface)),var(--surface));border:1px solid color-mix(in srgb,#5B6CD9 30%,transparent);border-radius:18px;padding:14px;margin:4px 0 12px}
+.turma.on{grid-template-columns:44px minmax(0,1fr)}
+.turma-em{font-size:30px;line-height:1;text-align:center}
+.turma-tx{min-width:0;display:flex;flex-direction:column;gap:2px}
+.turma-tx b{font-size:15.5px;line-height:1.25}
+.turma-tx small{color:var(--muted);font-size:12.5px}
