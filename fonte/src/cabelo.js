@@ -58,9 +58,10 @@ function cabNota(p, s){
 const cabLista = s => (CAB.L || []).map(p => ({ p, n: cabNota(p, s) })).filter(x => x.n >= 0).sort((a, b) => b.n - a.n || a.p.ordem - b.p.ordem).map(x => x.p);
 
 /* ---------- telas ---------- */
-const cabMidia = (url, rot, cls) => url ? `<img class="${cls}" src="${esc(url)}" alt="${esc(rot)}" loading="lazy" decoding="async">` : `<span class="${cls} cab-pend" role="img" aria-label="Mídia pendente">${ic("camera", 22, 1.6)}<small>Mídia pendente</small></span>`;
+/* foto/vídeo do painel tem prioridade; sem mídia, ilustração própria do CK Life (cabelo-arte.js) */
+const cabMidia = (url, rot, cls, p, opt) => url ? `<img class="${cls}" src="${esc(url)}" alt="${esc(rot)}" loading="lazy" decoding="async">` : p && window.CKCABARTE ? `<span class="${cls} cab-desenho">${window.CKCABARTE(p, { tipo: CAB.sel.tipo, ...(opt || {}) })}</span>` : `<span class="${cls} cab-pend" role="img" aria-label="Mídia pendente">${ic("camera", 22, 1.6)}<small>Mídia pendente</small></span>`;
 const cabCard = (p, destaque) => `<article class="cab-card ${destaque ? "rec" : ""}" data-pt="${p.id}">
-    <div class="cab-cm">${cabMidia(p.thumb || p.imagem, p.nome, "cab-img")}</div>
+    <div class="cab-cm">${cabMidia(p.thumb || p.imagem, p.nome, "cab-img", p)}</div>
     <div class="cab-cb">${destaque ? `<span class="cab-rec-tag">✨ Hoje você vai de…</span>` : ""}<b>${esc(p.nome)}</b><p>${esc(p.descricao || "")}</p>
       <div class="cab-meta"><span>${ic("clock", 13)} ${p.minutos} min</span><span>${CAB_DIF[p.dificuldade]}</span><span>${CAB_FIX[p.fixacao]}</span></div>
       <small class="cab-tr">${p.treinos.slice(0, 3).map(t => cabNome(CAB_TREINOS, t)).join(" • ")}</small>
@@ -127,12 +128,12 @@ async function cabTutorial(id){
   sheet(p.nome, `<div class="cab-tut" id="cab-tut"><div class="skel" style="height:200px;border-radius:22px"></div></div>`, () => abreCabelo());
   let S = []; try{ S = await cabPassos(id); }catch(e){}
   const box = $("cab-tut"); if(!box) return;
-  box.innerHTML = `<div class="cab-thero">${cabMidia(p.imagem || p.thumb, p.nome, "cab-timg")}</div>
+  box.innerHTML = `<div class="cab-thero">${cabMidia(p.imagem || p.thumb, p.nome, "cab-timg", p)}</div>
     <p class="cab-tdesc">${esc(p.descricao || "")}</p>
     <div class="cab-meta"><span>${ic("clock", 13)} ${p.minutos} min</span><span>${CAB_DIF[p.dificuldade]}</span><span>${CAB_FIX[p.fixacao]}</span></div>
     ${p.acessorios.length ? `<p class="cab-prec"><b>Você vai precisar:</b> ${p.acessorios.map(a => esc(CAB_ACS[a] || a)).join(", ")}</p>` : ""}
     ${p.video_url ? `<button class="btn btn-line btn-block" id="cab-vid">${ic("play", 16)} Ver tutorial</button><div id="cab-vbox"></div>` : ""}
-    <ol class="cab-passos">${S.map(x => `<li class="cab-passo"><div class="cab-pm">${cabMidia(x.midia, `Passo ${x.numero}, ${CAB_VISTA[x.vista] || ""}`, "cab-pimg")}<span class="cab-vista">${esc(CAB_VISTA[x.vista] || "")}</span></div><div><span class="eyebrow">Passo ${x.numero}</span><b>${esc(x.titulo || "")}</b><p>${esc(x.instrucao)}</p></div></li>`).join("")}</ol>
+    <ol class="cab-passos">${S.map(x => `<li class="cab-passo"><div class="cab-pm">${cabMidia(x.midia, `Passo ${x.numero}, ${CAB_VISTA[x.vista] || ""}`, "cab-pimg", p, { vista: x.vista, passo: x.numero })}<span class="cab-vista">${esc(CAB_VISTA[x.vista] || "")}</span></div><div><span class="eyebrow">Passo ${x.numero}</span><b>${esc(x.titulo || "")}</b><p>${esc(x.instrucao)}</p></div></li>`).join("")}</ol>
     <div class="cab-fim"><b>Pronta para treinar. 💚</b><div class="cab-act"><button class="cab-fav lg ${CAB.favs.has(p.id) ? "on" : ""}" data-fav="${p.id}" aria-pressed="${CAB.favs.has(p.id)}" aria-label="Salvar">${ic("heart", 18)} Salvar</button>${typeof abreComposer === "function" && SO.on() ? `<button class="btn btn-line btn-sm" id="cab-look">Mostrar meu look no CK Life</button>` : ""}</div></div>`;
   cabLiga(box);
   const v = $("cab-vid"); if(v) v.onclick = () => { $("cab-vbox").innerHTML = `<video class="cab-video" src="${esc(p.video_url)}" controls playsinline preload="metadata"></video>`; v.remove(); $("cab-vbox").querySelector("video").play().catch(() => {}); };

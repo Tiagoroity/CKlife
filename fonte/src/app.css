@@ -2030,3 +2030,9 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
 .cb-passo{padding:12px;border-radius:16px;background:#fff;border:1px solid #E1EADB;margin-bottom:10px}
 .cb-ph{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}.cb-ph span{display:flex;gap:6px}
 .cab-pend{display:grid!important;place-content:center;justify-items:center;gap:4px}
+.cab-desenho{display:block;overflow:hidden;background:#E4EFE0}.cab-desenho svg{display:block;width:100%;height:100%}
+.cab-timg.cab-desenho{aspect-ratio:4/3}
+.mod-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:10px;margin:0 0 16px}
+.mod-bi{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border-radius:16px;background:#F7F9F5;border:1px dashed #CBD5C8}
+.mod-bi.on{background:#EAF4E7;border:1px solid #CFE3CA}
+.mod-bi span{display:flex;flex-direction:column;min-width:0}.mod-bi b{font-size:14.5px}.mod-bi small{color:#65736C;font-size:12.5px}.mod-bi.on small{color:#2E7D5A;font-weight:700}

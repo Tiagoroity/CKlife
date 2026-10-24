@@ -20,14 +20,28 @@ function vModulos(){
         <span class="mod-acts">${podeVer(sec) && VIEWS[sec] ? `<button class="btn btn-line btn-sm" data-cad="${sec}">Cadastrar</button>` : ""}<button class="mod-sw needs-edit" role="switch" aria-checked="${ligado}" aria-label="${ligado ? "Desligar" : "Ligar"} ${esc(n)}" data-mod="${k}"><i></i></button></span></div>`; }).join("")}</div>
     <p class="hint" style="margin-top:12px">Se todos os módulos do Explorar estiverem desligados, a aba Explorar some do menu das alunas.</p>`;
   $("adm-main").querySelectorAll("[data-cad]").forEach(b => b.onclick = () => ir(b.dataset.cad));
-  $("adm-main").querySelectorAll("[data-mod]").forEach(b => b.onclick = () => { if(!podeEditar("modulos")) return toast("Sem permissão para alterar módulos");
-    const k = b.dataset.mod, n = MODS.find(x => x[0] === k)[1], liga = !on(k);
-    const aplica = () => { db.modulos[k] = { on: liga, desde: liga ? today() : (db.modulos[k] || {}).desde || null, por: (ME && ME.email) || "" }; db.modulos = { ...db.modulos }; save(); vModulos();
+  $("adm-main").querySelectorAll("[data-mod]").forEach(b => b.onclick = () => trocaModulo(b.dataset.mod, vModulos));
+}
+function modLigado(k){ const m = (DB().modulos || {})[k]; return !(m && m.on === false); }
+function trocaModulo(k, depois){
+  const db = DB(); db.modulos = db.modulos || {}; if(!podeEditar("modulos") && !PERM.total) return toast("Seu acesso não permite ligar/desligar módulos (área Módulos do app)");
+  { const n = MODS.find(x => x[0] === k)[1], liga = !modLigado(k), on = modLigado;
+    const aplica = () => { db.modulos[k] = { on: liga, desde: liga ? today() : (db.modulos[k] || {}).desde || null, por: (ME && ME.email) || "" }; db.modulos = { ...db.modulos }; save(); depois && depois();
       if(liga) modal("Módulo ligado", `<p style="margin:0"><b>${esc(n)}</b> já aparece no app com o selo <b>Novo</b> e um aviso no Início das alunas.</p>${podeEditar("notificacoes") ? `<p class="muted" style="margin:0">Quer avisar no celular também?</p><div class="toolbar" style="justify-content:flex-end"><button class="btn btn-line" data-close>Agora não</button><button class="btn btn-accent" id="md-avisa">Criar notificação</button></div>` : `<div class="toolbar" style="justify-content:flex-end"><button class="btn btn-accent" data-close>Ok</button></div>`}`), $("md-avisa") && ($("md-avisa").onclick = () => { fechar(); ir("notificacoes"); setTimeout(() => formNotif({ titulo: `Novidade: ${n} no CK Life`, mensagem: "Toque para conhecer. Chegou para deixar sua rotina ainda mais completa 💚", link: "/?ir=explorar", publico: { tipo: "todas" } }), 60); });
       else toast(`${n} desligado. Já não aparece para as alunas.`); };
-    liga ? aplica() : confirmar(`Desligar "${n}"? Ele some do app das alunas na próxima vez que abrirem. Nada é apagado.`, aplica); });
+    liga ? aplica() : confirmar(`Desligar "${n}"? Ele some do app das alunas na próxima vez que abrirem. Nada é apagado.`, aplica); }
 }
 VIEWS.modulos = vModulos;
+/* barra "Aparece no app" no topo de cada tela ligada a um módulo (não precisa ir em Configurações) */
+const SEC_MODS = { parceiros: ["clube"], cupons: ["cupons"], produtos: ["loja"], empresas: ["perto"], profissionais: ["perto", "online"], servicos: ["servicos"], agendamentos: ["servicos"], avaliacoes: ["perto", "online"] };
+function barraModulo(){
+  const ks = SEC_MODS[SEC]; if(!ks || $("mod-bar")) return; const h = document.querySelector("#adm-main > .adm-sub") || document.querySelector("#adm-main > .head"); if(!h) return;
+  h.insertAdjacentHTML("afterend", `<div class="mod-bar" id="mod-bar">${ks.map(k => { const on = modLigado(k), n = MODS.find(x => x[0] === k)[1];
+    return `<div class="mod-bi ${on ? "on" : ""}"><span><b>${esc(n)}</b><small>${on ? "Aparece no app das alunas" : "Escondido do app das alunas"}</small></span><button class="mod-sw" role="switch" aria-checked="${on}" aria-label="${on ? "Desligar" : "Ligar"} ${esc(n)} no app" data-mb="${k}"><i></i></button></div>`; }).join("")}</div>`);
+  document.querySelectorAll("#mod-bar [data-mb]").forEach(b => b.onclick = () => trocaModulo(b.dataset.mb, () => { const x = $("mod-bar"); if(x) x.remove(); barraModulo(); }));
+}
+new MutationObserver(() => { if(!$("v-admin").hidden) barraModulo(); }).observe($("adm-main"), { childList: true });
+const irMb = ir; ir = function(s){ irMb(s); barraModulo(); };
 
 /* ---------- Permissões dos administradores: por área, com filtro e papéis prontos ---------- */
 const PAPEIS = {
