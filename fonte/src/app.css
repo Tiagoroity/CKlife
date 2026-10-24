@@ -2214,3 +2214,46 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
 .tudo-n{font-size:11.5px;letter-spacing:-.01em;padding:0}
 @media (max-width:350px){.tudo-n{font-size:10.5px}}
 .tudo-n{min-height:0}
+
+/* ===== Comunidade 2.0 · acabamento estilo apps grandes ===== */
+.cm-nav{top:calc(var(--topbar-h,56px) + 4px)}
+/* posts (Instagram): cabeçalho mais limpo, ações maiores, legenda com nome em negrito */
+#t-juntas .post header .pav{width:40px;height:40px}
+#t-juntas .post .pmeta b{font-size:15px}
+#t-juntas .post .pmeta small{font-size:12.5px}
+#t-juntas .post .ptx{font-size:15.5px;line-height:1.45}
+#t-juntas .post .pimg{border-radius:16px}
+#t-juntas .post .pacts button svg{width:24px;height:24px}
+#t-juntas .post .pquem{font-weight:700;color:var(--ink)}
+#t-juntas .post .pc{font-size:14.5px;color:var(--muted)}
+#t-juntas .post .pc b{color:var(--ink)}
+#t-juntas .post .pcin{border-radius:999px}
+/* lista de conversas (WhatsApp): foto maior, horário à direita, bolinha verde com número */
+#sheet .xp-conv{padding:12px 4px;gap:14px;border-bottom-color:color-mix(in srgb,var(--line) 70%,transparent)}
+#sheet .xp-conv .pav{width:52px;height:52px;font-size:20px;flex:0 0 52px}
+#sheet .xp-conv b{font-size:16px}
+#sheet .xp-conv small{font-size:13.5px}
+#sheet .xp-conv .xp-badge{background:#25A55F;color:#fff;min-width:22px;height:22px;border-radius:999px;display:inline-grid;place-items:center;font-size:12px;font-weight:800;padding:0 6px;font-style:normal}
+#sheet .xp-conv.nova .so-cvr small{color:#25A55F;font-weight:800}
+#sheet .xp-conv.nova b::after{display:none}
+.so-novaconv{border-radius:16px}
+/* conversa (WhatsApp): fundo com textura suave, balões com biquinho e sombra leve */
+.xp-msgs.priv,#cv-m{background-color:color-mix(in srgb,var(--surface-2) 70%,var(--bg));background-image:radial-gradient(color-mix(in srgb,var(--accent) 10%,transparent) 1.2px,transparent 1.3px);background-size:18px 18px;border-radius:18px;padding:10px 8px 80px}
+.xp-msg{position:relative;box-shadow:0 1px 1.5px rgba(0,0,0,.12);border:0}
+.xp-msg:not(.eu):not(.fig){background:var(--surface);border-radius:4px 16px 16px 16px}
+.xp-msg.eu:not(.fig){background:#D7F5DC;color:#10291F;border-radius:16px 4px 16px 16px}
+.xp-msg.eu:not(.fig) small,.xp-msg.eu:not(.fig) .so-st1,.xp-msg.eu:not(.fig) .so-st2{color:#4F6B5D!important}
+.xp-msg.eu:not(.fig) .so-st3{color:#1E9BD7!important}
+.xp-msg:not(.eu):not(.fig)::before{content:"";position:absolute;left:-6px;top:0;border-width:0 8px 8px 0;border-style:solid;border-color:transparent var(--surface) transparent transparent}
+.xp-msg.eu:not(.fig)::before{content:"";position:absolute;right:-6px;top:0;border-width:0 0 8px 8px;border-style:solid;border-color:transparent transparent transparent #D7F5DC}
+.xp-msg.midia:not(.fig)::before{display:none}
+:root[data-theme="dark"] .xp-msg.eu:not(.fig){background:#1F5C40;color:#EAF7EF}
+:root[data-theme="dark"] .xp-msg.eu:not(.fig)::before{border-left-color:#1F5C40}
+:root[data-theme="dark"] .xp-msg.eu:not(.fig) small{color:#B7D9C6!important}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .xp-msg.eu:not(.fig){background:#1F5C40;color:#EAF7EF}:root:not([data-theme="light"]) .xp-msg.eu:not(.fig)::before{border-left-color:#1F5C40}:root:not([data-theme="light"]) .xp-msg.eu:not(.fig) small{color:#B7D9C6!important}}
+.so-dia{align-self:center;background:var(--surface);color:var(--muted);font-size:12px;font-weight:700;border-radius:10px;padding:4px 10px;box-shadow:0 1px 1.5px rgba(0,0,0,.1)}
+.so-dia::first-letter{text-transform:uppercase}
+/* barra de digitar: campo arredondado e botões redondos */
+.so-cin .input{border-radius:999px;padding-left:16px}
+.so-cin .so-mic,.so-cin #cv-env{background:#25A55F;color:#fff;border-color:#25A55F}
+#cv-bar .so-cin .so-mic,#cv-bar .so-cin #cv-env{background:#25A55F!important;color:#fff!important;border-color:#25A55F!important}

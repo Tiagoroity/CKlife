@@ -66,3 +66,16 @@ function comPergunta(){
 }
 
 const rJuntasC2 = rJuntas; rJuntas = function(){ const r = rJuntasC2.apply(this, arguments); try{ comNav(); comPergunta(); }catch(e){ console.warn(e); } return r; };
+
+/* ---------- acabamento: menu grudado logo abaixo do topo, vídeo que toca sozinho, título da conversa ---------- */
+function comTopo(){ const t = document.querySelector("#v-app .top"); if(t) document.documentElement.style.setProperty("--topbar-h", t.offsetHeight + "px"); }
+window.addEventListener("resize", comTopo); setTimeout(comTopo, 800);
+/* vídeos do feed: tocam sem som quando aparecem na tela (como no TikTok/Instagram) e pausam ao sair; o som liga pelo controle do vídeo */
+const comToca = v => { if(v.dataset.vis === "1" && (v.src || v.currentSrc)){ v.muted = v.dataset.som !== "1"; v.play().catch(() => {}); } };
+const comVidIO = "IntersectionObserver" in window ? new IntersectionObserver(es => es.forEach(e => { const v = e.target; v.dataset.vis = e.isIntersecting && e.intersectionRatio > .6 ? "1" : "0"; if(v.dataset.vis === "1") comToca(v); else if(!v.paused) v.pause(); }), { threshold: [0, .6, 1] }) : null;
+function comVideos(root){ if(!comVidIO || !root) return; root.querySelectorAll("video[data-m]:not([data-io])").forEach(v => { v.dataset.io = 1; v.addEventListener("loadeddata", () => comToca(v)); v.addEventListener("volumechange", () => { if(!v.muted) v.dataset.som = "1"; }); comVidIO.observe(v); }); }
+const desenhaFeedC2 = desenhaFeed; desenhaFeed = function(){ const r = desenhaFeedC2.apply(this, arguments); comVideos($("feed")); return r; };
+/* conversa: o título da tela vira o nome dela (o cabeçalho com foto continua) */
+const abreConversaC2 = abreConversa; abreConversa = async function(c){ const pr = abreConversaC2.apply(this, arguments);
+  let n = 0; const t = setInterval(() => { try{ const tt = $("sheet-title"); if(tt && $("cv-m") && c){ clearInterval(t); const o = outroDe(c); tt.textContent = nomeP(o, c.a === NU.uid ? c.nome_b : c.nome_a).split(" ")[0]; } else if(++n > 30) clearInterval(t); }catch(e){ clearInterval(t); } }, 150);
+  return pr; };
