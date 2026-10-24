@@ -29,7 +29,7 @@ async function cbImagem(file){
 function cbVideo(file){ return new Promise((ok, no) => { if(!/^video\/(mp4|webm)$/.test(file.type)) return no(new Error("Use MP4 ou WebM.")); if(file.size > 30 * 1048576) return no(new Error("Vídeo muito pesado (máximo 30 MB).")); const v = document.createElement("video"); v.preload = "metadata"; v.src = URL.createObjectURL(file); v.onloadedmetadata = () => v.duration > 120.5 ? no(new Error("O vídeo pode ter até 2 minutos.")) : ok(file); v.onerror = () => no(new Error("Não foi possível ler este vídeo.")); }); }
 
 async function vCabelo(){
-  $("adm-main").innerHTML = `<div class="head"><div><h1>Cabelo para Treinar</h1><p class="muted">Penteados rápidos para cada treino. Você decide quando as alunas veem.</p></div><div class="toolbar"><button class="btn btn-line needs-edit" id="cb-lote">Enviar fotos em lote</button><button class="btn btn-accent needs-edit" id="cb-new">+ Novo penteado</button></div></div>
+  $("adm-main").innerHTML = `<div class="head"><div><h1>Cabelo para Treinar</h1><p class="muted">Penteados rápidos para cada treino. Você decide quando as alunas veem.</p></div><div class="toolbar"><button class="btn btn-line needs-edit" id="cb-lote">Enviar fotos e vídeos em lote</button><button class="btn btn-accent needs-edit" id="cb-new">+ Novo penteado</button></div></div>
     <div class="card cb-flag" id="cb-flag"><div class="skel" style="height:16px;width:50%"></div><div class="skel" style="height:40px;margin-top:12px"></div></div>
     <div class="cb-tools"><div class="chips">${[["todos", "Todos"], ["publicado", "Publicados"], ["rascunho", "Rascunhos"], ["desativado", "Desativados"]].map(([k, n]) => `<button class="chip" data-f="${k}" aria-pressed="${CBF === k}">${n}</button>`).join("")}</div><div class="search">${aic("busca", 16)}<input class="input" id="cb-q" placeholder="Buscar penteado" value="${esc(CBQ)}"></div></div>
     <div id="cb-l"><div class="card"><div class="skel" style="height:14px;width:70%"></div></div></div>`;
@@ -153,12 +153,13 @@ async function cbForm(id, duplicar){
 const CB_PARTES = { capa: { n: 5, t: "Resultado de costas", i: "Assim fica pronto, visto de costas.", v: "back" }, esquerda: { n: 6, t: "Lado esquerdo", i: "Veja como fica do lado esquerdo.", v: "side" },
   direita: { n: 7, t: "Lado direito", i: "Veja como fica do lado direito.", v: "side" }, cima: { n: 8, t: "Visto de cima", i: "Vista de cima para conferir o acabamento.", v: "back" }, detalhe: { n: 9, t: "Detalhe", i: "Detalhe do acabamento e do acessório.", v: "detail" } };
 function cbParte(nome){
+  if(/\.(mp4|webm)$/i.test(nome)) return { sl: cbSlug(nome.replace(/\.[a-z0-9]+$/i, "").replace(/--?video$/i, "")), parte: "video" };
   const base = nome.replace(/\.[a-z0-9]+$/i, "").replace(/\s*\(\d+\)$/, ""), m = base.match(/^(.*?)(?:--|__)(p[1-4]|capa|esquerda|direita|cima|detalhe)$/i);
   return m ? { sl: cbSlug(m[1]), parte: m[2].toLowerCase() } : { sl: cbSlug(base), parte: "capa" };
 }
-const cbParteNome = x => x.parte === "capa" ? "miniatura + resultado de costas" : /^p\d$/.test(x.parte) ? "passo " + x.parte.slice(1) : CB_PARTES[x.parte].t.toLowerCase();
+const cbParteNome = x => x.parte === "video" ? "vídeo do tutorial" : x.parte === "capa" ? "miniatura + resultado de costas" : /^p\d$/.test(x.parte) ? "passo " + x.parte.slice(1) : CB_PARTES[x.parte].t.toLowerCase();
 function cbLote(){
-  const inp = document.createElement("input"); inp.type = "file"; inp.multiple = true; inp.accept = "image/jpeg,image/png,image/webp"; inp.style.display = "none"; document.body.appendChild(inp);
+  const inp = document.createElement("input"); inp.type = "file"; inp.multiple = true; inp.accept = "image/jpeg,image/png,image/webp,video/mp4,video/webm"; inp.style.display = "none"; document.body.appendChild(inp);
   inp.onchange = async () => { const fs = [...inp.files]; inp.remove(); if(!fs.length) return;
     if(!CB_L.length) try{ CB_L = await sq(SB2().from("penteados").select("id,nome,slug,status,tipos,comprimentos,treinos,minutos,thumb,imagem,video_url,destaque,ordem").order("ordem")); }catch(e){}
     const plano = fs.map(f => { const x = cbParte(f.name); return { f, ...x, p: CB_L.find(y => y.slug === x.sl) }; }).sort((a, b) => (a.sl + a.parte).localeCompare(b.sl + b.parte));
@@ -170,6 +171,7 @@ function cbLote(){
     const ok = $("cb-lt-ok"); if(ok) ok.onclick = async () => { ok.disabled = true; let n = 0; const passosDe = {};
       for(const [i, x] of plano.entries()){ if(!x.p) continue; const st = $("cb-lt").querySelector(`[data-i="${i}"] i`); st.textContent = "enviando…";
         try{
+          if(x.parte === "video"){ await cbVideo(x.f); const vurl = await cbSobe("video", x.f, x.f.type === "video/webm" ? "webm" : "mp4", x.f.type || "video/mp4"); await sq(SB2().from("penteados").update({ video_url: vurl }).eq("id", x.p.id)); st.textContent = "✓ pronto"; st.className = "ok"; n++; continue; }
           const im = await cbImagem(x.f), url = await cbSobe(x.parte === "capa" ? "thumb" : "passo", im.bl, im.ext, im.mime);
           if(x.parte === "capa"){ await sq(SB2().from("penteados").update({ thumb: url, imagem: url }).eq("id", x.p.id)); x.p.thumb = url; }
           if(!passosDe[x.p.id]) passosDe[x.p.id] = await sq(SB2().from("penteado_passos").select("id,numero").eq("penteado_id", x.p.id));
