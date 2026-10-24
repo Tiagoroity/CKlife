@@ -29,7 +29,7 @@ async function cbImagem(file){
 function cbVideo(file){ return new Promise((ok, no) => { if(!/^video\/(mp4|webm)$/.test(file.type)) return no(new Error("Use MP4 ou WebM.")); if(file.size > 30 * 1048576) return no(new Error("Vídeo muito pesado (máximo 30 MB).")); const v = document.createElement("video"); v.preload = "metadata"; v.src = URL.createObjectURL(file); v.onloadedmetadata = () => v.duration > 120.5 ? no(new Error("O vídeo pode ter até 2 minutos.")) : ok(file); v.onerror = () => no(new Error("Não foi possível ler este vídeo.")); }); }
 
 async function vCabelo(){
-  $("adm-main").innerHTML = `<div class="head"><div><h1>Cabelo para Treinar</h1><p class="muted">Penteados rápidos para cada treino. Você decide quando as alunas veem.</p></div><div class="toolbar"><button class="btn btn-line needs-edit" id="cb-lote">Enviar miniaturas em lote</button><button class="btn btn-accent needs-edit" id="cb-new">+ Novo penteado</button></div></div>
+  $("adm-main").innerHTML = `<div class="head"><div><h1>Cabelo para Treinar</h1><p class="muted">Penteados rápidos para cada treino. Você decide quando as alunas veem.</p></div><div class="toolbar"><button class="btn btn-line needs-edit" id="cb-lote">Enviar fotos em lote</button><button class="btn btn-accent needs-edit" id="cb-new">+ Novo penteado</button></div></div>
     <div class="card cb-flag" id="cb-flag"><div class="skel" style="height:16px;width:50%"></div><div class="skel" style="height:40px;margin-top:12px"></div></div>
     <div class="cb-tools"><div class="chips">${[["todos", "Todos"], ["publicado", "Publicados"], ["rascunho", "Rascunhos"], ["desativado", "Desativados"]].map(([k, n]) => `<button class="chip" data-f="${k}" aria-pressed="${CBF === k}">${n}</button>`).join("")}</div><div class="search">${aic("busca", 16)}<input class="input" id="cb-q" placeholder="Buscar penteado" value="${esc(CBQ)}"></div></div>
     <div id="cb-l"><div class="card"><div class="skel" style="height:14px;width:70%"></div></div></div>`;
@@ -146,21 +146,39 @@ async function cbForm(id, duplicar){
     }catch(e){ ok.disabled = false; ok.textContent = "Salvar penteado"; $("cf-msg").innerHTML = `<div class="msg msg-bad">${/duplicate|unique/i.test(e.message || "") ? "Já existe um penteado com esse slug." : esc(e.message || "Não foi possível salvar")}</div>`; }
   };
 }
-/* várias fotos de uma vez: o nome do arquivo (ex.: rabo-alto.png) diz de qual penteado é */
+/* várias fotos de uma vez. O nome do arquivo diz o destino:
+   rabo-alto.png ou rabo-alto--capa.png → miniatura e imagem principal (e "Resultado de costas")
+   rabo-alto--p1 … --p4 → foto do passo 1 a 4
+   --esquerda / --direita / --cima / --detalhe → ângulos extras, viram passos 6 a 9 do tutorial */
+const CB_PARTES = { capa: { n: 5, t: "Resultado de costas", i: "Assim fica pronto, visto de costas.", v: "back" }, esquerda: { n: 6, t: "Lado esquerdo", i: "Veja como fica do lado esquerdo.", v: "side" },
+  direita: { n: 7, t: "Lado direito", i: "Veja como fica do lado direito.", v: "side" }, cima: { n: 8, t: "Visto de cima", i: "Vista de cima para conferir o acabamento.", v: "back" }, detalhe: { n: 9, t: "Detalhe", i: "Detalhe do acabamento e do acessório.", v: "detail" } };
+function cbParte(nome){
+  const base = nome.replace(/\.[a-z0-9]+$/i, "").replace(/\s*\(\d+\)$/, ""), m = base.match(/^(.*?)(?:--|__)(p[1-4]|capa|esquerda|direita|cima|detalhe)$/i);
+  return m ? { sl: cbSlug(m[1]), parte: m[2].toLowerCase() } : { sl: cbSlug(base), parte: "capa" };
+}
+const cbParteNome = x => x.parte === "capa" ? "miniatura + resultado de costas" : /^p\d$/.test(x.parte) ? "passo " + x.parte.slice(1) : CB_PARTES[x.parte].t.toLowerCase();
 function cbLote(){
   const inp = document.createElement("input"); inp.type = "file"; inp.multiple = true; inp.accept = "image/jpeg,image/png,image/webp"; inp.style.display = "none"; document.body.appendChild(inp);
   inp.onchange = async () => { const fs = [...inp.files]; inp.remove(); if(!fs.length) return;
     if(!CB_L.length) try{ CB_L = await sq(SB2().from("penteados").select("id,nome,slug,status,tipos,comprimentos,treinos,minutos,thumb,imagem,video_url,destaque,ordem").order("ordem")); }catch(e){}
-    const plano = fs.map(f => { const sl = cbSlug(f.name.replace(/\.[a-z0-9]+$/i, "").replace(/\s*\(\d+\)$/, "")); return { f, sl, p: CB_L.find(x => x.slug === sl) }; });
-    modal("Enviar miniaturas em lote", `<p class="muted" style="margin:0">${plano.filter(x => x.p).length} de ${fs.length} fotos com penteado correspondente. A foto vira a miniatura (e a imagem principal, se o penteado ainda não tiver).</p>
-      <div class="cb-lote" id="cb-lt">${plano.map((x, i) => `<div class="cb-li" data-i="${i}"><span>${esc(x.f.name)}</span><b class="${x.p ? "" : "bad"}">${x.p ? "→ " + esc(x.p.nome) : "sem penteado com esse nome"}</b><i>${x.p ? "aguardando" : ""}</i></div>`).join("")}</div>
-      <div class="toolbar" style="justify-content:flex-end"><button class="btn btn-line" data-close>Fechar</button>${plano.some(x => x.p) ? `<button class="btn btn-accent" id="cb-lt-ok">Enviar ${plano.filter(x => x.p).length} fotos</button>` : ""}</div>`);
+    const plano = fs.map(f => { const x = cbParte(f.name); return { f, ...x, p: CB_L.find(y => y.slug === x.sl) }; }).sort((a, b) => (a.sl + a.parte).localeCompare(b.sl + b.parte));
+    const ok1 = plano.filter(x => x.p);
+    modal("Enviar fotos em lote", `<p class="muted" style="margin:0">${ok1.length} de ${fs.length} fotos com destino certo (${new Set(ok1.map(x => x.sl)).size} penteados).</p>
+      <div class="cb-lote" id="cb-lt">${plano.map((x, i) => `<div class="cb-li" data-i="${i}"><span>${esc(x.f.name)}</span><b class="${x.p ? "" : "bad"}">${x.p ? "→ " + esc(x.p.nome) + " · " + cbParteNome(x) : "sem penteado com esse nome"}</b><i>${x.p ? "aguardando" : ""}</i></div>`).join("")}</div>
+      <div class="toolbar" style="justify-content:flex-end"><button class="btn btn-line" data-close>Fechar</button>${ok1.length ? `<button class="btn btn-accent" id="cb-lt-ok">Enviar ${ok1.length} fotos</button>` : ""}</div>`);
     $("mbox").classList.add("mbox-wide");
-    const ok = $("cb-lt-ok"); if(ok) ok.onclick = async () => { ok.disabled = true; let n = 0;
+    const ok = $("cb-lt-ok"); if(ok) ok.onclick = async () => { ok.disabled = true; let n = 0; const passosDe = {};
       for(const [i, x] of plano.entries()){ if(!x.p) continue; const st = $("cb-lt").querySelector(`[data-i="${i}"] i`); st.textContent = "enviando…";
-        try{ const im = await cbImagem(x.f), url = await cbSobe("thumb", im.bl, im.ext, im.mime); const d = { thumb: url }; if(!x.p.imagem) d.imagem = url; await sq(SB2().from("penteados").update(d).eq("id", x.p.id)); x.p.thumb = url; st.textContent = "✓ pronto"; st.className = "ok"; n++; }
-        catch(e){ st.textContent = "erro: " + (e.message || "").slice(0, 40); st.className = "bad"; } }
-      ok.textContent = `${n} enviadas`; toast(`${n} miniaturas atualizadas`); cbLista(); };
+        try{
+          const im = await cbImagem(x.f), url = await cbSobe(x.parte === "capa" ? "thumb" : "passo", im.bl, im.ext, im.mime);
+          if(x.parte === "capa"){ await sq(SB2().from("penteados").update({ thumb: url, imagem: url }).eq("id", x.p.id)); x.p.thumb = url; }
+          if(!passosDe[x.p.id]) passosDe[x.p.id] = await sq(SB2().from("penteado_passos").select("id,numero").eq("penteado_id", x.p.id));
+          const num = /^p\d$/.test(x.parte) ? +x.parte.slice(1) : CB_PARTES[x.parte].n, ja = passosDe[x.p.id].find(y => y.numero === num);
+          if(ja) await sq(SB2().from("penteado_passos").update({ midia: url }).eq("id", ja.id));
+          else if(CB_PARTES[x.parte]){ const c = CB_PARTES[x.parte], r = await sq(SB2().from("penteado_passos").insert({ penteado_id: x.p.id, numero: num, titulo: c.t, instrucao: c.i, vista: c.v, midia: url }).select()); passosDe[x.p.id].push(r[0]); }
+          st.textContent = "✓ pronto"; st.className = "ok"; n++;
+        }catch(e){ st.textContent = "erro: " + (e.message || "").slice(0, 40); st.className = "bad"; } }
+      ok.textContent = `${n} enviadas`; toast(`${n} fotos colocadas nos penteados`); cbLista(); };
   };
   inp.click();
 }
