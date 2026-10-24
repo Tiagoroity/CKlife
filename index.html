@@ -8040,7 +8040,9 @@ const CAM_EX = {
   flexao: ["flexao", "lado"], flexjoelho: ["flexao", "lado"], flexinc: ["flexao", "lado"], flexdiam: ["flexao", "lado"],
   polichinelo: ["poli", "frente"]
 };
-const camTipo = id => CAM_EX[id] || null;
+/* liga/desliga: o painel (Módulos do app → Câmera nos treinos) e cada aluna no Perfil */
+const camLiberada = () => modOn("camera") && !(ME && ME.camOff);
+const camTipo = id => camLiberada() ? CAM_EX[id] || null : null;
 const L_ = { nariz: 0, oE: 11, oD: 12, coE: 13, coD: 14, puE: 15, puD: 16, qE: 23, qD: 24, jE: 25, jD: 26, tE: 27, tD: 28 };
 const CAM = { on: false, stream: null, video: null, det: null, carregando: null, raf: 0, ts: 0, estado: "pos", n: 0, fase: "cima", ema: null, ext: null, ultimaDica: 0, okDesde: 0, alvo: 0, tipo: null, lado: null, onRep: null, falhou: false };
 
@@ -8242,6 +8244,13 @@ window.CKCAM = { async testar(urls, id){ const t = camTipo(id); if(!t) return "s
     const m = CAM_REGRAS[t[0]].medida(p); out.push(u.split("/").pop() + " → " + (m.v == null ? "sem corpo" : Math.round(m.v)) + (m.dica ? " (" + m.dica + ")" : ""));
     for(let k = 0; k < 6; k++){ CAM.estado = "conta"; camProcessa(p); } }
   return { reps: CAM.n, leituras: out }; } };
+
+/* Perfil: chave "Câmera nos treinos" */
+const rPerfilCam = rPerfil; rPerfil = function(){ const r = rPerfilCam.apply(this, arguments);
+  if(!modOn("camera") || $("p-cam")) return r; const ref = $("p-somn") || $("p-push"); if(!ref) return r;
+  const on = !ME.camOff; ref.insertAdjacentHTML("afterend", setRow("p-cam", "camera", "Câmera nos treinos", on ? "Botão para contar repetições pela câmera" : "Desligada", sw(on)));
+  $("p-cam").onclick = () => { ME.camOff = !ME.camOff; save(); SOM.tap && SOM.tap(); toast(ME.camOff ? "Câmera desligada nos treinos" : "Câmera ligada: o botão aparece nos exercícios compatíveis"); rPerfil(); };
+  return r; };
 
 const TABS = [["inicio","Início"],["treinar","Treinos"],["dieta","Nutrição"],["juntas","Comunidade"],["explorar","Explorar"],["perfil","Perfil"],["evolucao","Evolução"]];
 const NAV = TABS.slice(0, 6), NAV_DE = { evolucao: "perfil" };
@@ -11631,7 +11640,8 @@ const MODS = [
   ["servicos", "Serviços e agendamentos", "Agendar aulas, avaliações e consultas. Some também “Meus agendamentos” do Perfil.", () => DB().servicos.filter(s => s.ativo !== false).length, "servicos"],
   ["clube", "Clube CK", "Benefícios e descontos em parceiros.", () => DB().parceiros.filter(p => p.ativo !== false).length, "parceiros"],
   ["cupons", "Cupons por treino", "A cada X treinos a aluna ganha um cupom (Início, Perfil e fim do treino).", () => DB().parceiros.filter(p => p.ativo !== false && !p.livre).length, "cupons"],
-  ["loja", "Loja CK", "Produtos com link para compra (loja própria ou afiliados).", () => DB().produtos.filter(p => p.ativo !== false).length, "produtos"]
+  ["loja", "Loja CK", "Produtos com link para compra (loja própria ou afiliados).", () => DB().produtos.filter(p => p.ativo !== false).length, "produtos"],
+  ["camera", "Câmera nos treinos", "Botão “Contar com a câmera”: conta repetições e dá dicas de postura em 5 exercícios. Roda só no celular da aluna, nada é enviado. Cada aluna também pode desligar no Perfil.", () => 5, null]
 ];
 function vModulos(){
   const db = DB(); db.modulos = db.modulos || {};

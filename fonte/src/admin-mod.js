@@ -8,7 +8,8 @@ const MODS = [
   ["servicos", "Serviços e agendamentos", "Agendar aulas, avaliações e consultas. Some também “Meus agendamentos” do Perfil.", () => DB().servicos.filter(s => s.ativo !== false).length, "servicos"],
   ["clube", "Clube CK", "Benefícios e descontos em parceiros.", () => DB().parceiros.filter(p => p.ativo !== false).length, "parceiros"],
   ["cupons", "Cupons por treino", "A cada X treinos a aluna ganha um cupom (Início, Perfil e fim do treino).", () => DB().parceiros.filter(p => p.ativo !== false && !p.livre).length, "cupons"],
-  ["loja", "Loja CK", "Produtos com link para compra (loja própria ou afiliados).", () => DB().produtos.filter(p => p.ativo !== false).length, "produtos"]
+  ["loja", "Loja CK", "Produtos com link para compra (loja própria ou afiliados).", () => DB().produtos.filter(p => p.ativo !== false).length, "produtos"],
+  ["camera", "Câmera nos treinos", "Botão “Contar com a câmera”: conta repetições e dá dicas de postura em 5 exercícios. Roda só no celular da aluna, nada é enviado. Cada aluna também pode desligar no Perfil.", () => 5, null]
 ];
 function vModulos(){
   const db = DB(); db.modulos = db.modulos || {};

@@ -12,7 +12,9 @@ const CAM_EX = {
   flexao: ["flexao", "lado"], flexjoelho: ["flexao", "lado"], flexinc: ["flexao", "lado"], flexdiam: ["flexao", "lado"],
   polichinelo: ["poli", "frente"]
 };
-const camTipo = id => CAM_EX[id] || null;
+/* liga/desliga: o painel (Módulos do app → Câmera nos treinos) e cada aluna no Perfil */
+const camLiberada = () => modOn("camera") && !(ME && ME.camOff);
+const camTipo = id => camLiberada() ? CAM_EX[id] || null : null;
 const L_ = { nariz: 0, oE: 11, oD: 12, coE: 13, coD: 14, puE: 15, puD: 16, qE: 23, qD: 24, jE: 25, jD: 26, tE: 27, tD: 28 };
 const CAM = { on: false, stream: null, video: null, det: null, carregando: null, raf: 0, ts: 0, estado: "pos", n: 0, fase: "cima", ema: null, ext: null, ultimaDica: 0, okDesde: 0, alvo: 0, tipo: null, lado: null, onRep: null, falhou: false };
 
@@ -214,3 +216,10 @@ window.CKCAM = { async testar(urls, id){ const t = camTipo(id); if(!t) return "s
     const m = CAM_REGRAS[t[0]].medida(p); out.push(u.split("/").pop() + " → " + (m.v == null ? "sem corpo" : Math.round(m.v)) + (m.dica ? " (" + m.dica + ")" : ""));
     for(let k = 0; k < 6; k++){ CAM.estado = "conta"; camProcessa(p); } }
   return { reps: CAM.n, leituras: out }; } };
+
+/* Perfil: chave "Câmera nos treinos" */
+const rPerfilCam = rPerfil; rPerfil = function(){ const r = rPerfilCam.apply(this, arguments);
+  if(!modOn("camera") || $("p-cam")) return r; const ref = $("p-somn") || $("p-push"); if(!ref) return r;
+  const on = !ME.camOff; ref.insertAdjacentHTML("afterend", setRow("p-cam", "camera", "Câmera nos treinos", on ? "Botão para contar repetições pela câmera" : "Desligada", sw(on)));
+  $("p-cam").onclick = () => { ME.camOff = !ME.camOff; save(); SOM.tap && SOM.tap(); toast(ME.camOff ? "Câmera desligada nos treinos" : "Câmera ligada: o botão aparece nos exercícios compatíveis"); rPerfil(); };
+  return r; };
