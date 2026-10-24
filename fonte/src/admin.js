@@ -69,7 +69,7 @@ const rerender = () => ir(SEC);
 function modal(title, html){ $("mbox").innerHTML = `<div class="mh"><h2 style="flex:1">${esc(title)}</h2><button class="iconbtn" data-close aria-label="Fechar">×</button></div>${html}`; $("modal").hidden = false; document.body.style.overflow = "hidden"; }
 function fechar(){ $("modal").hidden = true; document.body.style.overflow = ""; }
 $("modal").addEventListener("click", e => { if(e.target.id === "modal" || e.target.closest("[data-close]")) fechar(); });
-document.addEventListener("keydown", e => { if(e.key === "Escape" && !$("modal").hidden) fechar(); });
+document.addEventListener("keydown", e => { const m = $("modal"); if(e.key === "Escape" && m && !m.hidden) fechar(); });
 const val = id => { const e = $(id); return e ? (e.type === "checkbox" ? e.checked : e.value.trim()) : ""; };
 function confirmar(texto, ok){ modal("Confirmar", `<p style="margin:0">${esc(texto)}</p><div class="toolbar" style="justify-content:flex-end"><button class="btn btn-line" data-close>Cancelar</button><button class="btn btn-bad" id="cf-ok">Sim, continuar</button></div>`); $("cf-ok").onclick = () => { fechar(); ok(); }; }
 

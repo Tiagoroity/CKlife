@@ -3985,7 +3985,7 @@ function showAdminLogin(aviso){
   $("admlogin").innerHTML = `<div class="brandrow"><span class="logo-slot">${LOGO(34)}</span><div class="wordmark">CK <b>Life</b><small>Admin</small></div></div>
     <h1 class="bigtitle" style="font-size:40px">${temAdm ? "Entrar no <em>painel</em>" : "Criar conta de <em>administrador</em>"}</h1>
     <p class="lead">${temAdm ? "Alunas, anúncios, parceiros, receitas e financeiro." : "Esta é a primeira vez. Crie a conta que vai administrar o app."}</p>
-    ${aviso ? `<div class="msg msg-bad">${esc(aviso)}</div>` : ""}
+    ${aviso && temAdm ? `<div class="msg msg-bad">${esc(aviso)}</div>` : ""}
     <form id="fa" class="panel" style="gap:12px" novalidate>
       ${temAdm ? "" : `<div class="field"><label for="fa-n">Seu nome</label><input class="input" id="fa-n" autocomplete="name"></div>`}
       <div class="field"><label for="fa-e">E-mail</label><input class="input" id="fa-e" type="email" autocomplete="email" inputmode="email"></div>
@@ -9766,7 +9766,7 @@ const rerender = () => ir(SEC);
 function modal(title, html){ $("mbox").innerHTML = `<div class="mh"><h2 style="flex:1">${esc(title)}</h2><button class="iconbtn" data-close aria-label="Fechar">×</button></div>${html}`; $("modal").hidden = false; document.body.style.overflow = "hidden"; }
 function fechar(){ $("modal").hidden = true; document.body.style.overflow = ""; }
 $("modal").addEventListener("click", e => { if(e.target.id === "modal" || e.target.closest("[data-close]")) fechar(); });
-document.addEventListener("keydown", e => { if(e.key === "Escape" && !$("modal").hidden) fechar(); });
+document.addEventListener("keydown", e => { const m = $("modal"); if(e.key === "Escape" && m && !m.hidden) fechar(); });
 const val = id => { const e = $(id); return e ? (e.type === "checkbox" ? e.checked : e.value.trim()) : ""; };
 function confirmar(texto, ok){ modal("Confirmar", `<p style="margin:0">${esc(texto)}</p><div class="toolbar" style="justify-content:flex-end"><button class="btn btn-line" data-close>Cancelar</button><button class="btn btn-bad" id="cf-ok">Sim, continuar</button></div>`); $("cf-ok").onclick = () => { fechar(); ok(); }; }
 

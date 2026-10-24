@@ -299,7 +299,7 @@ function showAdminLogin(aviso){
   $("admlogin").innerHTML = `<div class="brandrow"><span class="logo-slot">${LOGO(34)}</span><div class="wordmark">CK <b>Life</b><small>Admin</small></div></div>
     <h1 class="bigtitle" style="font-size:40px">${temAdm ? "Entrar no <em>painel</em>" : "Criar conta de <em>administrador</em>"}</h1>
     <p class="lead">${temAdm ? "Alunas, anúncios, parceiros, receitas e financeiro." : "Esta é a primeira vez. Crie a conta que vai administrar o app."}</p>
-    ${aviso ? `<div class="msg msg-bad">${esc(aviso)}</div>` : ""}
+    ${aviso && temAdm ? `<div class="msg msg-bad">${esc(aviso)}</div>` : ""}
     <form id="fa" class="panel" style="gap:12px" novalidate>
       ${temAdm ? "" : `<div class="field"><label for="fa-n">Seu nome</label><input class="input" id="fa-n" autocomplete="name"></div>`}
       <div class="field"><label for="fa-e">E-mail</label><input class="input" id="fa-e" type="email" autocomplete="email" inputmode="email"></div>
