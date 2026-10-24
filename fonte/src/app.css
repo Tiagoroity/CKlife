@@ -2347,3 +2347,32 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
 }
 .kpi-ic>span:first-of-type{min-height:34px}
 @media (max-width:440px){.kpi-ic .kpi-i,#v-admin .kpi-ic .kpi-i{display:none!important}.kpi-ic>span:first-of-type,#v-admin .kpi span{padding-right:0!important;min-height:0}}
+
+/* ===== Selo da Equipe de Incentivo ===== */
+.sel-eq{display:inline-grid;place-items:center;width:17px;height:17px;margin-left:4px;vertical-align:-3px;cursor:pointer;font-style:normal;filter:drop-shadow(0 1px 2px rgba(14,61,50,.35))}
+.sel-eq svg{display:block}
+.eq-banner{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:1px solid color-mix(in srgb,#E7B53C 45%,transparent);background:linear-gradient(135deg,color-mix(in srgb,#2E7D5A 12%,var(--surface)),color-mix(in srgb,#E7B53C 14%,var(--surface)));border-radius:16px;padding:10px 12px;margin-bottom:12px;color:var(--ink);font:inherit}
+.eq-banner .sel-eq{width:28px;height:28px;margin:0}.eq-banner .sel-eq svg{width:28px;height:28px}
+.eq-banner b{display:block;font-size:14.5px}.eq-banner small{color:var(--muted);font-size:12.5px}
+.eq-sob{text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px}
+.eq-sob-selo .sel-eq,.eq-sob-selo .sel-eq svg{width:64px;height:64px;margin:0}
+.eq-sob h2{margin:4px 0 0}.eq-sob p{margin:0;color:var(--muted)}.eq-sob ul{text-align:left;width:100%}
+/* painel · Time de Incentivo */
+.eq-cfg{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;margin-top:14px;padding:16px}
+.eq-cfg-l b{display:block}.eq-cfg-l small{color:var(--muted)}
+.eq-cfg-f{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
+.eq-cfg-f label{display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--muted);font-weight:600;min-width:0}
+.eq-cfg-f .input{min-width:0;width:auto;max-width:180px}
+.eq-lista{padding:6px 12px}
+.eq-m{display:grid;grid-template-columns:38px minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.eq-m:first-child{border-top:0}
+.eq-m.off{opacity:.55}
+.eq-av{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-weight:800;color:#fff;background:linear-gradient(135deg,#2E7D5A,#E7B53C)}
+.eq-n{min-width:0}.eq-n b{display:block;font-size:14.5px}.eq-n small{display:block;color:var(--muted);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.eq-log{padding:8px 14px}
+.eq-l{display:grid;grid-template-columns:96px minmax(0,1fr);gap:8px;padding:8px 0;border-top:1px solid var(--line);font-size:13.5px}
+.eq-l:first-child{border-top:0}.eq-l .num{color:var(--muted);font-size:12px}
+@media (max-width:420px){.eq-l{grid-template-columns:minmax(0,1fr)}}
+/* painel é sempre claro: o modo escuro do app não pode deixar texto claro em fundo claro */
+#v-admin .btn-line{border-color:#CFDCCB;color:#17211D}
+#v-admin .adm-top .btn-line{color:#fff;border-color:rgba(255,255,255,.28);background:rgba(255,255,255,.06)}

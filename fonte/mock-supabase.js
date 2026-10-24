@@ -83,6 +83,10 @@ const client = {
   from: t => new Q(t),
   rpc: async (n, a) => {
     const me = db.sess;
+    if(n === "admin_equipe"){ db.eqcfg = db.eqcfg || { ligado: true, hora_ini: 8, hora_fim: 22, max_coment_dia: 15, max_curt_dia: 40 }; db.eqm = db.eqm || ["Ana Clara Souza","Beatriz Lima","Camila Rocha","Daniela Martins"].map((nome, i) => ({ user_id: "eq" + i, nome, ativo: true, username: "equipe." + nome.split(" ")[0].toLowerCase(), coment_24h: i, curt_24h: i * 2, total: i * 5 }));
+      return { data: { config: db.eqcfg, membros: db.eqm, log: [{ id: 1, nome: "Ana Clara Souza", acao: "comentou", texto: "Que treino! Orgulho de você 💪", criado: new Date().toISOString() }, { id: 2, nome: "Beatriz Lima", acao: "story", texto: "❤️", criado: new Date().toISOString() }], hoje: { comentarios: 1, curtidas: 2, stories: 1 } }, error: null }; }
+    if(n === "admin_equipe_membro"){ const m = (db.eqm || []).find(x => x.user_id === a.p_user); if(m) m.ativo = a.p_ativo; return { data: !!m, error: null }; }
+    if(n === "admin_equipe_config"){ db.eqcfg = db.eqcfg || {}; if(a.p_ligado != null) db.eqcfg.ligado = a.p_ligado; if(a.p_ini != null) db.eqcfg.hora_ini = a.p_ini; if(a.p_fim != null) db.eqcfg.hora_fim = a.p_fim; if(a.p_coment != null) db.eqcfg.max_coment_dia = a.p_coment; if(a.p_curt != null) db.eqcfg.max_curt_dia = a.p_curt; return { data: true, error: null }; }
     if(n === "existe_admin") return { data: db.admins.length > 0, error: null };
     if(n === "virar_primeiro_admin"){ if(!me) return { data: false, error: null }; if(db.admins.length) return { data: db.admins.some(x => x.user_id === me), error: null }; const u = db.users.find(x => x.id === me); db.admins.push({ user_id: me, email: u.email, nome: a.p_nome, perms: { total: true }, desde: "2026-10-22" }); salva(); return { data: true, error: null }; }
     if(n === "validar_cupom"){ const c = db.colecoes.find(x => x.nome === "cupons" && x.id === a.p_cupom), p = c && db.colecoes.find(x => x.nome === "pins" && x.id === c.dados.parc); const ok = !!(p && p.dados === a.p_pin); if(ok){ c.dados.usado = true; salva(); } return { data: ok, error: null }; }

@@ -243,7 +243,7 @@ async function encontrarMulheres(){
     let L = [];
     try{ let qy = SB().from("perfis").select("user_id,username,nome,foto_mini,privado,bio,cidade,mostrar_cidade").neq("user_id", NU.uid).limit(30);
       if(termo){ const t = termo.replace(/[%,()]/g, " ").trim().replace(/^@/, ""); qy = qy.or(`username.ilike.%${t}%,nome.ilike.%${t}%`); } else qy = qy.order("criado", { ascending: false });
-      L = await q(qy); }catch(e){ $("em-l").innerHTML = `<p class="empty">${ERR_MSG(e)}</p>`; return; }
+      L = await q(qy); if(!termo && window.CK_EQUIPE) L = L.filter(p => !window.CK_EQUIPE.has(p.user_id)); }catch(e){ $("em-l").innerHTML = `<p class="empty">${ERR_MSG(e)}</p>`; return; }
     L.forEach(p => PERFIS.set(p.user_id, Object.assign(PERFIS.get(p.user_id) || {}, p)));
     if(!termo){ const cid = ME.cidade; L.sort((a, b) => ((b.mostrar_cidade && +b.cidade === +cid) - (a.mostrar_cidade && +a.cidade === +cid))); }
     const box = $("em-l"); if(!box) return;
@@ -359,7 +359,7 @@ function postHtml(p){
     ${p.figurinha && !p.midia && !p.img ? `<div class="pfig">${figImg(p.figurinha, "pfig-img")}</div>` : ""}${p.midia && eVideo(p.midia) ? `<div class="pimg pvid priv"><video data-m="${esc(p.midia)}" playsinline muted loop preload="metadata" controls controlslist="nodownload noplaybackrate" disablepictureinpicture></video></div>` : p.midia ? `<div class="pimg priv" data-abre><img ${midiaPronta(p.midia)} alt="" loading="lazy" draggable="false"><i class="pheart">${ic("heart", 70)}</i></div>` : p.img ? `<div class="pimg priv" data-abre><img src="${esc(p.img)}" alt="" loading="lazy" draggable="false"><i class="pheart">${ic("heart", 70)}</i></div>` : ""}
     <div class="pacts"><button class="pl ${liked ? "on" : ""}" data-like aria-label="Curtir">${ic("heart", 22)}<span>${nl || ""}</span></button><button data-abre aria-label="Comentar">${ic("chat", 21)}<span>${nc || ""}</span></button>${SO.on() ? `<button data-share aria-label="Compartilhar">${ic("send", 20)}</button><button class="so-save ${salvo ? "on" : ""}" data-save aria-label="Salvar">${ic("bookmark", 20)}</button>` : ""}
       ${nl ? `<small class="pquem" data-quem role="button">${liked ? (nl === 1 ? "Você curtiu" : `Você e mais ${nl - 1}`) : `${nl} ${nl === 1 ? "curtida" : "curtidas"}`}</small>` : ""}</div>
-    ${(p.coments || []).slice(-2).map(c => `<p class="pc"><b>${esc(nomeP(c.user, c.nome).split(" ")[0])}</b> ${rico(c.texto)}</p>`).join("")}
+    ${(p.coments || []).slice(-2).map(c => `<p class="pc"><b>${esc(nomeP(c.user, c.nome).split(" ")[0])}${selosP(c.user)}</b> ${rico(c.texto)}</p>`).join("")}
     ${nc > 2 ? `<button class="link pver" data-abre>Ver os ${nc} comentários</button>` : ""}
     <button class="pcin" data-abre>${avU(ME.id, ME.nome, ME.foto)}<span>Escreva um comentário…</span></button>
   </article>`;
@@ -521,7 +521,7 @@ function desenhaFeed(){
 
 async function sugestoes(){
   if(!SO.on() || FD.modo !== "todos") return; const f = $("feed"); if(!f || f.querySelector(".so-sug")) return;
-  if(!SUG){ try{ const seg = new Set(await seguindoIds()); const L = await q(SB().from("perfis").select("user_id,username,nome,foto_mini,privado,bio").neq("user_id", NU.uid).order("criado", { ascending: false }).limit(30)); SUG = L.filter(p => !seg.has(p.user_id)).slice(0, 10); SUG.forEach(p => PERFIS.set(p.user_id, Object.assign(PERFIS.get(p.user_id) || {}, p))); }catch(e){ SUG = []; } }
+  if(!SUG){ try{ const seg = new Set(await seguindoIds()); const L = await q(SB().from("perfis").select("user_id,username,nome,foto_mini,privado,bio").neq("user_id", NU.uid).order("criado", { ascending: false }).limit(30)); SUG = L.filter(p => !seg.has(p.user_id) && !(window.CK_EQUIPE && window.CK_EQUIPE.has(p.user_id))).slice(0, 10); SUG.forEach(p => PERFIS.set(p.user_id, Object.assign(PERFIS.get(p.user_id) || {}, p))); }catch(e){ SUG = []; } }
   if(!SUG.length) return; const posts = f.querySelectorAll(".post"), ref = posts[Math.min(1, posts.length - 1)];
   const html = `<div class="card so-sug"><div class="sec-title"><h3>Sugestões de amigas</h3><button class="link" id="sg-mais">Ver mais</button></div><div class="hscroll">${SUG.map(p => `<div class="so-sugc" data-u="${p.user_id}">${avU(p.user_id)}<b>${esc(p.nome.split(" ")[0])}</b><small>@${esc(p.username)}</small><button class="btn btn-accent btn-sm" data-seg="${p.user_id}">${p.privado ? "Solicitar" : "Seguir"}</button></div>`).join("")}</div></div>`;
   if(ref) ref.insertAdjacentHTML("afterend", html); else f.insertAdjacentHTML("afterbegin", html);

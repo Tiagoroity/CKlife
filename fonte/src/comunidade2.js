@@ -161,3 +161,26 @@ async function pegaVideoChat(c, cap){
   prevChat(c, `<video src="${u}" playsinline controls autoplay muted loop style="max-width:100%;max-height:70vh;border-radius:16px;background:#000"></video>`,
     t => enviaMsg(c, { tipo: "video", blob: v, mime: v.type || "video/mp4", texto: t, duracao: dur != null ? Math.min(300, dur) : null }).catch(() => {}), () => URL.revokeObjectURL(u));
 }
+
+/* ---------- TIME DE INCENTIVO CK: selo, perfil e explicação ---------- */
+window.CK_EQUIPE = window.CK_EQUIPE || new Set(); let EQUIPE_T = 0;
+async function carregaEquipe(forca){
+  if(!SO.on() || (!forca && Date.now() - EQUIPE_T < 10 * 60 * 1000)) return; EQUIPE_T = Date.now();
+  try{ const r = await SB().from("perfis").select("user_id").eq("equipe", true).limit(300); if(!r.error && r.data){ const antes = window.CK_EQUIPE.size; window.CK_EQUIPE = new Set(r.data.map(x => x.user_id)); if(antes !== window.CK_EQUIPE.size && TAB === "juntas" && FEED && FEED.length) desenhaFeed(); } }catch(e){}
+}
+{ let n = 0; const t = setInterval(() => { if(SO.on()){ clearInterval(t); carregaEquipe(true); } else if(++n > 40) clearInterval(t); }, 1500); }
+const rJuntasEq = rJuntas; rJuntas = function(){ const r = rJuntasEq.apply(this, arguments); carregaEquipe(); return r; };
+function sobreEquipe(){
+  sheet("Equipe de Incentivo", `<div class="eq-sob"><span class="eq-sob-selo">${SELO_EQ}</span><h2>Equipe de Incentivo CK Life</h2>
+    <p>Perfis oficiais da equipe CK Life com este selo. Elas estão aqui pra comemorar cada treino, receita e conquista com você.</p>
+    <ul class="ing"><li>Deixam um comentário de incentivo e curtem publicações</li><li>Reagem com ❤️ aos Stories</li><li>Não respondem conversas e não enviam mensagens</li><li>Não avaliam produtos nem profissionais</li></ul>
+    <p class="hint">As avaliações e conversas do app são sempre de alunas reais.</p></div>`);
+}
+document.addEventListener("click", e => { const s = e.target.closest && e.target.closest(".sel-eq"); if(!s) return; e.preventDefault(); e.stopPropagation(); SOM.tap && SOM.tap(); sobreEquipe(); }, true);
+const abrirPerfilEq = abrirPerfil; abrirPerfil = async function(u){
+  const r = await abrirPerfilEq.apply(this, arguments);
+  try{ if(window.CK_EQUIPE.has(u)){ const b = $("sheet-body"); if(!b) return r; const m = $("pf-msg"); if(m) m.remove();
+    if(!b.querySelector(".eq-banner")) b.insertAdjacentHTML("afterbegin", `<button class="eq-banner" type="button">${SELO_EQ}<span><b>Equipe de Incentivo CK Life</b><small>Perfil oficial da equipe · não envia mensagens</small></span></button>`);
+    const bn = b.querySelector(".eq-banner"); if(bn) bn.onclick = sobreEquipe; } }catch(e){}
+  return r;
+};

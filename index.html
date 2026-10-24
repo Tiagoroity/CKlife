@@ -2378,6 +2378,35 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
 }
 .kpi-ic>span:first-of-type{min-height:34px}
 @media (max-width:440px){.kpi-ic .kpi-i,#v-admin .kpi-ic .kpi-i{display:none!important}.kpi-ic>span:first-of-type,#v-admin .kpi span{padding-right:0!important;min-height:0}}
+
+/* ===== Selo da Equipe de Incentivo ===== */
+.sel-eq{display:inline-grid;place-items:center;width:17px;height:17px;margin-left:4px;vertical-align:-3px;cursor:pointer;font-style:normal;filter:drop-shadow(0 1px 2px rgba(14,61,50,.35))}
+.sel-eq svg{display:block}
+.eq-banner{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:1px solid color-mix(in srgb,#E7B53C 45%,transparent);background:linear-gradient(135deg,color-mix(in srgb,#2E7D5A 12%,var(--surface)),color-mix(in srgb,#E7B53C 14%,var(--surface)));border-radius:16px;padding:10px 12px;margin-bottom:12px;color:var(--ink);font:inherit}
+.eq-banner .sel-eq{width:28px;height:28px;margin:0}.eq-banner .sel-eq svg{width:28px;height:28px}
+.eq-banner b{display:block;font-size:14.5px}.eq-banner small{color:var(--muted);font-size:12.5px}
+.eq-sob{text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px}
+.eq-sob-selo .sel-eq,.eq-sob-selo .sel-eq svg{width:64px;height:64px;margin:0}
+.eq-sob h2{margin:4px 0 0}.eq-sob p{margin:0;color:var(--muted)}.eq-sob ul{text-align:left;width:100%}
+/* painel · Time de Incentivo */
+.eq-cfg{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;margin-top:14px;padding:16px}
+.eq-cfg-l b{display:block}.eq-cfg-l small{color:var(--muted)}
+.eq-cfg-f{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
+.eq-cfg-f label{display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--muted);font-weight:600;min-width:0}
+.eq-cfg-f .input{min-width:0;width:auto;max-width:180px}
+.eq-lista{padding:6px 12px}
+.eq-m{display:grid;grid-template-columns:38px minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.eq-m:first-child{border-top:0}
+.eq-m.off{opacity:.55}
+.eq-av{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-weight:800;color:#fff;background:linear-gradient(135deg,#2E7D5A,#E7B53C)}
+.eq-n{min-width:0}.eq-n b{display:block;font-size:14.5px}.eq-n small{display:block;color:var(--muted);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.eq-log{padding:8px 14px}
+.eq-l{display:grid;grid-template-columns:96px minmax(0,1fr);gap:8px;padding:8px 0;border-top:1px solid var(--line);font-size:13.5px}
+.eq-l:first-child{border-top:0}.eq-l .num{color:var(--muted);font-size:12px}
+@media (max-width:420px){.eq-l{grid-template-columns:minmax(0,1fr)}}
+/* painel é sempre claro: o modo escuro do app não pode deixar texto claro em fundo claro */
+#v-admin .btn-line{border-color:#CFDCCB;color:#17211D}
+#v-admin .adm-top .btn-line{color:#fff;border-color:rgba(255,255,255,.28);background:rgba(255,255,255,.06)}
 </style>
 
 <!-- Entrar / criar conta -->
@@ -5266,7 +5295,7 @@ async function encontrarMulheres(){
     let L = [];
     try{ let qy = SB().from("perfis").select("user_id,username,nome,foto_mini,privado,bio,cidade,mostrar_cidade").neq("user_id", NU.uid).limit(30);
       if(termo){ const t = termo.replace(/[%,()]/g, " ").trim().replace(/^@/, ""); qy = qy.or(`username.ilike.%${t}%,nome.ilike.%${t}%`); } else qy = qy.order("criado", { ascending: false });
-      L = await q(qy); }catch(e){ $("em-l").innerHTML = `<p class="empty">${ERR_MSG(e)}</p>`; return; }
+      L = await q(qy); if(!termo && window.CK_EQUIPE) L = L.filter(p => !window.CK_EQUIPE.has(p.user_id)); }catch(e){ $("em-l").innerHTML = `<p class="empty">${ERR_MSG(e)}</p>`; return; }
     L.forEach(p => PERFIS.set(p.user_id, Object.assign(PERFIS.get(p.user_id) || {}, p)));
     if(!termo){ const cid = ME.cidade; L.sort((a, b) => ((b.mostrar_cidade && +b.cidade === +cid) - (a.mostrar_cidade && +a.cidade === +cid))); }
     const box = $("em-l"); if(!box) return;
@@ -5382,7 +5411,7 @@ function postHtml(p){
     ${p.figurinha && !p.midia && !p.img ? `<div class="pfig">${figImg(p.figurinha, "pfig-img")}</div>` : ""}${p.midia && eVideo(p.midia) ? `<div class="pimg pvid priv"><video data-m="${esc(p.midia)}" playsinline muted loop preload="metadata" controls controlslist="nodownload noplaybackrate" disablepictureinpicture></video></div>` : p.midia ? `<div class="pimg priv" data-abre><img ${midiaPronta(p.midia)} alt="" loading="lazy" draggable="false"><i class="pheart">${ic("heart", 70)}</i></div>` : p.img ? `<div class="pimg priv" data-abre><img src="${esc(p.img)}" alt="" loading="lazy" draggable="false"><i class="pheart">${ic("heart", 70)}</i></div>` : ""}
     <div class="pacts"><button class="pl ${liked ? "on" : ""}" data-like aria-label="Curtir">${ic("heart", 22)}<span>${nl || ""}</span></button><button data-abre aria-label="Comentar">${ic("chat", 21)}<span>${nc || ""}</span></button>${SO.on() ? `<button data-share aria-label="Compartilhar">${ic("send", 20)}</button><button class="so-save ${salvo ? "on" : ""}" data-save aria-label="Salvar">${ic("bookmark", 20)}</button>` : ""}
       ${nl ? `<small class="pquem" data-quem role="button">${liked ? (nl === 1 ? "Você curtiu" : `Você e mais ${nl - 1}`) : `${nl} ${nl === 1 ? "curtida" : "curtidas"}`}</small>` : ""}</div>
-    ${(p.coments || []).slice(-2).map(c => `<p class="pc"><b>${esc(nomeP(c.user, c.nome).split(" ")[0])}</b> ${rico(c.texto)}</p>`).join("")}
+    ${(p.coments || []).slice(-2).map(c => `<p class="pc"><b>${esc(nomeP(c.user, c.nome).split(" ")[0])}${selosP(c.user)}</b> ${rico(c.texto)}</p>`).join("")}
     ${nc > 2 ? `<button class="link pver" data-abre>Ver os ${nc} comentários</button>` : ""}
     <button class="pcin" data-abre>${avU(ME.id, ME.nome, ME.foto)}<span>Escreva um comentário…</span></button>
   </article>`;
@@ -5544,7 +5573,7 @@ function desenhaFeed(){
 
 async function sugestoes(){
   if(!SO.on() || FD.modo !== "todos") return; const f = $("feed"); if(!f || f.querySelector(".so-sug")) return;
-  if(!SUG){ try{ const seg = new Set(await seguindoIds()); const L = await q(SB().from("perfis").select("user_id,username,nome,foto_mini,privado,bio").neq("user_id", NU.uid).order("criado", { ascending: false }).limit(30)); SUG = L.filter(p => !seg.has(p.user_id)).slice(0, 10); SUG.forEach(p => PERFIS.set(p.user_id, Object.assign(PERFIS.get(p.user_id) || {}, p))); }catch(e){ SUG = []; } }
+  if(!SUG){ try{ const seg = new Set(await seguindoIds()); const L = await q(SB().from("perfis").select("user_id,username,nome,foto_mini,privado,bio").neq("user_id", NU.uid).order("criado", { ascending: false }).limit(30)); SUG = L.filter(p => !seg.has(p.user_id) && !(window.CK_EQUIPE && window.CK_EQUIPE.has(p.user_id))).slice(0, 10); SUG.forEach(p => PERFIS.set(p.user_id, Object.assign(PERFIS.get(p.user_id) || {}, p))); }catch(e){ SUG = []; } }
   if(!SUG.length) return; const posts = f.querySelectorAll(".post"), ref = posts[Math.min(1, posts.length - 1)];
   const html = `<div class="card so-sug"><div class="sec-title"><h3>Sugestões de amigas</h3><button class="link" id="sg-mais">Ver mais</button></div><div class="hscroll">${SUG.map(p => `<div class="so-sugc" data-u="${p.user_id}">${avU(p.user_id)}<b>${esc(p.nome.split(" ")[0])}</b><small>@${esc(p.username)}</small><button class="btn btn-accent btn-sm" data-seg="${p.user_id}">${p.privado ? "Solicitar" : "Seguir"}</button></div>`).join("")}</div></div>`;
   if(ref) ref.insertAdjacentHTML("afterend", html); else f.insertAdjacentHTML("afterbegin", html);
@@ -7000,7 +7029,8 @@ function pedeSelfie(v){
 }
 
 /* ---------- Ao lado do nome só o ✓ (perfil verificado). A coroa Pro fica só sobre a foto (coroaDe / classe .cr). ---------- */
-const selosP = u => { const p = PERFIS.get(u) || (EU && EU.user_id === u ? EU : {}); return `${p.verificada ? `<i class="sel-ver" title="Perfil verificado">✓</i>` : ""}`; };
+const SELO_EQ = `<i class="sel-eq" role="button" tabindex="0" title="Equipe de Incentivo CK Life" aria-label="Equipe de Incentivo CK Life"><svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><defs><linearGradient id="seq" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2E7D5A"/><stop offset=".55" stop-color="#3DAA74"/><stop offset="1" stop-color="#E7B53C"/></linearGradient></defs><path fill="url(#seq)" d="M12 1.6l2.3 1.7 2.8-.4 1.2 2.6 2.6 1.2-.4 2.8 1.7 2.3-1.7 2.3.4 2.8-2.6 1.2-1.2 2.6-2.8-.4L12 22.4l-2.3-1.7-2.8.4-1.2-2.6-2.6-1.2.4-2.8L1.6 12l1.7-2.3-.4-2.8 2.6-1.2 1.2-2.6 2.8.4z"/><path fill="#fff" d="M12 16.6s-4.3-2.6-4.3-5.5A2.3 2.3 0 0 1 12 9.9a2.3 2.3 0 0 1 4.3 1.2c0 2.9-4.3 5.5-4.3 5.5z"/></svg></i>`;
+const selosP = u => { const p = PERFIS.get(u) || (EU && EU.user_id === u ? EU : {}); return `${p.verificada ? `<i class="sel-ver" title="Perfil verificado">✓</i>` : ""}${window.CK_EQUIPE && window.CK_EQUIPE.has(u) ? SELO_EQ : ""}`; };
 
 /* ---------- Publicidade: só Free depois do 30º dia, só em espaços naturais (Feed e Explorar) ---------- */
 function anuncioHtml(local){
@@ -8629,6 +8659,29 @@ async function pegaVideoChat(c, cap){
   prevChat(c, `<video src="${u}" playsinline controls autoplay muted loop style="max-width:100%;max-height:70vh;border-radius:16px;background:#000"></video>`,
     t => enviaMsg(c, { tipo: "video", blob: v, mime: v.type || "video/mp4", texto: t, duracao: dur != null ? Math.min(300, dur) : null }).catch(() => {}), () => URL.revokeObjectURL(u));
 }
+
+/* ---------- TIME DE INCENTIVO CK: selo, perfil e explicação ---------- */
+window.CK_EQUIPE = window.CK_EQUIPE || new Set(); let EQUIPE_T = 0;
+async function carregaEquipe(forca){
+  if(!SO.on() || (!forca && Date.now() - EQUIPE_T < 10 * 60 * 1000)) return; EQUIPE_T = Date.now();
+  try{ const r = await SB().from("perfis").select("user_id").eq("equipe", true).limit(300); if(!r.error && r.data){ const antes = window.CK_EQUIPE.size; window.CK_EQUIPE = new Set(r.data.map(x => x.user_id)); if(antes !== window.CK_EQUIPE.size && TAB === "juntas" && FEED && FEED.length) desenhaFeed(); } }catch(e){}
+}
+{ let n = 0; const t = setInterval(() => { if(SO.on()){ clearInterval(t); carregaEquipe(true); } else if(++n > 40) clearInterval(t); }, 1500); }
+const rJuntasEq = rJuntas; rJuntas = function(){ const r = rJuntasEq.apply(this, arguments); carregaEquipe(); return r; };
+function sobreEquipe(){
+  sheet("Equipe de Incentivo", `<div class="eq-sob"><span class="eq-sob-selo">${SELO_EQ}</span><h2>Equipe de Incentivo CK Life</h2>
+    <p>Perfis oficiais da equipe CK Life com este selo. Elas estão aqui pra comemorar cada treino, receita e conquista com você.</p>
+    <ul class="ing"><li>Deixam um comentário de incentivo e curtem publicações</li><li>Reagem com ❤️ aos Stories</li><li>Não respondem conversas e não enviam mensagens</li><li>Não avaliam produtos nem profissionais</li></ul>
+    <p class="hint">As avaliações e conversas do app são sempre de alunas reais.</p></div>`);
+}
+document.addEventListener("click", e => { const s = e.target.closest && e.target.closest(".sel-eq"); if(!s) return; e.preventDefault(); e.stopPropagation(); SOM.tap && SOM.tap(); sobreEquipe(); }, true);
+const abrirPerfilEq = abrirPerfil; abrirPerfil = async function(u){
+  const r = await abrirPerfilEq.apply(this, arguments);
+  try{ if(window.CK_EQUIPE.has(u)){ const b = $("sheet-body"); if(!b) return r; const m = $("pf-msg"); if(m) m.remove();
+    if(!b.querySelector(".eq-banner")) b.insertAdjacentHTML("afterbegin", `<button class="eq-banner" type="button">${SELO_EQ}<span><b>Equipe de Incentivo CK Life</b><small>Perfil oficial da equipe · não envia mensagens</small></span></button>`);
+    const bn = b.querySelector(".eq-banner"); if(bn) bn.onclick = sobreEquipe; } }catch(e){}
+  return r;
+};
 
 const TABS = [["inicio","Início"],["treinar","Treinos"],["dieta","Nutrição"],["juntas","Comunidade"],["explorar","Explorar"],["perfil","Perfil"],["evolucao","Evolução"]];
 const NAV = TABS.slice(0, 6), NAV_DE = { evolucao: "perfil" };
@@ -12406,6 +12459,50 @@ async function vNumeros(){
 VIEWS.numeros = vNumeros;
 /* quem vê os Relatórios (métricas) ou o Financeiro também vê os Números do negócio */
 const montaMenuNB = montaMenu; montaMenu = function(){ try{ if(PERM && !PERM.total && PERM.numeros == null){ const v = PERM.metricas || PERM.financeiro || PERM.monetizacao; if(v) PERM.numeros = v === "editar" ? "ver" : v; } }catch(e){} return montaMenuNB.apply(this, arguments); };
+
+/* ===================== Painel · TIME DE INCENTIVO CK =====================
+   Perfis oficiais da equipe (com selo), que comentam 1 vez por post, curtem e reagem a Stories, só coisas boas.
+   Aqui: chave geral, horário, limites por dia, liga/desliga uma por uma e o histórico de tudo que fizeram. */
+AIC.equipe = '<path d="M12 2l2.4 1.8 3-.4 1.2 2.8 2.8 1.2-.4 3L22.8 12l-1.8 2.4.4 3-2.8 1.2-1.2 2.8-3-.4L12 22.8l-2.4-1.8-3 .4-1.2-2.8-2.8-1.2.4-3L1.2 12 3 9.6l-.4-3 2.8-1.2L6.6 2.6l3 .4z"/><path d="M12 16s-4-2.4-4-5.1a2.1 2.1 0 0 1 4-1 2.1 2.1 0 0 1 4 1C16 13.6 12 16 12 16z"/>';
+SECOES.push(["equipe", "Time de Incentivo"]); MENU_NOME.equipe = "Time de Incentivo";
+MENU.forEach(([, gs]) => gs.forEach(g => { if(g[1] === "comunidade" && !g[2].includes("equipe")) g[2].push("equipe"); }));
+{ const mmEq = montaMenu; montaMenu = function(){ try{ if(PERM && !PERM.total && PERM.equipe == null && PERM.comunidade) PERM.equipe = PERM.comunidade; }catch(e){} return mmEq.apply(this, arguments); }; }
+let EQD = null;
+const eqHora = h => String(h).padStart(2, "0") + "h";
+const eqAcao = { comentou: "comentou", curtiu: "curtiu", story: "reagiu ❤️ ao Story" };
+async function vEquipe(){
+  $("adm-main").innerHTML = `<div class="head"><div><h1>Time de Incentivo</h1><p class="muted">Carregando…</p></div></div>`;
+  try{ const r = await SB2().rpc("admin_equipe"); if(r.error) throw r.error; EQD = r.data; }
+  catch(e){ $("adm-main").innerHTML = `<div class="head"><div><h1>Time de Incentivo</h1><p class="muted">Ainda não ativado. Rode o SQL <b>equipe.sql</b> no Supabase (SQL Editor) e abra esta tela de novo.</p></div></div>`; return; }
+  const d = EQD, c = d.config || {}, M = d.membros || [], ativas = M.filter(m => m.ativo).length, ed = podeEditar("equipe") || podeEditar("comunidade") || PERM.total;
+  $("adm-main").innerHTML = `
+    <div class="head"><div><h1>Time de Incentivo</h1><p class="muted">Perfis oficiais da equipe, com selo. Cada post de aluna recebe <b>no máximo 1 comentário</b> da equipe, só com frases de incentivo. Elas curtem, reagem com ❤️ aos Stories, <b>nunca respondem, nunca mandam mensagem e não avaliam</b> produtos ou profissionais. Não têm login nem acesso ao painel.</p></div>
+      <div class="toolbar"><button class="btn btn-line btn-sm" id="eq-at">${aic("resumo", 15)} Atualizar</button></div></div>
+    <div class="grid g4">${kpi("Situação", c.ligado ? "Ligado" : "Desligado", `${eqHora(c.hora_ini)} às ${eqHora(c.hora_fim)} (Cuiabá)`, "equipe", 1)}${kpi("Comentários (24h)", int(d.hoje.comentarios), "1 por post, no máximo", "comunidade")}${kpi("Curtidas (24h)", int(d.hoje.curtidas), `${int(d.hoje.stories)} reações a Stories`, "comunidade")}${kpi("Perfis ligados", `${ativas} de ${M.length}`, "desligue quem quiser", "alunos")}</div>
+    <div class="card eq-cfg">
+      <div class="eq-cfg-l"><b>Chave geral</b><small>Desligada, nenhum perfil da equipe age.</small></div>
+      <button class="mod-sw ${ed ? "" : "needs-edit"}" role="switch" id="eq-geral" aria-checked="${!!c.ligado}" aria-label="${c.ligado ? "Desligar" : "Ligar"} o Time de Incentivo"><i></i></button>
+      <div class="eq-cfg-f"><label>Das <select class="input" id="eq-ini">${Array.from({ length: 24 }, (_, h) => `<option value="${h}" ${h === c.hora_ini ? "selected" : ""}>${eqHora(h)}</option>`).join("")}</select></label>
+        <label>até <select class="input" id="eq-fim">${Array.from({ length: 24 }, (_, i) => i + 1).map(h => `<option value="${h}" ${h === c.hora_fim ? "selected" : ""}>${eqHora(h)}</option>`).join("")}</select></label>
+        <label>Comentários por perfil/dia <input class="input" id="eq-mc" type="number" min="0" max="100" value="${c.max_coment_dia}"></label>
+        <label>Curtidas por perfil/dia <input class="input" id="eq-mk" type="number" min="0" max="300" value="${c.max_curt_dia}"></label>
+        <button class="btn btn-accent btn-sm" id="eq-salva">Salvar horário e limites</button></div></div>
+    <div class="nb-sec">Perfis da equipe (${M.length})</div>
+    <div class="card eq-lista">${M.map(m => `<div class="eq-m ${m.ativo ? "" : "off"}"><span class="eq-av">${esc((m.nome || "?")[0])}</span><span class="eq-n"><b>${esc(m.nome)}</b><small>@${esc(m.username || "")} · 24h: ${int(m.coment_24h)} coment. · ${int(m.curt_24h)} curt. · total ${int(m.total)}</small></span>
+      <button class="mod-sw" role="switch" data-eq="${m.user_id}" aria-checked="${!!m.ativo}" aria-label="${m.ativo ? "Desligar" : "Ligar"} ${esc(m.nome)}"><i></i></button></div>`).join("") || `<p class="muted">Nenhum perfil criado.</p>`}</div>
+    <div class="nb-sec">Histórico (últimas 60 ações)</div>
+    <div class="card eq-log">${(d.log || []).map(l => `<div class="eq-l"><span class="num">${new Date(l.criado).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}</span><span><b>${esc(l.nome || "")}</b> ${eqAcao[l.acao] || esc(l.acao)}${l.texto && l.acao === "comentou" ? `: “${esc(l.texto)}”` : ""}</span></div>`).join("") || `<p class="muted">Nada ainda. A equipe age a cada 5 minutos, no horário escolhido, em posts e Stories de alunas reais.</p>`}</div>`;
+  $("eq-at").onclick = vEquipe;
+  $("eq-geral").onclick = async () => { if(!ed) return toast("Seu acesso não permite mudar isso"); const liga = !c.ligado;
+    const vai = async () => { try{ const r = await SB2().rpc("admin_equipe_config", { p_ligado: liga, p_ini: null, p_fim: null, p_coment: null, p_curt: null }); if(r.error) throw r.error; toast(liga ? "Time de Incentivo ligado" : "Time de Incentivo desligado"); vEquipe(); }catch(e){ toast("Não deu: " + (e.message || e)); } };
+    liga ? vai() : confirmar("Desligar o Time de Incentivo? Nenhum perfil da equipe vai agir até você ligar de novo.", vai); };
+  $("eq-salva").onclick = async () => { if(!ed) return toast("Seu acesso não permite mudar isso"); const ini = +$("eq-ini").value, fim = +$("eq-fim").value;
+    if(fim <= ini) return toast("O horário final precisa ser depois do inicial");
+    try{ const r = await SB2().rpc("admin_equipe_config", { p_ligado: null, p_ini: ini, p_fim: fim, p_coment: Math.max(0, Math.min(100, +$("eq-mc").value || 0)), p_curt: Math.max(0, Math.min(300, +$("eq-mk").value || 0)) }); if(r.error) throw r.error; toast("Salvo"); vEquipe(); }catch(e){ toast("Não deu: " + (e.message || e)); } };
+  $("adm-main").querySelectorAll("[data-eq]").forEach(b => b.onclick = async () => { if(!ed) return toast("Seu acesso não permite mudar isso"); const on = b.getAttribute("aria-checked") !== "true";
+    try{ const r = await SB2().rpc("admin_equipe_membro", { p_user: b.dataset.eq, p_ativo: on }); if(r.error) throw r.error; b.setAttribute("aria-checked", on); b.closest(".eq-m").classList.toggle("off", !on); toast(on ? "Perfil ligado" : "Perfil desligado"); }catch(e){ toast("Não deu: " + (e.message || e)); } });
+}
+VIEWS.equipe = vEquipe;
 
 window.ADMIN = { abrir };
 })();
