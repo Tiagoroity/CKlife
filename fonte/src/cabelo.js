@@ -132,11 +132,39 @@ async function cabTutorial(id){
     <p class="cab-tdesc">${esc(p.descricao || "")}</p>
     <div class="cab-meta"><span>${ic("clock", 13)} ${p.minutos} min</span><span>${CAB_DIF[p.dificuldade]}</span><span>${CAB_FIX[p.fixacao]}</span></div>
     ${p.acessorios.length ? `<p class="cab-prec"><b>Você vai precisar:</b> ${p.acessorios.map(a => esc(CAB_ACS[a] || a)).join(", ")}</p>` : ""}
-    ${p.video_url ? `<button class="btn btn-line btn-block" id="cab-vid">${ic("play", 16)} Ver tutorial</button><div id="cab-vbox"></div>` : ""}
+    ${p.video_url ? `<button class="btn btn-accent btn-block" id="cab-vid">${ic("play", 16)} Ver tutorial com voz</button><div id="cab-vbox"></div>` : ""}
+    ${S.length ? `<button class="btn btn-line btn-block cab-ouvir" id="cab-ouvir">${ic("speaker", 16)} Ouvir o passo a passo</button>` : ""}
     <ol class="cab-passos">${S.map(x => `<li class="cab-passo"><div class="cab-pm">${cabMidia(x.midia, `Passo ${x.numero}, ${CAB_VISTA[x.vista] || ""}`, "cab-pimg", p, { vista: x.vista, passo: x.numero })}<span class="cab-vista">${esc(CAB_VISTA[x.vista] || "")}</span></div><div><span class="eyebrow">${x.numero >= 5 && /^(Resultado|Lado|Visto|Detalhe)/.test(x.titulo || "") ? "Resultado" : "Passo " + x.numero}</span><b>${esc(x.titulo || "")}</b><p>${esc(x.instrucao)}</p></div></li>`).join("")}</ol>
     <div class="cab-fim"><b>Pronta para treinar. 💚</b><div class="cab-act"><button class="cab-fav lg ${CAB.favs.has(p.id) ? "on" : ""}" data-fav="${p.id}" aria-pressed="${CAB.favs.has(p.id)}" aria-label="Salvar">${ic("heart", 18)} Salvar</button>${typeof abreComposer === "function" && SO.on() ? `<button class="btn btn-line btn-sm" id="cab-look">Mostrar meu look no CK Life</button>` : ""}</div></div>`;
   cabLiga(box);
-  const v = $("cab-vid"); if(v) v.onclick = () => { $("cab-vbox").innerHTML = `<video class="cab-video" src="${esc(p.video_url)}" controls playsinline preload="metadata"></video>`; v.remove(); $("cab-vbox").querySelector("video").play().catch(() => {}); };
+  const passos = S.filter(x => x.numero <= 4), fala = x => `Passo ${x.numero}. ${x.titulo ? x.titulo + ". " : ""}${x.instrucao}`;
+  /* vídeo com a voz do celular: cada passo é lido no momento certo; se a fala for maior que a cena, o vídeo espera */
+  const v = $("cab-vid"); if(v) v.onclick = () => {
+    $("cab-vbox").innerHTML = `<div class="cab-vw"><video class="cab-video" src="${esc(p.video_url)}" controls playsinline preload="metadata"></video><button class="cab-vozbt" id="cab-vozbt" aria-pressed="true">${ic("speaker", 15)} Voz ligada</button></div>`; v.remove();
+    const vid = $("cab-vbox").querySelector("video"), vb = $("cab-vozbt"); let voz = true, feito = new Set(), esperando = false, falando = false;
+    const marcas = [[0.05, `${p.nome}. Leva ${p.minutos} ${p.minutos === 1 ? "minuto" : "minutos"}.`, 1.7], ...passos.map((x, k) => [1.85 + k * 2.7, fala(x), 1.85 + (k + 1) * 2.7 - 0.25]), [1.85 + passos.length * 2.7, "Pronto! Veja como fica de todos os lados.", 99]];
+    const diz = (i) => { const [, txt, fimCena] = marcas[i]; falando = true; falar(txt, () => { falando = false; if(esperando){ esperando = false; vid.play().catch(() => {}); } }); marcas[i].fim = fimCena; };
+    vid.addEventListener("timeupdate", () => { if(!voz) return; const t = vid.currentTime;
+      marcas.forEach((m, i) => { if(t >= m[0] && !feito.has(i)){ feito.add(i); diz(i); } });
+      const atual = [...feito].pop(); if(atual != null && falando && t >= marcas[atual][2] && !vid.paused){ esperando = true; vid.pause(); } });
+    vid.addEventListener("seeking", () => { calar(); falando = false; esperando = false; feito = new Set(marcas.map((m, i) => i).filter(i => marcas[i][0] < vid.currentTime - .3)); });
+    vid.addEventListener("pause", () => { if(!esperando) calar(); });
+    vid.addEventListener("ended", () => { if(voz) falar("Pronta para treinar."); });
+    vb.onclick = () => { voz = !voz; vb.setAttribute("aria-pressed", voz); vb.innerHTML = `${ic(voz ? "speaker" : "mute", 15)} Voz ${voz ? "ligada" : "desligada"}`; if(!voz){ calar(); if(esperando){ esperando = false; vid.play().catch(() => {}); } } };
+    vid.play().catch(() => {});
+  };
+  /* sem vídeo: o celular lê os passos e destaca cada um */
+  const ou = $("cab-ouvir"); let lendo = false;
+  if(ou) ou.onclick = () => {
+    const cards = [...box.querySelectorAll(".cab-passo")];
+    if(lendo){ lendo = false; calar(); cards.forEach(c => c.classList.remove("falando")); ou.innerHTML = `${ic("speaker", 16)} Ouvir o passo a passo`; return; }
+    lendo = true; ou.innerHTML = `${ic("pause", 16)} Parar a voz`; let k = -1;
+    const prox = () => { if(!lendo) return; cards.forEach(c => c.classList.remove("falando")); k++;
+      if(k >= passos.length){ lendo = false; ou.innerHTML = `${ic("speaker", 16)} Ouvir o passo a passo`; falar("Pronta para treinar."); return; }
+      const c = cards[k]; if(c){ c.classList.add("falando"); c.scrollIntoView({ behavior: "smooth", block: "center" }); } falar(fala(passos[k]), () => setTimeout(prox, 350)); };
+    falar(`${p.nome}. Vamos lá.`, prox);
+  };
+  const fechaVoz = new MutationObserver(() => { if(!document.body.contains(box)){ calar(); fechaVoz.disconnect(); } }); fechaVoz.observe(document.body, { childList: true, subtree: true });
   const lk = $("cab-look"); if(lk) lk.onclick = () => { fecharSheet(); abreComposer(`Hoje fui de ${p.nome} no treino 💚 #CabeloParaTreinar`); };
 }
 
