@@ -4,7 +4,7 @@
 (function(){
 const B = window.BONECO, X = B._;
 // exercícios que usam a foto de outro bem parecido
-const FOTO = { agachsalto: "agacho", afundo: "afundocasa", pontealt: "ponte", elevpelv: "ponte" };
+const FOTO = {};
 B.fotoDe = e => {
   if(!e) return "";
   if(e.foto) return e.foto;
