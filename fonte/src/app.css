@@ -2257,3 +2257,46 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
 .so-cin .input{border-radius:999px;padding-left:16px}
 .so-cin .so-mic,.so-cin #cv-env{background:#25A55F;color:#fff;border-color:#25A55F}
 #cv-bar .so-cin .so-mic,#cv-bar .so-cin #cv-env{background:#25A55F!important;color:#fff!important;border-color:#25A55F!important}
+
+/* ===== Vídeos em tela cheia ===== */
+.cm-nav.cinco{grid-template-columns:repeat(5,minmax(0,1fr))}
+.cm-nav.cinco button{font-size:11px}
+.rl{position:fixed;inset:0;z-index:15;background:#000;color:#fff;display:flex;flex-direction:column}
+.rl-top{position:absolute;left:0;right:0;top:0;z-index:3;display:flex;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top,0px) + 10px) 12px 10px;background:linear-gradient(180deg,rgba(0,0,0,.55),transparent)}
+.rl-top b{font-family:var(--display);font-size:18px}
+.rl-b{background:rgba(255,255,255,.14)!important;border-color:transparent!important;color:#fff!important}
+.rl-lista{flex:1;overflow-y:auto;scroll-snap-type:y mandatory;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.rl-s{position:relative;height:100%;height:100dvh;scroll-snap-align:start;scroll-snap-stop:always;display:grid;place-items:center;overflow:hidden;background:#000}
+.rl-s video{width:100%;height:100%;object-fit:cover}
+@media (min-width:700px){.rl-s video{object-fit:contain}}
+.rl-play,.rl-heart{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-style:normal;pointer-events:none;opacity:0;color:#fff;filter:drop-shadow(0 4px 16px rgba(0,0,0,.5))}
+.rl-heart svg{fill:#fff}
+.rl-s.pausado .rl-play{opacity:.85}
+.rl-s.bate .rl-heart{animation:bate .8s ease-out}
+.rl-acts{position:absolute;right:10px;bottom:calc(env(safe-area-inset-bottom,0px) + 120px);z-index:2;display:flex;flex-direction:column;align-items:center;gap:18px}
+.rl-acts button{display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:0;color:#fff;font:inherit;font-size:13px;font-weight:800;filter:drop-shadow(0 2px 6px rgba(0,0,0,.5));padding:0}
+.rl-acts button .pav{width:46px;height:46px;border:2px solid #fff}
+.rl-acts button.on{color:#FF3B5C}.rl-acts button.on svg{fill:#FF3B5C}
+.rl-info{position:absolute;left:14px;right:80px;bottom:calc(env(safe-area-inset-bottom,0px) + 28px);z-index:2;text-shadow:0 1px 6px rgba(0,0,0,.7)}
+.rl-info b{font-size:16px}
+.rl-info small{display:block;opacity:.85;font-size:12.5px;margin-top:1px}
+.rl-info p{margin:6px 0 0;font-size:14.5px;line-height:1.35;max-height:5.5em;overflow:hidden}
+.rl-vazio{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:24px}
+.rl-vazio p{opacity:.8;margin:0}
+.pvid{position:relative}
+.rl-abre{position:absolute;right:10px;top:10px;z-index:2;display:inline-flex;align-items:center;gap:4px;background:rgba(0,0,0,.55);color:#fff;border:0;border-radius:999px;padding:6px 10px;font:inherit;font-size:12px;font-weight:700;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+/* ===== Grupos ===== */
+.so-gr-top.gr2{background:linear-gradient(150deg,var(--gc),color-mix(in srgb,var(--gc) 55%,#0A1F19));color:#fff;padding:22px 16px 18px;border-radius:24px;box-shadow:0 18px 40px -26px var(--gc)}
+.so-gr-top.gr2>i{display:inline-grid;place-items:center;width:76px;height:76px;border-radius:50%;background:rgba(255,255,255,.18);font-size:40px}
+.so-gr-top.gr2 h2{color:#fff}
+.so-gr-top.gr2 p,.so-gr-top.gr2 small{color:rgba(255,255,255,.88)}
+.so-gr-top.gr2 .btn-accent{background:#fff;color:#0E3D32;border-color:#fff}
+.so-gr-top.gr2 .btn-line{border-color:rgba(255,255,255,.5);color:#fff;background:transparent}
+.gr-regras{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);background:var(--surface-2);border-radius:14px;padding:10px 12px;margin:0 0 12px}
+.gr-regras svg{flex:0 0 auto;color:#E5484D}
+.gr-comp{margin-bottom:12px}
+.so-gr-lin{border-left:0!important;box-shadow:var(--shadow-sm)}
+.so-gr-lin>i{display:grid;place-items:center;width:52px;height:52px;border-radius:16px;background:color-mix(in srgb,var(--gc) 16%,var(--surface));flex:0 0 52px}
+/* ===== Perfil: grade de fotos estilo Instagram ===== */
+.so-grade{gap:3px;border-radius:14px;overflow:hidden}
+.so-grade .so-gi{border-radius:0!important}

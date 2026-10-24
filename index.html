@@ -2288,6 +2288,49 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
 .so-cin .input{border-radius:999px;padding-left:16px}
 .so-cin .so-mic,.so-cin #cv-env{background:#25A55F;color:#fff;border-color:#25A55F}
 #cv-bar .so-cin .so-mic,#cv-bar .so-cin #cv-env{background:#25A55F!important;color:#fff!important;border-color:#25A55F!important}
+
+/* ===== Vídeos em tela cheia ===== */
+.cm-nav.cinco{grid-template-columns:repeat(5,minmax(0,1fr))}
+.cm-nav.cinco button{font-size:11px}
+.rl{position:fixed;inset:0;z-index:15;background:#000;color:#fff;display:flex;flex-direction:column}
+.rl-top{position:absolute;left:0;right:0;top:0;z-index:3;display:flex;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top,0px) + 10px) 12px 10px;background:linear-gradient(180deg,rgba(0,0,0,.55),transparent)}
+.rl-top b{font-family:var(--display);font-size:18px}
+.rl-b{background:rgba(255,255,255,.14)!important;border-color:transparent!important;color:#fff!important}
+.rl-lista{flex:1;overflow-y:auto;scroll-snap-type:y mandatory;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.rl-s{position:relative;height:100%;height:100dvh;scroll-snap-align:start;scroll-snap-stop:always;display:grid;place-items:center;overflow:hidden;background:#000}
+.rl-s video{width:100%;height:100%;object-fit:cover}
+@media (min-width:700px){.rl-s video{object-fit:contain}}
+.rl-play,.rl-heart{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-style:normal;pointer-events:none;opacity:0;color:#fff;filter:drop-shadow(0 4px 16px rgba(0,0,0,.5))}
+.rl-heart svg{fill:#fff}
+.rl-s.pausado .rl-play{opacity:.85}
+.rl-s.bate .rl-heart{animation:bate .8s ease-out}
+.rl-acts{position:absolute;right:10px;bottom:calc(env(safe-area-inset-bottom,0px) + 120px);z-index:2;display:flex;flex-direction:column;align-items:center;gap:18px}
+.rl-acts button{display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:0;color:#fff;font:inherit;font-size:13px;font-weight:800;filter:drop-shadow(0 2px 6px rgba(0,0,0,.5));padding:0}
+.rl-acts button .pav{width:46px;height:46px;border:2px solid #fff}
+.rl-acts button.on{color:#FF3B5C}.rl-acts button.on svg{fill:#FF3B5C}
+.rl-info{position:absolute;left:14px;right:80px;bottom:calc(env(safe-area-inset-bottom,0px) + 28px);z-index:2;text-shadow:0 1px 6px rgba(0,0,0,.7)}
+.rl-info b{font-size:16px}
+.rl-info small{display:block;opacity:.85;font-size:12.5px;margin-top:1px}
+.rl-info p{margin:6px 0 0;font-size:14.5px;line-height:1.35;max-height:5.5em;overflow:hidden}
+.rl-vazio{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:24px}
+.rl-vazio p{opacity:.8;margin:0}
+.pvid{position:relative}
+.rl-abre{position:absolute;right:10px;top:10px;z-index:2;display:inline-flex;align-items:center;gap:4px;background:rgba(0,0,0,.55);color:#fff;border:0;border-radius:999px;padding:6px 10px;font:inherit;font-size:12px;font-weight:700;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+/* ===== Grupos ===== */
+.so-gr-top.gr2{background:linear-gradient(150deg,var(--gc),color-mix(in srgb,var(--gc) 55%,#0A1F19));color:#fff;padding:22px 16px 18px;border-radius:24px;box-shadow:0 18px 40px -26px var(--gc)}
+.so-gr-top.gr2>i{display:inline-grid;place-items:center;width:76px;height:76px;border-radius:50%;background:rgba(255,255,255,.18);font-size:40px}
+.so-gr-top.gr2 h2{color:#fff}
+.so-gr-top.gr2 p,.so-gr-top.gr2 small{color:rgba(255,255,255,.88)}
+.so-gr-top.gr2 .btn-accent{background:#fff;color:#0E3D32;border-color:#fff}
+.so-gr-top.gr2 .btn-line{border-color:rgba(255,255,255,.5);color:#fff;background:transparent}
+.gr-regras{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);background:var(--surface-2);border-radius:14px;padding:10px 12px;margin:0 0 12px}
+.gr-regras svg{flex:0 0 auto;color:#E5484D}
+.gr-comp{margin-bottom:12px}
+.so-gr-lin{border-left:0!important;box-shadow:var(--shadow-sm)}
+.so-gr-lin>i{display:grid;place-items:center;width:52px;height:52px;border-radius:16px;background:color-mix(in srgb,var(--gc) 16%,var(--surface));flex:0 0 52px}
+/* ===== Perfil: grade de fotos estilo Instagram ===== */
+.so-grade{gap:3px;border-radius:14px;overflow:hidden}
+.so-grade .so-gi{border-radius:0!important}
 </style>
 
 <!-- Entrar / criar conta -->
@@ -8395,7 +8438,7 @@ function comNav(){
   head.insertAdjacentHTML("afterend", `<nav class="cm-nav" aria-label="Comunidade">
     <button class="on" data-cn="feed">${ic("home", 17)}<span>Feed</span></button>
     <button data-cn="grupos">${ic("people", 17)}<span>Grupos</span></button>
-    <button data-cn="msgs">${ic("chat", 17)}<span>Mensagens</span><i class="cm-nb" id="cm-nav-msg" hidden></i></button>
+    <button data-cn="msgs">${ic("chat", 17)}<span>Chats</span><i class="cm-nb" id="cm-nav-msg" hidden></i></button>
     <button data-cn="amigas">${ic("search", 17)}<span>Amigas</span></button></nav>`);
   box.querySelectorAll("[data-cn]").forEach(b => b.onclick = () => { SOM.tap && SOM.tap(); const k = b.dataset.cn;
     if(k === "feed") return window.scrollTo({ top: 0, behavior: "smooth" });
@@ -8437,6 +8480,61 @@ const desenhaFeedC2 = desenhaFeed; desenhaFeed = function(){ const r = desenhaFe
 const abreConversaC2 = abreConversa; abreConversa = async function(c){ const pr = abreConversaC2.apply(this, arguments);
   let n = 0; const t = setInterval(() => { try{ const tt = $("sheet-title"); if(tt && $("cv-m") && c){ clearInterval(t); const o = outroDe(c); tt.textContent = nomeP(o, c.a === NU.uid ? c.nome_b : c.nome_a).split(" ")[0]; } else if(++n > 30) clearInterval(t); }catch(e){ clearInterval(t); } }, 150);
   return pr; };
+
+/* ---------- VÍDEOS EM TELA CHEIA (deslizar para cima, como no TikTok/Reels) ---------- */
+let RL_SOM = false, RL_IO = null;
+function fechaVideos(){ const o = $("rl"); if(o){ o.querySelectorAll("video").forEach(v => { v.pause(); v.removeAttribute("src"); v.load(); }); o.remove(); } if(RL_IO){ RL_IO.disconnect(); RL_IO = null; } document.body.style.overflow = ""; }
+async function abrirVideos(inicioId){
+  if(!SO.on()) return FORA();
+  fechaVideos(); SOM.tap && SOM.tap();
+  document.body.insertAdjacentHTML("beforeend", `<div class="rl" id="rl" role="dialog" aria-label="Vídeos da comunidade"><div class="rl-top"><button class="iconbtn rl-b" id="rl-x" aria-label="Voltar">${ic("back", 20)}</button><b>Vídeos</b><button class="iconbtn rl-b" id="rl-som" aria-label="Ligar o som">${ic(RL_SOM ? "speaker" : "mute", 19)}</button></div><div class="rl-lista" id="rl-l"><div class="rl-vazio"><i class="so-spin"></i></div></div></div>`);
+  document.body.style.overflow = "hidden";
+  $("rl-x").onclick = fechaVideos;
+  $("rl-som").onclick = () => { RL_SOM = !RL_SOM; $("rl-som").innerHTML = ic(RL_SOM ? "speaker" : "mute", 19); document.querySelectorAll("#rl video").forEach(v => v.muted = !RL_SOM); SOM.tap && SOM.tap(); };
+  let L = [];
+  try{ const rows = await q(SB().from("posts").select("*").order("criado", { ascending: false }).limit(120)); L = (await completaPosts(rows.filter(p => eVideo(p.midia)))).filter(p => p.midia && eVideo(p.midia) && !p.oculto); }catch(e){ console.warn(e); }
+  const lista = $("rl-l"); if(!lista) return;
+  if(!L.length){ lista.innerHTML = `<div class="rl-vazio"><b>Ainda não tem vídeos por aqui 🎬</b><p>Grave seu treino e seja a primeira a postar!</p><button class="btn btn-accent" id="rl-post">${ic("camera", 18)} Postar um vídeo</button></div>`; $("rl-post").onclick = () => { fechaVideos(); abreComposer(); }; return; }
+  if(inicioId){ const i = L.findIndex(p => p.id === inicioId); if(i > 0) L = L.slice(i).concat(L.slice(0, i)); }
+  lista.innerHTML = L.map(p => { const liked = (p.curtidas || []).includes(ME.id), nl = (p.curtidas || []).length, nc = (p.coments || []).length;
+    return `<section class="rl-s" data-id="${p.id}"><video class="priv" data-m="${esc(p.midia)}" playsinline loop muted preload="metadata" disablepictureinpicture></video><i class="rl-play">${ic("play", 54)}</i><i class="rl-heart">${ic("heart", 90)}</i>
+      <div class="rl-acts"><button data-rl="perfil" aria-label="Ver perfil">${avU(p.user, p.nome, p.foto)}</button><button data-rl="like" class="${liked ? "on" : ""}" aria-label="Curtir">${ic("heart", 30)}<span>${nl || ""}</span></button><button data-rl="com" aria-label="Comentários">${ic("chat", 28)}<span>${nc || ""}</span></button><button data-rl="share" aria-label="Compartilhar">${ic("send", 26)}</button></div>
+      <div class="rl-info"><b>${esc(nomeP(p.user, p.nome))}</b>${userP(p.user) ? `<small>@${esc(userP(p.user))} · ${tempoAtras(p.criado)}</small>` : ""}${p.texto ? `<p>${rico(p.texto)}</p>` : ""}</div></section>`; }).join("");
+  ligaMidia(lista, 900);
+  RL_IO = new IntersectionObserver(es => es.forEach(e => { const v = e.target.querySelector("video"); if(!v) return; if(e.isIntersecting && e.intersectionRatio > .7){ v.muted = !RL_SOM; const toca = () => v.play().catch(() => {}); if(v.src) toca(); else v.addEventListener("loadeddata", toca, { once: true }); } else { v.pause(); } }), { root: lista, threshold: [0, .7, 1] });
+  lista.querySelectorAll(".rl-s").forEach(s => {
+    RL_IO.observe(s); const p = L.find(x => x.id === s.dataset.id), v = s.querySelector("video");
+    const like = async forcar => { const ja = (p.curtidas || []).includes(ME.id); if(forcar && ja) return; const on = !ja; p.curtidas = (p.curtidas || []).filter(u => u !== ME.id); if(on) p.curtidas.push(ME.id);
+      const b = s.querySelector('[data-rl="like"]'); b.classList.toggle("on", on); b.querySelector("span").textContent = p.curtidas.length || ""; if(on){ SOM.fav ? SOM.fav() : SOM.tap(); vibra(12); }
+      try{ await CM.curtir(p, on); }catch(e){ toast(ERR_MSG(e)); } };
+    let t = 0, tm = null;
+    v.addEventListener("click", () => { const n = Date.now();
+      if(n - t < 300){ clearTimeout(tm); t = 0; like(true); s.classList.remove("bate"); void s.offsetWidth; s.classList.add("bate"); return; }
+      t = n; tm = setTimeout(() => { if(v.paused){ v.play().catch(() => {}); s.classList.remove("pausado"); } else { v.pause(); s.classList.add("pausado"); } }, 300); });
+    s.querySelector('[data-rl="like"]').onclick = () => like(false);
+    s.querySelector('[data-rl="com"]').onclick = () => abrePost(p, true);
+    s.querySelector('[data-rl="share"]').onclick = () => compartilharPost(p);
+    s.querySelector('[data-rl="perfil"]').onclick = () => abrirPerfil(p.user);
+  });
+}
+/* entrada: item "Vídeos" no menu e botão de tela cheia nos vídeos do feed */
+const comNavRl = comNav; comNav = function(){ comNavRl.apply(this, arguments); const nav = document.querySelector("#t-juntas .cm-nav"); if(!nav || nav.querySelector('[data-cn="videos"]')) return;
+  const g = nav.querySelector('[data-cn="grupos"]'); g.insertAdjacentHTML("beforebegin", `<button data-cn="videos">${ic("play", 17)}<span>Vídeos</span></button>`);
+  nav.querySelector('[data-cn="videos"]').onclick = () => abrirVideos(); nav.classList.add("cinco"); };
+const desenhaFeedRl = desenhaFeed; desenhaFeed = function(){ const r = desenhaFeedRl.apply(this, arguments);
+  document.querySelectorAll("#feed .pvid:not([data-rlb])").forEach(d => { d.dataset.rlb = 1; const post = d.closest(".post"); d.insertAdjacentHTML("beforeend", `<button class="rl-abre" aria-label="Ver em tela cheia">${ic("play", 14)} Tela cheia</button>`); d.querySelector(".rl-abre").onclick = e => { e.stopPropagation(); abrirVideos(post && post.dataset.id); }; });
+  return r; };
+document.addEventListener("keydown", e => { if(e.key === "Escape" && $("rl") && $("sheet").hidden) fechaVideos(); });
+
+/* ---------- GRUPOS: capa colorida, regras e campo para escrever no grupo ---------- */
+const abrirGrupoC2 = abrirGrupo; abrirGrupo = async function(g){
+  const r = await abrirGrupoC2.apply(this, arguments);
+  try{ const top = document.querySelector("#sheet-body .so-gr-top"); if(!top || top.dataset.c2) return r; top.dataset.c2 = 1; top.classList.add("gr2");
+    top.insertAdjacentHTML("afterend", `<div class="gr-regras">${ic("heart", 15)} Aqui a gente se apoia: elogie, incentive e respeite. Sem comparação de corpos.</div>${g.eu ? `<button class="composer gr-comp" id="gr-comp">${avU(ME.id, ME.nome, ME.foto)}<span>Escreva para o grupo…</span><i>${ic("camera", 20)}</i></button>` : ""}`);
+    const c = $("gr-comp"); if(c) c.onclick = () => abreComposer("", null, { grupo: g });
+  }catch(e){ console.warn(e); }
+  return r;
+};
 
 const TABS = [["inicio","Início"],["treinar","Treinos"],["dieta","Nutrição"],["juntas","Comunidade"],["explorar","Explorar"],["perfil","Perfil"],["evolucao","Evolução"]];
 const NAV = TABS.slice(0, 6), NAV_DE = { evolucao: "perfil" };
