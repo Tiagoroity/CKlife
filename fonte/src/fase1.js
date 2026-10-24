@@ -137,3 +137,80 @@ const rInicioTudo = rInicio; rInicio = function(){
 };
 /* o Cabelo descobre se está liberado depois de carregar: atualiza a grade quando isso acontecer */
 { let n = 0; const t = setInterval(() => { if(typeof cabOn === "function" && cabOn()){ clearInterval(t); const g = document.querySelector("#t-inicio .tudo"); if(g && !g.querySelector('[data-tudo="cabelo"]') && TAB === "inicio"){ g.remove(); rInicio(); } } else if(++n > 30) clearInterval(t); }, 2000); }
+
+/* ---------- Início enxuto: topo baixo com check-in, "Pra você agora" (cartõezinhos de deslizar), semana num cartão só ----------
+   Nada é apagado: os blocos vão para uma gaveta escondida dentro do Início (continuam funcionando) e viram atalhos. */
+const txt = (el, s) => { const e = el && (s ? el.querySelector(s) : el); return e ? e.textContent.trim().replace(/\s+/g, " ") : ""; };
+function abreNoSheet(tit, node){
+  sheet(tit, ""); const b = $("sheet-body"); b.appendChild(node); node.hidden = false;
+  // depois de um toque dentro, se a ação não abriu outra tela, fecha e redesenha o Início
+  node.addEventListener("click", e => { if(!e.target.closest("button,a")) return; setTimeout(() => { if(b.contains(node) && !$("sheet").hidden) fecharSheet(); if(TAB === "inicio") rInicio(); }, 80); });
+}
+/* cada item vira um cartãozinho: [seletor, ícone, cor, título, subtítulo, ação] */
+const CTX_INI = [
+  [".xe-rec", "bolt", "#F4A62A", n => "Hoje, algo mais leve", n => txt(n, "#xe-leve").replace(/^.*·\s*/, "") || "Treino leve sugerido", n => { const b = n.querySelector("#xe-leve"); if(b) b.click(); }],
+  [".notice", "speaker", "#2E7D5A", n => txt(n, "b") || "Aviso", n => txt(n, "p"), n => sheet(txt(n, "b") || "Aviso", `<p style="font-size:16px;line-height:1.5">${esc(txt(n, "p"))}</p>`)],
+  [".card.passos", "check", "#2E7D5A", n => "Primeiros passos", n => { const f = [...n.querySelectorAll(".passo:not(.ok) span:last-child")][0]; return `${txt(n, ".sec-title .num")}${f ? " · Próximo: " + f.textContent.trim() : ""}`; }, n => abreNoSheet("Primeiros passos", n)],
+  [".pa-conv", "calendar", "#0E3D32", n => txt(n, "b") || "Plano do ano CK", n => "52 semanas sem repetir treino", n => abreNoSheet("Plano do ano CK", n)],
+  [".xp-cic-card", "ciclo", "#C2557A", n => "Meu Ciclo", n => txt(n, "small"), n => abrirCiclo()],
+  [".xp-proxag", "calendar", "#3D8BD9", n => txt(n, "b") || "Agendamento", n => txt(n, "small"), n => n.click()],
+  [".xe-des", "trophy", "#D4A017", n => txt(n, "b"), n => txt(n, "small"), n => { const b = n.querySelector("[data-desver]"); if(b) b.click(); else { TV = "programas"; tab("treinar"); } }],
+  [".mod-novo", "explorar", "#2E7D5A", n => txt(n, "b"), n => "Toque para conhecer", n => n.click()],
+  [".cab-ini", "pente", "#8A5CC2", n => txt(n, "b") || "Cabelo para treinar", n => txt(n, "small") || "Penteados rápidos para o treino", n => n.click()],
+  ["#xe-ult", "explorar", "#65736C", n => txt(n, "b"), n => "Continue de onde parou", n => { const b = n.querySelector("#xe-ult-go"); if(b) b.click(); }],
+  [".inst", "plus", "#2E7D5A", n => "Instale o CK Life", n => "Abre em tela cheia e mais rápido", n => abreNoSheet("Instalar o app", n)],
+  [".dica-dia", "leaf", "#7BA77A", n => "Dica do dia", n => txt(n, "p"), n => sheet("Dica do dia", `<p style="font-size:17px;line-height:1.5">${esc(txt(n, "p"))}</p>`)]
+];
+let ORG = false;
+function organizaInicio(){
+  const box = $("t-inicio"); if(!box || ORG || !box.querySelector(".capa")) return; ORG = true;
+  try{
+    box.classList.add("ini2");
+    let gav = box.querySelector(".ini-gaveta"); if(!gav){ gav = document.createElement("div"); gav.className = "ini-gaveta"; gav.hidden = true; box.appendChild(gav); }
+    const guarda = n => { if(n && n.parentNode !== gav) gav.appendChild(n); };
+    const capa = box.querySelector(".capa"), sd = box.querySelector(".sd");
+    // 1) check-in dentro do topo
+    const ck = box.querySelector(".xe-ck, .xe-ck-ok"); if(ck && capa && ck.parentNode !== capa){ ck.classList.add("capa-ck"); capa.appendChild(ck); }
+    // 2) "Pra você agora"
+    let pv = box.querySelector(".pv"); if(!pv){ pv = document.createElement("section"); pv.className = "pv"; pv.setAttribute("aria-label", "Pra você agora"); pv.innerHTML = `<div class="sec-title"><h3>Pra você agora</h3></div><div class="hscroll pv-row"></div>`; }
+    const row = pv.querySelector(".pv-row");
+    CTX_INI.forEach(([sel, i, cor, ft, fs, fa], k) => box.querySelectorAll(sel).forEach(n => {
+      if(n.closest(".ini-gaveta") || n.closest(".pv") || n.closest("#sheet") || n.closest(".capa")) return;
+      const id = "pv" + k + "-" + Math.random().toString(36).slice(2, 7); n.dataset.pv = id;
+      const sub = (fs(n) || "").slice(0, 90);
+      row.insertAdjacentHTML("beforeend", `<button class="pv-c" data-pvk="${k}" data-pvid="${id}" style="--pc:${cor}"><span class="pv-ic">${ic(i, 20, 2)}</span><span class="pv-t"><b>${esc(ft(n) || "")}</b>${sub ? `<small>${esc(sub)}</small>` : ""}</span>${ic("chev", 16, 2.4)}</button>`);
+      guarda(n);
+    }));
+    [...row.children].sort((a, b) => +a.dataset.pvk - +b.dataset.pvk).forEach(c => row.appendChild(c));
+    row.querySelectorAll(".pv-c").forEach(c => c.onclick = () => { const it = CTX_INI[+c.dataset.pvk], n = box.querySelector(`[data-pv="${c.dataset.pvid}"]`); SOM.tap && SOM.tap(); if(n) try{ it[5](n); }catch(e){ console.warn(e); } });
+    pv.hidden = !row.children.length;
+    // xp-ini sem nada visível (banners do Início continuam aparecendo se houver)
+    const xi = $("xp-ini"); if(xi) xi.hidden = !xi.children.length;
+    // 3) Sua semana: calendário + sequência + ritmo + evolução num cartão só
+    const sem = [...box.children].find(e => e.classList.contains("card") && /Esta semana/.test(txt(e, "h3")));
+    if(sem && !sem.querySelector(".ss")){
+      const s = streak(), L = ME.treinos || [], min = L.reduce((a, t) => a + (t.min || 0), 0), r = typeof meuRitmo === "function" ? meuRitmo() : null;
+      sem.classList.add("semana2"); const h = sem.querySelector("h3"); if(h) h.textContent = "Sua semana";
+      sem.insertAdjacentHTML("beforeend", `<div class="ss"><span><b class="num">🔥 ${s}</b><small>${s === 1 ? "dia seguido" : "dias seguidos"}</small></span>${r ? `<span><b class="num">${r.v}</b><small>Meu Ritmo</small></span>` : ""}<span><b class="num">${L.length}</b><small>treinos</small></span><span><b class="num">${int(min)}</b><small>minutos</small></span></div><button class="link ss-ev" id="ss-ev">Ver minha evolução ${ic("chev", 14, 2.4)}</button>`);
+      $("ss-ev").onclick = () => tab("evolucao");
+    }
+    const evo = $("h-evo"); if(evo){ const d = evo.closest("#t-inicio > *"); if(d && d !== sem) guarda(d); }
+    box.querySelectorAll(".xe-rit, .xe-seq-tx").forEach(guarda);
+    const xd = box.querySelector(".xe-dia"); if(xd && !xd.children.length) guarda(xd);
+    // 4) treinos rápidos saem do Início (ficam na aba Treinos e no "Mais um?")
+    const rap = $("h-rap"); if(rap){ const t = rap.closest(".sec-title"), hs = t && t.nextElementSibling; guarda(t); if(hs && hs.classList.contains("hscroll")) guarda(hs); }
+    // 5) receita compacta
+    const rh = box.querySelector(".rhero"); if(rh) rh.classList.add("rhero-mini");
+    // 6) ordem final
+    const recT = $("h-card") && $("h-card").closest(".sec-title");
+    const ordem = [capa, sd, pv, box.querySelector(".tudo"), xi && !xi.hidden ? xi : null, sem, recT, rh, box.querySelector(".pr-fila")].filter(Boolean);
+    const fim = [...box.querySelectorAll(":scope > .ad-card, :scope > .slogan")];
+    const resto = [...box.children].filter(e => !ordem.includes(e) && !fim.includes(e) && e !== gav && e !== xi && !e.classList.contains("xe-dia"));
+    [...ordem, ...resto, ...fim, gav].forEach(e => box.appendChild(e));
+    if(xd && xd.children.length) sd ? sd.after(xd) : null;
+  } finally { ORG = false; }
+}
+const rInicioOrg = rInicio; rInicio = function(){ const r = rInicioOrg.apply(this, arguments); organizaInicio(); return r; };
+/* coisas que chegam depois (ciclo, cabelo, novidades, convite do plano): reorganiza de novo */
+{ let tm = null; const ob = new MutationObserver(() => { if(ORG) return; clearTimeout(tm); tm = setTimeout(() => { if(TAB === "inicio") organizaInicio(); }, 120); });
+  const liga = () => { const b = $("t-inicio"); if(b) ob.observe(b, { childList: true, subtree: true }); else setTimeout(liga, 500); }; setTimeout(liga, 0); }
