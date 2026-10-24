@@ -2300,3 +2300,4 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
 /* ===== Perfil: grade de fotos estilo Instagram ===== */
 .so-grade{gap:3px;border-radius:14px;overflow:hidden}
 .so-grade .so-gi{border-radius:0!important}
+.fl-gira{flex:0 0 auto;width:38px;height:38px;background:rgba(255,255,255,.12)!important;border-color:transparent!important;color:#fff!important}

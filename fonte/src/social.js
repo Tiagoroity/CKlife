@@ -62,13 +62,22 @@ async function sobe(pasta, dono, blob, ext, tipo){
 function escolheArquivo(accept, captura){ return new Promise(ok => { const i = document.createElement("input"); i.type = "file"; i.accept = accept; if(captura) i.setAttribute("capture", captura);
   i.style.cssText = "position:fixed;left:-9999px;top:0;width:1px;height:1px;opacity:0"; document.body.appendChild(i);
   let feito = false; const fim = v => { if(feito) return; feito = true; ok(v); setTimeout(() => i.remove(), 1000); };
-  i.addEventListener("change", () => fim(i.files && i.files[0] || null)); i.addEventListener("cancel", () => fim(null)); i.click(); }); }
+  i.addEventListener("change", () => { const f = i.files && i.files[0] || null; if(f && captura === "user") try{ f.ckSelfie = true; }catch(e){} fim(f); }); i.addEventListener("cancel", () => fim(null)); i.click(); }); }
 async function imagemValida(f, max){
   if(!f) return null;
   if(!/^image\/(jpeg|jpg|png|webp|heic|heif|gif)$/i.test(f.type || "") && !/\.(jpe?g|png|webp|heic|heif)$/i.test(f.name || "")){ toast("Formato não suportado. Use foto JPG ou PNG."); return null; }
   if(f.size > 20 * 1024 * 1024){ toast("Arquivo muito grande (máx. 20 MB)."); return null; }
-  try{ return await comprimeImg(f, max || 1440); }catch(e){ toast("Não deu para abrir essa foto. Tente outra."); return null; }
+  try{ const b = await comprimeImg(f, max || 2048); return (await selfieNova(f)) ? await espelhaBlob(b) : b; }catch(e){ toast("Não deu para abrir essa foto. Tente outra."); return null; }
 }
+/* selfie que acabou de ser tirada com a câmera da frente: o celular mostra espelhado na hora de tirar e entrega desespelhado.
+   Espelhamos para a foto ficar igual ao que ela viu (como Instagram/WhatsApp). Fotos antigas da galeria não mudam. */
+async function selfieNova(f){
+  try{ if(Date.now() - (f.lastModified || 0) > 3 * 60 * 1000) return false; if(f.ckSelfie) return true;
+    if(!/jpe?g/i.test(f.type || f.name || "")) return false;
+    const t = new Uint8Array(await f.slice(0, 131072).arrayBuffer()); let s = ""; for(let i = 0; i < t.length; i++) s += t[i] > 31 && t[i] < 127 ? String.fromCharCode(t[i]) : " ";
+    return /front camera|frontal|front-facing|selfie/i.test(s); }catch(e){ return false; }
+}
+function espelhaBlob(b){ return new Promise(ok => { const u = URL.createObjectURL(b), im = new Image(); im.onload = () => { const c = document.createElement("canvas"); c.width = im.width; c.height = im.height; const x = c.getContext("2d"); x.translate(c.width, 0); x.scale(-1, 1); x.drawImage(im, 0, 0); URL.revokeObjectURL(u); c.toBlob(r => ok(r || b), "image/jpeg", .92); }; im.onerror = () => { URL.revokeObjectURL(u); ok(b); }; im.src = u; }); }
 function corteQuadrado(blob, S){ return new Promise((ok, no) => { const u = URL.createObjectURL(blob), im = new Image(); im.onload = () => { const c = document.createElement("canvas"); c.width = c.height = S; const m = Math.min(im.width, im.height); c.getContext("2d").drawImage(im, (im.width - m) / 2, (im.height - m) / 2, m, m, 0, 0, S, S); URL.revokeObjectURL(u); c.toBlob(b => b ? ok(b) : no(), "image/jpeg", .86); }; im.onerror = no; im.src = u; }); }
 
 /* ---------- Perfis ---------- */
@@ -271,7 +280,7 @@ function editarPerfil(){
     tu = setTimeout(async () => { if(v === p.username){ uOk = true; $("ed-u-m").textContent = "É o seu nome de usuária atual."; return; } if(!/^[a-z0-9._]{3,20}$/.test(v)){ $("ed-u-m").textContent = "Use de 3 a 20 letras minúsculas, números, ponto ou _."; return; }
       const r = await SB().rpc("username_livre", { u: v }); uOk = !!r.data; $("ed-u-m").innerHTML = uOk ? `<span style="color:var(--accent-strong)">@${esc(v)} está disponível ✓</span>` : `<span style="color:var(--bad)">@${esc(v)} já está em uso. Tente outro.</span>`; }, 350); };
   $("ed-foto-b").onclick = async () => { const f = await escolheArquivo("image/*"); const b = await imagemValida(f, 1200); if(!b) return; novaFoto = await corteQuadrado(b, 480); $("ed-av").innerHTML = `<img src="${await blobParaURL(novaFoto)}" alt="">`; };
-  $("ed-capa-b").onclick = async () => { const f = await escolheArquivo("image/*"); const b = await imagemValida(f, 1600); if(!b) return; novaCapa = b; tiraCapa = false; $("ed-capa").style.backgroundImage = `url("${await blobParaURL(b)}")`; };
+  $("ed-capa-b").onclick = async () => { const f = await escolheArquivo("image/*"); const b = await imagemValida(f, 2048); if(!b) return; novaCapa = b; tiraCapa = false; $("ed-capa").style.backgroundImage = `url("${await blobParaURL(b)}")`; };
   const cx = $("ed-capa-x"); if(cx) cx.onclick = () => { tiraCapa = true; novaCapa = null; $("ed-capa").style.backgroundImage = "none"; };
   $("ed-ok").onclick = async () => {
     const nome = $("ed-n").value.trim(), un = $("ed-u").value.trim();
@@ -416,7 +425,7 @@ function abreComposer(texto0, blob0, extra){
   $("cp-fig").onclick = async () => { const f = await escolheFigurinha("comunidade", "comunidade"); if(f){ figP = f; mostraFig(); } };
   extra = extra || {}; Object.defineProperty(extra, "figurinha", { get: () => figP, configurable: true, enumerable: true });
   const cv = $("cp-video"); if(cv) cv.onclick = async () => { const f = await escolheArquivo("video/*"); const v = await videoValido(f); if(v){ blob = v; prev(); } };
-  $("cp-foto").onclick = async () => { const f = await escolheArquivo("image/*"); let b = await imagemValida(f, 1440); if(b) b = await escolheFiltro(b); if(b){ blob = b; prev(); } };
+  $("cp-foto").onclick = async () => { const f = await escolheArquivo("image/*"); let b = await imagemValida(f, 2048); if(b) b = await escolheFiltro(b); if(b){ blob = b; prev(); } };
   $("cp-ok").onclick = async () => { const t = $("cp-t").value.trim(); if(!t && !blob && !cq && !figP) return toast("Escreva algo, escolha uma foto ou uma figurinha"); if(ME.bloqueado) return toast("Sua conta está bloqueada");
     const b = $("cp-ok"); b.classList.add("carregando"); b.disabled = true;
     try{ await CM.publicar(t, blob, extra); SOM.done ? SOM.done() : SOM.check(); fecharSheet(); toast("Publicado no CK Life 💚"); window.scrollTo({ top: 0, behavior: "smooth" }); NOVO_POST = true; FD = { ...FD, cursor: null, fim: false }; if(TAB !== "juntas") tab("juntas"); else rJuntas(); }
@@ -541,7 +550,7 @@ const CORES_ST = ["#0E3D32","#2E7D5A","#C2577B","#6C5FB5","#D08A2E","#17211D"];
 async function criarStory(){
   if(ME.bloqueado) return toast("Sua conta está bloqueada");
   const f = await escolheArquivo("image/*,video/*");
-  if(f && /^video\//.test(f.type || "")) return storyVideo(f); let b = await imagemValida(f, 1920); if(!b) return; b = await escolheFiltro(b); if(!b) return;
+  if(f && /^video\//.test(f.type || "")) return storyVideo(f); let b = await imagemValida(f, 2048); if(!b) return; b = await escolheFiltro(b); if(!b) return;
   let cor = CORES_ST[0];
   sheet("Novo Story", `<div class="so-stprev priv" id="sp-p"><img src="${await blobParaURL(b)}" alt=""><span id="sp-tx" class="so-sttx" hidden></span></div>
     <div class="field"><label for="sp-t">Texto sobre a foto (opcional)</label><input class="input" id="sp-t" maxlength="120" placeholder="Ex.: Treino feito! 💪"></div>
@@ -797,7 +806,7 @@ function ligaAudio(el){
 function fotoChat(c){
   menuLeve([["camera", "Tirar foto agora", () => pegaFoto("environment")], ["image", "Escolher da galeria", () => pegaFoto(null)]]);
   async function pegaFoto(cap){
-    const f = await escolheArquivo("image/*", cap); if(!f) return; let b = await imagemValida(f, 1600); if(!b) return; b = await escolheFiltro(b); if(!b) return;
+    const f = await escolheArquivo("image/*", cap); if(!f) return; let b = await imagemValida(f, 2048); if(!b) return; b = await escolheFiltro(b); if(!b) return;
     const u = URL.createObjectURL(b); let box = $("so-prev"); if(!box){ box = document.createElement("div"); box.id = "so-prev"; box.className = "so-prev priv"; document.body.appendChild(box); }
     box.innerHTML = `<div class="so-prev-top"><button class="iconbtn" id="pv-x" aria-label="Cancelar">${ic("close", 20)}</button><b>Enviar para ${esc(nomeP(outroDe(c)).split(" ")[0])}</b></div><img src="${u}" alt="" draggable="false"><div class="so-prev-pe"><input class="input" id="pv-t" maxlength="500" placeholder="Escreva uma legenda (opcional)"><button class="btn btn-accent so-env" id="pv-ok" aria-label="Enviar foto">${ic("send", 18)}</button></div>`;
     box.hidden = false; const fecha = () => { box.hidden = true; box.innerHTML = ""; URL.revokeObjectURL(u); };
@@ -983,7 +992,7 @@ async function celebrar(c){
   const u = $("ce-user"); if(u) u.onchange = async () => { comUser = u.checked; blob = await cartaoConq(c, comUser); };
   $("ce-ok").onclick = fecha;
   $("ce-post").onclick = () => { sai(); setTimeout(() => abreComposer(`${c[3]} ${c[4].charAt(0) + c[4].slice(1).toLowerCase()}! ${c[5]}`, blob, { conquista: cq }), 350); };
-  $("ce-foto").onclick = async () => { const f = await escolheArquivo("image/*"); const b = await imagemValida(f, 1440); if(!b) return; sai(); setTimeout(() => abreComposer(`${c[3]} ${c[4].charAt(0) + c[4].slice(1).toLowerCase()}! `, b, { conquista: cq }), 350); };
+  $("ce-foto").onclick = async () => { const f = await escolheArquivo("image/*"); const b = await imagemValida(f, 2048); if(!b) return; sai(); setTimeout(() => abreComposer(`${c[3]} ${c[4].charAt(0) + c[4].slice(1).toLowerCase()}! `, b, { conquista: cq }), 350); };
   $("ce-share").onclick = async () => { const file = new File([blob], "ck-life-conquista.jpg", { type: "image/jpeg" }), txt = `${c[3]} ${c[4]} no CK Life 💚 ${location.origin}`;
     try{ if(navigator.canShare && navigator.canShare({ files: [file] })) await navigator.share({ files: [file], text: txt }); else if(navigator.share) await navigator.share({ text: txt, url: location.origin }); else copyText(txt, "Texto copiado para compartilhar"); }catch(e){} };
 }

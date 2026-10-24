@@ -110,12 +110,14 @@ function aplicaFiltro(cv, nome){
   x.putImageData(d, 0, 0); return cv;
 }
 function paraCanvas(im, max){ const k = Math.min(1, max / Math.max(im.width, im.height)), c = document.createElement("canvas"); c.width = Math.round(im.width * k); c.height = Math.round(im.height * k); c.getContext("2d").drawImage(im, 0, 0, c.width, c.height); return c; }
+const FL_ESP = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18"/><path d="M8 7 3 12l5 5V7z"/><path d="M16 7l5 5-5 5V7z"/></svg>`;
+const FL_GIR = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>`;
 function escolheFiltro(blob, titulo){
   return new Promise(async fim => {
     const u = URL.createObjectURL(blob), im = await new Promise(ok => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => ok(null); i.src = u; }); if(!im) return fim(blob);
     let box = $("so-filtro"); if(!box){ box = document.createElement("div"); box.id = "so-filtro"; box.className = "so-prev priv"; document.body.appendChild(box); }
-    const base = paraCanvas(im, 900), mini = paraCanvas(im, 140); let esc0 = "original";
-    box.innerHTML = `<div class="so-prev-top"><button class="iconbtn" id="fl-x" aria-label="Cancelar">${ic("close", 20)}</button><b>${titulo || "Filtros"}</b><button class="btn btn-soft btn-sm fl-mk-b" id="fl-mk">💄 Maquiagem</button><button class="btn btn-accent btn-sm" id="fl-ok" style="margin-left:auto">Usar</button></div><div class="fl-vis"><canvas id="fl-cv"></canvas></div>
+    let src = im, mudou = false, base = paraCanvas(src, 900), mini = paraCanvas(src, 140), esc0 = "original";
+    box.innerHTML = `<div class="so-prev-top"><button class="iconbtn" id="fl-x" aria-label="Cancelar">${ic("close", 20)}</button><b>${titulo || "Filtros"}</b><button class="iconbtn fl-gira" id="fl-esp" aria-label="Espelhar a foto" title="Espelhar">${FL_ESP}</button><button class="iconbtn fl-gira" id="fl-gir" aria-label="Girar a foto" title="Girar">${FL_GIR}</button><button class="btn btn-soft btn-sm fl-mk-b" id="fl-mk">💄 Maquiagem</button><button class="btn btn-accent btn-sm" id="fl-ok" style="margin-left:auto">Usar</button></div><div class="fl-vis"><canvas id="fl-cv"></canvas></div>
       <div class="fl-mk" id="fl-mkp" hidden></div><div class="fl-row">${FILTROS.map(([k, n]) => { const m = document.createElement("canvas"); m.width = mini.width; m.height = mini.height; m.getContext("2d").drawImage(mini, 0, 0); aplicaFiltro(m, k); return `<button data-fl="${k}" aria-pressed="${k === esc0}"><img src="${m.toDataURL("image/jpeg", .7)}" alt=""><small>${n}</small></button>`; }).join("")}</div>`;
     box.hidden = false;
     const MK = { rosto: null, batom: null, blush: false, forca: .6 };
@@ -136,7 +138,14 @@ function escolheFiltro(blob, titulo){
     box.querySelectorAll("[data-fl]").forEach(b => b.onclick = () => { esc0 = b.dataset.fl; box.querySelectorAll("[data-fl]").forEach(y => y.setAttribute("aria-pressed", y === b)); vibra(6); mostra(); });
     const sai = r => { box.hidden = true; box.innerHTML = ""; URL.revokeObjectURL(u); fim(r); };
     $("fl-x").onclick = () => sai(null);
-    $("fl-ok").onclick = () => { const temMk = MK.rosto && (MK.batom || MK.blush); if(esc0 === "original" && !temMk) return sai(blob); const cv = aplicaFiltro(paraCanvas(im, 1600), esc0); if(temMk) aplicaMaquiagem(cv, MK); cv.toBlob(b => sai(b || blob), "image/jpeg", .88); };
+    // espelhar / girar: refaz a prévia e as miniaturas dos filtros a partir da foto corrigida
+    const transforma = (girar) => { const c = document.createElement("canvas"), x = c.getContext("2d");
+      if(girar){ c.width = src.height; c.height = src.width; x.translate(c.width, 0); x.rotate(Math.PI / 2); } else { c.width = src.width; c.height = src.height; x.translate(c.width, 0); x.scale(-1, 1); }
+      x.drawImage(src, 0, 0); src = c; mudou = true; base = paraCanvas(src, 900); mini = paraCanvas(src, 140); MK.rosto = null; const p = $("fl-mkp"); if(p) p.hidden = true;
+      box.querySelectorAll("[data-fl]").forEach(b => { const m = document.createElement("canvas"); m.width = mini.width; m.height = mini.height; m.getContext("2d").drawImage(mini, 0, 0); aplicaFiltro(m, b.dataset.fl); b.querySelector("img").src = m.toDataURL("image/jpeg", .7); });
+      vibra(8); mostra(); };
+    $("fl-esp").onclick = () => transforma(false); $("fl-gir").onclick = () => transforma(true);
+    $("fl-ok").onclick = () => { const temMk = MK.rosto && (MK.batom || MK.blush); if(esc0 === "original" && !temMk && !mudou) return sai(blob); const cv = aplicaFiltro(paraCanvas(src, 2048), esc0); if(temMk) aplicaMaquiagem(cv, MK); cv.toBlob(b => sai(b || blob), "image/jpeg", .92); };
   });
 }
 

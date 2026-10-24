@@ -201,7 +201,7 @@ criarStory = async function(){
   if(ME.bloqueado) return toast("Sua conta está bloqueada");
   const f = await escolheArquivo("image/*,video/*"); if(!f) return;
   if(/^video\//.test(f.type || "")) return storyVideo(f);
-  let b = await imagemValida(f, 1920); if(!b) return; b = await escolheFiltro(b); if(!b) return;
+  let b = await imagemValida(f, 2048); if(!b) return; b = await escolheFiltro(b); if(!b) return;
   editorStory(b, { contexto: "story" });
 };
 void criarStoryE;
@@ -209,8 +209,8 @@ void criarStoryE;
 async function compartilharConquista(t){
   const dados = { treino: t };
   const inicial = async () => { const L = await figsPara("story"); return ["hoje-teve", "create-keep-live"].map(id => L.find(f => f.id === id)).filter(Boolean).slice(0, 1); };
-  menuLeve([["camera", "Tirar uma selfie", async () => { const f = await escolheArquivo("image/*", "user"); if(!f) return; let b = await imagemValida(f, 1920); if(!b) return; b = await escolheFiltro(b); if(b) editorStory(b, { contexto: "posTreino", dados, inicial: await inicial() }); }],
-    ["image", "Escolher uma foto", async () => { const f = await escolheArquivo("image/*"); if(!f) return; let b = await imagemValida(f, 1920); if(!b) return; b = await escolheFiltro(b); if(b) editorStory(b, { contexto: "posTreino", dados, inicial: await inicial() }); }],
+  menuLeve([["camera", "Tirar uma selfie", async () => { const f = await escolheArquivo("image/*", "user"); if(!f) return; let b = await imagemValida(f, 2048); if(!b) return; b = await escolheFiltro(b); if(b) editorStory(b, { contexto: "posTreino", dados, inicial: await inicial() }); }],
+    ["image", "Escolher uma foto", async () => { const f = await escolheArquivo("image/*"); if(!f) return; let b = await imagemValida(f, 2048); if(!b) return; b = await escolheFiltro(b); if(b) editorStory(b, { contexto: "posTreino", dados, inicial: await inicial() }); }],
     ["star", "Sem foto (fundo CK Life)", async () => editorStory(null, { contexto: "posTreino", dados, inicial: await inicial() })]]);
 }
 setTimeout(() => { catalogo().catch(() => {}); }, 4000);
