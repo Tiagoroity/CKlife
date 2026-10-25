@@ -47,3 +47,4 @@ insert into posts (id, user_id, nome, texto, criado) values ('eeeeeeee-0000-0000
 select equipe_tick();
 select ok((select c.foto from comentarios c join equipe_membros m on m.user_id = c.user_id where c.post_id = 'eeeeeeee-0000-0000-0000-0000000000e9') like 'img/equipe/%', 'comentário novo sai com a foto');
 select ok((select count(*) from comentarios c join equipe_membros m on m.user_id = c.user_id where c.foto is null) = 0, 'comentários antigos ganharam a foto');
+select ok((select count(*) from perfis p join equipe_membros m on m.user_id = p.user_id where p.capa like 'img/equipe/capa-%') = 46, '46 capas da equipe');

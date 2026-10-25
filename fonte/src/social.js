@@ -167,7 +167,7 @@ async function abrirPerfil(u){
   const conq = p.mostrar_conquistas !== false ? (p.conquistas || []) : [];
   const cid = p.mostrar_cidade && p.cidade ? xcidNome(p.cidade) : "";
   sheet(meu ? "Meu perfil" : "Perfil", `<div class="so-perfil">
-    <div class="so-capa priv" ${p.capa ? `data-m="${esc(p.capa)}"` : ""}></div>
+    <div class="so-capa priv" ${p.capa ? (/^img\//.test(p.capa) ? `style="background-image:url('${esc(p.capa)}')"` : `data-m="${esc(p.capa)}"`) : ""}></div>
     <div class="so-ph"><span class="so-av priv${coroaDe(p.user_id) ? " cr" : ""}" ${p.foto ? `data-m="${esc(p.foto)}"` : ""}>${p.foto_mini ? `<img src="${esc(p.foto_mini)}" alt="" draggable="false">` : esc((p.nome || "?")[0].toUpperCase())}</span></div>
     <div class="so-id"><h2>${esc(p.nome)}${selosP(p.user_id)}</h2><p class="muted">@${esc(p.username)}${p.privado ? ` · ${ic("lock", 13)} privado` : ""}${c && c.me_segue && !meu ? ` · <span class="so-segue">segue você</span>` : ""}</p>
       ${p.bio ? `<p class="so-bio">${esc(p.bio)}</p>` : ""}
