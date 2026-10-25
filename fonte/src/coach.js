@@ -149,7 +149,7 @@ function coachCaminhada(){
 function coachVoltou(){
   const C = COACH(); if(C.voltou === today() || !(ME.treinos || []).length) return;
   const n = cDiasSem(); if(n === null || n < 7) return;
-  C.voltou = today(); C.voltas = (C.voltas || 0) + 1; save();
+  C.voltou = today(); C.voltas = (C.voltas || 0) + 1; C.voltasD = (Array.isArray(C.voltasD) ? C.voltasD : []).concat([today()]).slice(-30); save();
   const d = document.createElement("div"); d.className = "ent"; d.id = "coach-volta";
   d.innerHTML = `<img class="ent-bg" src="img/modelo.jpg" alt="" onerror="this.remove()"><div class="ent-in"><div class="coach-av grande"><img src="img/modelo.jpg" alt="" onerror="this.remove()"><i>${ic("star", 12, 3)}</i></div>
     <h1 class="ent-t" style="text-align:center">OLHA QUEM VOLTOU 💚</h1>

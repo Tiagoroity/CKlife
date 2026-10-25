@@ -2503,3 +2503,28 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
 #v-admin .co-prev small{color:#C9B37E!important}#v-admin .co-prev span{color:#DCE9DF}
 .mbox .co-prev{display:flex;flex-direction:column;gap:4px;background:#0E3D32;color:#fff;border:0;border-radius:16px;padding:14px}
 .mbox .co-prev small{color:#C9B37E!important}.mbox .co-prev span{color:#DCE9DF}
+/* ===== Missões, resumos e jornada ===== */
+.mis-ini{margin:0 0 14px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mis-ini>div{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:14px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.mis-ini>div.ok{border-color:#C9B37E;background:linear-gradient(160deg,var(--surface),var(--accent-soft))}
+.mis-eb{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.mis-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.mis-row b{font-size:15px;line-height:1.3;color:var(--ink);flex:1;min-width:0}
+.mis-em{font-style:normal;font-size:24px;line-height:1}
+.mis-ok{font-size:12px;font-weight:800;color:#0B2F25;background:#C9B37E;border-radius:99px;padding:3px 9px}
+.mis-ac{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.mis-ac small{font-size:12px}
+.mis-ac .btn{min-height:40px;border-radius:12px;font-size:13px;font-weight:700;padding:0 12px}
+.mis-b1{background:var(--accent);color:#fff;border:0}.mis-b2{background:var(--surface-2);color:var(--ink);border:1px solid var(--line)}
+.mis-dots{display:inline-flex;gap:5px}.mis-dots i{width:16px;height:16px;border-radius:50%;border:2px solid var(--accent);box-sizing:border-box}.mis-dots i.on{background:var(--accent)}
+.mis-sem small{color:var(--muted);font-size:13px;line-height:1.4}
+.mis-extra{grid-column:1/-1;margin:0;padding:10px 14px;border-radius:14px;background:var(--surface-2);color:var(--ink);font-size:14px}
+@media (max-width:420px){.mis-ini{grid-template-columns:1fr}}
+.capa-ck.pisca,.xe-ck.pisca{animation:entPop .6s 2}
+.res-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.res-grid>div{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:14px;display:grid;animation:entIn .5s both;animation-delay:var(--d)}
+.res-grid b{font-family:var(--display);font-size:34px;color:#F2E6C4;line-height:1.1}.res-grid small{color:#DCE9DF;font-size:13px}
+.res-ov .ent-tem li{font-weight:500}
+.jor-head{display:flex;flex-direction:column;gap:10px;margin:4px 0 14px}
+.jor-st{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.jor-st>div{background:var(--surface-2);border-radius:14px;padding:10px;display:grid;text-align:center}.jor-st b{font-family:var(--display);font-size:22px;color:var(--ink)}.jor-st small{font-size:11.5px;color:var(--muted);line-height:1.2}
+.jor-res{margin:0;padding:10px 12px;border-radius:14px;background:var(--accent-soft);color:var(--ink);font-size:14px}
+.jor-bts{display:flex;flex-wrap:wrap;gap:8px}
