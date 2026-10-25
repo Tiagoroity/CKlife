@@ -2559,6 +2559,41 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
 .jor-st>div{background:var(--surface-2);border-radius:14px;padding:10px;display:grid;text-align:center}.jor-st b{font-family:var(--display);font-size:22px;color:var(--ink)}.jor-st small{font-size:11.5px;color:var(--muted);line-height:1.2}
 .jor-res{margin:0;padding:10px 12px;border-radius:14px;background:var(--accent-soft);color:var(--ink);font-size:14px}
 .jor-bts{display:flex;flex-wrap:wrap;gap:8px}
+/* ===== Etapa 5: vitórias, parceira, PRO e insights ===== */
+.vit-hoje{margin:10px 0 6px;padding:12px 14px;border-radius:20px;background:linear-gradient(150deg,var(--surface),var(--accent-soft));border:1px solid var(--line)}
+.vit-h{display:flex;align-items:baseline;justify-content:space-between;gap:8px;flex-wrap:wrap}.vit-h small{color:var(--muted);font-size:13px}
+.vit-row{display:flex;gap:12px;padding:10px 2px 2px}
+.vit-it{display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:0;padding:0;min-width:80px;cursor:pointer;color:var(--ink)}
+.vit-it small{font-size:12px;max-width:84px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vit-av{position:relative;width:58px;height:58px;border-radius:50%;padding:2px;background:conic-gradient(#C9B37E,#7BD3A0,#C9B37E);display:grid;place-items:center}
+.vit-av>*:not(i){width:100%;height:100%;border-radius:50%;overflow:hidden;border:2px solid var(--surface)}
+.vit-av img{width:100%;height:100%;object-fit:cover}
+.vit-av i{position:absolute;right:-4px;bottom:-4px;font-style:normal;font-size:18px;background:var(--surface);border-radius:50%;width:26px;height:26px;display:grid;place-items:center;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.vit-eu .vit-av{background:var(--surface-2);border:2px dashed var(--accent);color:var(--accent)}
+.vit-sk{width:58px;height:58px;border-radius:50%;background:var(--surface-2);flex:none}
+.btn-vit{background:linear-gradient(135deg,#F2E6C4,#C9B37E)!important;color:#0B2F25!important;border:0!important;font-weight:800}
+.parc{display:flex;flex-direction:column;gap:12px}
+.parc-top,.parc-conv{display:flex;align-items:center;gap:12px}.parc-top>div,.parc-conv>div{flex:1;display:grid;min-width:0}.parc-conv small{color:var(--muted)}
+.parc-av{width:48px;height:48px;border-radius:50%;overflow:hidden;flex:none;display:grid;place-items:center;background:var(--surface-2)}.parc-av>*{width:100%;height:100%}.parc-av img{object-fit:cover}
+.parc-sem{display:grid;grid-template-columns:1fr 1fr;gap:10px}.parc-sem>div{background:var(--surface-2);border-radius:16px;padding:12px;display:grid}.parc-sem b{font-family:var(--display);font-size:30px;color:var(--ink)}.parc-sem small{color:var(--muted);font-size:12.5px}
+.parc-inc{display:flex;flex-direction:column;gap:8px}.parc-fr{display:flex;flex-wrap:wrap;gap:6px}.parc-fr .chip{min-height:40px;text-align:left;white-space:normal;height:auto;padding:8px 12px}
+.parc-bts{display:flex;justify-content:space-between;align-items:center}
+.parc-hero{text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px}.parc-hero i{font-style:normal;font-size:40px}.parc-hero p{margin:0;color:var(--muted)}
+.mis-ini>.mis-parc{grid-column:1/-1;display:flex;flex-direction:row;align-items:center;gap:10px;padding:10px 12px;border-radius:16px;background:var(--surface);border:1px solid var(--line);font-size:14px}
+.mis-parc .parc-av{width:36px;height:36px;flex:none}.mis-parc>span:not(.parc-av){flex:1;color:var(--ink)}.mis-parc .btn{min-height:38px;border-radius:12px;font-size:13px;font-weight:700;padding:0 12px}
+.ins-ini{margin:0 0 14px;padding:14px;border-radius:20px;background:var(--surface);border:1px solid var(--line);display:flex;flex-direction:column;gap:10px}
+.ins-h{display:flex;align-items:center;justify-content:space-between}
+.ins-pro{font-size:11px;font-weight:800;letter-spacing:.1em;color:#0B2F25;background:linear-gradient(135deg,#F7F1E1,#E8D9AE,#C9B37E);padding:3px 10px;border-radius:99px}
+.ins-it{display:flex;gap:10px;align-items:flex-start}.ins-it i{font-style:normal;font-size:20px;line-height:1.3}.ins-it b{display:block;font-size:14.5px;color:var(--ink)}.ins-it p{margin:2px 0 0;color:var(--muted);font-size:14px;line-height:1.4}
+.ins-mais{align-self:flex-start;color:var(--accent);font-weight:700}
+/* PRO: acabamento premium (verde profundo, champanhe, perolado) */
+.ck-pro #top-av{box-shadow:0 0 0 2px var(--bg),0 0 0 4px #C9B37E,0 0 14px rgba(201,179,126,.55)}
+.ck-pro .coach-ini{border-color:rgba(232,217,174,.7);background:linear-gradient(150deg,#0B3329 0%,#0E3D32 45%,#14503E 100%)}
+.ck-pro .coach-ini::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(115deg,transparent 30%,rgba(247,241,225,.10) 45%,transparent 60%);background-size:250% 100%;animation:ckPerola 6s ease-in-out infinite}
+.ck-pro .mis-ini>div.ok,.ck-pro .ins-ini.pro{border-color:#C9B37E;background:linear-gradient(160deg,var(--surface) 0%,rgba(232,217,174,.16) 100%)}
+.ck-pro .vit-hoje{border-color:rgba(201,179,126,.55)}
+@keyframes ckPerola{0%,100%{background-position:120% 0}50%{background-position:-20% 0}}
+@media (prefers-reduced-motion:reduce){.ck-pro .coach-ini::before{animation:none}}
 </style>
 
 <!-- Entrar / criar conta -->
@@ -8839,7 +8874,7 @@ const abrirPerfilEq = abrirPerfil; abrirPerfil = async function(u){
    Quem deixa o CK Life aberto (ou instalado na tela inicial) fica com a versão antiga até recarregar.
    O app confere a versão publicada ao abrir, ao voltar do segundo plano e a cada 5 minutos.
    Se houver versão nova, mostra a faixa "ATUALIZAR": um toque e pronto. Nunca aparece no meio do treino. */
-const CK_VER = "20261025000052";
+const CK_VER = "20261025002903";
 let CK_VER_NOVA = null;
 async function confereVersao(){
   if(!/^\d/.test(CK_VER) || !/^https?:/.test(location.protocol)) return;
@@ -9553,6 +9588,140 @@ minhaJornada = function(){
     $("jor-cq").onclick = () => colecaoConquistas();
   }catch(e){ console.warn(e); }
 };
+
+/* ===================== ETAPA 5 · COMUNIDADE INTEGRADA, PARCEIRA CK E PRO REFINADO =====================
+   VITÓRIAS DE HOJE no topo da Comunidade (posts de conquista de hoje, número real de mulheres);
+   "COMPARTILHAR MINHA VITÓRIA" no fim do treino; Parceira CK (opcional: só dias de treino na semana + 1 incentivo por dia);
+   PRO com acabamento premium (anel champanhe, detalhes perolados) e "Seus insights" (Free também recebe insights).
+   Nada de ranking, nada de corpo, nada de número inventado. */
+
+/* ---------- Vitórias de hoje ---------- */
+const VIT_CONQ = { emoji: "💪", titulo: "Vitória de hoje", frase: "Cada passo conta.", k: "vitoria" };
+async function vitoriasHoje(){
+  if(!SO.on()) return null;
+  const ini = new Date(today() + "T00:00:00").toISOString();
+  let rows = null;
+  try{ const r = await SB().from("posts").select("*").not("conquista", "is", null).gte("criado", ini).order("criado", { ascending: false }).limit(300); if(!r.error) rows = r.data; }catch(e){}
+  if(!rows) return null;
+  rows = rows.filter(p => p.conquista && !p.oculto && !(window.CK_EQUIPE && window.CK_EQUIPE.has(p.user_id)));
+  return { rows, mulheres: new Set(rows.map(p => p.user_id)).size };
+}
+function vitoriasPinta(){
+  const box = $("t-juntas"), alvo = box && (box.querySelector(".cm-pdia") || box.querySelector(".cm-atal") || $("cm-nova")); if(!alvo || box.querySelector(".vit-hoje")) return;
+  alvo.insertAdjacentHTML("afterend", `<section class="vit-hoje" id="vit-hoje" aria-label="Vitórias de hoje"><div class="vit-h"><span class="eyebrow">Vitórias de hoje</span><small id="vit-n"></small></div><div class="hscroll vit-row" id="vit-row"><div class="vit-sk"></div><div class="vit-sk"></div><div class="vit-sk"></div></div></section>`);
+  vitoriasHoje().then(V => {
+    const row = $("vit-row"), n = $("vit-n"); if(!row) return;
+    const minha = `<button class="vit-it vit-eu" id="vit-eu"><span class="vit-av">${ic("plus", 20, 2.4)}</span><small>Minha vitória</small></button>`;
+    if(!V){ $("vit-hoje").remove(); return; }
+    if(n) n.textContent = V.mulheres >= 2 ? `${int(V.mulheres)} mulheres comemoraram hoje 💚` : V.mulheres === 1 ? "A primeira vitória do dia já chegou 💚" : "Seja a primeira a comemorar hoje 💚";
+    const vistos = new Set(), L = V.rows.filter(p => !vistos.has(p.user_id) && vistos.add(p.user_id)).slice(0, 20);
+    row.innerHTML = minha + L.map(p => `<button class="vit-it" data-vp="${esc(p.id)}"><span class="vit-av">${avU(p.user_id, p.nome, p.foto)}<i>${esc((p.conquista && p.conquista.emoji) || "💪")}</i></span><small>${esc((p.nome || "").split(" ")[0])}</small></button>`).join("");
+    $("vit-eu").onclick = () => abreComposer("💪 Minha vitória de hoje: ", null, { conquista: VIT_CONQ });
+    row.querySelectorAll("[data-vp]").forEach(b => b.onclick = async () => { const p = V.rows.find(x => String(x.id) === b.dataset.vp); if(!p) return; try{ const [m] = await completaPosts([p]); abrePost(m); }catch(e){ toast("Não deu para abrir agora"); } });
+  });
+}
+const rJuntasVit = rJuntas; rJuntas = function(){ const r = rJuntasVit.apply(this, arguments); try{ setTimeout(vitoriasPinta, 50); }catch(e){ console.warn(e); } return r; };
+
+/* ---------- Compartilhar minha vitória (fim do treino) ---------- */
+const fimTreinoVit = fimTreino;
+fimTreino = function(parcial){
+  const T = PL && PL.T, r = fimTreinoVit.apply(this, arguments);
+  try{
+    const b = $("fim-post"); if(b && !parcial && T){ const ult = (ME.treinos || [])[ME.treinos.length - 1] || {};
+      b.innerHTML = `${ic("people", 18)} Compartilhar minha vitória`; b.classList.add("btn-vit");
+      b.onclick = async () => { b.classList.add("carregando"); b.disabled = true; let blob = null;
+        try{ blob = await comprimeImg(await blobParaURL(await cartaoConquista({ T, min: ult.min || 1, kcal: ult.kcal || 0, dias: streak(), nome: (ME.nome || "").split(" ")[0], parcial: false })), 1080); }catch(e){}
+        fimPlay(); tab("juntas"); setTimeout(() => abreComposer(`💪 Treino concluído: ${T.nome} em ${ult.min || 1} min!`, blob, { conquista: { emoji: "💪", titulo: "TREINO CONCLUÍDO", frase: `${T.nome} · ${ult.min || 1} min`, k: "treino" } }), 350); };
+    }
+  }catch(e){ console.warn(e); }
+  return r;
+};
+
+/* ---------- Parceira CK ---------- */
+let PARC = null;
+const PARC_FR = ["Bora treinar hoje? Tô contigo 💚", "Orgulho de você! Continua 💪", "Pouco ainda conta. 5 minutinhos? 💚", "Sentindo sua falta no treino. Bora juntas?", "Você consegue! Tô torcendo por você ✨", "Hoje é dia de cuidar de você 💚"];
+async function parcStatus(){ if(!SO.on()) return PARC = null; try{ const r = await SB().rpc("parceira_status"); if(!r.error) PARC = r.data; }catch(e){} return PARC; }
+const parcAv = o => `<span class="parc-av">${avU(o.user_id, o.nome, o.foto)}</span>`;
+async function parceiraTela(){
+  if(!SO.on()) return toast("A comunidade precisa estar ativa para ter uma Parceira CK");
+  sheet("Parceira CK", `<div class="parc" id="parc"><p class="muted">Carregando…</p></div>`);
+  const s = await parcStatus(), box = $("parc"); if(!box) return;
+  if(!s){ box.innerHTML = `<p class="muted">Não deu para carregar agora. Tente de novo em instantes.</p>`; return; }
+  if(s.status === "ativa"){
+    const o = s.outra || {};
+    box.innerHTML = `<div class="parc-top">${parcAv(o)}<div><span class="eyebrow">Sua Parceira CK</span><b>${esc(o.nome || "")}</b><small class="muted">@${esc(o.username || "")}</small></div></div>
+      <div class="parc-sem"><div><b class="num">${int(s.semana_ela)}</b><small>${s.semana_ela === 1 ? "dia" : "dias"} com treino dela essa semana</small></div><div><b class="num">${int(s.semana_eu)}</b><small>${s.semana_eu === 1 ? "dia" : "dias"} com treino seu essa semana</small></div></div>
+      <p class="hint" style="margin:0">Vocês veem só quantos dias cada uma treinou na semana. Nada de peso, ciclo ou detalhes.</p>
+      <div class="parc-inc"><b>${s.incentivo_hoje ? "Incentivo de hoje enviado 💚" : "Mandar um incentivo (1 por dia)"}</b>${s.incentivo_hoje ? "" : `<div class="parc-fr">${PARC_FR.map((f, i) => `<button class="chip" data-pf="${i + 1}">${esc(f)}</button>`).join("")}</div>`}</div>
+      <div class="parc-bts"><button class="btn btn-line btn-sm" id="parc-perfil">Ver perfil</button><button class="link" id="parc-fim">Encerrar parceria</button></div>`;
+    box.querySelectorAll("[data-pf]").forEach(b => b.onclick = async () => { try{ const r = await SB().rpc("parceira_incentivar", { p_frase: +b.dataset.pf }); if(r.error) throw r.error; SOM.check && SOM.check(); vibra([20, 30, 20]); toast("Incentivo enviado 💚"); parceiraTela(); }catch(e){ toast(e.message || "Não deu agora"); } });
+    $("parc-perfil").onclick = () => { fecharSheet(); abrirPerfil(o.user_id); };
+    $("parc-fim").onclick = () => { if(!confirm("Encerrar a parceria? Vocês continuam amigas e seguindo uma à outra.")) return; SB().rpc("parceira_encerrar", { p_id: s.id }).then(() => { toast("Parceria encerrada"); PARC = null; parceiraTela(); missaoPinta && missaoPinta(true); }); };
+    return;
+  }
+  const conv = (s.convites || []).map(c => `<div class="parc-conv">${parcAv(c.de)}<div><b>${esc(c.de.nome || "")}</b><small>quer ser sua Parceira CK</small></div><button class="btn btn-accent btn-sm" data-pa="${c.id}">Aceitar</button><button class="iconbtn sm" data-pr="${c.id}" aria-label="Recusar">${ic("close", 14)}</button></div>`).join("");
+  box.innerHTML = `<div class="parc-hero"><i>🤝</i><h3>Treinar com uma amiga é mais fácil</h3><p>Escolha uma amiga para se apoiarem na semana. Vocês veem só <b>quantos dias</b> cada uma treinou e podem mandar 1 incentivo por dia. Sem cobrança, sem comparação. Dá para encerrar quando quiser.</p></div>
+    ${conv ? `<div class="nb-sec">Convites para você</div>${conv}` : ""}
+    ${s.enviado ? `<div class="parc-conv">${parcAv(s.enviado.para)}<div><b>${esc(s.enviado.para.nome || "")}</b><small>convite enviado, esperando resposta</small></div><button class="link" id="parc-canc">Cancelar</button></div>` : `<div class="nb-sec">Convidar uma amiga</div><div id="parc-amigas"><p class="muted">Carregando amigas…</p></div>`}`;
+  box.querySelectorAll("[data-pa]").forEach(b => b.onclick = async () => { try{ const r = await SB().rpc("parceira_responder", { p_id: b.dataset.pa, p_aceita: true }); if(r.error) throw r.error; SOM.done && SOM.done(); toast("Agora vocês são Parceiras CK 💚"); parceiraTela(); }catch(e){ toast(e.message || "Não deu agora"); } });
+  box.querySelectorAll("[data-pr]").forEach(b => b.onclick = async () => { await SB().rpc("parceira_responder", { p_id: b.dataset.pr, p_aceita: false }); parceiraTela(); });
+  const cc = $("parc-canc"); if(cc) cc.onclick = async () => { await SB().rpc("parceira_encerrar", { p_id: s.enviado.id }); toast("Convite cancelado"); parceiraTela(); };
+  const am = $("parc-amigas"); if(am) try{ const r = await SB().rpc("parceira_amigas"); const L = (!r.error && r.data) || [];
+    am.innerHTML = L.length ? L.map(a => `<div class="parc-conv">${parcAv(a)}<div><b>${esc(a.nome || "")}</b><small>@${esc(a.username || "")}</small></div><button class="btn btn-line btn-sm" data-pc="${a.user_id}">Convidar</button></div>`).join("")
+      : `<p class="muted">Para convidar, vocês precisam se seguir. Siga uma amiga na Comunidade e peça para ela te seguir de volta 💚</p>`;
+    am.querySelectorAll("[data-pc]").forEach(b => b.onclick = async () => { b.disabled = true; try{ const r = await SB().rpc("parceira_convidar", { p_user: b.dataset.pc }); if(r.error) throw r.error; toast("Convite enviado 💚"); parceiraTela(); }catch(e){ b.disabled = false; toast(e.message || "Não deu agora"); } }); }catch(e){ am.innerHTML = `<p class="muted">Não deu para carregar agora.</p>`; }
+}
+const rPerfilParc = rPerfil; rPerfil = function(){ const r = rPerfilParc.apply(this, arguments); try{
+  const ref = $("p-coach") || $("p-push"); if(ref && !$("p-parc")){ ref.insertAdjacentHTML("afterend", setRow("p-parc", "people", "Parceira CK", PARC && PARC.status === "ativa" ? `Com ${esc((PARC.outra && PARC.outra.nome || "").split(" ")[0])} 💚` : "Treine junto com uma amiga (opcional)")); $("p-parc").onclick = parceiraTela; } }catch(e){ console.warn(e); } return r; };
+/* linha da parceira no cartão de missões do Início */
+const missaoCardParc = missaoCardHTML;
+missaoCardHTML = function(){ let h = missaoCardParc.apply(this, arguments);
+  if(PARC && PARC.status === "ativa" && PARC.outra){ const o = PARC.outra, nm = esc((o.nome || "").split(" ")[0]);
+    h = h.replace(/<\/section>\s*$/, `<div class="mis-parc">${parcAv(o)}<span><b>${nm}</b>, sua Parceira CK, treinou <b>${int(PARC.semana_ela)} ${PARC.semana_ela === 1 ? "dia" : "dias"}</b> essa semana.</span><button class="btn mis-b2" data-mi="parc">${PARC.incentivo_hoje ? "Ver" : "Incentivar"}</button></div></section>`); }
+  return h; };
+const missaoAcaoParc = missaoAcao; missaoAcao = function(k){ if(k === "parc") return parceiraTela(); return missaoAcaoParc.apply(this, arguments); };
+const abrirAppParc = abrirApp; abrirApp = function(){ const r = abrirAppParc.apply(this, arguments); setTimeout(() => { parcStatus().then(() => { if(TAB === "inicio" && typeof missaoPinta === "function") missaoPinta(true); }); }, 5000); return r; };
+
+/* ---------- PRO refinado + Seus insights ---------- */
+function proVisual(){ const on = typeof pagou === "function" && pagou(); document.body.classList.toggle("ck-pro", !!on); }
+setInterval(proVisual, 4000); setTimeout(proVisual, 1500);
+const DSEM_NOME = ["domingo", "segunda", "terça", "quarta", "quinta", "sexta", "sábado"];
+function insights(){
+  const T = (ME.treinos || []).filter(t => t.d), I = [];
+  if(T.length < 3) return { I, poucos: true };
+  const hs = T.filter(t => t.h != null).map(t => +t.h);
+  if(hs.length >= 3){ const per = { manhã: hs.filter(h => h < 12).length, tarde: hs.filter(h => h >= 12 && h < 18).length, noite: hs.filter(h => h >= 18).length }, top = Object.entries(per).sort((a, b) => b[1] - a[1])[0];
+    I.push(["⏰", "Seu melhor horário", `Você treina mais de ${top[0]}. Que tal deixar o lembrete nesse horário?`, 0]); }
+  const dw = [0, 0, 0, 0, 0, 0, 0]; [...new Set(T.map(t => t.d))].forEach(d => dw[new Date(d + "T12:00").getDay()]++); const di = dw.indexOf(Math.max(...dw));
+  I.push(["📅", "Seu dia mais constante", `${DSEM_NOME[di].charAt(0).toUpperCase() + DSEM_NOME[di].slice(1)} é o dia em que você mais aparece por você.`, 0]);
+  const soma = (a, b) => T.filter(t => t.d >= addD(today(), -b) && t.d < addD(today(), -a)).reduce((x, t) => x + (t.min || 0), 0), m1 = soma(0, 28), m0 = soma(28, 56);
+  if(m1 && m0){ const p = Math.round(100 * (m1 - m0) / m0); I.push(["📈", "Seu ritmo no mês", p >= 5 ? `${p}% mais minutos que nos 28 dias anteriores. Você está crescendo no seu ritmo.` : p <= -5 ? "Um mês mais leve que o anterior. Tudo bem: o importante é continuar." : "Ritmo parecido com o mês anterior. Constância é isso.", 1]); }
+  const meta = metas(ME).agua; let ag = 0; for(let i = 0; i < 7; i++){ const x = (ME.diario || {})[addD(today(), -i)]; if(x && (x.agua || 0) >= meta) ag++; }
+  I.push(["💧", "Hidratação", ag ? `Você bateu a meta de água em ${ag} dos últimos 7 dias.` : "A semana teve pouca água. Um copo agora já é um bom começo.", 1]);
+  const fav = Object.entries(T.reduce((o, t) => (o[t.nome] = (o[t.nome] || 0) + 1, o), {})).sort((a, b) => b[1] - a[1])[0];
+  if(fav && fav[1] >= 2) I.push(["💚", "Seu treino favorito", `${fav[0]}: você já fez ${fav[1]} vezes.`, 1]);
+  const rec = recordeSeq(); if(rec >= 3) I.push(["🔥", "Sua maior sequência", `${rec} dias seguidos. Você já provou que consegue.`, 1]);
+  return { I, poucos: false };
+}
+function insightsHTML(){
+  const { I, poucos } = insights(), pro = typeof pode === "function" ? pode("graficos_avancados") : false;
+  if(poucos) return `<section class="ins-ini" id="ins-ini"><div class="ins-h"><span class="eyebrow">Seus insights</span></div><p class="muted" style="margin:0">Depois de 3 treinos, a Coach começa a mostrar o que funciona melhor para você. 💚</p></section>`;
+  const livres = I.filter(x => !x[3]), extras = I.filter(x => x[3]), mostra = pro ? I : livres;
+  return `<section class="ins-ini ${pro ? "pro" : ""}" id="ins-ini"><div class="ins-h"><span class="eyebrow">Seus insights</span>${pro ? `<span class="ins-pro">PRO</span>` : ""}</div>
+    ${mostra.map(([e, t, x]) => `<div class="ins-it"><i>${e}</i><div><b>${esc(t)}</b><p>${esc(x)}</p></div></div>`).join("")}
+    ${!pro && extras.length ? `<button class="link ins-mais" id="ins-mais">Mais ${extras.length} insights no CK Life PRO</button>` : ""}</section>`;
+}
+const missaoPintaIns = missaoPinta;
+missaoPinta = function(forca){ const r = missaoPintaIns.apply(this, arguments);
+  try{ const mi = $("mis-ini"); if(!mi) return r; const v = $("ins-ini"), tmp = document.createElement("div"); tmp.innerHTML = insightsHTML(); const n = tmp.firstElementChild;
+    if(v && v.innerHTML === n.innerHTML){ if(v.previousElementSibling !== mi) mi.after(v); } else { if(v) v.replaceWith(n); else mi.after(n); }
+    const b = $("ins-mais"); if(b) b.onclick = () => paywall("insights"); }catch(e){ console.warn(e); }
+  return r; };
+
+/* "Compartilhar minha vitória" no recado da Coach já abre a postagem marcada como vitória */
+const coachAcaoVit = coachAcao; coachAcao = function(k){ if(k === "comp"){ SOM.tap && SOM.tap(); tab("juntas"); const u = (ME.treinos || [])[ME.treinos.length - 1];
+  return setTimeout(() => abreComposer(u && u.d === today() ? `💪 Treino de hoje feito: ${u.nome}${u.min ? ` em ${u.min} min` : ""}!` : "💪 Minha vitória de hoje: ", null, { conquista: VIT_CONQ }), 350); }
+  return coachAcaoVit.apply(this, arguments); };
 
 const TABS = [["inicio","Início"],["treinar","Treinos"],["dieta","Nutrição"],["juntas","Comunidade"],["explorar","Explorar"],["perfil","Perfil"],["evolucao","Evolução"]];
 const NAV = TABS.slice(0, 6), NAV_DE = { evolucao: "perfil" };
@@ -13389,10 +13558,10 @@ let CO_ABA = "geral", CO_D = null, CO_M = null, CO_F = { cat: "", q: "", st: "" 
 const CO_CAT = { bom_dia: "Bom dia", treino: "Treino", pre_treino: "Pré-treino", pos_treino: "Pós-treino", alimentacao: "Alimentação", hidratacao: "Hidratação", preguica: "Preguiça", humor: "Humor",
   segunda: "Segunda", sexta: "Sexta", fim_de_semana: "Fim de semana", recomeco: "Recomeço", ausencia_24h: "Ausência 24h", ausencia_48h: "Ausência 48h", ausencia_3d: "Ausência 3 dias",
   ausencia_5d: "Ausência 5 dias", ausencia_7d: "Ausência 7 dias", primeira_semana: "Primeira semana", primeiro_mes: "Primeiro mês", conquista: "Conquista", streak: "Sequência", comunidade: "Comunidade",
-  autoestima: "Autoestima", disciplina: "Disciplina", motivacao: "Motivação", rotina_corrida: "Rotina corrida", treino_rapido: "Treino rápido", noite: "Noite", celebracao: "Celebração", voltou: "Voltou" };
+  autoestima: "Autoestima", disciplina: "Disciplina", motivacao: "Motivação", rotina_corrida: "Rotina corrida", treino_rapido: "Treino rápido", noite: "Noite", celebracao: "Celebração", voltou: "Voltou", faltou_voce: "Amiga, faltou você", coach_comunidade: "Post da Coach na comunidade" };
 const CO_GAT = c => ({ pos_treino: "Comemorar treino", streak: "Comemorar treino (sequência)", celebracao: "Comemorar treino (marco)", voltou: "Voltou depois de pausa", ausencia_24h: "Faltou ontem",
   ausencia_48h: "Sumiu 2 dias", ausencia_3d: "Sumiu 3 dias", ausencia_5d: "Sumiu 5 dias", ausencia_7d: "Sumiu 7 dias", primeira_semana: "Primeira semana", primeiro_mes: "Um mês de CK Life",
-  pre_treino: "Antes do horário", noite: "Fim de dia", comunidade: "Comunidade", segunda: "Bom dia (segunda)", sexta: "Bom dia (sexta)", fim_de_semana: "Bom dia (fim de semana)" }[c]
+  pre_treino: "Antes do horário", noite: "Fim de dia", comunidade: "Comunidade", faltou_voce: "Amiga, faltou você", coach_comunidade: "Post diário na comunidade", segunda: "Bom dia (segunda)", sexta: "Bom dia (sexta)", fim_de_semana: "Bom dia (fim de semana)" }[c]
   || (["bom_dia", "motivacao", "hidratacao", "autoestima", "treino_rapido", "disciplina", "alimentacao", "humor", "rotina_corrida", "treino", "preguica"].includes(c) ? "Bom dia (rodízio)" : "Reserva (manual)"));
 const coPct = (a, b) => b ? Math.round(100 * a / b) + "%" : "-";
 const coNome = c => CO_CAT[c] || c;
@@ -13455,10 +13624,17 @@ function coAba(ed){
         <label>Silêncio das <select class="input" id="co-ini">${hs.map(h => `<option value="${h}" ${h === c.silencio_ini ? "selected" : ""}>${String(h).padStart(2, "0")}h</option>`).join("")}</select></label>
         <label>até <select class="input" id="co-fim">${hs.map(h => `<option value="${h}" ${h === c.silencio_fim ? "selected" : ""}>${String(h).padStart(2, "0")}h</option>`).join("")}</select></label>
         <button class="btn btn-accent btn-sm" id="co-salva">Salvar limites</button></div></div>
+      <div class="card eq-cfg">
+        <div class="eq-cfg-l"><b>Post diário da Coach na comunidade</b><small>Um post por dia do perfil oficial "Coach CK Life" (virtual, com selo), puxando conversa. Na segunda, mostra quantas mulheres compartilharam vitórias na semana (número real). Ela nunca responde ninguém.</small></div>
+        <button class="mod-sw ${ed ? "" : "needs-edit"}" role="switch" id="co-post" aria-checked="${c.posts_comunidade !== false}" aria-label="Post diário da Coach"><i></i></button>
+        <div class="eq-cfg-f"><label>Horário (Cuiabá) <select class="input" id="co-hp">${Array.from({ length: 16 }, (_, i) => i + 6).map(h => `<option value="${h}" ${h === (c.hora_post || 9) ? "selected" : ""}>${String(h).padStart(2, "0")}h</option>`).join("")}</select></label></div></div>
       <p class="hint">O horário vale no fuso de cada aluna. Cada aluna também pode escolher o próprio silêncio, até 3 recados por dia e desligar categorias em Perfil › Coach e avisos.</p>`;
     $("co-geral").onclick = async () => { if(!ed) return toast("Seu acesso não permite mudar isso"); const liga = !c.ligado;
       const vai = async () => { try{ const r = await SB2().rpc("admin_coach_config", { p_ligado: liga, p_max: null, p_intervalo: null, p_ini: null, p_fim: null }); if(r.error) throw r.error; toast(liga ? "Coach ligada" : "Coach desligada"); vCoach(); }catch(e){ toast("Não deu: " + (e.message || e)); } };
       liga ? vai() : confirmar("Desligar a Coach? Nenhuma aluna vai receber recados até você ligar de novo.", vai); };
+    const cp = async (lig, hora) => { if(!ed) return toast("Seu acesso não permite mudar isso"); try{ const r = await SB2().rpc("admin_coach_comunidade", { p_ligado: lig, p_hora: hora }); if(r.error) throw r.error; toast("Salvo"); vCoach(); }catch(e){ toast("Não deu: " + (e.message || e)); } };
+    $("co-post").onclick = () => cp(c.posts_comunidade === false, null);
+    $("co-hp").onchange = e => cp(null, +e.target.value);
     $("co-salva").onclick = async () => { if(!ed) return toast("Seu acesso não permite mudar isso");
       try{ const r = await SB2().rpc("admin_coach_config", { p_ligado: null, p_max: +$("co-max").value, p_intervalo: +$("co-int").value, p_ini: +$("co-ini").value, p_fim: +$("co-fim").value }); if(r.error) throw r.error; toast("Salvo"); vCoach(); }catch(e){ toast("Não deu: " + (e.message || e)); } };
   }

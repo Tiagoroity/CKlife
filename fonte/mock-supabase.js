@@ -111,6 +111,16 @@ const client = {
     if(n === "admin_coach_regra"){ const r = (db.coachRegras || []).find(x => x.id === a.p_id); if(r){ if(a.p_ativo != null) r.ativo = a.p_ativo; if(a.p_prioridade != null) r.prioridade = a.p_prioridade; } salva(); return { data: !!r, error: null }; }
     if(n === "admin_coach_config"){ db.coachCfg = db.coachCfg || {}; [["p_ligado","ligado"],["p_max","max_dia"],["p_intervalo","intervalo_h"],["p_ini","silencio_ini"],["p_fim","silencio_fim"]].forEach(([k, c]) => { if(a[k] != null) db.coachCfg[c] = a[k]; }); salva(); return { data: true, error: null }; }
     if(n === "admin_coach_testar") return { data: 99, error: null };
+
+    // ---- Parceira CK (teste) ----
+    if(n === "parceira_status"){ db.parc = db.parc || {}; const s = db.parc[me]; if(s && s.status === "ativa") return { data: { ...s, semana_eu: 1 }, error: null };
+      return { data: { status: "nenhuma", convites: (db.parcConv || {})[me] || [], enviado: (db.parcEnv || {})[me] || null }, error: null }; }
+    if(n === "parceira_amigas"){ const L = (db.perfis || []).filter(p => p.user_id !== me && !p.equipe).slice(0, 3).map(p => ({ user_id: p.user_id, nome: p.nome, username: p.username, foto: p.foto_mini })); return { data: L, error: null }; }
+    if(n === "parceira_convidar"){ const p = (db.perfis || []).find(x => x.user_id === a.p_user) || { nome: "Amiga" }; db.parc = db.parc || {}; db.parc[me] = { id: "pc1", status: "ativa", desde: new Date().toISOString(), outra: { user_id: a.p_user, nome: p.nome, username: p.username, foto: p.foto_mini }, semana_ela: 2, incentivo_hoje: false }; salva(); return { data: "pc1", error: null }; }
+    if(n === "parceira_incentivar"){ const s = (db.parc || {})[me]; if(!s) return { data: null, error: { message: "Você não tem uma Parceira CK agora" } }; if(s.incentivo_hoje) return { data: null, error: { message: "Você já mandou um incentivo hoje 💚" } }; s.incentivo_hoje = true; salva(); return { data: true, error: null }; }
+    if(n === "parceira_encerrar"){ if(db.parc) delete db.parc[me]; salva(); return { data: true, error: null }; }
+    if(n === "parceira_responder") return { data: true, error: null };
+    if(n === "admin_coach_comunidade"){ db.coachCfg = db.coachCfg || {}; if(a.p_ligado != null) db.coachCfg.posts_comunidade = a.p_ligado; if(a.p_hora != null) db.coachCfg.hora_post = a.p_hora; salva(); return { data: true, error: null }; }
     if(n === "existe_admin") return { data: db.admins.length > 0, error: null };
     if(n === "virar_primeiro_admin"){ if(!me) return { data: false, error: null }; if(db.admins.length) return { data: db.admins.some(x => x.user_id === me), error: null }; const u = db.users.find(x => x.id === me); db.admins.push({ user_id: me, email: u.email, nome: a.p_nome, perms: { total: true }, desde: "2026-10-22" }); salva(); return { data: true, error: null }; }
     if(n === "validar_cupom"){ const c = db.colecoes.find(x => x.nome === "cupons" && x.id === a.p_cupom), p = c && db.colecoes.find(x => x.nome === "pins" && x.id === c.dados.parc); const ok = !!(p && p.dados === a.p_pin); if(ok){ c.dados.usado = true; salva(); } return { data: ok, error: null }; }

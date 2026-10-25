@@ -12,10 +12,10 @@ let CO_ABA = "geral", CO_D = null, CO_M = null, CO_F = { cat: "", q: "", st: "" 
 const CO_CAT = { bom_dia: "Bom dia", treino: "Treino", pre_treino: "Pré-treino", pos_treino: "Pós-treino", alimentacao: "Alimentação", hidratacao: "Hidratação", preguica: "Preguiça", humor: "Humor",
   segunda: "Segunda", sexta: "Sexta", fim_de_semana: "Fim de semana", recomeco: "Recomeço", ausencia_24h: "Ausência 24h", ausencia_48h: "Ausência 48h", ausencia_3d: "Ausência 3 dias",
   ausencia_5d: "Ausência 5 dias", ausencia_7d: "Ausência 7 dias", primeira_semana: "Primeira semana", primeiro_mes: "Primeiro mês", conquista: "Conquista", streak: "Sequência", comunidade: "Comunidade",
-  autoestima: "Autoestima", disciplina: "Disciplina", motivacao: "Motivação", rotina_corrida: "Rotina corrida", treino_rapido: "Treino rápido", noite: "Noite", celebracao: "Celebração", voltou: "Voltou" };
+  autoestima: "Autoestima", disciplina: "Disciplina", motivacao: "Motivação", rotina_corrida: "Rotina corrida", treino_rapido: "Treino rápido", noite: "Noite", celebracao: "Celebração", voltou: "Voltou", faltou_voce: "Amiga, faltou você", coach_comunidade: "Post da Coach na comunidade" };
 const CO_GAT = c => ({ pos_treino: "Comemorar treino", streak: "Comemorar treino (sequência)", celebracao: "Comemorar treino (marco)", voltou: "Voltou depois de pausa", ausencia_24h: "Faltou ontem",
   ausencia_48h: "Sumiu 2 dias", ausencia_3d: "Sumiu 3 dias", ausencia_5d: "Sumiu 5 dias", ausencia_7d: "Sumiu 7 dias", primeira_semana: "Primeira semana", primeiro_mes: "Um mês de CK Life",
-  pre_treino: "Antes do horário", noite: "Fim de dia", comunidade: "Comunidade", segunda: "Bom dia (segunda)", sexta: "Bom dia (sexta)", fim_de_semana: "Bom dia (fim de semana)" }[c]
+  pre_treino: "Antes do horário", noite: "Fim de dia", comunidade: "Comunidade", faltou_voce: "Amiga, faltou você", coach_comunidade: "Post diário na comunidade", segunda: "Bom dia (segunda)", sexta: "Bom dia (sexta)", fim_de_semana: "Bom dia (fim de semana)" }[c]
   || (["bom_dia", "motivacao", "hidratacao", "autoestima", "treino_rapido", "disciplina", "alimentacao", "humor", "rotina_corrida", "treino", "preguica"].includes(c) ? "Bom dia (rodízio)" : "Reserva (manual)"));
 const coPct = (a, b) => b ? Math.round(100 * a / b) + "%" : "-";
 const coNome = c => CO_CAT[c] || c;
@@ -78,10 +78,17 @@ function coAba(ed){
         <label>Silêncio das <select class="input" id="co-ini">${hs.map(h => `<option value="${h}" ${h === c.silencio_ini ? "selected" : ""}>${String(h).padStart(2, "0")}h</option>`).join("")}</select></label>
         <label>até <select class="input" id="co-fim">${hs.map(h => `<option value="${h}" ${h === c.silencio_fim ? "selected" : ""}>${String(h).padStart(2, "0")}h</option>`).join("")}</select></label>
         <button class="btn btn-accent btn-sm" id="co-salva">Salvar limites</button></div></div>
+      <div class="card eq-cfg">
+        <div class="eq-cfg-l"><b>Post diário da Coach na comunidade</b><small>Um post por dia do perfil oficial "Coach CK Life" (virtual, com selo), puxando conversa. Na segunda, mostra quantas mulheres compartilharam vitórias na semana (número real). Ela nunca responde ninguém.</small></div>
+        <button class="mod-sw ${ed ? "" : "needs-edit"}" role="switch" id="co-post" aria-checked="${c.posts_comunidade !== false}" aria-label="Post diário da Coach"><i></i></button>
+        <div class="eq-cfg-f"><label>Horário (Cuiabá) <select class="input" id="co-hp">${Array.from({ length: 16 }, (_, i) => i + 6).map(h => `<option value="${h}" ${h === (c.hora_post || 9) ? "selected" : ""}>${String(h).padStart(2, "0")}h</option>`).join("")}</select></label></div></div>
       <p class="hint">O horário vale no fuso de cada aluna. Cada aluna também pode escolher o próprio silêncio, até 3 recados por dia e desligar categorias em Perfil › Coach e avisos.</p>`;
     $("co-geral").onclick = async () => { if(!ed) return toast("Seu acesso não permite mudar isso"); const liga = !c.ligado;
       const vai = async () => { try{ const r = await SB2().rpc("admin_coach_config", { p_ligado: liga, p_max: null, p_intervalo: null, p_ini: null, p_fim: null }); if(r.error) throw r.error; toast(liga ? "Coach ligada" : "Coach desligada"); vCoach(); }catch(e){ toast("Não deu: " + (e.message || e)); } };
       liga ? vai() : confirmar("Desligar a Coach? Nenhuma aluna vai receber recados até você ligar de novo.", vai); };
+    const cp = async (lig, hora) => { if(!ed) return toast("Seu acesso não permite mudar isso"); try{ const r = await SB2().rpc("admin_coach_comunidade", { p_ligado: lig, p_hora: hora }); if(r.error) throw r.error; toast("Salvo"); vCoach(); }catch(e){ toast("Não deu: " + (e.message || e)); } };
+    $("co-post").onclick = () => cp(c.posts_comunidade === false, null);
+    $("co-hp").onchange = e => cp(null, +e.target.value);
     $("co-salva").onclick = async () => { if(!ed) return toast("Seu acesso não permite mudar isso");
       try{ const r = await SB2().rpc("admin_coach_config", { p_ligado: null, p_max: +$("co-max").value, p_intervalo: +$("co-int").value, p_ini: +$("co-ini").value, p_fim: +$("co-fim").value }); if(r.error) throw r.error; toast("Salvo"); vCoach(); }catch(e){ toast("Não deu: " + (e.message || e)); } };
   }

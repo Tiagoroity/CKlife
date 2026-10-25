@@ -117,6 +117,7 @@ No topo: logo, coroa PRO (só para quem paga), chip da sequência 🔥 e foto da
 - **Primeiro treino:** comemoração especial "Você começou 💚", com "Chamar uma amiga para treinar comigo".
 - **Nos treinos seguintes:** a tela de treino concluído traz uma frase da Coach.
 - **30 dias depois do cadastro:** o recado mostra a mensagem que ela escreveu para a eu do futuro.
+- **Parceira CK** e **Vitórias de hoje**: veja a seção 9 (Etapa 5).
 - **Recados da Coach:** lista com o que o servidor mandou, com novos destacados. Tocar no aviso do celular abre o recado certo.
 
 ### 3.6 Treinos
@@ -258,7 +259,7 @@ No topo: logo, coroa PRO (só para quem paga), chip da sequência 🔥 e foto da
 - **Lembrete de treino:** fica salvo no banco e o servidor envia antes do horário, nos dias escolhidos.
 - **Coach no servidor** (novo, já ativada):
   - **Frequência:** a cada 10 minutos o servidor decide se manda **um** recado útil para cada aluna.
-  - **13 automações:**
+  - **14 automações:**
     - voltou depois de pausa;
     - comemorar treino (1h depois; sequência e marcos);
     - sumiu 7, 5, 3 e 2 dias (uma vez por pausa; para depois de 30 dias);
@@ -272,7 +273,7 @@ No topo: logo, coroa PRO (só para quem paga), chip da sequência 🔥 e foto da
     - pelo menos 3 horas entre recados;
     - silêncio das 21h às 8h, no fuso de cada aluna;
     - respeita as categorias que ela desligou.
-  - **371 mensagens em 30 categorias**, com variáveis seguras ({primeiro_nome}, {streak}, {quantidade_treinos}, {horario_treino}, {dias_ativos}, {ultima_atividade}, {objetivo}, {tempo_disponivel}).
+  - **401 mensagens em 32 categorias**, com variáveis seguras ({primeiro_nome}, {streak}, {quantidade_treinos}, {horario_treino}, {dias_ativos}, {ultima_atividade}, {objetivo}, {tempo_disponivel}).
   - **Entrega e privacidade:** quem não ativou avisos recebe nos "Recados" do app. Nunca usa ciclo, peso ou saúde.
 
 ---
@@ -361,11 +362,15 @@ Objetivo: o CK Life acompanhar a aluna como uma coach, com rotina, missões e co
   - resumos automáticos **SUA SEMANA** (domingo à noite ou segunda/terça) e **OLHA TUDO QUE VOCÊ FEZ EM {MÊS}** (dias 1 a 5), uma vez cada, só se houve atividade, com cartão 1080x1350 para compartilhar;
   - **Chamar uma amiga** depois das grandes conquistas;
   - **Minha Jornada ampliada:** números da história dela, resiliência, botões Minha semana / Meu mês / Conquistas e novos momentos na linha do tempo (compromisso, mensagem para a eu do futuro, voltas, semanas no ritmo, conquistas especiais).
-- ⬜ **Etapa 5:**
-  - comunidade integrada: VITÓRIAS DE HOJE, Coach postando na comunidade, "Compartilhar minha vitória" depois do treino, "Amiga, faltou você", Parceira CK opcional;
-  - PRO com acabamento premium (verde profundo, champanhe, perolado, anel premium, insights), sem a Free se sentir abandonada;
-  - teste completo de todas as jornadas.
-
+- ✅ **Etapa 5:**
+  - **VITÓRIAS DE HOJE** no topo da Comunidade: fotos de quem compartilhou uma vitória hoje (com o emoji da conquista), "N mulheres comemoraram hoje" com número real e o botão "Minha vitória";
+  - **"Compartilhar minha vitória"** no fim do treino e no recado da Coach: já abre a postagem marcada como vitória, com o cartão do treino;
+  - **Coach postando na comunidade:** perfil oficial "Coach CK Life" (virtual, com selo, sem login) faz 1 post por dia (20 perguntas e incentivos em rodízio). Na segunda, se pelo menos 5 mulheres compartilharam vitórias na semana, diz o número real. Nunca responde ninguém, e o Time de Incentivo nunca comenta nos posts dela. O painel liga, desliga e escolhe o horário;
+  - **"Amiga, faltou você lá"**: nova automação da Coach para quem participava da comunidade e sumiu de 4 a 14 dias (no máximo a cada 10 dias; 10 mensagens);
+  - **Parceira CK** (opcional, em Perfil): convite só entre amigas que se seguem; cada uma vê só quantos dias a outra treinou na semana; 1 incentivo por dia com frases prontas e positivas; recusa silenciosa; qualquer uma encerra quando quiser. Aparece também no cartão de missões do Início;
+  - **PRO refinado:** anel champanhe na foto do topo, recado da Coach com brilho perolado, cartões cumpridos com detalhe champanhe;
+  - **Seus insights** no Início: melhor horário, dia mais constante, ritmo do mês (comparando só com ela mesma), hidratação, treino favorito e maior sequência. A Free recebe 2 insights e um link discreto para o PRO; o PRO vê todos;
+  - **Testes das jornadas:** nova, antiga, sumida, Free, PRO, sem internet, avisos desligados, dados incompletos, celular pequeno; 432 testes de banco OK.
 ---
 
 ## 10. O que depende do dono (Tiago)

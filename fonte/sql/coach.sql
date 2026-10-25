@@ -97,7 +97,8 @@ insert into public.coach_regras (id, nome, quando, se, aguardar, acao, prioridad
  ('pre_treino', 'Antes do horário de treino', 'Dia de treino no plano', 'Não treinou ainda e não tem lembrete de treino ligado', '1 hora antes do horário preferido', 'Recado pré-treino', 100, true),
  ('bom_dia', 'Bom dia', 'Manhã', 'Nenhum recado hoje; a cada 2 dias', 'Fim do horário de silêncio dela', 'Bom dia, segunda, sexta, fim de semana, água, alimentação...', 110, true),
  ('noite', 'Fim de dia', 'Dia de treino no plano', 'Não treinou hoje e não recebeu recado hoje', '20h', 'Recado leve de noite', 120, true),
- ('comunidade', 'Comunidade', 'Quarta-feira', 'Sem recado de comunidade na semana', '12h', 'Convite para a comunidade', 130, true)
+ ('comunidade', 'Comunidade', 'Quarta-feira', 'Sem recado de comunidade na semana', '12h', 'Convite para a comunidade', 130, true),
+ ('faltou_voce', 'Amiga, faltou você', '4 a 14 dias sem abrir o app', 'Participava da comunidade nos últimos 60 dias; uma vez a cada 10 dias', '18h', 'Recado "Amiga, faltou você lá"', 45, true)
 on conflict (id) do update set nome = excluded.nome, quando = excluded.quando, se = excluded.se, aguardar = excluded.aguardar, acao = excluded.acao;
 
 -- ---------- 5) Recados enviados (inbox da aluna + histórico) ----------
@@ -127,7 +128,7 @@ language sql immutable as $$
   select case
     when p_cat in ('treino','pre_treino','treino_rapido') then 'treino'
     when p_cat in ('alimentacao','hidratacao') then 'alimentacao'
-    when p_cat = 'comunidade' then 'comunidade'
+    when p_cat in ('comunidade','faltou_voce','coach_comunidade') then 'comunidade'
     when p_cat in ('pos_treino','streak','conquista','celebracao') then 'conquistas'
     else 'coach' end
 $$;
@@ -209,7 +210,7 @@ begin
 end $$;
 grant execute on function public.push_resultado(uuid, text, int, int) to anon, authenticated;
 
--- ---------- Mensagens iniciais (371 em 30 categorias). Rodar de novo não duplica. ----------
+-- ---------- Mensagens iniciais (401 em 32 categorias). Rodar de novo não duplica. ----------
 insert into public.coach_mensagens (categoria, titulo, texto) values
 ('bom_dia','Bom dia, {primeiro_nome} 💚','Que tal começar o dia fazendo algo por você? Nem que seja um pouquinho.'),
 ('bom_dia','Bom dia!','Um copo de água e 5 minutos de movimento já mudam o dia.'),
@@ -581,7 +582,37 @@ insert into public.coach_mensagens (categoria, titulo, texto) values
 ('voltou','Saudade matada 💚','Bom demais ter você de novo por aqui.'),
 ('voltou','Recomeço','Hoje é dia 1 de novo. E tudo bem.'),
 ('voltou','Voltar é vitória','Comemora! Não é todo mundo que volta.'),
-('voltou','Oi de novo!','A comunidade e a Coach estão felizes com a sua volta.')
+('voltou','Oi de novo!','A comunidade e a Coach estão felizes com a sua volta.'),
+('faltou_voce','Amiga, faltou você lá 💚','A comunidade sentiu sua falta. Passa lá para ver as vitórias das meninas.'),
+('faltou_voce','Saudade de você na comunidade','Tem mulheres compartilhando conquistas hoje. Vem comemorar junto.'),
+('faltou_voce','Faltou você 💚','Seu comentário sempre faz diferença para alguém que está começando.'),
+('faltou_voce','Oi, {primeiro_nome}','A Legião CK está ativa hoje. Que tal dar um oi?'),
+('faltou_voce','A comunidade está aqui','Sem cobrança. Quando quiser, a gente te recebe de braços abertos.'),
+('faltou_voce','Volta lá? 💚','Uma palavra boa sua pode mudar o dia de alguém hoje.'),
+('faltou_voce','Sentimos sua falta','Passa na comunidade e veja quem precisou de um incentivo hoje.'),
+('faltou_voce','Amiga, cadê você? 😄','Brincadeira. Mas a comunidade fica mais bonita com você.'),
+('faltou_voce','Vitórias de hoje','Tem vitória nova na comunidade. Vem ver e comemorar.'),
+('faltou_voce','Juntas é mais leve','Lembra que você não está sozinha. A comunidade está aqui.'),
+('coach_comunidade','Bom dia, Legião CK 💚','Qual é o seu pequeno passo de hoje? Conta aqui nos comentários.'),
+('coach_comunidade','Pergunta da Coach','O que você vai fazer por você hoje, mesmo que seja pouco?'),
+('coach_comunidade','Lembrete para todas 💚','Não buscamos perfeição. Buscamos constância. Quem já treinou hoje?'),
+('coach_comunidade','Bora, Legião?','Hoje vale treino de 5 minutos, caminhada ou alongamento. Qual vai ser o seu?'),
+('coach_comunidade','Momento de celebrar 🎉','Conta uma vitória sua dessa semana. Pode ser pequena. Toda vitória conta.'),
+('coach_comunidade','Para quem está recomeçando','Voltar também é progresso. Se você está voltando hoje, comenta um 💚 que a gente comemora junto.'),
+('coach_comunidade','Pergunta do dia da Coach','Qual é a sua música favorita para treinar?'),
+('coach_comunidade','Água em dia? 💧','Quantos copos você já bebeu hoje? Bora bater a meta juntas.'),
+('coach_comunidade','Dica da Coach','Separar a roupa de treino na noite anterior ajuda muito. Quem testa amanhã?'),
+('coach_comunidade','Sem comparação 💚','Cada uma tem o seu ritmo. Hoje, comente algo bom que você fez por você.'),
+('coach_comunidade','Rotina corrida?','Qual horário funciona melhor para você treinar? Conta aqui.'),
+('coach_comunidade','Constância','Quantos dias você treinou essa semana? Qualquer número vale.'),
+('coach_comunidade','Receita da semana 🥗','Qual receita do CK Life você mais gostou até agora?'),
+('coach_comunidade','Fim de semana ativo','Qual movimento você vai fazer no fim de semana? Caminhada, dança, treino?'),
+('coach_comunidade','Incentivo coletivo 💚','Deixa um comentário de incentivo para quem está começando hoje.'),
+('coach_comunidade','Segunda-feira, Legião!','Qual é a sua meta pequena para essa semana?'),
+('coach_comunidade','Sexta chegou 🎉','Qual foi a melhor coisa que você fez por você nessa semana?'),
+('coach_comunidade','Autocuidado','Além do treino, o que você faz para cuidar de você?'),
+('coach_comunidade','Dia difícil?','Se hoje está pesado, comenta aqui. A comunidade te acolhe. 💚'),
+('coach_comunidade','Gratidão','Pelo que você é grata hoje? Pode ser algo bem simples.')
 on conflict (categoria, texto) do nothing;
 
 -- ---------- 7) O motor: decide UM recado útil por aluna, respeitando limites ----------
@@ -598,7 +629,7 @@ begin
   select * into cfg from coach_config where id = 1;
   if cfg.id is null or not cfg.ligado or cfg.max_dia = 0 then return jsonb_build_object('ligado', false); end if;
   for u in
-    select a.id, a.nome, a.criado, a.dados, p.coach, p.treino pt, p.alimentacao pa, p.comunidade pc, p.conquistas pq,
+    select a.id, a.nome, a.criado, a.ultimo, a.dados, p.coach, p.treino pt, p.alimentacao pa, p.comunidade pc, p.conquistas pq,
       p.silencio_ini, p.silencio_fim, p.max_dia, coalesce(p.fuso, l.fuso, 'America/Cuiaba') fuso,
       l.dias ldias, l.hora lhora, (l.ativo and exists (select 1 from push_inscricoes s where s.user_id = a.id)) lemb_on
     from alunas a
@@ -671,6 +702,9 @@ begin
           and not exists (select 1 from coach_envios e where e.user_id = u.id and e.regra = 'bom_dia' and e.criado > p_agora - interval '40 hours')
           then case dow when 1 then 'segunda' when 5 then 'sexta' when 0 then 'fim_de_semana' when 6 then 'fim_de_semana' else rot[1 + (extract(doy from hoje)::int % array_length(rot, 1))] end end
         when 'noite' then case when h = 20 and planejado and not treinou and enviados = 0 and coalesce(dias, 0) < 3 and ult is not null then 'noite' end
+        when 'faltou_voce' then case when h between 18 and 19 and u.ultimo is not null and hoje - u.ultimo between 4 and 14
+          and (exists (select 1 from posts po where po.user_id = u.id and po.criado > p_agora - interval '60 days') or exists (select 1 from comentarios co where co.user_id = u.id and co.criado > p_agora - interval '60 days'))
+          and not exists (select 1 from coach_envios e where e.user_id = u.id and e.regra = 'faltou_voce' and e.criado > p_agora - interval '10 days') then 'faltou_voce' end
         when 'comunidade' then case when dow = 3 and h between 12 and 13
           and not exists (select 1 from coach_envios e where e.user_id = u.id and e.regra = 'comunidade' and e.criado > p_agora - interval '6 days') then 'comunidade' end
       end;
@@ -868,3 +902,160 @@ revoke all on function public.admin_coach_testar(int) from public, anon;
 grant execute on function public.admin_coach_testar(int) to authenticated;
 
 select 'Coach CK Life pronta' as status, (select count(*) from public.coach_mensagens) as mensagens;
+
+-- ---------- 10) Coach CK Life na comunidade (Etapa 5) ----------
+-- Um perfil oficial "Coach CK Life" (virtual, com selo da equipe, sem login) publica 1 post por dia para todas,
+-- puxando conversa e comemorando. Na segunda, se houver dado suficiente, conta quantas mulheres compartilharam
+-- vitórias na semana anterior (número real; com menos de 5, usa uma frase sem número). Nunca responde ninguém.
+alter table public.coach_config add column if not exists perfil uuid;
+alter table public.coach_config add column if not exists posts_comunidade boolean not null default true;
+alter table public.coach_config add column if not exists hora_post int not null default 9 check (hora_post between 6 and 21);
+
+create or replace function public._coach_perfil() returns uuid
+language plpgsql security definer set search_path = public, auth as $$
+declare uid uuid; cols text[];
+begin
+  select perfil into uid from coach_config where id = 1;
+  if uid is not null and exists (select 1 from perfis where user_id = uid) then return uid; end if;
+  select user_id into uid from perfis where username = 'coach.cklife';
+  if uid is null then
+    uid := gen_random_uuid();
+    select array_agg(column_name::text) into cols from information_schema.columns where table_schema = 'auth' and table_name = 'users';
+    if 'encrypted_password' = any(cols) then   -- conta real, sem senha válida e bloqueada (não entra no app nem no painel)
+      execute format($f$insert into auth.users (instance_id, id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, banned_until,
+        confirmation_token, recovery_token, email_change_token_new, email_change)
+        values ('00000000-0000-0000-0000-000000000000', %L, 'authenticated', 'authenticated', 'coach@equipe.cklife.app', %L, now(), '{"provider":"email","providers":["email"],"equipe":true}', '{"equipe":true}', now(), now(), '2999-12-31', '', '', '', '')$f$,
+        uid, 'sem-login-' || md5(random()::text));
+    else
+      insert into auth.users (id, email) values (uid, 'coach@equipe.cklife.app');   -- banco de testes
+    end if;
+    perform set_config('ck.sistema', '1', true);
+    insert into perfis (user_id, username, nome, bio, privado, equipe, foto_mini)
+      values (uid, 'coach.cklife', 'Coach CK Life', 'Sou a coach virtual do CK Life (não sou uma pessoa). Passo aqui todo dia para puxar conversa e comemorar com vocês 💚', false, true, 'img/modelo.jpg');
+    perform set_config('ck.sistema', '0', true);
+  end if;
+  update coach_config set perfil = uid where id = 1;
+  return uid;
+end $$;
+revoke all on function public._coach_perfil() from public, anon, authenticated;
+select public._coach_perfil();
+
+create or replace function public._coach_post_comunidade(p_agora timestamptz default now()) returns uuid
+language plpgsql security definer set search_path = public as $$
+declare cfg coach_config; uid uuid; loc timestamp; hoje date; m coach_mensagens; txt text; n int; pid uuid;
+begin
+  select * into cfg from coach_config where id = 1;
+  if cfg.id is null or not cfg.ligado or not cfg.posts_comunidade then return null; end if;
+  loc := p_agora at time zone 'America/Cuiaba'; hoje := loc::date;
+  if extract(hour from loc) < cfg.hora_post or extract(hour from loc) > 21 then return null; end if;
+  uid := _coach_perfil();
+  if exists (select 1 from posts where user_id = uid and (criado at time zone 'America/Cuiaba')::date = hoje) then return null; end if;
+  if extract(dow from loc) = 1 then
+    select count(distinct po.user_id) into n from posts po left join perfis pf on pf.user_id = po.user_id
+      where po.conquista is not null and not po.oculto and coalesce(pf.equipe, false) = false
+        and (po.criado at time zone 'America/Cuiaba')::date between hoje - 7 and hoje - 1;
+    if n >= 5 then txt := 'Na semana passada, ' || n || ' mulheres compartilharam vitórias por aqui. 💚 Qual foi a sua? Conta nos comentários.'; end if;
+  end if;
+  if txt is null then
+    select * into m from coach_mensagens c where c.categoria = 'coach_comunidade' and c.ativo
+      and c.texto not in (select coalesce(split_part(p.texto, E'\n', 2), '') from posts p where p.user_id = uid and p.criado > p_agora - interval '25 days')
+      order by random() * c.prioridade desc limit 1;
+    if m.id is null then select * into m from coach_mensagens c where c.categoria = 'coach_comunidade' and c.ativo order by random() limit 1; end if;
+    if m.id is null then return null; end if;
+    txt := m.titulo || E'\n' || m.texto;
+  end if;
+  insert into posts (user_id, nome, foto, texto, criado) values (uid, 'Coach CK Life', 'img/modelo.jpg', left(txt, 1000), p_agora) returning id into pid;
+  return pid;
+end $$;
+revoke all on function public._coach_post_comunidade(timestamptz) from public, anon, authenticated;
+
+-- o relógio da Coach agora também faz o post do dia na comunidade
+create or replace function public.coach_tick() returns jsonb
+language plpgsql security definer set search_path = public as $$
+declare r jsonb;
+begin
+  r := public._coach_tick(now(), 400);
+  begin perform public._coach_post_comunidade(now()); exception when others then null; end;
+  return r;
+end $$;
+revoke all on function public.coach_tick() from public, anon, authenticated;
+
+create or replace function public.admin_coach_comunidade(p_ligado boolean, p_hora int) returns boolean
+language plpgsql security definer set search_path = public as $$
+begin
+  if not admin_pode('notificacoes') then raise exception 'sem permissão'; end if;
+  update coach_config set posts_comunidade = coalesce(p_ligado, posts_comunidade), hora_post = coalesce(greatest(6, least(p_hora, 21)), hora_post), atualizado = now() where id = 1;
+  begin perform auditar('coach_comunidade', 'coach', '1', 'ok', case when p_ligado then 'ligado' when not p_ligado then 'desligado' else 'horário' end); exception when others then null; end;
+  return true;
+end $$;
+revoke all on function public.admin_coach_comunidade(boolean, int) from public, anon;
+grant execute on function public.admin_coach_comunidade(boolean, int) to authenticated;
+
+-- ---------- 12) Time de Incentivo: nunca comenta nem reage em post ou Story oficial (Coach) ----------
+create or replace function public.equipe_tick() returns int
+language plpgsql security definer set search_path = public as $$
+declare cfg equipe_config; h int; p record; s record; bot uuid; bot2 uuid; t text; frase text; nomeb text; feitos int := 0; primeiro_nome text;
+begin
+  select * into cfg from equipe_config where id = 1;
+  if cfg is null or not cfg.ligado then return 0; end if;
+  h := extract(hour from now() at time zone 'America/Cuiaba');
+  if h < cfg.hora_ini or h >= cfg.hora_fim then return 0; end if;
+  -- posts de alunas reais das últimas 48 h, ainda sem comentário da equipe, depois de alguns minutos (cada post com um atraso diferente)
+  for p in select po.* from posts po
+    where po.criado > now() - interval '48 hours' and not po.oculto
+      and not exists (select 1 from equipe_membros m where m.user_id = po.user_id)
+      and not exists (select 1 from perfis pf where pf.user_id = po.user_id and pf.equipe)   -- nunca em post oficial (Coach)
+      and not exists (select 1 from equipe_log l where l.post_id = po.id and l.acao = 'comentou')
+      and po.criado < now() - ((abs(hashtext(po.id::text)) % 26) + 4) * interval '1 minute'
+    order by po.criado limit 5
+  loop
+    select m.user_id, m.nome into bot, nomeb from equipe_membros m
+      where m.ativo and (select count(*) from equipe_log l where l.user_id = m.user_id and l.acao = 'comentou' and l.criado > now() - interval '24 hours') < cfg.max_coment_dia
+        and not bloqueio_entre(m.user_id, p.user_id)
+      order by md5(p.id::text || m.user_id::text) limit 1;
+    if bot is null then continue; end if;
+    t := case
+      when (select count(*) from posts x where x.user_id = p.user_id) = 1 then 'primeiro'
+      when to_jsonb(p) ? 'conquista' and (to_jsonb(p) ->> 'conquista') is not null then 'conquista'
+      when coalesce(to_jsonb(p) ->> 'midia', '') ~* '\.(mp4|webm|mov)$' then 'video'
+      when coalesce(p.texto, '') ~* '(receita|comida|almo[cç]o|jantar|caf[eé] da manh|lanche|prato|marmita)' then 'receita'
+      when coalesce(p.texto, '') ~* '(treino|treinei|academia|agachament|corrida|caminhada|exerc[ií]cio|suor|💪)' then 'treino'
+      when coalesce(to_jsonb(p) ->> 'midia', '') <> '' or p.img is not null then 'foto'
+      else 'geral' end;
+    select texto into frase from equipe_frases where ativo and tipo in (t, case when t = 'primeiro' then 'primeiro' else 'geral' end)
+      order by (tipo = t) desc, md5(p.id::text || id::text) limit 1;
+    if frase is null then continue; end if;
+    primeiro_nome := split_part(coalesce(p.nome, ''), ' ', 1);
+    frase := case when primeiro_nome = '' then replace(replace(frase, ', {nome}', ''), '{nome}', '') else replace(frase, '{nome}', primeiro_nome) end;
+    insert into comentarios (post_id, user_id, nome, foto, texto) values (p.id, bot, nomeb, (select foto_mini from perfis where user_id = bot), frase);
+    insert into curtidas (post_id, user_id) values (p.id, bot) on conflict do nothing;
+    insert into equipe_log (user_id, acao, post_id, texto) values (bot, 'comentou', p.id, frase);
+    insert into equipe_log (user_id, acao, post_id) values (bot, 'curtiu', p.id);
+    feitos := feitos + 1;
+    -- metade dos posts ganha mais uma curtida de outra pessoa da equipe (só curtida)
+    if abs(hashtext(p.id::text || 'x')) % 2 = 0 then
+      select m.user_id into bot2 from equipe_membros m where m.ativo and m.user_id <> bot
+        and (select count(*) from equipe_log l where l.user_id = m.user_id and l.acao = 'curtiu' and l.criado > now() - interval '24 hours') < cfg.max_curt_dia
+        and not bloqueio_entre(m.user_id, p.user_id) order by md5(p.id::text || m.user_id::text || 'c') limit 1;
+      if bot2 is not null then insert into curtidas (post_id, user_id) values (p.id, bot2) on conflict do nothing; insert into equipe_log (user_id, acao, post_id) values (bot2, 'curtiu', p.id); end if;
+    end if;
+  end loop;
+  -- Stories: uma reação ❤️ por Story (vê o Story e avisa a aluna), nunca mensagem
+  for s in select st.* from stories st
+    where st.expira > now() and not st.oculto and st.criado < now() - interval '8 minutes'
+      and not exists (select 1 from equipe_membros m where m.user_id = st.user_id)
+      and not exists (select 1 from perfis pf where pf.user_id = st.user_id and pf.equipe)
+      and not exists (select 1 from equipe_log l where l.story_id = st.id and l.acao = 'story')
+    order by st.criado limit 5
+  loop
+    select m.user_id into bot from equipe_membros m where m.ativo and not bloqueio_entre(m.user_id, s.user_id)
+      and (select count(*) from equipe_log l where l.user_id = m.user_id and l.acao in ('curtiu','story') and l.criado > now() - interval '24 hours') < cfg.max_curt_dia
+      order by md5(s.id::text || m.user_id::text) limit 1;
+    if bot is null then continue; end if;
+    insert into story_vistas (story_id, user_id) values (s.id, bot) on conflict do nothing;
+    perform notificar(s.user_id, bot, 'sistema', 'equipe-story:' || s.id::text, nome_de(bot) || ' reagiu com ❤️ ao seu Story');
+    insert into equipe_log (user_id, acao, story_id, texto) values (bot, 'story', s.id, '❤️');
+    feitos := feitos + 1;
+  end loop;
+  return feitos;
+end $$;

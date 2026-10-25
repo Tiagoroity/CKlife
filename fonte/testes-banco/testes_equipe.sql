@@ -6,7 +6,7 @@ reset role;
 delete from bloqueios where true;
 update equipe_config set hora_ini = 0, hora_fim = 24, ligado = true where id = 1;
 select ok((select count(*) from equipe_membros) = 50, '50 perfis da equipe criados');
-select ok((select count(*) from perfis where equipe) = 50, 'todos com o selo da equipe');
+select ok((select count(*) from perfis p join equipe_membros m on m.user_id = p.user_id where p.equipe) = 50, 'todos com o selo da equipe');
 select ok((select count(*) from alunas a join equipe_membros m on m.user_id = a.id) = 0, 'equipe não conta como aluna');
 -- post de aluna real (antigo o bastante para passar o atraso)
 insert into posts (id, user_id, nome, texto, criado) values ('eeeeeeee-0000-0000-0000-00000000000e', :A, 'Ana Real', 'Treino de hoje feito!', now() - interval '2 hours');

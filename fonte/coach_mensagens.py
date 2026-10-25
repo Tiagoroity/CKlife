@@ -435,6 +435,40 @@ M["recomeco"] += [("Dia 1 de novo?", "Tudo bem. Todo dia 1 é uma prova de que v
 M["noite"] += [("Descansa 🌙", "Recuperar bem é parte da constância.")]
 M["rotina_corrida"] += [("Entre uma coisa e outra", "Um treino curto no intervalo do dia já conta.")]
 M["comunidade"] += [("Alguém precisa ouvir isso", "Deixa uma mensagem de incentivo na comunidade hoje.")]
+M["faltou_voce"] = [
+ ("Amiga, faltou você lá 💚", "A comunidade sentiu sua falta. Passa lá para ver as vitórias das meninas."),
+ ("Saudade de você na comunidade", "Tem mulheres compartilhando conquistas hoje. Vem comemorar junto."),
+ ("Faltou você 💚", "Seu comentário sempre faz diferença para alguém que está começando."),
+ ("Oi, {primeiro_nome}", "A Legião CK está ativa hoje. Que tal dar um oi?"),
+ ("A comunidade está aqui", "Sem cobrança. Quando quiser, a gente te recebe de braços abertos."),
+ ("Volta lá? 💚", "Uma palavra boa sua pode mudar o dia de alguém hoje."),
+ ("Sentimos sua falta", "Passa na comunidade e veja quem precisou de um incentivo hoje."),
+ ("Amiga, cadê você? 😄", "Brincadeira. Mas a comunidade fica mais bonita com você."),
+ ("Vitórias de hoje", "Tem vitória nova na comunidade. Vem ver e comemorar."),
+ ("Juntas é mais leve", "Lembra que você não está sozinha. A comunidade está aqui."),
+]
+M["coach_comunidade"] = [
+ ("Bom dia, Legião CK 💚", "Qual é o seu pequeno passo de hoje? Conta aqui nos comentários."),
+ ("Pergunta da Coach", "O que você vai fazer por você hoje, mesmo que seja pouco?"),
+ ("Lembrete para todas 💚", "Não buscamos perfeição. Buscamos constância. Quem já treinou hoje?"),
+ ("Bora, Legião?", "Hoje vale treino de 5 minutos, caminhada ou alongamento. Qual vai ser o seu?"),
+ ("Momento de celebrar 🎉", "Conta uma vitória sua dessa semana. Pode ser pequena. Toda vitória conta."),
+ ("Para quem está recomeçando", "Voltar também é progresso. Se você está voltando hoje, comenta um 💚 que a gente comemora junto."),
+ ("Pergunta do dia da Coach", "Qual é a sua música favorita para treinar?"),
+ ("Água em dia? 💧", "Quantos copos você já bebeu hoje? Bora bater a meta juntas."),
+ ("Dica da Coach", "Separar a roupa de treino na noite anterior ajuda muito. Quem testa amanhã?"),
+ ("Sem comparação 💚", "Cada uma tem o seu ritmo. Hoje, comente algo bom que você fez por você."),
+ ("Rotina corrida?", "Qual horário funciona melhor para você treinar? Conta aqui."),
+ ("Constância", "Quantos dias você treinou essa semana? Qualquer número vale."),
+ ("Receita da semana 🥗", "Qual receita do CK Life você mais gostou até agora?"),
+ ("Fim de semana ativo", "Qual movimento você vai fazer no fim de semana? Caminhada, dança, treino?"),
+ ("Incentivo coletivo 💚", "Deixa um comentário de incentivo para quem está começando hoje."),
+ ("Segunda-feira, Legião!", "Qual é a sua meta pequena para essa semana?"),
+ ("Sexta chegou 🎉", "Qual foi a melhor coisa que você fez por você nessa semana?"),
+ ("Autocuidado", "Além do treino, o que você faz para cuidar de você?"),
+ ("Dia difícil?", "Se hoje está pesado, comenta aqui. A comunidade te acolhe. 💚"),
+ ("Gratidão", "Pelo que você é grata hoje? Pode ser algo bem simples."),
+]
 if __name__ == "__main__":
     tot = sum(len(v) for v in M.values()); print(len(M), "categorias,", tot, "mensagens")
     ruins = ["gorda", "culpa por", "vergonha de", "fracass", "preguiçosa", "emagrecer rápido", "garant", "secar"]
