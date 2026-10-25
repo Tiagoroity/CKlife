@@ -2595,11 +2595,6 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
 .ins-toast i{font-style:normal;font-size:22px;line-height:1.2}.ins-toast small{display:block;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#C9B37E}
 .ins-toast b{display:block;font-size:14.5px}.ins-toast p{margin:2px 0 0;font-size:13.5px;color:#DCE9DF;line-height:1.4}
 .st-vit .so-st-av{display:grid;place-items:center;font-size:26px;background:conic-gradient(#C9B37E,#7BD3A0,#C9B37E)!important}
-#fd-modo{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:4px;gap:4px}
-#fd-modo button{min-height:42px;border-radius:12px;font-weight:700;font-size:14.5px;color:var(--ink);background:transparent;border:0}
-#fd-modo button[aria-pressed="true"]{background:var(--accent);color:#fff;box-shadow:0 6px 16px -10px rgba(46,125,90,.8)}
-:root[data-theme="dark"] #fd-modo button[aria-pressed="true"]{background:#4ECB86;color:#04170F}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #fd-modo button[aria-pressed="true"]{background:#4ECB86;color:#04170F}}
 .st-vit small{max-width:none!important;white-space:nowrap;font-size:11.5px;overflow:visible!important;text-overflow:clip!important}.st-vit{min-width:78px}
 /* ===== Comunidade estilo Instagram + coroa ao lado do nome ===== */
 .cr::after{display:none!important}
@@ -2609,3 +2604,17 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
 .cm-acts{display:flex;gap:2px;margin-left:2px;padding-left:4px;border-left:1px solid var(--line)}
 .cm-acts .iconbtn{width:40px;height:40px;min-width:40px}
 .wm-com{margin-right:8px;white-space:nowrap}.wm-com .wm-sec{font-family:var(--display);font-weight:700;font-size:14px;letter-spacing:-.01em;color:var(--ink);opacity:.9}
+/* ===== Botões de abas padronizados (Treinos, Nutrição, Comunidade e demais) — claro e escuro ===== */
+#v-app .seg:not(.seg-sub),#sheet .seg{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:4px;gap:4px;box-shadow:none}
+#v-app .seg:not(.seg-sub) button,#sheet .seg button{min-height:42px;border-radius:12px;padding:8px 10px;font-weight:700;font-size:14.5px;color:var(--ink);background:transparent;border:0;box-shadow:none;transition:background .2s,color .2s}
+#v-app .seg:not(.seg-sub) button[aria-pressed="true"],#sheet .seg button[aria-pressed="true"]{background:var(--accent);color:#fff;box-shadow:0 6px 16px -10px rgba(46,125,90,.8)}
+:root[data-theme="dark"] #v-app .seg:not(.seg-sub) button[aria-pressed="true"],:root[data-theme="dark"] #sheet .seg button[aria-pressed="true"]{background:#4ECB86;color:#04170F}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #v-app .seg:not(.seg-sub) button[aria-pressed="true"],:root:not([data-theme="light"]) #sheet .seg button[aria-pressed="true"]{background:#4ECB86;color:#04170F}}
+#v-app .seg-sm{flex:1 1 auto}
+/* barra da Comunidade: sino e + alinhados com os demais */
+.cm-nav{align-items:stretch!important}
+.cm-acts{align-items:center;align-self:stretch;gap:4px;margin-left:4px;padding-left:6px}
+.cm-nav .cm-acts .iconbtn{flex-direction:row;padding:0;width:42px;height:42px;min-width:42px;border-radius:14px;display:grid;place-items:center;color:var(--ink);background:var(--surface-2);font-size:inherit;gap:0;position:relative}
+.cm-nav .cm-acts .iconbtn:active{transform:scale(.96)}
+.cm-nav .cm-acts .so-dot{position:absolute;top:-4px;right:-4px;min-width:17px;height:17px;font-size:10px;border:2px solid var(--surface)}
+.cm-nav .cm-acts .iconbtn>*:not(.so-dot){pointer-events:none}
