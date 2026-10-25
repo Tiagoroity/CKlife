@@ -2461,3 +2461,45 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
 .coach-1o-in h1{font-size:clamp(26px,7.5vw,32px);color:#fff}.coach-1o-in p{margin:0;color:#DCE9DF;line-height:1.5}.coach-1o-q b{color:#F2E6C4}
 .coach-1o .btn.ent-cta{min-height:54px;width:100%;border-radius:16px;border:0;font-weight:800;background:linear-gradient(135deg,#F2E6C4,#C9B37E);color:#0B2F25;margin-top:6px}
 .coach-1o .link.ent-pula{color:#B9CFC2;min-height:44px;background:none;border:0;text-decoration:underline;font-size:14px}
+.coach-n{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:#C9B37E;color:#0B2F25;font-style:normal;font-size:11px;font-weight:800;margin-left:4px}
+.coach-rec{display:flex;flex-direction:column;gap:10px}
+.coach-it{display:flex;gap:12px;align-items:flex-start;padding:12px;border-radius:18px;background:var(--surface-2);border:1px solid var(--line)}
+.coach-it .coach-av{width:38px;height:38px}.coach-it .coach-av i{width:16px;height:16px}
+.coach-it .coach-av img,.coach-it .coach-av i,.coach-vazio .coach-av img,.coach-vazio .coach-av i{border-color:var(--surface-2)}
+.coach-it b{display:block;color:var(--ink)}.coach-it p{margin:2px 0 4px;color:var(--ink);line-height:1.45}.coach-it small{color:var(--muted)}
+.coach-it.novo{border-color:#C9B37E;box-shadow:inset 3px 0 0 #C9B37E}
+.coach-it.dest{animation:entPop .5s both}
+.coach-vazio{text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;padding:16px 0;color:var(--muted)}
+.cp-lista{display:flex;flex-direction:column;gap:6px}
+.cp-sil{display:flex;flex-direction:column;gap:8px}.cp-sil .row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+/* ===== Painel · Engajamento & Coach ===== */
+#v-admin .co-st{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:99px;background:var(--bad-soft);color:var(--bad);font-weight:700;font-size:13px}
+#v-admin .co-st.on{background:var(--accent-soft);color:var(--accent-strong)}
+#v-admin .co-st::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+#v-admin #co-abas{margin:4px 0 14px}
+#v-admin .co-bars{display:flex;align-items:flex-end;gap:6px;height:150px}
+#v-admin .co-bar{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;min-width:0}
+#v-admin .co-bar i{display:block;width:100%;position:relative;margin-top:auto;border-radius:6px 6px 2px 2px;background:var(--surface-3);min-height:2px}
+#v-admin .co-bar i b{position:absolute;left:0;right:0;bottom:0;background:var(--accent);border-radius:6px 6px 2px 2px}
+#v-admin .co-bar small{font-size:11px;color:var(--muted)}
+#v-admin .co-lg{display:inline-block;width:10px;height:10px;border-radius:3px;vertical-align:middle;margin:0 4px 0 10px}
+#v-admin .co-lg.a{background:var(--surface-3)}#v-admin .co-lg.b{background:var(--accent)}
+#v-admin .co-ab{display:flex;flex-direction:column;gap:4px;opacity:.75}
+#v-admin .co-atalhos{display:flex;flex-wrap:wrap;gap:8px}
+#v-admin .co-regras{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+#v-admin .co-rg{display:flex;flex-direction:column;gap:10px;margin:0}
+#v-admin .co-rg.off{opacity:.6}
+#v-admin .co-rg-h{display:flex;align-items:center;gap:10px}.co-rg-h b{flex:1}
+#v-admin .co-pr{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+#v-admin .co-pr input{width:64px;min-height:36px;padding:4px 8px}
+#v-admin .co-qsaa{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;margin:0;font-size:14px}
+#v-admin .co-qsaa dt{font-size:11px;font-weight:800;letter-spacing:.08em;color:var(--accent);padding-top:2px}
+#v-admin .co-qsaa dd{margin:0;color:var(--ink)}
+#v-admin .co-filtros{flex-wrap:wrap;gap:8px}#v-admin .co-filtros .input{width:auto;flex:1 1 180px}
+#v-admin .co-tbl td{vertical-align:top}#v-admin .co-tbl tr.off td{opacity:.55}
+#v-admin .co-tx{min-width:260px;max-width:420px;white-space:normal}
+#v-admin .co-ac{white-space:nowrap}#v-admin .co-ac .btn{margin:0 4px 4px 0}
+#v-admin .co-prev{display:flex;flex-direction:column;gap:4px;background:#0E3D32;color:#fff;border:0}
+#v-admin .co-prev small{color:#C9B37E!important}#v-admin .co-prev span{color:#DCE9DF}
+.mbox .co-prev{display:flex;flex-direction:column;gap:4px;background:#0E3D32;color:#fff;border:0;border-radius:16px;padding:14px}
+.mbox .co-prev small{color:#C9B37E!important}.mbox .co-prev span{color:#DCE9DF}

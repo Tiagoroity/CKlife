@@ -191,3 +191,84 @@ const migraCoach = migra; migra = function(u){ try{ if(u && ME && u === ME && u.
 const organizaInicioCoach = organizaInicio;
 organizaInicio = function(){ const r = organizaInicioCoach.apply(this, arguments); if(!ORG){ ORG = true; try{ coachPinta(); }catch(e){ console.warn(e); } finally { setTimeout(() => { ORG = false; }, 0); } } return r; };
 const abrirAppCoach = abrirApp; abrirApp = function(){ const r = abrirAppCoach.apply(this, arguments); setTimeout(() => { if(!$("onb") || $("v-onb").hidden) try{ if(!$("ent-bv")) coachVoltou(); }catch(e){ console.warn(e); } }, 1200); return r; };
+
+/* ===================== COACH NO SERVIDOR: recados, preferências e fuso =====================
+   O servidor manda no máximo 2 recados por dia (contando os lembretes). Aqui a aluna vê os recados
+   e escolhe o que quer receber. Desligar uma categoria vale na hora, no servidor. */
+const CPREF_PAD = { coach: true, treino: true, alimentacao: true, comunidade: true, conquistas: true, desafios: true, promocoes: false, silencio_ini: 21, silencio_fim: 8, max_dia: 2 };
+const CPREF_GR = [["coach", "Coach CK Life", "Incentivo, bom dia e aquele empurrãozinho quando você some", "star"], ["treino", "Treinos", "Antes do seu horário e treinos curtinhos", "treinar"],
+  ["alimentacao", "Alimentação e água", "Receitas, refeições e hidratação", "drop"], ["comunidade", "Comunidade", "Vitórias, grupos e Pergunta do dia", "people"],
+  ["conquistas", "Conquistas", "Comemorar treinos, sequências e marcos", "trophy"], ["desafios", "Desafios", "Desafios da semana e do mês", "target"], ["promocoes", "Promoções", "Ofertas do CK Life. Só se você quiser.", "tag"]];
+let CPREF = null, CINBOX = null;
+const cNuvem = () => !!(NU.ativo && NU.sb && NU.uid);
+const cFuso = () => { try{ return Intl.DateTimeFormat().resolvedOptions().timeZone || "America/Cuiaba"; }catch(e){ return "America/Cuiaba"; } };
+async function coachPrefsCarrega(){
+  CPREF = { ...CPREF_PAD, ...(ME.coachPrefs || {}) };
+  if(cNuvem()) try{ const r = await NU.sb.from("coach_prefs").select("*").eq("user_id", NU.uid); if(!r.error && r.data && r.data[0]) CPREF = { ...CPREF_PAD, ...r.data[0] }; }catch(e){}
+  return CPREF;
+}
+async function coachPrefsSalva(p){
+  CPREF = { ...(CPREF || CPREF_PAD), ...p }; const { user_id, atualizado, fuso, ...loc } = CPREF; ME.coachPrefs = loc; save();
+  if(!cNuvem()) return true;
+  try{ const r = await NU.sb.from("coach_prefs").upsert({ user_id: NU.uid, ...p, fuso: cFuso() }, { onConflict: "user_id" }); if(r.error) throw r.error; ME.coachFuso = cFuso(); save(); return true; }
+  catch(e){ toast("Sem conexão agora. Tentamos de novo quando voltar."); ME.coachPendente = 1; save(); return false; }
+}
+async function coachFuso(){   // o servidor precisa do fuso para respeitar o seu horário
+  if(!cNuvem()) return; const f = cFuso();
+  if(ME.coachPendente && ME.coachPrefs){ const { coach, treino, alimentacao, comunidade, conquistas, desafios, promocoes, silencio_ini, silencio_fim, max_dia } = { ...CPREF_PAD, ...ME.coachPrefs };
+    try{ const r = await NU.sb.from("coach_prefs").upsert({ user_id: NU.uid, coach, treino, alimentacao, comunidade, conquistas, desafios, promocoes, silencio_ini, silencio_fim, max_dia, fuso: f }, { onConflict: "user_id" }); if(!r.error){ delete ME.coachPendente; ME.coachFuso = f; save(); } }catch(e){} return; }
+  if(ME.coachFuso === f) return;
+  try{ const r = await NU.sb.from("coach_prefs").upsert({ user_id: NU.uid, fuso: f }, { onConflict: "user_id" }); if(!r.error){ ME.coachFuso = f; save(); } }catch(e){}
+}
+async function coachInbox(){
+  if(!cNuvem()) return CINBOX = CINBOX || [];
+  try{ const r = await NU.sb.rpc("coach_inbox"); if(!r.error && Array.isArray(r.data)) CINBOX = r.data; }catch(e){}
+  return CINBOX || [];
+}
+const cNaoLidos = () => (CINBOX || []).filter(x => !x.aberto).length;
+const cQuando = iso => { const m = Math.max(0, Math.round((Date.now() - new Date(iso)) / 60000)); return m < 1 ? "agora" : m < 60 ? `${m} min` : m < 1440 ? `${Math.round(m / 60)} h` : m < 2880 ? "ontem" : `${Math.round(m / 1440)} dias`; };
+function coachRecados(destaque){
+  sheet("Recados da Coach", `<div class="coach-rec" id="coach-rec"><p class="muted">Carregando…</p></div>
+    <button class="btn btn-line btn-block" id="coach-pref-ir" style="margin-top:14px">${ic("gear", 16)} Escolher o que receber</button>`);
+  $("coach-pref-ir").onclick = coachPrefsTela;
+  coachInbox().then(L => {
+    const box = $("coach-rec"); if(!box) return;
+    box.innerHTML = L.length ? L.map(x => `<article class="coach-it ${x.aberto ? "" : "novo"} ${String(x.id) === String(destaque) ? "dest" : ""}"><div class="coach-av"><img src="img/modelo.jpg" alt="" onerror="this.remove()"><i>${ic("star", 8, 3)}</i></div>
+        <div><b>${esc(x.titulo)}</b><p>${esc(x.texto)}</p><small>${cQuando(x.criado)}</small></div></article>`).join("")
+      : `<div class="coach-vazio"><div class="coach-av grande"><img src="img/modelo.jpg" alt="" onerror="this.remove()"><i>${ic("star", 12, 3)}</i></div><p>Ainda não há recados.<br>A Coach aparece por aqui de vez em quando, sem exagero. 💚</p></div>`;
+    if(cNaoLidos() && cNuvem()){ NU.sb.rpc("coach_abriu", { p_id: null }).then(() => { (CINBOX || []).forEach(x => x.aberto = x.aberto || new Date().toISOString()); coachPinta(); }).catch(() => {}); }
+  });
+}
+async function coachPrefsTela(){
+  const p = await coachPrefsCarrega(), hs = Array.from({ length: 24 }, (_, h) => h);
+  const push = typeof pushLigado === "function" && pushLigado();
+  sheet("Coach e avisos", `<div class="coach-sh">
+    <p class="muted" style="margin:0">Você escolhe o que quer receber. A Coach manda no máximo ${p.max_dia} ${p.max_dia === 1 ? "recado" : "recados"} por dia e nunca no seu horário de silêncio.</p>
+    ${push ? "" : `<button class="setrow" id="cp-push"><span class="si">${ic("bell", 19)}</span><div><b>Avisos no celular desligados</b><small>Os recados ficam só dentro do app. Toque para ativar.</small></div></button>`}
+    <div class="cp-lista">${CPREF_GR.map(([k, t, s, i]) => `<button class="setrow cp-g" data-cp="${k}"><span class="si">${ic(i, 19)}</span><div><b>${t}</b><small>${s}</small></div>${sw(p[k])}</button>`).join("")}</div>
+    <div class="card cp-sil"><b>Horário de silêncio</b><small class="muted">Nada chega nesse horário.</small>
+      <div class="row2"><label class="field">Das<select class="input" id="cp-ini">${hs.map(h => `<option value="${h}" ${h === p.silencio_ini ? "selected" : ""}>${String(h).padStart(2, "0")}h</option>`).join("")}</select></label>
+      <label class="field">até<select class="input" id="cp-fim">${hs.map(h => `<option value="${h}" ${h === p.silencio_fim ? "selected" : ""}>${String(h).padStart(2, "0")}h</option>`).join("")}</select></label></div>
+      <label class="field">Recados por dia (no máximo)<select class="input" id="cp-max">${[1, 2, 3].map(n => `<option value="${n}" ${n === p.max_dia ? "selected" : ""}>${n}</option>`).join("")}</select></label></div>
+    <p class="hint" style="margin:0">A Coach CK Life é uma coach virtual. Ela nunca usa dados do seu ciclo, peso ou saúde nos avisos.</p></div>`);
+  const cp = $("cp-push"); if(cp) cp.onclick = async () => { try{ await ativarNotificacoes(); }catch(e){} if($("sheet-title").textContent === "Coach e avisos") coachPrefsTela(); };
+  document.querySelectorAll("[data-cp]").forEach(b => b.onclick = async () => { const k = b.dataset.cp, s = b.querySelector(".sw"), v = s.getAttribute("aria-checked") !== "true";
+    s.setAttribute("aria-checked", v); SOM.tap && SOM.tap(); await coachPrefsSalva({ [k]: v }); if(k === "coach" && !v) toast("Coach pausada. Você pode ligar quando quiser."); });
+  ["cp-ini", "cp-fim", "cp-max"].forEach(id => $(id).onchange = () => coachPrefsSalva({ silencio_ini: +$("cp-ini").value, silencio_fim: +$("cp-fim").value, max_dia: +$("cp-max").value }).then(ok => ok && toast("Salvo 💚")));
+}
+/* Perfil: linha "Coach e avisos" logo abaixo de "Avisos no celular" */
+const rPerfilCoach = rPerfil; rPerfil = function(){ const r = rPerfilCoach.apply(this, arguments); try{
+  const ref = $("p-somn") || $("p-push") || $("p-lemb"); if(ref && !$("p-coach")){ const p = { ...CPREF_PAD, ...(ME.coachPrefs || {}) };
+    ref.insertAdjacentHTML("afterend", setRow("p-coach", "star", "Coach e avisos", p.coach ? "Escolha o que receber e o horário de silêncio" : "Coach pausada"));
+    $("p-coach").onclick = coachPrefsTela; } }catch(e){ console.warn(e); } return r; };
+/* recado aberto pelo aviso do celular (?coach=ID) */
+function coachAbrePorUrl(url){ const m = /[?&]coach=(\d+)/.exec(url || ""); if(!m) return false; const id = +m[1];
+  if(cNuvem()) NU.sb.rpc("coach_abriu", { p_id: id }).catch(() => {}); coachRecados(id); return true; }
+{ let n = 0; const t = setInterval(() => { if(ME && !$("v-app").hidden){ clearInterval(t); if(coachAbrePorUrl(location.search)) history.replaceState(null, "", location.pathname + location.hash); } else if(++n > 40) clearInterval(t); }, 500); }
+if("serviceWorker" in navigator) navigator.serviceWorker.addEventListener("message", e => { if(e.data && e.data.tipo === "push") coachAbrePorUrl(String(e.data.url || "")); });
+/* chip de recados no cartão da Coach */
+const coachCardHTMLBase = coachCardHTML;
+coachCardHTML = function(){ const n = cNaoLidos(); return coachCardHTMLBase().replace('<div class="coach-lk">', `<div class="coach-lk"><button class="coach-chip" data-ca="recados">Recados${n ? ` <i class="coach-n">${n}</i>` : ""}</button>`); };
+const coachAcaoBase = coachAcao; coachAcao = function(k){ if(k === "recados"){ SOM.tap && SOM.tap(); return coachRecados(); } return coachAcaoBase.apply(this, arguments); };
+const abrirAppCoach2 = abrirApp; abrirApp = function(){ const r = abrirAppCoach2.apply(this, arguments); setTimeout(() => { if(!ME) return; coachFuso(); coachInbox().then(() => { if(TAB === "inicio") coachPinta(); }); }, 2500); return r; };
+document.addEventListener("visibilitychange", () => { if(!document.hidden && ME && cNuvem()) coachInbox().then(() => { if(TAB === "inicio") coachPinta(); }); });

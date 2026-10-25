@@ -2492,6 +2492,48 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
 .coach-1o-in h1{font-size:clamp(26px,7.5vw,32px);color:#fff}.coach-1o-in p{margin:0;color:#DCE9DF;line-height:1.5}.coach-1o-q b{color:#F2E6C4}
 .coach-1o .btn.ent-cta{min-height:54px;width:100%;border-radius:16px;border:0;font-weight:800;background:linear-gradient(135deg,#F2E6C4,#C9B37E);color:#0B2F25;margin-top:6px}
 .coach-1o .link.ent-pula{color:#B9CFC2;min-height:44px;background:none;border:0;text-decoration:underline;font-size:14px}
+.coach-n{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:#C9B37E;color:#0B2F25;font-style:normal;font-size:11px;font-weight:800;margin-left:4px}
+.coach-rec{display:flex;flex-direction:column;gap:10px}
+.coach-it{display:flex;gap:12px;align-items:flex-start;padding:12px;border-radius:18px;background:var(--surface-2);border:1px solid var(--line)}
+.coach-it .coach-av{width:38px;height:38px}.coach-it .coach-av i{width:16px;height:16px}
+.coach-it .coach-av img,.coach-it .coach-av i,.coach-vazio .coach-av img,.coach-vazio .coach-av i{border-color:var(--surface-2)}
+.coach-it b{display:block;color:var(--ink)}.coach-it p{margin:2px 0 4px;color:var(--ink);line-height:1.45}.coach-it small{color:var(--muted)}
+.coach-it.novo{border-color:#C9B37E;box-shadow:inset 3px 0 0 #C9B37E}
+.coach-it.dest{animation:entPop .5s both}
+.coach-vazio{text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;padding:16px 0;color:var(--muted)}
+.cp-lista{display:flex;flex-direction:column;gap:6px}
+.cp-sil{display:flex;flex-direction:column;gap:8px}.cp-sil .row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+/* ===== Painel · Engajamento & Coach ===== */
+#v-admin .co-st{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:99px;background:var(--bad-soft);color:var(--bad);font-weight:700;font-size:13px}
+#v-admin .co-st.on{background:var(--accent-soft);color:var(--accent-strong)}
+#v-admin .co-st::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+#v-admin #co-abas{margin:4px 0 14px}
+#v-admin .co-bars{display:flex;align-items:flex-end;gap:6px;height:150px}
+#v-admin .co-bar{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;min-width:0}
+#v-admin .co-bar i{display:block;width:100%;position:relative;margin-top:auto;border-radius:6px 6px 2px 2px;background:var(--surface-3);min-height:2px}
+#v-admin .co-bar i b{position:absolute;left:0;right:0;bottom:0;background:var(--accent);border-radius:6px 6px 2px 2px}
+#v-admin .co-bar small{font-size:11px;color:var(--muted)}
+#v-admin .co-lg{display:inline-block;width:10px;height:10px;border-radius:3px;vertical-align:middle;margin:0 4px 0 10px}
+#v-admin .co-lg.a{background:var(--surface-3)}#v-admin .co-lg.b{background:var(--accent)}
+#v-admin .co-ab{display:flex;flex-direction:column;gap:4px;opacity:.75}
+#v-admin .co-atalhos{display:flex;flex-wrap:wrap;gap:8px}
+#v-admin .co-regras{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+#v-admin .co-rg{display:flex;flex-direction:column;gap:10px;margin:0}
+#v-admin .co-rg.off{opacity:.6}
+#v-admin .co-rg-h{display:flex;align-items:center;gap:10px}.co-rg-h b{flex:1}
+#v-admin .co-pr{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+#v-admin .co-pr input{width:64px;min-height:36px;padding:4px 8px}
+#v-admin .co-qsaa{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;margin:0;font-size:14px}
+#v-admin .co-qsaa dt{font-size:11px;font-weight:800;letter-spacing:.08em;color:var(--accent);padding-top:2px}
+#v-admin .co-qsaa dd{margin:0;color:var(--ink)}
+#v-admin .co-filtros{flex-wrap:wrap;gap:8px}#v-admin .co-filtros .input{width:auto;flex:1 1 180px}
+#v-admin .co-tbl td{vertical-align:top}#v-admin .co-tbl tr.off td{opacity:.55}
+#v-admin .co-tx{min-width:260px;max-width:420px;white-space:normal}
+#v-admin .co-ac{white-space:nowrap}#v-admin .co-ac .btn{margin:0 4px 4px 0}
+#v-admin .co-prev{display:flex;flex-direction:column;gap:4px;background:#0E3D32;color:#fff;border:0}
+#v-admin .co-prev small{color:#C9B37E!important}#v-admin .co-prev span{color:#DCE9DF}
+.mbox .co-prev{display:flex;flex-direction:column;gap:4px;background:#0E3D32;color:#fff;border:0;border-radius:16px;padding:14px}
+.mbox .co-prev small{color:#C9B37E!important}.mbox .co-prev span{color:#DCE9DF}
 </style>
 
 <!-- Entrar / criar conta -->
@@ -8772,7 +8814,7 @@ const abrirPerfilEq = abrirPerfil; abrirPerfil = async function(u){
    Quem deixa o CK Life aberto (ou instalado na tela inicial) fica com a versão antiga até recarregar.
    O app confere a versão publicada ao abrir, ao voltar do segundo plano e a cada 5 minutos.
    Se houver versão nova, mostra a faixa "ATUALIZAR": um toque e pronto. Nunca aparece no meio do treino. */
-const CK_VER = "20261024232011";
+const CK_VER = "20261024234619";
 let CK_VER_NOVA = null;
 async function confereVersao(){
   if(!/^\d/.test(CK_VER) || !/^https?:/.test(location.protocol)) return;
@@ -9165,6 +9207,87 @@ const migraCoach = migra; migra = function(u){ try{ if(u && ME && u === ME && u.
 const organizaInicioCoach = organizaInicio;
 organizaInicio = function(){ const r = organizaInicioCoach.apply(this, arguments); if(!ORG){ ORG = true; try{ coachPinta(); }catch(e){ console.warn(e); } finally { setTimeout(() => { ORG = false; }, 0); } } return r; };
 const abrirAppCoach = abrirApp; abrirApp = function(){ const r = abrirAppCoach.apply(this, arguments); setTimeout(() => { if(!$("onb") || $("v-onb").hidden) try{ if(!$("ent-bv")) coachVoltou(); }catch(e){ console.warn(e); } }, 1200); return r; };
+
+/* ===================== COACH NO SERVIDOR: recados, preferências e fuso =====================
+   O servidor manda no máximo 2 recados por dia (contando os lembretes). Aqui a aluna vê os recados
+   e escolhe o que quer receber. Desligar uma categoria vale na hora, no servidor. */
+const CPREF_PAD = { coach: true, treino: true, alimentacao: true, comunidade: true, conquistas: true, desafios: true, promocoes: false, silencio_ini: 21, silencio_fim: 8, max_dia: 2 };
+const CPREF_GR = [["coach", "Coach CK Life", "Incentivo, bom dia e aquele empurrãozinho quando você some", "star"], ["treino", "Treinos", "Antes do seu horário e treinos curtinhos", "treinar"],
+  ["alimentacao", "Alimentação e água", "Receitas, refeições e hidratação", "drop"], ["comunidade", "Comunidade", "Vitórias, grupos e Pergunta do dia", "people"],
+  ["conquistas", "Conquistas", "Comemorar treinos, sequências e marcos", "trophy"], ["desafios", "Desafios", "Desafios da semana e do mês", "target"], ["promocoes", "Promoções", "Ofertas do CK Life. Só se você quiser.", "tag"]];
+let CPREF = null, CINBOX = null;
+const cNuvem = () => !!(NU.ativo && NU.sb && NU.uid);
+const cFuso = () => { try{ return Intl.DateTimeFormat().resolvedOptions().timeZone || "America/Cuiaba"; }catch(e){ return "America/Cuiaba"; } };
+async function coachPrefsCarrega(){
+  CPREF = { ...CPREF_PAD, ...(ME.coachPrefs || {}) };
+  if(cNuvem()) try{ const r = await NU.sb.from("coach_prefs").select("*").eq("user_id", NU.uid); if(!r.error && r.data && r.data[0]) CPREF = { ...CPREF_PAD, ...r.data[0] }; }catch(e){}
+  return CPREF;
+}
+async function coachPrefsSalva(p){
+  CPREF = { ...(CPREF || CPREF_PAD), ...p }; const { user_id, atualizado, fuso, ...loc } = CPREF; ME.coachPrefs = loc; save();
+  if(!cNuvem()) return true;
+  try{ const r = await NU.sb.from("coach_prefs").upsert({ user_id: NU.uid, ...p, fuso: cFuso() }, { onConflict: "user_id" }); if(r.error) throw r.error; ME.coachFuso = cFuso(); save(); return true; }
+  catch(e){ toast("Sem conexão agora. Tentamos de novo quando voltar."); ME.coachPendente = 1; save(); return false; }
+}
+async function coachFuso(){   // o servidor precisa do fuso para respeitar o seu horário
+  if(!cNuvem()) return; const f = cFuso();
+  if(ME.coachPendente && ME.coachPrefs){ const { coach, treino, alimentacao, comunidade, conquistas, desafios, promocoes, silencio_ini, silencio_fim, max_dia } = { ...CPREF_PAD, ...ME.coachPrefs };
+    try{ const r = await NU.sb.from("coach_prefs").upsert({ user_id: NU.uid, coach, treino, alimentacao, comunidade, conquistas, desafios, promocoes, silencio_ini, silencio_fim, max_dia, fuso: f }, { onConflict: "user_id" }); if(!r.error){ delete ME.coachPendente; ME.coachFuso = f; save(); } }catch(e){} return; }
+  if(ME.coachFuso === f) return;
+  try{ const r = await NU.sb.from("coach_prefs").upsert({ user_id: NU.uid, fuso: f }, { onConflict: "user_id" }); if(!r.error){ ME.coachFuso = f; save(); } }catch(e){}
+}
+async function coachInbox(){
+  if(!cNuvem()) return CINBOX = CINBOX || [];
+  try{ const r = await NU.sb.rpc("coach_inbox"); if(!r.error && Array.isArray(r.data)) CINBOX = r.data; }catch(e){}
+  return CINBOX || [];
+}
+const cNaoLidos = () => (CINBOX || []).filter(x => !x.aberto).length;
+const cQuando = iso => { const m = Math.max(0, Math.round((Date.now() - new Date(iso)) / 60000)); return m < 1 ? "agora" : m < 60 ? `${m} min` : m < 1440 ? `${Math.round(m / 60)} h` : m < 2880 ? "ontem" : `${Math.round(m / 1440)} dias`; };
+function coachRecados(destaque){
+  sheet("Recados da Coach", `<div class="coach-rec" id="coach-rec"><p class="muted">Carregando…</p></div>
+    <button class="btn btn-line btn-block" id="coach-pref-ir" style="margin-top:14px">${ic("gear", 16)} Escolher o que receber</button>`);
+  $("coach-pref-ir").onclick = coachPrefsTela;
+  coachInbox().then(L => {
+    const box = $("coach-rec"); if(!box) return;
+    box.innerHTML = L.length ? L.map(x => `<article class="coach-it ${x.aberto ? "" : "novo"} ${String(x.id) === String(destaque) ? "dest" : ""}"><div class="coach-av"><img src="img/modelo.jpg" alt="" onerror="this.remove()"><i>${ic("star", 8, 3)}</i></div>
+        <div><b>${esc(x.titulo)}</b><p>${esc(x.texto)}</p><small>${cQuando(x.criado)}</small></div></article>`).join("")
+      : `<div class="coach-vazio"><div class="coach-av grande"><img src="img/modelo.jpg" alt="" onerror="this.remove()"><i>${ic("star", 12, 3)}</i></div><p>Ainda não há recados.<br>A Coach aparece por aqui de vez em quando, sem exagero. 💚</p></div>`;
+    if(cNaoLidos() && cNuvem()){ NU.sb.rpc("coach_abriu", { p_id: null }).then(() => { (CINBOX || []).forEach(x => x.aberto = x.aberto || new Date().toISOString()); coachPinta(); }).catch(() => {}); }
+  });
+}
+async function coachPrefsTela(){
+  const p = await coachPrefsCarrega(), hs = Array.from({ length: 24 }, (_, h) => h);
+  const push = typeof pushLigado === "function" && pushLigado();
+  sheet("Coach e avisos", `<div class="coach-sh">
+    <p class="muted" style="margin:0">Você escolhe o que quer receber. A Coach manda no máximo ${p.max_dia} ${p.max_dia === 1 ? "recado" : "recados"} por dia e nunca no seu horário de silêncio.</p>
+    ${push ? "" : `<button class="setrow" id="cp-push"><span class="si">${ic("bell", 19)}</span><div><b>Avisos no celular desligados</b><small>Os recados ficam só dentro do app. Toque para ativar.</small></div></button>`}
+    <div class="cp-lista">${CPREF_GR.map(([k, t, s, i]) => `<button class="setrow cp-g" data-cp="${k}"><span class="si">${ic(i, 19)}</span><div><b>${t}</b><small>${s}</small></div>${sw(p[k])}</button>`).join("")}</div>
+    <div class="card cp-sil"><b>Horário de silêncio</b><small class="muted">Nada chega nesse horário.</small>
+      <div class="row2"><label class="field">Das<select class="input" id="cp-ini">${hs.map(h => `<option value="${h}" ${h === p.silencio_ini ? "selected" : ""}>${String(h).padStart(2, "0")}h</option>`).join("")}</select></label>
+      <label class="field">até<select class="input" id="cp-fim">${hs.map(h => `<option value="${h}" ${h === p.silencio_fim ? "selected" : ""}>${String(h).padStart(2, "0")}h</option>`).join("")}</select></label></div>
+      <label class="field">Recados por dia (no máximo)<select class="input" id="cp-max">${[1, 2, 3].map(n => `<option value="${n}" ${n === p.max_dia ? "selected" : ""}>${n}</option>`).join("")}</select></label></div>
+    <p class="hint" style="margin:0">A Coach CK Life é uma coach virtual. Ela nunca usa dados do seu ciclo, peso ou saúde nos avisos.</p></div>`);
+  const cp = $("cp-push"); if(cp) cp.onclick = async () => { try{ await ativarNotificacoes(); }catch(e){} if($("sheet-title").textContent === "Coach e avisos") coachPrefsTela(); };
+  document.querySelectorAll("[data-cp]").forEach(b => b.onclick = async () => { const k = b.dataset.cp, s = b.querySelector(".sw"), v = s.getAttribute("aria-checked") !== "true";
+    s.setAttribute("aria-checked", v); SOM.tap && SOM.tap(); await coachPrefsSalva({ [k]: v }); if(k === "coach" && !v) toast("Coach pausada. Você pode ligar quando quiser."); });
+  ["cp-ini", "cp-fim", "cp-max"].forEach(id => $(id).onchange = () => coachPrefsSalva({ silencio_ini: +$("cp-ini").value, silencio_fim: +$("cp-fim").value, max_dia: +$("cp-max").value }).then(ok => ok && toast("Salvo 💚")));
+}
+/* Perfil: linha "Coach e avisos" logo abaixo de "Avisos no celular" */
+const rPerfilCoach = rPerfil; rPerfil = function(){ const r = rPerfilCoach.apply(this, arguments); try{
+  const ref = $("p-somn") || $("p-push") || $("p-lemb"); if(ref && !$("p-coach")){ const p = { ...CPREF_PAD, ...(ME.coachPrefs || {}) };
+    ref.insertAdjacentHTML("afterend", setRow("p-coach", "star", "Coach e avisos", p.coach ? "Escolha o que receber e o horário de silêncio" : "Coach pausada"));
+    $("p-coach").onclick = coachPrefsTela; } }catch(e){ console.warn(e); } return r; };
+/* recado aberto pelo aviso do celular (?coach=ID) */
+function coachAbrePorUrl(url){ const m = /[?&]coach=(\d+)/.exec(url || ""); if(!m) return false; const id = +m[1];
+  if(cNuvem()) NU.sb.rpc("coach_abriu", { p_id: id }).catch(() => {}); coachRecados(id); return true; }
+{ let n = 0; const t = setInterval(() => { if(ME && !$("v-app").hidden){ clearInterval(t); if(coachAbrePorUrl(location.search)) history.replaceState(null, "", location.pathname + location.hash); } else if(++n > 40) clearInterval(t); }, 500); }
+if("serviceWorker" in navigator) navigator.serviceWorker.addEventListener("message", e => { if(e.data && e.data.tipo === "push") coachAbrePorUrl(String(e.data.url || "")); });
+/* chip de recados no cartão da Coach */
+const coachCardHTMLBase = coachCardHTML;
+coachCardHTML = function(){ const n = cNaoLidos(); return coachCardHTMLBase().replace('<div class="coach-lk">', `<div class="coach-lk"><button class="coach-chip" data-ca="recados">Recados${n ? ` <i class="coach-n">${n}</i>` : ""}</button>`); };
+const coachAcaoBase = coachAcao; coachAcao = function(k){ if(k === "recados"){ SOM.tap && SOM.tap(); return coachRecados(); } return coachAcaoBase.apply(this, arguments); };
+const abrirAppCoach2 = abrirApp; abrirApp = function(){ const r = abrirAppCoach2.apply(this, arguments); setTimeout(() => { if(!ME) return; coachFuso(); coachInbox().then(() => { if(TAB === "inicio") coachPinta(); }); }, 2500); return r; };
+document.addEventListener("visibilitychange", () => { if(!document.hidden && ME && cNuvem()) coachInbox().then(() => { if(TAB === "inicio") coachPinta(); }); });
 
 const TABS = [["inicio","Início"],["treinar","Treinos"],["dieta","Nutrição"],["juntas","Comunidade"],["explorar","Explorar"],["perfil","Perfil"],["evolucao","Evolução"]];
 const NAV = TABS.slice(0, 6), NAV_DE = { evolucao: "perfil" };
@@ -12986,6 +13109,143 @@ async function vEquipe(){
     try{ const r = await SB2().rpc("admin_equipe_membro", { p_user: b.dataset.eq, p_ativo: on }); if(r.error) throw r.error; b.setAttribute("aria-checked", on); b.closest(".eq-m").classList.toggle("off", !on); toast(on ? "Perfil ligado" : "Perfil desligado"); }catch(e){ toast("Não deu: " + (e.message || e)); } });
 }
 VIEWS.equipe = vEquipe;
+
+/* ===================== Painel · ENGAJAMENTO & COACH =====================
+   Visão geral (DAU/WAU/MAU, D1/D7/D30, recuperadas, avisos enviados/abertos, treinos depois do aviso, quem desligou),
+   Mensagens (365+, editar, ligar/desligar, testar em mim), Automações (QUANDO / SE / AGUARDAR / AÇÃO),
+   Inativas e segmentos (só contagens, nunca lista pessoal), Configurações (chave geral, limite por dia, silêncio).
+   Tudo vem do banco. Sem número inventado: sem base, aparece "-". */
+AIC.coach = '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/><path d="m17 3 1 2 2 .3-1.5 1.4.4 2.1-1.9-1-1.9 1 .4-2.1L14 5.3l2-.3z"/>';
+SECOES.push(["coach", "Engajamento & Coach"]); MENU_NOME.coach = "Engajamento & Coach";
+{ const g = MENU.find(m => m[0] === "Marketing"); if(g && !g[1].some(x => x[2].includes("coach"))) g[1].unshift(["Engajamento & Coach", "coach", ["coach"]]); }
+{ const mmCo = montaMenu; montaMenu = function(){ try{ if(PERM && !PERM.total && PERM.coach == null && PERM.notificacoes) PERM.coach = PERM.notificacoes; }catch(e){} return mmCo.apply(this, arguments); }; }
+
+let CO_ABA = "geral", CO_D = null, CO_M = null, CO_F = { cat: "", q: "", st: "" };
+const CO_CAT = { bom_dia: "Bom dia", treino: "Treino", pre_treino: "Pré-treino", pos_treino: "Pós-treino", alimentacao: "Alimentação", hidratacao: "Hidratação", preguica: "Preguiça", humor: "Humor",
+  segunda: "Segunda", sexta: "Sexta", fim_de_semana: "Fim de semana", recomeco: "Recomeço", ausencia_24h: "Ausência 24h", ausencia_48h: "Ausência 48h", ausencia_3d: "Ausência 3 dias",
+  ausencia_5d: "Ausência 5 dias", ausencia_7d: "Ausência 7 dias", primeira_semana: "Primeira semana", primeiro_mes: "Primeiro mês", conquista: "Conquista", streak: "Sequência", comunidade: "Comunidade",
+  autoestima: "Autoestima", disciplina: "Disciplina", motivacao: "Motivação", rotina_corrida: "Rotina corrida", treino_rapido: "Treino rápido", noite: "Noite", celebracao: "Celebração", voltou: "Voltou" };
+const CO_GAT = c => ({ pos_treino: "Comemorar treino", streak: "Comemorar treino (sequência)", celebracao: "Comemorar treino (marco)", voltou: "Voltou depois de pausa", ausencia_24h: "Faltou ontem",
+  ausencia_48h: "Sumiu 2 dias", ausencia_3d: "Sumiu 3 dias", ausencia_5d: "Sumiu 5 dias", ausencia_7d: "Sumiu 7 dias", primeira_semana: "Primeira semana", primeiro_mes: "Um mês de CK Life",
+  pre_treino: "Antes do horário", noite: "Fim de dia", comunidade: "Comunidade", segunda: "Bom dia (segunda)", sexta: "Bom dia (sexta)", fim_de_semana: "Bom dia (fim de semana)" }[c]
+  || (["bom_dia", "motivacao", "hidratacao", "autoestima", "treino_rapido", "disciplina", "alimentacao", "humor", "rotina_corrida", "treino", "preguica"].includes(c) ? "Bom dia (rodízio)" : "Reserva (manual)"));
+const coPct = (a, b) => b ? Math.round(100 * a / b) + "%" : "-";
+const coNome = c => CO_CAT[c] || c;
+
+async function vCoach(){
+  const ed = podeEditar("coach") || podeEditar("notificacoes") || PERM.total;
+  $("adm-main").innerHTML = `<div class="head"><div><h1>Engajamento & Coach</h1><p class="muted">Carregando…</p></div></div>`;
+  try{ const r = await SB2().rpc("admin_coach_resumo"); if(r.error) throw r.error; CO_D = r.data; if(!CO_D) throw new Error("sem acesso"); }
+  catch(e){ $("adm-main").innerHTML = `<div class="head"><div><h1>Engajamento & Coach</h1><p class="muted">Ainda não ativado. Rode o SQL <b>coach.sql</b> no Supabase (SQL Editor) e abra esta tela de novo.</p></div></div>`; return; }
+  const d = CO_D, c = d.config || {};
+  const abas = [["geral", "Visão geral"], ["mensagens", "Mensagens"], ["auto", "Automações"], ["inativas", "Inativas e segmentos"], ["config", "Configurações"]];
+  const atalhos = [["notificacoes", "Notificações (Central)"], ["comunidade", "Comunidade"], ["equipe", "Time de Incentivo"], ["figurinhas", "Conquistas e figurinhas"], ["numeros", "Números do negócio"]].filter(([k]) => VIEWS[k] && podeVer(k));
+  $("adm-main").innerHTML = `
+    <div class="head"><div><h1>Engajamento & Coach</h1><p class="muted">A Coach CK Life é virtual e nunca finge ser uma pessoa. O servidor manda <b>no máximo ${int(c.max_dia)} recados por dia</b> para cada aluna (contando os lembretes), respeita o horário de silêncio e as preferências dela, e nunca usa ciclo, peso ou saúde.</p></div>
+      <div class="toolbar"><span class="co-st ${c.ligado ? "on" : ""}">${c.ligado ? "Coach ligada" : "Coach desligada"}</span><button class="btn btn-line btn-sm" id="co-at">${aic("resumo", 15)} Atualizar</button></div></div>
+    <div class="chips scroll seg-sub" id="co-abas">${abas.map(([k, n]) => `<button class="chip" data-co="${k}" aria-pressed="${CO_ABA === k}">${n}</button>`).join("")}</div>
+    <div id="co-corpo"></div>
+    ${atalhos.length ? `<div class="nb-sec">Outras áreas de engajamento</div><div class="co-atalhos">${atalhos.map(([k, n]) => `<button class="btn btn-line btn-sm" data-ir="${k}">${esc(n)} ${aic("chev", 14)}</button>`).join("")}</div>` : ""}`;
+  $("co-at").onclick = () => { CO_M = null; vCoach(); };
+  $("co-abas").querySelectorAll("[data-co]").forEach(b => b.onclick = () => { CO_ABA = b.dataset.co; $("co-abas").querySelectorAll("[data-co]").forEach(x => x.setAttribute("aria-pressed", x === b)); coAba(ed); });
+  $("adm-main").querySelectorAll("[data-ir]").forEach(b => b.onclick = () => { const t = document.querySelector(`#adm-tabs [data-s="${b.dataset.ir}"]`); if(t) t.click(); else if(VIEWS[b.dataset.ir]) VIEWS[b.dataset.ir](); });
+  coAba(ed);
+}
+function coAba(ed){
+  const box = $("co-corpo"), d = CO_D, c = d.config || {};
+  if(CO_ABA === "geral"){
+    const pd = d.por_dia || [], mx = Math.max(1, ...pd.map(x => x.envios));
+    box.innerHTML = `
+      <div class="grid g4">${kpi("Ativas hoje (DAU)", int(d.dau), `${int(d.wau)} na semana · ${int(d.mau)} no mês`, "alunos", 1)}${kpi("Voltam no dia seguinte (D1)", coPct(d.d1.ok, d.d1.base), `base: ${int(d.d1.base)} cadastros`, "resumo")}${kpi("Voltam na 1ª semana (D7)", coPct(d.d7.ok, d.d7.base), `base: ${int(d.d7.base)}`, "resumo")}${kpi("Voltam no 1º mês (D30)", coPct(d.d30.ok, d.d30.base), `base: ${int(d.d30.base)}`, "resumo")}</div>
+      <div class="grid g4">${kpi("Recados (30 dias)", int(d.envios), `${int(d.push)} no celular · ${int(d.push_ok)} entregues`, "coach")}${kpi("Abertos", coPct(d.abertos, d.envios), `${int(d.abertos)} recados abertos`, "notificacoes")}${kpi("Treinou depois", coPct(d.treinos_apos, d.envios), `${int(d.treinos_apos)} treinaram até o dia seguinte`, "treinos")}${kpi("Recuperadas", int(d.recuperadas), "voltaram a treinar até 3 dias depois do recado de ausência", "alunos")}</div>
+      <div class="card"><h3 style="margin:0 0 10px">Recados por dia (14 dias)</h3>${pd.length ? `<div class="co-bars">${pd.map(x => `<div class="co-bar" title="${esc(x.dia)}: ${x.envios} enviados, ${x.abertos} abertos"><i style="height:${Math.round(100 * x.envios / mx)}%"><b style="height:${x.envios ? Math.round(100 * x.abertos / x.envios) : 0}%"></b></i><small>${esc(String(x.dia).slice(8, 10))}</small></div>`).join("")}</div><p class="hint" style="margin:8px 0 0"><span class="co-lg a"></span> enviados <span class="co-lg b"></span> abertos</p>` : `<p class="muted">Nenhum recado enviado ainda. O servidor começa a mandar no próximo ciclo (a cada 10 minutos).</p>`}</div>
+      <div class="card"><h3 style="margin:0 0 10px">Por categoria (30 dias)</h3>${(d.por_categoria || []).length ? `<div class="nb-tbl-wrap"><table class="nb-tbl"><thead><tr><th>Categoria</th><th>Enviados</th><th>Abertos</th><th>Taxa</th></tr></thead><tbody>${d.por_categoria.map(x => `<tr><td>${esc(coNome(x.categoria))}</td><td class="num">${int(x.envios)}</td><td class="num">${int(x.abertos)}</td><td class="num">${coPct(x.abertos, x.envios)}</td></tr>`).join("")}</tbody></table></div>` : `<p class="muted">Sem dados ainda.</p>`}</div>
+      <div class="grid g4">${kpi("Desligaram a Coach", int(d.optout), "pausaram todos os recados", "seguranca")}${kpi("Sem treinos", int(d.optout_grupos.treino), "desligaram essa categoria", "treinos")}${kpi("Sem alimentação", int(d.optout_grupos.alimentacao), "desligaram essa categoria", "receitas")}${kpi("Sem comunidade", int(d.optout_grupos.comunidade), "desligaram essa categoria", "comunidade")}</div>
+      <div class="card co-ab"><b>Testes A/B</b><small class="muted">Em breve: comparar duas versões de um recado e ver qual faz mais alunas treinarem.</small></div>`;
+  } else if(CO_ABA === "mensagens"){ coMensagens(ed); }
+  else if(CO_ABA === "auto"){
+    const R = d.regras || [];
+    box.innerHTML = `<p class="muted">Cada automação manda no máximo um recado por vez. Quando duas valem ao mesmo tempo, vale a de <b>menor número de prioridade</b> (a mais importante). O limite diário e o horário de silêncio sempre valem.</p>
+      <div class="co-regras">${R.map(r => `<div class="card co-rg ${r.ativo ? "" : "off"}">
+        <div class="co-rg-h"><b>${esc(r.nome)}</b><span class="co-pr">prioridade <input class="input num" type="number" min="1" max="999" value="${r.prioridade}" data-rp="${esc(r.id)}" ${ed ? "" : "disabled"} aria-label="Prioridade de ${esc(r.nome)}"></span>
+          <button class="mod-sw ${ed ? "" : "needs-edit"}" role="switch" data-rg="${esc(r.id)}" aria-checked="${!!r.ativo}" aria-label="${r.ativo ? "Desligar" : "Ligar"} ${esc(r.nome)}"><i></i></button></div>
+        <dl class="co-qsaa"><dt>QUANDO</dt><dd>${esc(r.quando)}</dd><dt>SE</dt><dd>${esc(r.se)}</dd><dt>AGUARDAR</dt><dd>${esc(r.aguardar)}</dd><dt>AÇÃO</dt><dd>${esc(r.acao)}</dd></dl></div>`).join("")}</div>`;
+    box.querySelectorAll("[data-rg]").forEach(b => b.onclick = async () => { if(!ed) return toast("Seu acesso não permite mudar isso"); const on = b.getAttribute("aria-checked") !== "true";
+      try{ const r = await SB2().rpc("admin_coach_regra", { p_id: b.dataset.rg, p_ativo: on, p_prioridade: null }); if(r.error) throw r.error; b.setAttribute("aria-checked", on); b.closest(".co-rg").classList.toggle("off", !on); const x = R.find(y => y.id === b.dataset.rg); if(x) x.ativo = on; toast(on ? "Automação ligada" : "Automação desligada"); }catch(e){ toast("Não deu: " + (e.message || e)); } });
+    box.querySelectorAll("[data-rp]").forEach(i => i.onchange = async () => { if(!ed) return; const v = Math.max(1, Math.min(999, +i.value || 50));
+      try{ const r = await SB2().rpc("admin_coach_regra", { p_id: i.dataset.rp, p_ativo: null, p_prioridade: v }); if(r.error) throw r.error; toast("Prioridade salva"); }catch(e){ toast("Não deu: " + (e.message || e)); } });
+  } else if(CO_ABA === "inativas"){
+    const I = d.inativas || {}, tot = Math.max(1, d.total || 0);
+    box.innerHTML = `<p class="muted">Só contagens. O painel não mostra a lista de quem sumiu nem dados pessoais: quem cuida delas é a Coach, com recados gentis e no máximo uma vez por pausa.</p>
+      <div class="grid g4">${kpi("3 a 6 dias sem abrir", int(I.d3), coPct(I.d3, tot) + " das alunas", "alunos")}${kpi("7 a 13 dias", int(I.d7), coPct(I.d7, tot), "alunos")}${kpi("14 a 29 dias", int(I.d14), coPct(I.d14, tot), "alunos")}${kpi("30 dias ou mais", int(I.d30), "a Coach para de chamar depois de 30 dias", "alunos")}</div>
+      <div class="nb-sec">Segmentos</div>
+      <div class="grid g4">${kpi("Total de alunas", int(d.total), "sem contar a equipe", "alunos")}${kpi("Novas (7 dias)", int(d.novas7), "recebem as dicas da primeira semana", "alunos")}${kpi("Ativas no mês", int(d.mau), coPct(d.mau, tot) + " do total", "alunos")}${kpi("Mensagens ativas", int(d.mensagens), "no banco de recados", "coach")}</div>`;
+  } else if(CO_ABA === "config"){
+    const hs = Array.from({ length: 24 }, (_, h) => h);
+    box.innerHTML = `<div class="card eq-cfg">
+      <div class="eq-cfg-l"><b>Chave geral da Coach</b><small>Desligada, o servidor não manda nenhum recado (os lembretes de treino continuam).</small></div>
+      <button class="mod-sw ${ed ? "" : "needs-edit"}" role="switch" id="co-geral" aria-checked="${!!c.ligado}" aria-label="${c.ligado ? "Desligar" : "Ligar"} a Coach"><i></i></button>
+      <div class="eq-cfg-f"><label>Recados por dia (máx.) <select class="input" id="co-max">${[0, 1, 2, 3].map(n => `<option value="${n}" ${n === c.max_dia ? "selected" : ""}>${n}</option>`).join("")}</select></label>
+        <label>Intervalo mínimo <select class="input" id="co-int">${[2, 3, 4, 6, 8].map(n => `<option value="${n}" ${n === c.intervalo_h ? "selected" : ""}>${n} horas</option>`).join("")}</select></label>
+        <label>Silêncio das <select class="input" id="co-ini">${hs.map(h => `<option value="${h}" ${h === c.silencio_ini ? "selected" : ""}>${String(h).padStart(2, "0")}h</option>`).join("")}</select></label>
+        <label>até <select class="input" id="co-fim">${hs.map(h => `<option value="${h}" ${h === c.silencio_fim ? "selected" : ""}>${String(h).padStart(2, "0")}h</option>`).join("")}</select></label>
+        <button class="btn btn-accent btn-sm" id="co-salva">Salvar limites</button></div></div>
+      <p class="hint">O horário vale no fuso de cada aluna. Cada aluna também pode escolher o próprio silêncio, até 3 recados por dia e desligar categorias em Perfil › Coach e avisos.</p>`;
+    $("co-geral").onclick = async () => { if(!ed) return toast("Seu acesso não permite mudar isso"); const liga = !c.ligado;
+      const vai = async () => { try{ const r = await SB2().rpc("admin_coach_config", { p_ligado: liga, p_max: null, p_intervalo: null, p_ini: null, p_fim: null }); if(r.error) throw r.error; toast(liga ? "Coach ligada" : "Coach desligada"); vCoach(); }catch(e){ toast("Não deu: " + (e.message || e)); } };
+      liga ? vai() : confirmar("Desligar a Coach? Nenhuma aluna vai receber recados até você ligar de novo.", vai); };
+    $("co-salva").onclick = async () => { if(!ed) return toast("Seu acesso não permite mudar isso");
+      try{ const r = await SB2().rpc("admin_coach_config", { p_ligado: null, p_max: +$("co-max").value, p_intervalo: +$("co-int").value, p_ini: +$("co-ini").value, p_fim: +$("co-fim").value }); if(r.error) throw r.error; toast("Salvo"); vCoach(); }catch(e){ toast("Não deu: " + (e.message || e)); } };
+  }
+}
+async function coMensagens(ed){
+  const box = $("co-corpo");
+  if(!CO_M){ box.innerHTML = `<p class="muted">Carregando mensagens…</p>`; try{ const r = await SB2().rpc("admin_coach_mensagens"); if(r.error) throw r.error; CO_M = r.data || []; }catch(e){ box.innerHTML = `<p class="muted">Não deu para carregar: ${esc(e.message || e)}</p>`; return; } }
+  const cats = [...new Set(CO_M.map(m => m.categoria))].sort((a, b) => coNome(a).localeCompare(coNome(b)));
+  const q = CO_F.q.toLowerCase(), L = CO_M.filter(m => (!CO_F.cat || m.categoria === CO_F.cat) && (!CO_F.st || (CO_F.st === "on") === !!m.ativo) && (!q || (m.titulo + " " + m.texto).toLowerCase().includes(q)));
+  box.innerHTML = `<div class="toolbar co-filtros"><select class="input" id="cm-cat" aria-label="Categoria"><option value="">Todas as categorias (${CO_M.length})</option>${cats.map(c => `<option value="${esc(c)}" ${c === CO_F.cat ? "selected" : ""}>${esc(coNome(c))} (${CO_M.filter(m => m.categoria === c).length})</option>`).join("")}</select>
+      <select class="input" id="cm-st" aria-label="Status"><option value="">Ativas e pausadas</option><option value="on" ${CO_F.st === "on" ? "selected" : ""}>Só ativas</option><option value="off" ${CO_F.st === "off" ? "selected" : ""}>Só pausadas</option></select>
+      <input class="input" id="cm-q" placeholder="Buscar no texto" value="${esc(CO_F.q)}">${ed ? `<button class="btn btn-accent btn-sm" id="cm-nova">+ Nova mensagem</button>` : ""}</div>
+    <p class="hint">${L.length} ${L.length === 1 ? "mensagem" : "mensagens"}. Variáveis seguras: {primeiro_nome} {quantidade_treinos} {streak} {horario_treino} {dias_ativos} {ultima_atividade} {objetivo} {tempo_disponivel}</p>
+    <div class="nb-tbl-wrap"><table class="nb-tbl co-tbl"><thead><tr><th>ID</th><th>Categoria</th><th>Texto</th><th>Tom</th><th>Gatilho</th><th>Prior.</th><th>Plano</th><th>Último envio</th><th>Uso</th><th>CTR</th><th>Conversão</th><th>Status</th><th></th></tr></thead><tbody>
+      ${L.slice(0, 400).map(m => `<tr class="${m.ativo ? "" : "off"}"><td class="num">${m.id}</td><td>${esc(coNome(m.categoria))}</td><td class="co-tx"><b>${esc(m.titulo)}</b><br>${esc(m.texto)}</td><td>${esc(m.tom)}</td><td>${esc(CO_GAT(m.categoria))}</td><td class="num">${m.prioridade}</td>
+        <td>${m.plano === "todos" ? "Free e PRO" : m.plano === "pro" ? "PRO" : "Free"}</td><td>${m.ultimo ? new Date(m.ultimo).toLocaleDateString("pt-BR") : "-"}</td><td class="num">${int(m.uso)}</td><td class="num">${coPct(m.abertos, m.uso)}</td><td class="num">${coPct(m.treinou, m.uso)}</td>
+        <td><button class="mod-sw ${ed ? "" : "needs-edit"}" role="switch" data-ma="${m.id}" aria-checked="${!!m.ativo}" aria-label="${m.ativo ? "Pausar" : "Ativar"} mensagem ${m.id}"><i></i></button></td>
+        <td class="co-ac">${ed ? `<button class="btn btn-line btn-sm" data-me="${m.id}">Editar</button>` : ""}<button class="btn btn-line btn-sm" data-mt="${m.id}" title="Manda só para você">Testar em mim</button></td></tr>`).join("") || `<tr><td colspan="13" class="muted">Nada encontrado.</td></tr>`}</tbody></table></div>`;
+  $("cm-cat").onchange = e => { CO_F.cat = e.target.value; coMensagens(ed); };
+  $("cm-st").onchange = e => { CO_F.st = e.target.value; coMensagens(ed); };
+  let tm; $("cm-q").oninput = e => { clearTimeout(tm); tm = setTimeout(() => { CO_F.q = e.target.value; coMensagens(ed); const i = $("cm-q"); if(i){ i.focus(); i.setSelectionRange(i.value.length, i.value.length); } }, 300); };
+  const nv = $("cm-nova"); if(nv) nv.onclick = () => coEdita(null, ed);
+  box.querySelectorAll("[data-me]").forEach(b => b.onclick = () => coEdita(CO_M.find(m => m.id === +b.dataset.me), ed));
+  box.querySelectorAll("[data-ma]").forEach(b => b.onclick = async () => { if(!ed) return toast("Seu acesso não permite mudar isso"); const on = b.getAttribute("aria-checked") !== "true";
+    try{ const r = await SB2().rpc("admin_coach_msg_ativo", { p_id: +b.dataset.ma, p_ativo: on }); if(r.error) throw r.error; const m = CO_M.find(x => x.id === +b.dataset.ma); if(m) m.ativo = on; b.setAttribute("aria-checked", on); b.closest("tr").classList.toggle("off", !on); toast(on ? "Mensagem ativa" : "Mensagem pausada"); }catch(e){ toast("Não deu: " + (e.message || e)); } });
+  box.querySelectorAll("[data-mt]").forEach(b => b.onclick = async () => { try{ const r = await SB2().rpc("admin_coach_testar", { p_msg: +b.dataset.mt }); if(r.error) throw r.error; toast("Recado de teste enviado para você (veja no app, em Recados da Coach)"); }catch(e){ toast("Não deu: " + (e.message || e)); } });
+}
+function coEdita(m, ed){
+  if(!ed) return toast("Seu acesso não permite mudar isso");
+  const x = m || { categoria: CO_F.cat || "motivacao", titulo: "", texto: "", tom: "acolhedor", prioridade: 5, plano: "todos", ativo: true };
+  modal(m ? `Editar mensagem ${m.id}` : "Nova mensagem", `<div class="form">
+    <div class="field"><label for="ce-cat">Categoria</label><select class="input" id="ce-cat">${Object.entries(CO_CAT).map(([k, n]) => `<option value="${k}" ${k === x.categoria ? "selected" : ""}>${esc(n)}</option>`).join("")}</select></div>
+    <div class="field"><label for="ce-ti">Título (aparece em negrito no aviso)</label><input class="input" id="ce-ti" maxlength="80" value="${esc(x.titulo)}"></div>
+    <div class="field"><label for="ce-tx">Texto</label><textarea class="input" id="ce-tx" maxlength="240" rows="3">${esc(x.texto)}</textarea><small class="muted" id="ce-n"></small></div>
+    <div class="row2"><div class="field"><label for="ce-tom">Tom</label><select class="input" id="ce-tom">${["acolhedor", "leve", "divertido", "firme e gentil", "celebração"].map(t => `<option ${t === x.tom ? "selected" : ""}>${t}</option>`).join("")}</select></div>
+      <div class="field"><label for="ce-pr">Prioridade (1 a 10)</label><input class="input num" id="ce-pr" type="number" min="1" max="10" value="${x.prioridade}"></div></div>
+    <div class="row2"><div class="field"><label for="ce-pl">Para quem</label><select class="input" id="ce-pl"><option value="todos" ${x.plano === "todos" ? "selected" : ""}>Free e PRO</option><option value="free" ${x.plano === "free" ? "selected" : ""}>Só Free</option><option value="pro" ${x.plano === "pro" ? "selected" : ""}>Só PRO</option></select></div>
+      <div class="field"><label for="ce-at">Status</label><select class="input" id="ce-at"><option value="1" ${x.ativo ? "selected" : ""}>Ativa</option><option value="0" ${x.ativo ? "" : "selected"}>Pausada</option></select></div></div>
+    <div class="card co-prev"><small class="muted">Prévia no celular</small><b id="ce-pt"></b><span id="ce-px"></span></div>
+    <p class="hint">Sem culpa, vergonha, comparação de corpo ou promessa de resultado. O servidor bloqueia palavras proibidas.</p>
+    <div class="toolbar" style="justify-content:flex-end"><button class="btn btn-line" data-close>Cancelar</button><button class="btn btn-accent" id="ce-ok">Salvar</button></div></div>`);
+  const ex = { primeiro_nome: "Ana", quantidade_treinos: 12, streak: 4, horario_treino: "19:00", dias_ativos: 9, ultima_atividade: "20/10", objetivo: "ter mais disposição", tempo_disponivel: 15 };
+  const rd = s => s.replace(/\{([a-z_]+)\}/g, (_, k) => ex[k] != null ? ex[k] : "");
+  const prev = () => { $("ce-pt").textContent = rd($("ce-ti").value) || "Título"; $("ce-px").textContent = rd($("ce-tx").value) || "Texto do recado"; $("ce-n").textContent = `${$("ce-tx").value.length}/240`; };
+  ["ce-ti", "ce-tx"].forEach(id => $(id).oninput = prev); prev();
+  $("ce-ok").onclick = async () => { const ti = $("ce-ti").value.trim(), tx = $("ce-tx").value.trim(); if(!ti || tx.length < 3) return toast("Preencha o título e o texto");
+    const b = $("ce-ok"); b.disabled = true;
+    try{ const r = await SB2().rpc("admin_coach_msg_salvar", { p_id: m ? m.id : null, p_categoria: $("ce-cat").value, p_titulo: ti, p_texto: tx, p_tom: $("ce-tom").value, p_prioridade: Math.max(1, Math.min(10, +$("ce-pr").value || 5)), p_plano: $("ce-pl").value, p_ativo: $("ce-at").value === "1" });
+      if(r.error) throw r.error; $("modal").hidden = true; document.body.style.overflow = ""; toast("Mensagem salva"); CO_M = null; coMensagens(ed); }
+    catch(e){ b.disabled = false; toast(e.message || String(e)); } };
+}
+VIEWS.coach = vCoach;
 
 window.ADMIN = { abrir };
 })();
