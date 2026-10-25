@@ -35,7 +35,7 @@ function desafioHojeConfere(){   // marca sozinho quando o app consegue ver que 
 }
 /* ---------- Missão da semana ---------- */
 const semanaKey = (d = today()) => { const x = new Date(d + "T12:00:00"); return addD(d, -((x.getDay() + 6) % 7)); };
-const alvoSemana = () => Math.max(2, Math.min(6, (ME.lembrete && ME.lembrete.dias && ME.lembrete.dias.length) || (ME.perfil && ME.perfil.dias) || 3));
+const alvoSemana = () => { const b = Math.max(2, Math.min(6, (ME.lembrete && ME.lembrete.dias && ME.lembrete.dias.length) || (ME.perfil && ME.perfil.dias) || 3)); return window.ckAlvoSemana ? window.ckAlvoSemana(b) : b; };
 function semanaFeitos(seg){ const dt = diasTreino(); let n = 0; for(let i = 0; i < 7; i++) if(dt.has(addD(seg, i))) n++; return n; }
 function missaoSemanaConfere(){
   const seg = semanaKey(), n = semanaFeitos(seg), alvo = alvoSemana(); ME.semanasOk = Array.isArray(ME.semanasOk) ? ME.semanasOk : [];

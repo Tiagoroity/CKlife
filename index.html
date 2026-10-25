@@ -2594,6 +2594,32 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
 .ck-pro .vit-hoje{border-color:rgba(201,179,126,.55)}
 @keyframes ckPerola{0%,100%{background-position:120% 0}50%{background-position:-20% 0}}
 @media (prefers-reduced-motion:reduce){.ck-pro .coach-ini::before{animation:none}}
+/* ===== Inteligência: atalhos da Coach lado a lado + cartões novos ===== */
+.coach-lk{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.coach-lk .coach-chip{min-height:44px;padding:4px 6px;font-size:13px;line-height:1.2;white-space:normal;text-align:center;display:flex;align-items:center;justify-content:center;gap:2px;flex-wrap:wrap;min-width:0}
+@media (max-width:360px){.coach-lk{gap:5px}.coach-lk .coach-chip{font-size:12px;padding:4px 4px}}
+.nba-ini{margin:14px 0 0;padding:14px 16px;border-radius:20px;background:var(--surface);border:1px solid #C9B37E;display:flex;flex-direction:column;gap:6px}
+.nba-eb{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.nba-t{font-family:var(--display);font-size:20px;line-height:1.2;color:var(--ink)}.nba-s{margin:0;color:var(--muted);font-size:14.5px;line-height:1.4}
+.nba-b{min-height:48px;border-radius:14px;border:0;background:var(--accent);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:4px}
+.nba-lk{display:flex;flex-wrap:wrap;gap:4px 16px;justify-content:center}.nba-lk .link{min-height:36px;font-size:14px}
+.ck-pro .nba-ini{background:linear-gradient(160deg,var(--surface),rgba(232,217,174,.14))}
+.pb-top{text-align:center;display:flex;flex-direction:column;gap:4px;margin-bottom:12px}.pb-top p{margin:0;color:var(--muted)}.pb-top b{font-family:var(--display);font-size:20px;color:var(--ink)}
+.pb-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.pb-grid .btn{min-height:52px;font-weight:800}
+.sm-ativa{padding:14px;border-radius:16px;background:var(--accent-soft);margin-bottom:12px}.sm-ativa p{margin:6px 0 0;color:var(--ink)}
+.vt-op{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}.vt-op .chip{min-height:40px;height:auto;white-space:normal;text-align:left;padding:8px 12px}
+.vt-lista{display:flex;flex-direction:column;gap:8px}.vt-it{padding:10px 12px;border-radius:14px;background:var(--surface-2)}.vt-it b{color:var(--ink)}.vt-it p{margin:4px 0;color:var(--ink)}.vt-it small{color:var(--muted)}
+.top-busca{margin-right:6px}
+.bg-r{display:flex;flex-direction:column;gap:4px;margin-top:10px}.bg-it{min-height:52px}
+.pl-troca{align-self:center;color:#fff;opacity:.9;min-height:40px;font-size:14px;text-decoration:underline;background:none;border:0}
+.rest .pl-troca{color:var(--ink)}
+.pc-at{display:flex;gap:6px;padding:6px 2px}.pc-at .chip{white-space:nowrap}
+.sq-tag{display:inline-block;margin:4px 0;font-size:11px;font-weight:800;letter-spacing:.08em;color:#0B2F25;background:#C9B37E;border-radius:99px;padding:3px 10px}
+.dc-ini{margin:0 0 14px;padding:14px;border-radius:20px;background:var(--surface);border:1px solid var(--line);display:flex;flex-direction:column;gap:6px}.dc-ini b{color:var(--ink)}.dc-ini small{color:var(--muted)}
+.dc-ini .bar,.co-rg .bar{display:block;height:8px;border-radius:8px;background:var(--surface-2);overflow:hidden}.dc-ini .bar i,.co-rg .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),#C9B37E);border-radius:8px}
+.dc-pos{width:100%;box-sizing:border-box;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.08);color:#F2E6C4;font-size:14px;text-align:left}
+.rc-sem{margin:10px 0;padding:12px 14px;border-radius:20px;background:var(--surface);border:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
+.rc-l{display:flex;flex-direction:column;gap:6px}.rc-it{display:flex;gap:10px;align-items:center}.rc-it i{font-style:normal;font-size:22px}.rc-it b{display:block;color:var(--ink);font-size:14.5px}.rc-it small{color:var(--muted)}
 </style>
 
 <!-- Entrar / criar conta -->
@@ -5652,7 +5678,7 @@ function abreComposer(texto0, blob0, extra){
     ${!texto0 && !cq ? `<div class="chips scroll so-temas">${[["💪","Treino de hoje","Treino de hoje concluído! "],["🥗","Receita","Fiz uma receita do app hoje: "],["✨","Motivação","Lembrete do dia: "],["👋","Me apresentar","Oi, meninas! Sou "],["🙋","Pergunta","Alguém tem dica de "]].map(([e, n, t]) => `<button class="chip" data-tema="${esc(t)}">${e} ${n}</button>`).join("")}</div>` : ""}
     <textarea class="input cmp-tx" id="cp-t" maxlength="1000" placeholder="O que você quer compartilhar hoje? 💚">${esc(texto0 || "")}</textarea><small class="so-cont" id="cp-n">0/1000</small>
     <div id="cp-prev" class="cp-prev"></div>
-    ${extra && extra.grupo ? `<p class="so-cp-grupo">${esc(extra.grupo.emoji || "")} Publicando em <b>${esc(extra.grupo.nome)}</b></p>` : ""}<div class="toolbar"><button class="btn btn-line" id="cp-foto">${ic("camera", 18)} Foto</button><button class="btn btn-line" id="cp-video">${ic("play", 18)} Vídeo</button><button class="btn btn-line" id="cp-fig">✨ Figurinha</button><span class="hint">Compartilhe só o que você quiser. Seu peso, medidas e ciclo nunca são postados.</span></div>
+    ${extra && extra.grupo ? `<p class="so-cp-grupo">${esc(extra.grupo.emoji || "")} Publicando em <b>${esc(extra.grupo.nome)}</b></p>` : ""}<div class="toolbar"><button class="btn btn-line" id="cp-foto">${ic("camera", 18)} Foto</button><button class="btn btn-line" id="cp-fig">✨ Figurinha</button><span class="hint">Compartilhe só o que você quiser. Seu peso, medidas e ciclo nunca são postados.</span></div>
     <button class="btn btn-accent btn-block btn-lg" id="cp-ok">Publicar</button>`);
   const cont = () => { const n = $("cp-t").value.length; $("cp-n").textContent = `${n}/1000`; }; $("cp-t").oninput = cont; cont();
   $("sheet-body").querySelectorAll("[data-tema]").forEach(b => b.onclick = () => { const t = $("cp-t"); t.value = b.dataset.tema + t.value; t.focus(); t.setSelectionRange(t.value.length, t.value.length); cont(); SOM.tap(); });
@@ -5788,7 +5814,7 @@ async function carregaStories(){
 const CORES_ST = ["#0E3D32","#2E7D5A","#C2577B","#6C5FB5","#D08A2E","#17211D"];
 async function criarStory(){
   if(ME.bloqueado) return toast("Sua conta está bloqueada");
-  const f = await escolheArquivo("image/*,video/*");
+  const f = await escolheArquivo("image/*");
   if(f && /^video\//.test(f.type || "")) return storyVideo(f); let b = await imagemValida(f, 2048); if(!b) return; b = await escolheFiltro(b); if(!b) return;
   let cor = CORES_ST[0];
   sheet("Novo Story", `<div class="so-stprev priv" id="sp-p"><img src="${await blobParaURL(b)}" alt=""><span id="sp-tx" class="so-sttx" hidden></span></div>
@@ -8802,11 +8828,11 @@ async function abrirVideos(inicioId){
   });
 }
 /* entrada: item "Vídeos" no menu e botão de tela cheia nos vídeos do feed */
-const comNavRl = comNav; comNav = function(){ comNavRl.apply(this, arguments); const nav = document.querySelector("#t-juntas .cm-nav"); if(!nav || nav.querySelector('[data-cn="videos"]')) return;
+const comNavRl = comNav; comNav = function(){ comNavRl.apply(this, arguments); const nav = document.querySelector("#t-juntas .cm-nav"); if(true || !nav || nav.querySelector('[data-cn="videos"]')) return;   // aba "Vídeos" desligada: alunas não publicam mais vídeo
   const g = nav.querySelector('[data-cn="grupos"]'); g.insertAdjacentHTML("beforebegin", `<button data-cn="videos">${ic("play", 17)}<span>Vídeos</span></button>`);
   nav.querySelector('[data-cn="videos"]').onclick = () => abrirVideos(); nav.classList.add("cinco"); };
 const desenhaFeedRl = desenhaFeed; desenhaFeed = function(){ const r = desenhaFeedRl.apply(this, arguments);
-  document.querySelectorAll("#feed .pvid:not([data-rlb])").forEach(d => { d.dataset.rlb = 1; const post = d.closest(".post"); d.insertAdjacentHTML("beforeend", `<button class="rl-abre" aria-label="Ver em tela cheia">${ic("play", 14)} Tela cheia</button>`); d.querySelector(".rl-abre").onclick = e => { e.stopPropagation(); abrirVideos(post && post.dataset.id); }; });
+  if(false) document.querySelectorAll("#feed .pvid:not([data-rlb])").forEach(d => { d.dataset.rlb = 1; const post = d.closest(".post"); d.insertAdjacentHTML("beforeend", `<button class="rl-abre" aria-label="Ver em tela cheia">${ic("play", 14)} Tela cheia</button>`); d.querySelector(".rl-abre").onclick = e => { e.stopPropagation(); abrirVideos(post && post.dataset.id); }; });
   return r; };
 document.addEventListener("keydown", e => { if(e.key === "Escape" && $("rl") && $("sheet").hidden) fechaVideos(); });
 
@@ -8822,8 +8848,7 @@ const abrirGrupoC2 = abrirGrupo; abrirGrupo = async function(g){
 
 /* ---------- FOTO e VÍDEO no chat (melhor qualidade possível) ---------- */
 fotoChat = function(c){
-  menuLeve([["camera", "Tirar foto agora", () => pegaFotoChat(c, "environment")], ["image", "Escolher foto da galeria", () => pegaFotoChat(c, null)],
-    ["play", "Gravar vídeo (até 1 min)", () => pegaVideoChat(c, "environment")], ["play", "Escolher vídeo da galeria", () => pegaVideoChat(c, null)]]);
+  menuLeve([["camera", "Tirar foto agora", () => pegaFotoChat(c, "environment")], ["image", "Escolher foto da galeria", () => pegaFotoChat(c, null)]]);   // vídeo no chat desligado para alunas
 };
 function prevChat(c, midiaHtml, envia, limpa){
   let box = $("so-prev"); if(!box){ box = document.createElement("div"); box.id = "so-prev"; box.className = "so-prev priv"; document.body.appendChild(box); }
@@ -8874,7 +8899,7 @@ const abrirPerfilEq = abrirPerfil; abrirPerfil = async function(u){
    Quem deixa o CK Life aberto (ou instalado na tela inicial) fica com a versão antiga até recarregar.
    O app confere a versão publicada ao abrir, ao voltar do segundo plano e a cada 5 minutos.
    Se houver versão nova, mostra a faixa "ATUALIZAR": um toque e pronto. Nunca aparece no meio do treino. */
-const CK_VER = "20261025002903";
+const CK_VER = "20261025004313";
 let CK_VER_NOVA = null;
 async function confereVersao(){
   if(!/^\d/.test(CK_VER) || !/^https?:/.test(location.protocol)) return;
@@ -9386,7 +9411,7 @@ function desafioHojeConfere(){   // marca sozinho quando o app consegue ver que 
 }
 /* ---------- Missão da semana ---------- */
 const semanaKey = (d = today()) => { const x = new Date(d + "T12:00:00"); return addD(d, -((x.getDay() + 6) % 7)); };
-const alvoSemana = () => Math.max(2, Math.min(6, (ME.lembrete && ME.lembrete.dias && ME.lembrete.dias.length) || (ME.perfil && ME.perfil.dias) || 3));
+const alvoSemana = () => { const b = Math.max(2, Math.min(6, (ME.lembrete && ME.lembrete.dias && ME.lembrete.dias.length) || (ME.perfil && ME.perfil.dias) || 3)); return window.ckAlvoSemana ? window.ckAlvoSemana(b) : b; };
 function semanaFeitos(seg){ const dt = diasTreino(); let n = 0; for(let i = 0; i < 7; i++) if(dt.has(addD(seg, i))) n++; return n; }
 function missaoSemanaConfere(){
   const seg = semanaKey(), n = semanaFeitos(seg), alvo = alvoSemana(); ME.semanasOk = Array.isArray(ME.semanasOk) ? ME.semanasOk : [];
@@ -9701,13 +9726,17 @@ function insights(){
   const fav = Object.entries(T.reduce((o, t) => (o[t.nome] = (o[t.nome] || 0) + 1, o), {})).sort((a, b) => b[1] - a[1])[0];
   if(fav && fav[1] >= 2) I.push(["💚", "Seu treino favorito", `${fav[0]}: você já fez ${fav[1]} vezes.`, 1]);
   const rec = recordeSeq(); if(rec >= 3) I.push(["🔥", "Sua maior sequência", `${rec} dias seguidos. Você já provou que consegue.`, 1]);
+  const comMin = T.filter(t => t.min > 0); if(comMin.length >= 5){ const fx = [[0, 14, "até 15 minutos"], [15, 19, "15 a 20 minutos"], [20, 30, "20 a 30 minutos"], [31, 999, "mais de 30 minutos"]].map(([a, b, n]) => [n, comMin.filter(t => t.min >= a && t.min <= b).length]).sort((a, b) => b[1] - a[1])[0];
+    if(fx[1] / comMin.length >= .5) I.push(["⏱️", "O tamanho que encaixa", `Treinos de ${fx[0]} parecem encaixar melhor na sua rotina.`, 1]); }
+  const dw2 = dw.map((n, i) => [i, n]).sort((a, b) => b[1] - a[1]); if(dw2[1] && dw2[1][1] >= 2 && dw2[0][1] >= 2) I.push(["🗓️", "Seus dias de constância", `Você costuma manter mais constância às ${DSEM_NOME[Math.min(dw2[0][0], dw2[1][0])]}s e ${DSEM_NOME[Math.max(dw2[0][0], dw2[1][0])]}s.`.replace("sábados", "sábados").replace("domingos", "domingos"), 1]);
+  const vd = (ME.coach && ME.coach.voltasD) || []; if(vd.length && vd.some(d => { const pr = T.filter(t => t.d >= d).sort((a, b) => a.d.localeCompare(b.d))[0]; return pr && /^(c|q)-/.test(pr.rapido || ""); })) I.push(["🌱", "O que te ajuda a voltar", "Treinos rápidos ajudaram você a voltar.", 1]);
   return { I, poucos: false };
 }
 function insightsHTML(){
   const { I, poucos } = insights(), pro = typeof pode === "function" ? pode("graficos_avancados") : false;
-  if(poucos) return `<section class="ins-ini" id="ins-ini"><div class="ins-h"><span class="eyebrow">Seus insights</span></div><p class="muted" style="margin:0">Depois de 3 treinos, a Coach começa a mostrar o que funciona melhor para você. 💚</p></section>`;
+  if(poucos || !I.length || !modOn("insights")) return `<section class="ins-ini" id="ins-ini" hidden></section>`;
   const livres = I.filter(x => !x[3]), extras = I.filter(x => x[3]), mostra = pro ? I : livres;
-  return `<section class="ins-ini ${pro ? "pro" : ""}" id="ins-ini"><div class="ins-h"><span class="eyebrow">Seus insights</span>${pro ? `<span class="ins-pro">PRO</span>` : ""}</div>
+  return `<section class="ins-ini ${pro ? "pro" : ""}" id="ins-ini"><div class="ins-h"><span class="eyebrow">O CK Life aprendeu sobre você</span>${pro ? `<span class="ins-pro">PRO</span>` : ""}</div>
     ${mostra.map(([e, t, x]) => `<div class="ins-it"><i>${e}</i><div><b>${esc(t)}</b><p>${esc(x)}</p></div></div>`).join("")}
     ${!pro && extras.length ? `<button class="link ins-mais" id="ins-mais">Mais ${extras.length} insights no CK Life PRO</button>` : ""}</section>`;
 }
@@ -9722,6 +9751,240 @@ missaoPinta = function(forca){ const r = missaoPintaIns.apply(this, arguments);
 const coachAcaoVit = coachAcao; coachAcao = function(k){ if(k === "comp"){ SOM.tap && SOM.tap(); tab("juntas"); const u = (ME.treinos || [])[ME.treinos.length - 1];
   return setTimeout(() => abreComposer(u && u.d === today() ? `💪 Treino de hoje feito: ${u.nome}${u.min ? ` em ${u.min} min` : ""}!` : "💪 Minha vitória de hoje: ", null, { conquista: VIT_CONQ }), 350); }
   return coachAcaoVit.apply(this, arguments); };
+
+/* ===================== INTELIGÊNCIA CK LIFE =====================
+   Próxima melhor ação (uma só, lógica simples), Plano B, "Hoje só tenho X min", retomar treino, trocar exercício,
+   Minha semana mudou / Semana difícil, Minhas vitórias, busca global, Meus salvos, atalhos da Parceira no chat,
+   Squad CK, Desafio coletivo, reconhecimentos da semana. Tudo com dados que o app já tem; sem IA, sem serviço novo.
+   Cada parte pode ser desligada em Painel › Módulos do app. */
+const IOn = k => modOn(k);
+/* alunas não publicam vídeo em Stories (foto e texto continuam) */
+storyVideo = async function(){ toast("Stories aceitam foto e texto. Envio de vídeo não está disponível."); };
+
+/* ---------- Retomar treino ---------- */
+const RET_K = () => "ck_retomar_" + ((ME && ME.id) || "");
+function retSalva(){ try{ if(!PL || !PL.T || PL.fase === "fim" || PL.i < 1) return; const T = PL.T;
+  localStorage.setItem(RET_K(), JSON.stringify({ T: { nome: T.nome, steps: T.steps, prog: T.prog || null, di: T.di, sem: T.sem, rapido: T.rapido || null, cor: T.cor, sub: T.sub }, i: PL.i, n: T.steps.length, ts: Date.now() })); }catch(e){} }
+function retLe(){ try{ const r = JSON.parse(localStorage.getItem(RET_K()) || "null"); if(!r || !r.T || !Array.isArray(r.T.steps) || r.i < 1 || r.i >= r.n || Date.now() - r.ts > 3 * 864e5) return null; return r; }catch(e){ return null; } }
+function retLimpa(){ try{ localStorage.removeItem(RET_K()); }catch(e){} }
+function retomar(){ const r = retLe(); if(!r) return toast("Não há treino para continuar"); fecharSheet(); iniciaTreino(r.T); calar(); PL.i = r.i; for(let k = 0; k < r.i; k++) PL.feitos.add(k); PL.fase = "prep"; PL.rem = 5; desenhaPlay(); }
+
+/* ---------- Trocar exercício (só catálogo existente) ---------- */
+const EXROW = id => (window.EX || []).find(r => r[0] === id);
+const EXPAD = id => { for(const [k, L] of Object.entries(typeof PA_POOL !== "undefined" ? PA_POOL : {})) if(L.includes(id)) return k; return null; };
+const EXMET = id => (META && META[id] && META[id].met) || 5;
+const CASA_IDS = () => new Set([].concat(...Object.values(typeof PA_POOL !== "undefined" ? PA_POOL : {}), ...QUICK.flatMap(q => q.itens.map(i => i[0]))));
+const TROCA_MOT = [["equip", "Não tenho equipamento"], ["dificil", "Muito difícil"], ["facil", "Muito fácil"], ["desconforto", "Estou desconfortável"], ["naogosto", "Não gosto desse exercício"]];
+function trocaCandidato(id, mot){
+  const r = EXROW(id), gr = r && r[2], pad = EXPAD(id), m = EXMET(id), casa = CASA_IDS();
+  let L = [...casa].filter(x => x !== id && EXROW(x) && (EXPAD(x) === pad && pad || (EXROW(x)[2] === gr)));
+  L.sort((a, b) => (EXPAD(b) === pad) - (EXPAD(a) === pad));
+  if(mot === "dificil" || mot === "desconforto") L = L.filter(x => EXMET(x) < m || (mot === "desconforto" && EXMET(x) <= m)).sort((a, b) => EXMET(b) - EXMET(a));
+  else if(mot === "facil") L = L.filter(x => EXMET(x) > m).sort((a, b) => EXMET(a) - EXMET(b));
+  else if(mot === "equip") L = L.filter(x => /peso do corpo|nenhum|sem equip/i.test(EXROW(x)[3] || "") || casa.has(x));
+  return L[0] || null;
+}
+function trocarExercicio(){
+  if(!PL) return; const s = PL.T.steps[PL.i], e = exById(s.id); PL.pausa = true;
+  sheet("Trocar exercício", `<p class="muted" style="margin-top:0">${esc(e.nome)} · por que você quer trocar?</p><div class="opts">${TROCA_MOT.map(([k, n]) => `<button class="opt" data-tm="${k}"><span>${n}</span></button>`).join("")}</div>`, () => { if(PL) PL.pausa = false; });
+  document.querySelectorAll("[data-tm]").forEach(b => b.onclick = () => {
+    const novo = trocaCandidato(s.id, b.dataset.tm);
+    if(!novo){ toast("Não encontramos uma troca segura para esse. Você pode pular ou fazer no seu ritmo."); return; }
+    const velho = s.id; PL.T.steps.forEach((x, j) => { if(j >= PL.i && x.id === velho) x.id = novo; });
+    fecharSheet(); PL.pausa = false; toast(`Trocamos por ${exById(novo).nome} 💚`); if(PL.fase === "ex") comecaExercicio(); else desenhaPlay(); trocaBotao(); });
+}
+function trocaBotao(){ try{ retSalva(); if(!PL || !IOn("troca") || PL.fase === "rest" || PL.fase === "fim" || $("pl-troca")) return;
+  const alvo = document.querySelector("#play .pnext") || $("pl-skip") || $("pl-pula"); if(!alvo) return;
+  alvo.insertAdjacentHTML("beforebegin", `<button class="link pl-troca" id="pl-troca">⇄ Trocar exercício</button>`); $("pl-troca").onclick = trocarExercicio; }catch(e){ console.warn(e); } }
+new MutationObserver(trocaBotao).observe($("play"), { childList: true });   // vale para todas as telas do player (inclusive a explicação por voz)
+const fimTreinoI = fimTreino; fimTreino = function(){ retLimpa(); const r = fimTreinoI.apply(this, arguments); try{ dcPosTreino(); }catch(e){} return r; };
+
+/* ---------- Minha semana mudou / Semana difícil (temporário; o Plano do Ano fica intacto) ---------- */
+const SEM_MOT = [["sem_tempo", "Estou sem tempo"], ["poucos_dias", "Só consigo alguns dias"], ["viajando", "Estou viajando"], ["leve", "Quero uma semana mais leve"], ["rotina", "Minha rotina mudou essa semana"]];
+function semanaMudou(){ const s = ME.semanaMudou; if(!s || !s.fim || s.fim < today()) return null; return s; }
+window.ckAlvoSemana = base => semanaMudou() ? Math.min(2, base) : base;
+function minhaSemanaMudou(){
+  const s = semanaMudou();
+  sheet("Minha semana mudou", s ? `<div class="sm-ativa"><b>Semana difícil ativa até ${brD(s.fim).slice(0, 5)}</b><p>Essa semana vamos diminuir o tamanho do compromisso, não abandonar o processo.</p></div>
+      <button class="btn btn-accent btn-block btn-lg" id="sm-volta">VOLTAR AO MEU PLANO NORMAL</button>`
+    : `<p class="muted" style="margin-top:0">Seu Plano do Ano continua guardado. Vamos só ajustar o tamanho desta semana.</p><div class="opts">${SEM_MOT.map(([k, n]) => `<button class="opt" data-sm="${k}"><span>${n}</span></button>`).join("")}</div>
+      <div class="seg" role="group" id="sm-per" style="margin-top:10px"><button data-sp="semana" aria-pressed="true">Só esta semana</button><button data-sp="7" aria-pressed="false">Próximos 7 dias</button></div>`);
+  const v = $("sm-volta"); if(v) v.onclick = () => { delete ME.semanaMudou; save(); fecharSheet(); toast("De volta ao seu plano normal 💚"); rerender(); };
+  let per = "semana"; document.querySelectorAll("[data-sp]").forEach(b => b.onclick = () => { per = b.dataset.sp; document.querySelectorAll("[data-sp]").forEach(x => x.setAttribute("aria-pressed", x === b)); });
+  document.querySelectorAll("[data-sm]").forEach(b => b.onclick = () => { const fim = per === "7" ? addD(today(), 6) : addD(semanaKey(), 6);
+    ME.semanaMudou = { motivo: b.dataset.sm, ini: today(), fim }; save(); fecharSheet(); SOM.check && SOM.check(); toast("Essa semana vamos diminuir o tamanho do compromisso, não abandonar o processo."); rerender(); });
+}
+
+/* ---------- Plano B e "Hoje só tenho X min" ---------- */
+function planoB(){
+  sheet("Plano B", `<div class="pb-top"><p>Seu dia apertou? Ainda dá para manter seu compromisso.</p><b>POUCO AINDA CONTA.</b></div>
+    <div class="pb-grid">${[["t5", "5 MIN"], ["t10", "10 MIN"], ["t15", "15 MIN"], ["cam", "CAMINHADA"], ["alo", "ALONGAMENTO"], ["desc", "DESCANSAR"]].map(([k, n]) => `<button class="btn ${k === "t5" ? "btn-accent" : "btn-line"}" data-pb="${k}">${n}</button>`).join("")}</div>
+    ${IOn("semana") ? `<button class="link" id="pb-sem" style="align-self:center">Minha semana mudou</button>` : ""}`);
+  document.querySelectorAll("[data-pb]").forEach(b => b.onclick = () => coachAcao(b.dataset.pb));
+  const sm = $("pb-sem"); if(sm) sm.onclick = minhaSemanaMudou;
+}
+function soTenho(){
+  sheet("Hoje só tenho…", `<p class="muted" style="margin-top:0">Escolha o tempo. O CK Life escolhe um treino que cabe.</p><div class="pb-grid">${[5, 10, 15, 20].map(m => `<button class="btn btn-line" data-st="${m}">${m} MIN</button>`).join("")}</div>`);
+  document.querySelectorAll("[data-st]").forEach(b => b.onclick = () => {
+    const X = +b.dataset.st, H = (typeof humorHoje === "function" && humorHoje()) || {}, cansada = H.h === "1" || H.e === "baixa", C = [];
+    try{ if(cDiaDoPlano() && !semanaMudou()){ const T = treinoDoDia(); C.push([minTreino(T), T, 3]); } }catch(e){}
+    [5, 10, 15].forEach(k => { const q = COACH_MINI[k], T = montaTreino({ nome: q.nome, tipo: "circuito", rodadas: q.rodadas, descRodada: q.descRodada, itens: q.itens }, 1, { rapido: q.id, cor: "#2E7D5A", sub: q.foco }); C.push([minTreino(T), T, 2]); });
+    if(cansada){ const q = COACH_MINI.alo, T = montaTreino({ nome: q.nome, tipo: "circuito", rodadas: 1, descRodada: 0, itens: q.itens }, 1, { rapido: q.id, cor: "#2E7D5A", sub: q.foco }); C.push([minTreino(T), T, 4]); }
+    QUICK.forEach((q, i) => { if(i < 3 || pode("treinos_rapidos_todos")){ const T = treinoRapido(q); C.push([minTreino(T), T, 1]); } });
+    const ok = C.filter(c => c[0] <= X + 1).sort((a, b) => (b[2] * 100 + b[0]) - (a[2] * 100 + a[0]) || 0);
+    const melhor = ok.filter(c => c[0] >= X - 6).sort((a, b) => b[2] - a[2] || b[0] - a[0])[0] || ok.sort((a, b) => b[0] - a[0])[0];
+    if(!melhor) return toast("Escolha um tempo um pouco maior 💚");
+    fecharSheet(); toast("Sem problema. Vamos adaptar seu dia."); abrirTreinoPreview(melhor[1]); });
+}
+
+/* ---------- Próxima melhor ação (uma ação principal) ---------- */
+function nbaDecide(){
+  const r = IOn("retomar") && retLe(), feito = diasTreino().has(today()), H = (typeof humorHoje === "function" && humorHoje()) || {}, sem = (ME.treinos || []).length ? cDiasSem() : null;
+  if(r) return { t: "Continuar treino", s: `Você parou no exercício ${r.i + 1} de ${r.n}: ${r.T.nome}.`, b: ["CONTINUAR TREINO", "ret"] };
+  if(!feito && sem != null && sem >= 3) return { t: "Voltar ao plano", s: "Voltar também é progresso. Comece leve, sem compensar nada.", b: ["TREINO 5 MIN", "t5"] };
+  if(semanaMudou() && !feito) return { t: "Semana difícil", s: "Essa semana vamos diminuir o tamanho do compromisso, não abandonar o processo.", b: ["VER PLANO B", "planob"], volta: 1 };
+  if(COACH().descanso[today()]) return { t: "Hoje é dia de descanso", s: "Descansar também faz parte da constância.", b: ["VER MISSÃO", "mis"] };
+  if(feito) return IOn("vitorias") ? { t: "Treino feito hoje 💚", s: "Registre algo bom que você percebeu em você.", b: ["REGISTRAR VITÓRIA", "vit"] } : { t: "Treino feito hoje 💚", s: "Veja como está sua semana.", b: ["VER MISSÃO", "mis"] };
+  if(H.h === "1" || H.e === "baixa") return { t: "Vamos no leve hoje", s: "Você contou que está cansada. Um alongamento já conta.", b: ["ALONGAMENTO", "alo"] };
+  if(H.t && +H.t <= 10) return { t: "Pouco tempo hoje", s: "10 minutos já mantêm o seu compromisso.", b: ["TREINO 10 MIN", "t10"] };
+  if(cDiaDoPlano()){ let T = null; try{ T = treinoDoDia(); }catch(e){}
+    return { t: H.h === "4" ? "Animada? Hoje dá para o treino completo" : "Começar treino do dia", s: T ? `${T.nome} · cerca de ${minTreino(T)} min` : "Seu treino de hoje está pronto.", b: ["COMEÇAR TREINO DO DIA", "plano"] }; }
+  return { t: "Dia livre no seu plano", s: "Uma caminhada leve ou um alongamento caem bem.", b: ["CAMINHADA", "cam"] };
+}
+function nbaAcao(k){ SOM.tap && SOM.tap();
+  if(k === "ret") return retomar(); if(k === "planob") return planoB(); if(k === "vit") return minhasVitorias(); if(k === "so") return soTenho(); if(k === "sem") return minhaSemanaMudou();
+  if(k === "volta"){ delete ME.semanaMudou; save(); toast("De volta ao seu plano normal 💚"); return rerender(); }
+  if(k === "mis"){ const m = $("mis-ini"); return m && m.scrollIntoView({ behavior: "smooth", block: "center" }); }
+  return coachAcao(k); }
+function nbaPinta(){
+  const co = $("coach-ini"); if(!co) return; const velho = $("nba-ini");
+  if(!IOn("nba")){ if(velho) velho.remove(); return; }
+  const a = nbaDecide();
+  const html = `<section class="nba-ini" id="nba-ini" aria-label="Próxima melhor ação"><span class="nba-eb">Agora, o mais útil para você</span><b class="nba-t">${esc(a.t)}</b><p class="nba-s">${esc(a.s)}</p>
+    <button class="btn nba-b" data-nb="${a.b[1]}">${a.b[1] === "ret" || /^t\d|plano/.test(a.b[1]) ? ic("play", 16) : ""}${a.b[0]}</button>
+    <div class="nba-lk">${IOn("planob") ? `<button class="link" data-nb="so">Hoje só tenho…</button><button class="link" data-nb="planob">Plano B</button>` : ""}${IOn("semana") ? (semanaMudou() ? `<button class="link" data-nb="volta">Voltar ao meu plano normal</button>` : `<button class="link" data-nb="sem">Minha semana mudou</button>`) : ""}</div></section>`;
+  const tmp = document.createElement("div"); tmp.innerHTML = html; const n = tmp.firstElementChild;
+  if(velho && velho.innerHTML === n.innerHTML){ if(velho.nextElementSibling !== co) co.before(velho); } else { if(velho) velho.replaceWith(n); else co.before(n); }
+  $("nba-ini").querySelectorAll("[data-nb]").forEach(b => b.onclick = () => nbaAcao(b.dataset.nb));
+}
+const coachPintaI = coachPinta; coachPinta = function(){ const r = coachPintaI.apply(this, arguments); try{ nbaPinta(); dcPinta(); }catch(e){ console.warn(e); } return r; };
+
+/* ---------- Minhas vitórias ---------- */
+const VIT_OP = [["disposicao", "Estou com mais disposição"], ["sono", "Dormi melhor"], ["correr", "Consegui correr mais"], ["forte", "Estou me sentindo mais forte"], ["semvontade", "Treinei mesmo sem vontade"],
+  ["voltei", "Voltei depois de parar"], ["rotina", "Mantive minha rotina"], ["dificil", "Consegui algo que antes era difícil"], ["outra", "Outra vitória"]];
+const vitNome = k => (VIT_OP.find(v => v[0] === k) || [k, "Vitória"])[1];
+function minhasVitorias(){
+  const L = (ME.vitorias || []).slice().reverse(); let sel = null;
+  sheet("Minhas vitórias", `<p class="muted" style="margin-top:0">Progresso também é o que você sente. Só você vê.</p><div class="vt-op">${VIT_OP.map(([k, n]) => `<button class="chip" data-vt="${k}">${n}</button>`).join("")}</div>
+    <div class="field"><textarea class="input" id="vt-tx" maxlength="120" placeholder="Quer contar mais? (opcional)"></textarea></div><button class="btn btn-accent btn-block" id="vt-ok" disabled>Guardar minha vitória</button>
+    ${L.length ? `<div class="nb-sec">Suas vitórias</div><div class="vt-lista">${L.slice(0, 30).map(v => `<div class="vt-it"><b>🏅 ${esc(vitNome(v.k))}</b>${v.t ? `<p>${esc(v.t)}</p>` : ""}<small>${brD(v.d)}</small></div>`).join("")}</div>` : ""}`);
+  document.querySelectorAll("[data-vt]").forEach(b => b.onclick = () => { sel = b.dataset.vt; document.querySelectorAll("[data-vt]").forEach(x => x.setAttribute("aria-pressed", x === b)); $("vt-ok").disabled = false; });
+  $("vt-ok").onclick = () => { if(!sel) return; ME.vitorias = (ME.vitorias || []).concat([{ d: today(), k: sel, t: $("vt-tx").value.trim().slice(0, 120) }]).slice(-200); save(); SOM.chime && SOM.chime(); vibra([30, 40, 60]);
+    const v = ME.vitorias[ME.vitorias.length - 1];
+    sheet("Vitória guardada 💚", `<div class="pb-top"><b>🏅 ${esc(vitNome(v.k))}</b>${v.t ? `<p>${esc(v.t)}</p>` : ""}<p>Isso também é evolução.</p></div>
+      ${SO.on() ? `<button class="btn btn-line btn-block" id="vt-comp">${ic("people", 16)} Compartilhar na comunidade</button>` : ""}<button class="btn btn-accent btn-block" id="vt-fim">Fechar</button>`);
+    $("vt-fim").onclick = fecharSheet; const c = $("vt-comp"); if(c) c.onclick = () => { fecharSheet(); tab("juntas"); setTimeout(() => abreComposer(`🏅 ${vitNome(v.k)}${v.t ? ": " + v.t : ""}`, null, { conquista: VIT_CONQ }), 350); }; };
+}
+const eventosJornadaI = eventosJornada;
+eventosJornada = function(){ const E = eventosJornadaI.apply(this, arguments); (ME.vitorias || []).forEach(v => E.push([v.d, "🏅", vitNome(v.k)])); return E.sort((a, b) => a[0].localeCompare(b[0])); };
+
+/* ---------- Busca global ---------- */
+const semAc = s => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+function buscaIndice(){
+  const I = [];
+  QUICK.forEach((q, i) => I.push(["Treinos", q.nome, q.foco, () => abrirTreinoPreview(treinoRapido(q))]));
+  [5, 10, 15, "alo"].forEach(k => I.push(["Treinos", COACH_MINI[k].nome, "Pouco ainda conta", () => coachTreino(k)]));
+  (PROGS || []).forEach(p => I.push(["Treinos", p.nome, "Programa", () => abrirPrograma(p.id)]));
+  (window.EX || []).forEach(r => I.push(["Exercícios", r[1], r[2], () => abrirExercicio(r[0])]));
+  (BASE_REC || []).forEach(rc => I.push(["Receitas", rc.nome, rc.cat || "", () => abrirReceita(rc.id)]));
+  if(typeof CAB !== "undefined" && cabOn()){ (CAB.L || []).forEach(p => I.push(["Penteados", p.nome, [p.tipos, p.comp].flat().join(" "), () => { fecharSheet(); if(typeof abreCabelo === "function") abreCabelo(); }]));
+    if(!(CAB.L || []).length) ["cabelo", "penteado", "cacheado", "crespo", "liso", "ondulado", "trança", "coque", "rabo"].forEach(w => I.push(["Penteados", "Cabelo para Treinar", w, () => { fecharSheet(); if(typeof abreCabelo === "function") abreCabelo(); }])); }
+  if(typeof GRP !== "undefined") [...GRP.values()].forEach(g => I.push(["Grupos", g.nome, g.descricao || "", () => abrirGrupo(g)]));
+  if(typeof explorarOn === "function" && explorarOn()){
+    (DB.profissionais || []).filter(p => p.ativo !== false).forEach(p => I.push(["Profissionais", p.nome, [p.cat, p.esp, p.tipo].filter(Boolean).join(" "), () => abrirProf(p.id)]));
+    (DB.empresas || []).filter(p => p.ativo !== false).forEach(p => I.push(["Empresas", p.nome, [p.tipo, p.modalidades].filter(Boolean).join(" "), () => abrirEmp(p.id)]));
+    (DB.produtos || []).filter(p => p.ativo !== false).forEach(p => I.push(["Produtos", p.nome, [p.marca, p.cat].filter(Boolean).join(" "), () => abrirProd(p.id)]));
+  }
+  return I.map(x => (x.k = semAc(x[1] + " " + x[2]), x));
+}
+function buscaGlobal(){
+  sheet("Buscar no CK Life", `<div class="search"><input class="input" id="bg-q" placeholder="Treino, receita, exercício, profissional…" autocomplete="off"></div><div id="bg-r" class="bg-r"><p class="muted">Ex.: frango, agachamento, nutricionista, cacheado</p></div>`);
+  let IDX = null, tm = null; const inp = $("bg-q"); setTimeout(() => inp && inp.focus(), 200);
+  inp.oninput = () => { clearTimeout(tm); tm = setTimeout(() => { const q = semAc(inp.value.trim()), box = $("bg-r"); if(!box) return;
+    if(q.length < 2){ box.innerHTML = `<p class="muted">Digite pelo menos 2 letras.</p>`; return; }
+    IDX = IDX || buscaIndice(); const ws = q.split(/\s+/), R = IDX.filter(x => ws.every(w => x.k.includes(w)));
+    const grupos = {}; R.forEach(x => (grupos[x[0]] = grupos[x[0]] || []).push(x));
+    box.innerHTML = R.length ? Object.entries(grupos).map(([g, L]) => `<div class="nb-sec">${esc(g)}</div>${L.slice(0, 6).map(x => `<button class="setrow bg-it" data-bi="${IDX.indexOf(x)}"><div><b>${esc(x[1])}</b>${x[2] ? `<small>${esc(String(x[2]).slice(0, 60))}</small>` : ""}</div></button>`).join("")}`).join("")
+      : `<p class="muted">Nada encontrado para “${esc(inp.value.trim())}”.</p>`;
+    box.querySelectorAll("[data-bi]").forEach(b => b.onclick = () => { const x = IDX[+b.dataset.bi]; fecharSheet(); setTimeout(() => x[3](), 120); }); }, 250); };
+}
+function buscaBotao(){ if(!IOn("busca")){ const b = $("b-busca"); if(b) b.remove(); return; } const sc = $("streak-chip"); if(!sc || $("b-busca")) return;
+  sc.insertAdjacentHTML("beforebegin", `<button class="iconbtn top-busca" id="b-busca" aria-label="Buscar no CK Life">${ic("search", 18)}</button>`); $("b-busca").onclick = buscaGlobal; }
+setInterval(buscaBotao, 4000); setTimeout(buscaBotao, 1500);
+
+/* ---------- Meus salvos (junta favoritos que já existem) ---------- */
+function meusSalvos(){
+  const rec = (ME.favs || []).map(id => BASE_REC.find(r => String(r.id) === String(id))).filter(Boolean);
+  const fx = ME.favx || [], pega = (t, L) => fx.filter(x => x.startsWith(t + ":")).map(x => (L || []).find(p => String(p.id) === x.slice(t.length + 1))).filter(Boolean);
+  const prof = pega("prof", DB.profissionais), emp = pega("emp", DB.empresas), prod = pega("prod", DB.produtos);
+  const pent = typeof CAB !== "undefined" && CAB.favs && CAB.L ? CAB.L.filter(p => CAB.favs.has(p.id)) : [];
+  const bloco = (t, L, fn) => L.length ? `<div class="nb-sec">${t}</div>${L.map(x => `<button class="setrow" data-sv="${t}:${x.id}"><div><b>${esc(x.nome)}</b></div></button>`).join("")}` : "";
+  const posts = typeof SALVOS !== "undefined" ? SALVOS.size : 0;
+  sheet("Meus salvos", `${bloco("Receitas", rec)}${bloco("Penteados", pent)}${bloco("Profissionais", prof)}${bloco("Empresas", emp)}${bloco("Produtos", prod)}
+    ${SO.on() ? `<div class="nb-sec">Posts</div><button class="setrow" id="sv-posts"><div><b>Posts salvos</b><small>${posts ? int(posts) + " salvos" : "Ver posts que você salvou"}</small></div></button>` : ""}
+    ${!rec.length && !pent.length && !prof.length && !emp.length && !prod.length && !SO.on() ? `<p class="muted">Você ainda não salvou nada. Toque no coração das receitas e dos profissionais para guardar aqui.</p>` : ""}`);
+  document.querySelectorAll("[data-sv]").forEach(b => b.onclick = () => { const [t, id] = b.dataset.sv.split(/:(.+)/); fecharSheet(); setTimeout(() => { if(t === "Receitas") abrirReceita(isNaN(+id) ? id : +id); else if(t === "Profissionais") abrirProf(id); else if(t === "Empresas") abrirEmp(id); else if(t === "Produtos") abrirProd(id); else if(typeof abreCabelo === "function") abreCabelo(); }, 120); });
+  const sp = $("sv-posts"); if(sp) sp.onclick = () => { fecharSheet(); setTimeout(verSalvos, 120); };
+}
+const rPerfilI = rPerfil; rPerfil = function(){ const r = rPerfilI.apply(this, arguments); try{
+  const ref = $("p-parc") || $("p-coach") || $("p-push");
+  if(ref && IOn("vitorias") && !$("p-vit")){ ref.insertAdjacentHTML("afterend", setRow("p-vit", "trophy", "Minhas vitórias", `${(ME.vitorias || []).length} ${(ME.vitorias || []).length === 1 ? "vitória guardada" : "vitórias guardadas"}`)); $("p-vit").onclick = minhasVitorias; }
+  const ref2 = $("p-vit") || ref; if(ref2 && !$("p-salvos")){ ref2.insertAdjacentHTML("afterend", setRow("p-salvos", "star", "Meus salvos", "Receitas, profissionais, posts e mais")); $("p-salvos").onclick = meusSalvos; }
+  const pp = $("p-parc"); if(pp && !IOn("parceira")) pp.remove(); }catch(e){ console.warn(e); } return r; };
+
+/* ---------- Parceira CK: atalhos no chat existente (mensagens normais) ---------- */
+const PARC_ATALHOS = ["Bora? 💚", "Terminei ✅", "Treino feito!", "Fechamos hoje?", "Cadê você? 😂"];
+const abreConversaI = abreConversa;
+abreConversa = async function(c){ const r = await abreConversaI.apply(this, arguments);
+  try{ const pid = PARC && PARC.status === "ativa" && PARC.outra && PARC.outra.user_id; if(pid && IOn("parceira") && c && (c.a === pid || c.b === pid) && !$("pc-at")){ const t = $("cv-t"), env = $("cv-env");
+    if(t && env){ t.closest("div").insertAdjacentHTML("beforebegin", `<div class="hscroll pc-at" id="pc-at">${PARC_ATALHOS.map(x => `<button class="chip" data-pa="${esc(x)}">${esc(x)}</button>`).join("")}</div>`);
+      document.querySelectorAll("[data-pa]").forEach(b => b.onclick = () => { t.value = b.dataset.pa; t.dispatchEvent(new Event("input", { bubbles: true })); env.click(); }); } } }catch(e){ console.warn(e); }
+  return r; };
+
+/* ---------- Squad CK (modalidade dos Grupos) ---------- */
+const abrirGrupoI = abrirGrupo; abrirGrupo = async function(g){ const r = await abrirGrupoI.apply(this, arguments);
+  try{ if(g && g.squad && IOn("squad")){ const top = document.querySelector("#sheet .so-gr-top small.num"); if(top && !top.dataset.sq){ top.dataset.sq = 1; top.insertAdjacentHTML("beforebegin", `<span class="sq-tag">SQUAD CK · ${int(g.membros)}/${int(g.max_membros || 15)}</span>`);
+    if(!g.eu && g.membros >= (g.max_membros || 15)){ const e = $("gr-entrar"); if(e){ e.disabled = true; e.textContent = "Squad completo"; } } } } }catch(e){}
+  return r; };
+
+/* ---------- Desafio coletivo (número real do banco) ---------- */
+let DC = null, DC_T = 0;
+async function dcCarrega(){ if(!IOn("coletivo") || !NU.ativo || !NU.sb) return DC = null; if(Date.now() - DC_T < 600000) return DC; DC_T = Date.now();
+  try{ const r = await NU.sb.rpc("desafio_coletivo_atual"); DC = r.error ? null : r.data; }catch(e){ DC = null; } return DC; }
+function dcPinta(){ const ref = $("mis-ini") || $("coach-ini"); if(!ref) return; const v = $("dc-ini");
+  if(!DC || !IOn("coletivo")){ if(v) v.remove(); return; }
+  const pc = Math.min(100, Math.round(100 * DC.total / Math.max(1, DC.meta)));
+  const h = `<section class="dc-ini" id="dc-ini"><span class="mis-eb">Desafio coletivo CK</span><b>${esc(DC.titulo)}</b><span class="bar"><i style="width:${pc}%"></i></span><small class="num">${int(DC.total)} / ${int(DC.meta)} minutos de movimento</small></section>`;
+  if(v){ if(v.outerHTML !== h){ v.outerHTML = h; } } else ref.after(Object.assign(document.createElement("div"), { innerHTML: h }).firstElementChild); }
+function dcPosTreino(){ const ult = (ME.treinos || [])[ME.treinos.length - 1]; if(!DC || !ult || !ult.min) return; const pc = $("play") && $("play").querySelector(".done-hero h2"); if(!pc) return;
+  DC.total += ult.min; DC_T = Date.now();
+  pc.insertAdjacentHTML("afterend", `<div class="dc-pos">🌍 Seus ${int(ult.min)} ${ult.min === 1 ? "minuto ajudou" : "minutos ajudaram"} a comunidade a chegar mais perto da meta.</div>`); }
+
+/* ---------- Reconhecimentos da semana (só para ela; nunca ranking) ---------- */
+async function reconhecimentos(){
+  const R = [], seg = semanaKey(), n = semanaFeitos(seg);
+  if(n >= alvoSemana()) R.push(["🔥", "Constância", `${n} dias com treino essa semana`]);
+  if(idadeConta() <= 7 && n > 0) R.push(["⭐", "Primeira semana", "Você começou e apareceu por você"]);
+  if(((ME.coach && ME.coach.voltasD) || []).some(d => d >= seg)) R.push(["🌱", "Recomeço da semana", "Voltar também é progresso"]);
+  if(SO.on()) try{ const r = await SB().from("comentarios").select("id", { count: "exact", head: true }).eq("user_id", NU.uid).gte("criado", new Date(Date.now() - 7 * 864e5).toISOString());
+    const c = r.count || 0; if(c >= 5) R.push(["💚", "Acolhedora da semana", `${c} comentários de incentivo`]); if(c >= 12) R.push(["🤝", "Ajudou outras mulheres", "Sua presença fez diferença"]); }catch(e){}
+  return R;
+}
+function reconhPinta(){ const ref = $("vit-hoje") || document.querySelector("#t-juntas .cm-pdia") || $("cm-nova"); if(!ref || $("rc-sem")) return;
+  reconhecimentos().then(R => { if(!R.length || $("rc-sem")) return; const r2 = $("vit-hoje") || ref;
+    r2.insertAdjacentHTML("afterend", `<section class="rc-sem" id="rc-sem"><span class="eyebrow">Seus reconhecimentos da semana</span><div class="rc-l">${R.map(([e, t, s]) => `<div class="rc-it"><i>${e}</i><span><b>${t}</b><small>${esc(s)}</small></span></div>`).join("")}</div><small class="muted">Só você vê. Aqui ninguém compete com ninguém 💚</small></section>`); }); }
+const rJuntasI = rJuntas; rJuntas = function(){ const r = rJuntasI.apply(this, arguments); setTimeout(() => { try{ reconhPinta(); }catch(e){} }, 900); return r; };
+const abrirAppI = abrirApp; abrirApp = function(){ const r = abrirAppI.apply(this, arguments); setTimeout(() => dcCarrega().then(() => { if(TAB === "inicio") dcPinta(); }), 3000); return r; };
 
 const TABS = [["inicio","Início"],["treinar","Treinos"],["dieta","Nutrição"],["juntas","Comunidade"],["explorar","Explorar"],["perfil","Perfil"],["evolucao","Evolução"]];
 const NAV = TABS.slice(0, 6), NAV_DE = { evolucao: "perfil" };
@@ -12401,15 +12664,17 @@ async function vGrupos(){
   if(!SB2()) return $("gp-b").innerHTML = `<div class="card">Funciona no app oficial, com o banco conectado.</div>`;
   let L, cont = {};
   try{ L = await sq(SB2().from("grupos").select("*").order("ordem").order("nome")); (await sq(SB2().rpc("grupos_info")) || []).forEach(g => cont[g.id] = g.membros); }catch(e){ return $("gp-b").innerHTML = semBanco(e).replace("seguranca.sql", "novidades.sql"); }
-  $("gp-b").innerHTML = `<div class="tbl"><table><thead><tr><th>Grupo</th><th>Cidade</th><th>Membras</th><th>Status</th><th></th></tr></thead><tbody>${L.map(g => `<tr><td><b>${esc(g.emoji || "")} ${esc(g.nome)}</b><br><small class="muted">${esc(g.descricao || "")}</small></td><td>${esc((DB().cidades.find(c => +c.id === +g.cidade) || {}).nome || "Todas")}</td><td class="num">${int(cont[g.id] || 0)}</td><td><span class="st ${g.ativo ? "ok" : "off"}">${g.ativo ? "Ativo" : "Oculto"}</span></td><td><button class="btn btn-line btn-sm needs-edit" data-gp="${g.id}">Editar</button></td></tr>`).join("") || `<tr><td colspan="5" class="empty">Nenhum grupo. Rode o novidades.sql no Supabase.</td></tr>`}</tbody></table></div>`;
+  $("gp-b").innerHTML = `<div class="tbl"><table><thead><tr><th>Grupo</th><th>Cidade</th><th>Membras</th><th>Status</th><th></th></tr></thead><tbody>${L.map(g => `<tr><td><b>${esc(g.emoji || "")} ${esc(g.nome)}</b>${g.squad ? ` <span class="tag">Squad · até ${g.max_membros || 15}</span>` : ""}<br><small class="muted">${esc(g.descricao || "")}</small></td><td>${esc((DB().cidades.find(c => +c.id === +g.cidade) || {}).nome || "Todas")}</td><td class="num">${int(cont[g.id] || 0)}</td><td><span class="st ${g.ativo ? "ok" : "off"}">${g.ativo ? "Ativo" : "Oculto"}</span></td><td><button class="btn btn-line btn-sm needs-edit" data-gp="${g.id}">Editar</button></td></tr>`).join("") || `<tr><td colspan="5" class="empty">Nenhum grupo. Rode o novidades.sql no Supabase.</td></tr>`}</tbody></table></div>`;
   const form = g => { const x = g || { ativo: true, ordem: 10, cor: "#2E7D5A" };
     modal(g ? "Editar grupo" : "Novo grupo", `<div class="formgrid"><div class="field"><label for="gp-n">Nome</label><input class="input" id="gp-n" value="${esc(x.nome || "")}" maxlength="60"></div><div class="field"><label for="gp-e">Emoji</label><input class="input" id="gp-e" value="${esc(x.emoji || "")}" maxlength="8"></div>
       <div class="field full"><label for="gp-d">Descrição</label><textarea class="input" id="gp-d" maxlength="300">${esc(x.descricao || "")}</textarea></div>
       <div class="field"><label for="gp-c">Cidade</label><select class="input" id="gp-c"><option value="">Todas</option>${DB().cidades.map(c => `<option value="${c.id}" ${+c.id === +x.cidade ? "selected" : ""}>${esc(c.nome)}</option>`).join("")}</select></div>
       <div class="field"><label for="gp-cor">Cor</label><input class="input" type="color" id="gp-cor" value="${esc(x.cor || "#2E7D5A")}"></div><div class="field"><label for="gp-o">Ordem</label><input class="input num" id="gp-o" value="${esc(x.ordem)}"></div>
-      <label class="field xf-chk"><input type="checkbox" id="gp-a" ${x.ativo ? "checked" : ""}> Visível para as alunas</label></div><button class="btn btn-accent" id="gp-ok">Salvar</button>`);
+      <label class="field xf-chk"><input type="checkbox" id="gp-a" ${x.ativo ? "checked" : ""}> Visível para as alunas</label>
+      <label class="field xf-chk"><input type="checkbox" id="gp-sq" ${x.squad ? "checked" : ""}> Squad CK (grupo pequeno)</label><div class="field"><label for="gp-mx">Máximo de integrantes (5 a 15)</label><input class="input num" id="gp-mx" value="${esc(x.max_membros || 15)}"></div></div><button class="btn btn-accent" id="gp-ok">Salvar</button>`);
     $("gp-ok").onclick = async () => { const nome = val("gp-n"); if(nome.length < 3) return toast("Nome com pelo menos 3 letras");
       const d = { nome, emoji: val("gp-e") || null, descricao: val("gp-d") || null, cidade: val("gp-c") ? +val("gp-c") : null, cor: val("gp-cor"), ordem: +val("gp-o") || 0, ativo: $("gp-a").checked };
+      if($("gp-sq").checked){ d.squad = true; d.max_membros = Math.max(5, Math.min(15, +val("gp-mx") || 15)); } else if(g && g.squad){ d.squad = false; d.max_membros = null; }
       try{ if(g) await sq(SB2().from("grupos").update(d).eq("id", g.id)); else await sq(SB2().from("grupos").insert({ ...d, slug: (nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 34) + "-" + Math.random().toString(36).slice(2, 5)) }));
         F.nuvem.sb.rpc("auditar", { p_acao: g ? "grupo_alterado" : "grupo_criado", p_recurso: "grupos", p_alvo: nome }); fechar(); toast("Grupo salvo"); vGrupos(); }catch(e){ toast("Sem permissão ou dados inválidos"); } }; };
   const nv = $("gp-novo"); if(nv) nv.onclick = () => form();
@@ -13112,7 +13377,18 @@ const MODS = [
   ["clube", "Clube CK", "Benefícios e descontos em parceiros.", () => DB().parceiros.filter(p => p.ativo !== false).length, "parceiros"],
   ["cupons", "Cupons por treino", "A cada X treinos a aluna ganha um cupom (Início, Perfil e fim do treino).", () => DB().parceiros.filter(p => p.ativo !== false && !p.livre).length, "cupons"],
   ["loja", "Loja CK", "Produtos com link para compra (loja própria ou afiliados).", () => DB().produtos.filter(p => p.ativo !== false).length, "produtos"],
-  ["camera", "Câmera nos treinos", "Botão “Contar com a câmera”: conta repetições e dá dicas de postura em 5 exercícios. Roda só no celular da aluna, nada é enviado. Cada aluna também pode desligar no Perfil.", () => 5, null]
+  ["camera", "Câmera nos treinos", "Botão “Contar com a câmera”: conta repetições e dá dicas de postura em 5 exercícios. Roda só no celular da aluna, nada é enviado. Cada aluna também pode desligar no Perfil.", () => 5, null],
+  ["nba", "Próxima melhor ação", "Card no Início com a ação mais útil para ela agora.", () => null, ""],
+  ["planob", "Plano B e Hoje só tenho X min", "Opções curtas quando o dia aperta.", () => null, ""],
+  ["retomar", "Retomar treino", "Continuar o treino de onde parou.", () => null, ""],
+  ["troca", "Trocar exercício", "Troca por um exercício equivalente do catálogo, durante o treino.", () => null, ""],
+  ["semana", "Minha semana mudou", "Semana difícil temporária, sem mexer no Plano do Ano.", () => null, ""],
+  ["vitorias", "Minhas vitórias", "Vitórias que ela sente (disposição, sono, força...).", () => null, ""],
+  ["busca", "Busca global", "Lupa no topo para achar treinos, receitas, exercícios e mais.", () => null, ""],
+  ["parceira", "Parceira CK", "Treinar junto com uma amiga.", () => null, ""],
+  ["squad", "Squad CK", "Grupos pequenos de 5 a 15 integrantes.", () => null, ""],
+  ["coletivo", "Desafio coletivo", "Meta de minutos somados pela comunidade.", () => null, ""],
+  ["insights", "O CK Life aprendeu sobre você", "Insights simples tirados da atividade dela.", () => null, ""]
 ];
 function vModulos(){
   const db = DB(); db.modulos = db.modulos || {};
@@ -13120,7 +13396,7 @@ function vModulos(){
   $("adm-main").innerHTML = `<div class="head"><div><h1>Módulos do app</h1><p class="muted">Ligue só o que já tem conteúdo. Desligado, some do app das alunas; ao ligar, aparece com o selo <b>Novo</b> por 14 dias e um aviso no Início.</p></div></div>
     <div class="mod-list">${MODS.map(([k, n, d, conta, sec]) => { const ligado = on(k), qt = conta(), m = db.modulos[k] || {};
       return `<div class="mod-row ${ligado ? "on" : ""}"><span class="mod-ai">${aic(sec === "parceiros" ? "parceiros" : sec === "produtos" ? "campanhas" : sec === "cupons" ? "parceiros" : sec === "servicos" ? "resumo" : "explorarg", 20)}</span>
-        <span class="mod-info"><b>${esc(n)}</b><small>${esc(d)}</small><small class="mod-st">${ligado ? (m.desde ? `Ligado desde ${brD(m.desde)}` : "Ligado") : "Desligado: não aparece para as alunas"} · ${int(qt)} cadastrado(s)${ligado && !qt ? ` · <span class="mod-alerta">sem conteúdo: a seção fica escondida</span>` : ""}</small></span>
+        <span class="mod-info"><b>${esc(n)}</b><small>${esc(d)}</small><small class="mod-st">${ligado ? (m.desde ? `Ligado desde ${brD(m.desde)}` : "Ligado") : "Desligado: não aparece para as alunas"} · ${qt === null ? "Função do app (liga/desliga)" : `${int(qt)} cadastrado(s)${ligado && !qt ? ` · <span class="mod-alerta">sem conteúdo: a seção fica escondida</span>` : ""}`}</small></span>
         <span class="mod-acts">${podeVer(sec) && VIEWS[sec] ? `<button class="btn btn-line btn-sm" data-cad="${sec}">Cadastrar</button>` : ""}<button class="mod-sw needs-edit" role="switch" aria-checked="${ligado}" aria-label="${ligado ? "Desligar" : "Ligar"} ${esc(n)}" data-mod="${k}"><i></i></button></span></div>`; }).join("")}</div>
     <p class="hint" style="margin-top:12px">Se todos os módulos do Explorar estiverem desligados, a aba Explorar some do menu das alunas.</p>`;
   $("adm-main").querySelectorAll("[data-cad]").forEach(b => b.onclick = () => ir(b.dataset.cad));
@@ -13572,7 +13848,7 @@ async function vCoach(){
   try{ const r = await SB2().rpc("admin_coach_resumo"); if(r.error) throw r.error; CO_D = r.data; if(!CO_D) throw new Error("sem acesso"); }
   catch(e){ $("adm-main").innerHTML = `<div class="head"><div><h1>Engajamento & Coach</h1><p class="muted">Ainda não ativado. Rode o SQL <b>coach.sql</b> no Supabase (SQL Editor) e abra esta tela de novo.</p></div></div>`; return; }
   const d = CO_D, c = d.config || {};
-  const abas = [["geral", "Visão geral"], ["mensagens", "Mensagens"], ["auto", "Automações"], ["inativas", "Inativas e segmentos"], ["config", "Configurações"]];
+  const abas = [["geral", "Visão geral"], ["mensagens", "Mensagens"], ["auto", "Automações"], ["inativas", "Inativas e segmentos"], ["coletivo", "Desafio coletivo"], ["config", "Configurações"]];
   const atalhos = [["notificacoes", "Notificações (Central)"], ["comunidade", "Comunidade"], ["equipe", "Time de Incentivo"], ["figurinhas", "Conquistas e figurinhas"], ["numeros", "Números do negócio"]].filter(([k]) => VIEWS[k] && podeVer(k));
   $("adm-main").innerHTML = `
     <div class="head"><div><h1>Engajamento & Coach</h1><p class="muted">A Coach CK Life é virtual e nunca finge ser uma pessoa. O servidor manda <b>no máximo ${int(c.max_dia)} recados por dia</b> para cada aluna (contando os lembretes), respeita o horário de silêncio e as preferências dela, e nunca usa ciclo, peso ou saúde.</p></div>
@@ -13614,6 +13890,7 @@ function coAba(ed){
       <div class="grid g4">${kpi("3 a 6 dias sem abrir", int(I.d3), coPct(I.d3, tot) + " das alunas", "alunos")}${kpi("7 a 13 dias", int(I.d7), coPct(I.d7, tot), "alunos")}${kpi("14 a 29 dias", int(I.d14), coPct(I.d14, tot), "alunos")}${kpi("30 dias ou mais", int(I.d30), "a Coach para de chamar depois de 30 dias", "alunos")}</div>
       <div class="nb-sec">Segmentos</div>
       <div class="grid g4">${kpi("Total de alunas", int(d.total), "sem contar a equipe", "alunos")}${kpi("Novas (7 dias)", int(d.novas7), "recebem as dicas da primeira semana", "alunos")}${kpi("Ativas no mês", int(d.mau), coPct(d.mau, tot) + " do total", "alunos")}${kpi("Mensagens ativas", int(d.mensagens), "no banco de recados", "coach")}</div>`;
+  } else if(CO_ABA === "coletivo"){ coColetivo(ed);
   } else if(CO_ABA === "config"){
     const hs = Array.from({ length: 24 }, (_, h) => h);
     box.innerHTML = `<div class="card eq-cfg">
@@ -13685,6 +13962,22 @@ function coEdita(m, ed){
     try{ const r = await SB2().rpc("admin_coach_msg_salvar", { p_id: m ? m.id : null, p_categoria: $("ce-cat").value, p_titulo: ti, p_texto: tx, p_tom: $("ce-tom").value, p_prioridade: Math.max(1, Math.min(10, +$("ce-pr").value || 5)), p_plano: $("ce-pl").value, p_ativo: $("ce-at").value === "1" });
       if(r.error) throw r.error; $("modal").hidden = true; document.body.style.overflow = ""; toast("Mensagem salva"); CO_M = null; coMensagens(ed); }
     catch(e){ b.disabled = false; toast(e.message || String(e)); } };
+}
+async function coColetivo(ed){
+  const box = $("co-corpo"); box.innerHTML = `<p class="muted">Carregando…</p>`; let L = [];
+  try{ const r = await SB2().rpc("admin_desafios_coletivos"); if(r.error) throw r.error; L = r.data || []; }catch(e){ box.innerHTML = `<p class="muted">Rode o SQL <b>inteligencia.sql</b> para ativar. (${esc(e.message || e)})</p>`; return; }
+  box.innerHTML = `<p class="muted">Meta de minutos de movimento somados pela comunidade. O total vem dos treinos reais registrados no período (nada estimado). Só um desafio ativo aparece por vez no app.</p>
+    ${ed ? `<button class="btn btn-accent btn-sm" id="dc-novo">+ Novo desafio coletivo</button>` : ""}
+    <div class="co-regras" style="margin-top:12px">${L.map(d => `<div class="card co-rg ${d.ativo ? "" : "off"}"><div class="co-rg-h"><b>${esc(d.titulo)}</b><button class="mod-sw ${ed ? "" : "needs-edit"}" role="switch" data-dca="${d.id}" aria-checked="${!!d.ativo}" aria-label="Ativar desafio"><i></i></button></div>
+      <small>${brD(d.ini)} a ${brD(d.fim)}</small><span class="bar"><i style="width:${Math.min(100, Math.round(100 * d.total / Math.max(1, d.meta)))}%"></i></span><small class="num">${int(d.total)} / ${int(d.meta)} minutos</small></div>`).join("") || `<p class="muted">Nenhum desafio coletivo ainda.</p>`}</div>`;
+  const nv = $("dc-novo"); if(nv) nv.onclick = () => { const hj = today();
+    modal("Novo desafio coletivo", `<div class="form"><div class="field"><label for="dc-t">Título</label><input class="input" id="dc-t" maxlength="80" value="100.000 minutos de movimento"></div>
+      <div class="row2"><div class="field"><label for="dc-m">Meta (minutos)</label><input class="input num" id="dc-m" value="100000"></div><div class="field"><label for="dc-i">Início</label><input class="input" type="date" id="dc-i" value="${hj}"></div></div>
+      <div class="field"><label for="dc-f">Fim</label><input class="input" type="date" id="dc-f" value="${addD(hj, 30)}"></div>
+      <div class="toolbar" style="justify-content:flex-end"><button class="btn btn-line" data-close>Cancelar</button><button class="btn btn-accent" id="dc-ok">Criar</button></div></div>`);
+    $("dc-ok").onclick = async () => { try{ const r = await SB2().rpc("admin_desafio_coletivo", { p_id: null, p_titulo: $("dc-t").value, p_meta: +$("dc-m").value, p_ini: $("dc-i").value, p_fim: $("dc-f").value, p_ativo: true }); if(r.error) throw r.error; $("modal").hidden = true; document.body.style.overflow = ""; toast("Desafio criado"); coColetivo(ed); }catch(e){ toast(e.message || String(e)); } }; };
+  box.querySelectorAll("[data-dca]").forEach(b => b.onclick = async () => { if(!ed) return toast("Seu acesso não permite mudar isso"); const on = b.getAttribute("aria-checked") !== "true";
+    try{ const r = await SB2().rpc("admin_desafio_coletivo", { p_id: b.dataset.dca, p_titulo: null, p_meta: null, p_ini: null, p_fim: null, p_ativo: on }); if(r.error) throw r.error; toast(on ? "Desafio ativado" : "Desafio pausado"); coColetivo(ed); }catch(e){ toast(e.message || String(e)); } });
 }
 VIEWS.coach = vCoach;
 

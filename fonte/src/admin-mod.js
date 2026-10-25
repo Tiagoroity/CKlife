@@ -9,7 +9,18 @@ const MODS = [
   ["clube", "Clube CK", "Benefícios e descontos em parceiros.", () => DB().parceiros.filter(p => p.ativo !== false).length, "parceiros"],
   ["cupons", "Cupons por treino", "A cada X treinos a aluna ganha um cupom (Início, Perfil e fim do treino).", () => DB().parceiros.filter(p => p.ativo !== false && !p.livre).length, "cupons"],
   ["loja", "Loja CK", "Produtos com link para compra (loja própria ou afiliados).", () => DB().produtos.filter(p => p.ativo !== false).length, "produtos"],
-  ["camera", "Câmera nos treinos", "Botão “Contar com a câmera”: conta repetições e dá dicas de postura em 5 exercícios. Roda só no celular da aluna, nada é enviado. Cada aluna também pode desligar no Perfil.", () => 5, null]
+  ["camera", "Câmera nos treinos", "Botão “Contar com a câmera”: conta repetições e dá dicas de postura em 5 exercícios. Roda só no celular da aluna, nada é enviado. Cada aluna também pode desligar no Perfil.", () => 5, null],
+  ["nba", "Próxima melhor ação", "Card no Início com a ação mais útil para ela agora.", () => null, ""],
+  ["planob", "Plano B e Hoje só tenho X min", "Opções curtas quando o dia aperta.", () => null, ""],
+  ["retomar", "Retomar treino", "Continuar o treino de onde parou.", () => null, ""],
+  ["troca", "Trocar exercício", "Troca por um exercício equivalente do catálogo, durante o treino.", () => null, ""],
+  ["semana", "Minha semana mudou", "Semana difícil temporária, sem mexer no Plano do Ano.", () => null, ""],
+  ["vitorias", "Minhas vitórias", "Vitórias que ela sente (disposição, sono, força...).", () => null, ""],
+  ["busca", "Busca global", "Lupa no topo para achar treinos, receitas, exercícios e mais.", () => null, ""],
+  ["parceira", "Parceira CK", "Treinar junto com uma amiga.", () => null, ""],
+  ["squad", "Squad CK", "Grupos pequenos de 5 a 15 integrantes.", () => null, ""],
+  ["coletivo", "Desafio coletivo", "Meta de minutos somados pela comunidade.", () => null, ""],
+  ["insights", "O CK Life aprendeu sobre você", "Insights simples tirados da atividade dela.", () => null, ""]
 ];
 function vModulos(){
   const db = DB(); db.modulos = db.modulos || {};
@@ -17,7 +28,7 @@ function vModulos(){
   $("adm-main").innerHTML = `<div class="head"><div><h1>Módulos do app</h1><p class="muted">Ligue só o que já tem conteúdo. Desligado, some do app das alunas; ao ligar, aparece com o selo <b>Novo</b> por 14 dias e um aviso no Início.</p></div></div>
     <div class="mod-list">${MODS.map(([k, n, d, conta, sec]) => { const ligado = on(k), qt = conta(), m = db.modulos[k] || {};
       return `<div class="mod-row ${ligado ? "on" : ""}"><span class="mod-ai">${aic(sec === "parceiros" ? "parceiros" : sec === "produtos" ? "campanhas" : sec === "cupons" ? "parceiros" : sec === "servicos" ? "resumo" : "explorarg", 20)}</span>
-        <span class="mod-info"><b>${esc(n)}</b><small>${esc(d)}</small><small class="mod-st">${ligado ? (m.desde ? `Ligado desde ${brD(m.desde)}` : "Ligado") : "Desligado: não aparece para as alunas"} · ${int(qt)} cadastrado(s)${ligado && !qt ? ` · <span class="mod-alerta">sem conteúdo: a seção fica escondida</span>` : ""}</small></span>
+        <span class="mod-info"><b>${esc(n)}</b><small>${esc(d)}</small><small class="mod-st">${ligado ? (m.desde ? `Ligado desde ${brD(m.desde)}` : "Ligado") : "Desligado: não aparece para as alunas"} · ${qt === null ? "Função do app (liga/desliga)" : `${int(qt)} cadastrado(s)${ligado && !qt ? ` · <span class="mod-alerta">sem conteúdo: a seção fica escondida</span>` : ""}`}</small></span>
         <span class="mod-acts">${podeVer(sec) && VIEWS[sec] ? `<button class="btn btn-line btn-sm" data-cad="${sec}">Cadastrar</button>` : ""}<button class="mod-sw needs-edit" role="switch" aria-checked="${ligado}" aria-label="${ligado ? "Desligar" : "Ligar"} ${esc(n)}" data-mod="${k}"><i></i></button></span></div>`; }).join("")}</div>
     <p class="hint" style="margin-top:12px">Se todos os módulos do Explorar estiverem desligados, a aba Explorar some do menu das alunas.</p>`;
   $("adm-main").querySelectorAll("[data-cad]").forEach(b => b.onclick = () => ir(b.dataset.cad));

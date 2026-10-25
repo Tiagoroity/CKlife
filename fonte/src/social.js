@@ -413,7 +413,7 @@ function abreComposer(texto0, blob0, extra){
     ${!texto0 && !cq ? `<div class="chips scroll so-temas">${[["💪","Treino de hoje","Treino de hoje concluído! "],["🥗","Receita","Fiz uma receita do app hoje: "],["✨","Motivação","Lembrete do dia: "],["👋","Me apresentar","Oi, meninas! Sou "],["🙋","Pergunta","Alguém tem dica de "]].map(([e, n, t]) => `<button class="chip" data-tema="${esc(t)}">${e} ${n}</button>`).join("")}</div>` : ""}
     <textarea class="input cmp-tx" id="cp-t" maxlength="1000" placeholder="O que você quer compartilhar hoje? 💚">${esc(texto0 || "")}</textarea><small class="so-cont" id="cp-n">0/1000</small>
     <div id="cp-prev" class="cp-prev"></div>
-    ${extra && extra.grupo ? `<p class="so-cp-grupo">${esc(extra.grupo.emoji || "")} Publicando em <b>${esc(extra.grupo.nome)}</b></p>` : ""}<div class="toolbar"><button class="btn btn-line" id="cp-foto">${ic("camera", 18)} Foto</button><button class="btn btn-line" id="cp-video">${ic("play", 18)} Vídeo</button><button class="btn btn-line" id="cp-fig">✨ Figurinha</button><span class="hint">Compartilhe só o que você quiser. Seu peso, medidas e ciclo nunca são postados.</span></div>
+    ${extra && extra.grupo ? `<p class="so-cp-grupo">${esc(extra.grupo.emoji || "")} Publicando em <b>${esc(extra.grupo.nome)}</b></p>` : ""}<div class="toolbar"><button class="btn btn-line" id="cp-foto">${ic("camera", 18)} Foto</button><button class="btn btn-line" id="cp-fig">✨ Figurinha</button><span class="hint">Compartilhe só o que você quiser. Seu peso, medidas e ciclo nunca são postados.</span></div>
     <button class="btn btn-accent btn-block btn-lg" id="cp-ok">Publicar</button>`);
   const cont = () => { const n = $("cp-t").value.length; $("cp-n").textContent = `${n}/1000`; }; $("cp-t").oninput = cont; cont();
   $("sheet-body").querySelectorAll("[data-tema]").forEach(b => b.onclick = () => { const t = $("cp-t"); t.value = b.dataset.tema + t.value; t.focus(); t.setSelectionRange(t.value.length, t.value.length); cont(); SOM.tap(); });
@@ -549,7 +549,7 @@ async function carregaStories(){
 const CORES_ST = ["#0E3D32","#2E7D5A","#C2577B","#6C5FB5","#D08A2E","#17211D"];
 async function criarStory(){
   if(ME.bloqueado) return toast("Sua conta está bloqueada");
-  const f = await escolheArquivo("image/*,video/*");
+  const f = await escolheArquivo("image/*");
   if(f && /^video\//.test(f.type || "")) return storyVideo(f); let b = await imagemValida(f, 2048); if(!b) return; b = await escolheFiltro(b); if(!b) return;
   let cor = CORES_ST[0];
   sheet("Novo Story", `<div class="so-stprev priv" id="sp-p"><img src="${await blobParaURL(b)}" alt=""><span id="sp-tx" class="so-sttx" hidden></span></div>

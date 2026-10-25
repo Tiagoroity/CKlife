@@ -373,6 +373,15 @@ Objetivo: o CK Life acompanhar a aluna como uma coach, com rotina, missões e co
   - **Testes das jornadas:** nova, antiga, sumida, Free, PRO, sem internet, avisos desligados, dados incompletos, celular pequeno; 432 testes de banco OK.
 ---
 
+## 9.1 Inteligência CK Life (25/10/2026)
+- **Próxima melhor ação** no Início (uma ação principal: continuar treino, voltar ao plano, semana difícil, descanso, registrar vitória, treino do dia, leve se cansada, 10 min se pouco tempo, caminhada na folga), com os links **Hoje só tenho…** (5/10/15/20 min, escolhe um treino real do catálogo), **Plano B** e **Minha semana mudou** (semana difícil temporária; o Plano do Ano fica intacto; botão "Voltar ao meu plano normal").
+- **Retomar treino** ("Você parou no exercício X de Y") e **Trocar exercício** no player (5 motivos; só exercícios equivalentes do catálogo).
+- **Minhas vitórias** (Perfil; entram na Jornada), **busca global** (lupa no topo), **Meus salvos** (Perfil).
+- **Parceira CK** ganhou atalhos no chat ("Bora? 💚", "Terminei ✅"...), **Squad CK** (grupo de 5 a 15, criado no painel de Grupos), **Desafio coletivo** (meta de minutos somados de verdade; painel Engajamento › Desafio coletivo), **reconhecimentos da semana** (só ela vê) e insights "O CK Life aprendeu sobre você".
+- **Vídeo das alunas desligado** (feed, Stories, chat e aba Vídeos); foto e áudio continuam; vídeos antigos e conteúdo oficial preservados. Bloqueado também no banco.
+- Atalhos da Coach (Recados, Hoje tá difícil?, Preciso de motivação) sempre na mesma linha, até em 320 px.
+- Cada função nova liga/desliga em Painel › Módulos do app.
+
 ## 10. O que depende do dono (Tiago)
 
 - **Capas de 4 perfis da equipe (números 37 a 40):** gerar as imagens no formato certo e mandar.

@@ -2563,3 +2563,29 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
 .ck-pro .vit-hoje{border-color:rgba(201,179,126,.55)}
 @keyframes ckPerola{0%,100%{background-position:120% 0}50%{background-position:-20% 0}}
 @media (prefers-reduced-motion:reduce){.ck-pro .coach-ini::before{animation:none}}
+/* ===== Inteligência: atalhos da Coach lado a lado + cartões novos ===== */
+.coach-lk{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.coach-lk .coach-chip{min-height:44px;padding:4px 6px;font-size:13px;line-height:1.2;white-space:normal;text-align:center;display:flex;align-items:center;justify-content:center;gap:2px;flex-wrap:wrap;min-width:0}
+@media (max-width:360px){.coach-lk{gap:5px}.coach-lk .coach-chip{font-size:12px;padding:4px 4px}}
+.nba-ini{margin:14px 0 0;padding:14px 16px;border-radius:20px;background:var(--surface);border:1px solid #C9B37E;display:flex;flex-direction:column;gap:6px}
+.nba-eb{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.nba-t{font-family:var(--display);font-size:20px;line-height:1.2;color:var(--ink)}.nba-s{margin:0;color:var(--muted);font-size:14.5px;line-height:1.4}
+.nba-b{min-height:48px;border-radius:14px;border:0;background:var(--accent);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:4px}
+.nba-lk{display:flex;flex-wrap:wrap;gap:4px 16px;justify-content:center}.nba-lk .link{min-height:36px;font-size:14px}
+.ck-pro .nba-ini{background:linear-gradient(160deg,var(--surface),rgba(232,217,174,.14))}
+.pb-top{text-align:center;display:flex;flex-direction:column;gap:4px;margin-bottom:12px}.pb-top p{margin:0;color:var(--muted)}.pb-top b{font-family:var(--display);font-size:20px;color:var(--ink)}
+.pb-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.pb-grid .btn{min-height:52px;font-weight:800}
+.sm-ativa{padding:14px;border-radius:16px;background:var(--accent-soft);margin-bottom:12px}.sm-ativa p{margin:6px 0 0;color:var(--ink)}
+.vt-op{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}.vt-op .chip{min-height:40px;height:auto;white-space:normal;text-align:left;padding:8px 12px}
+.vt-lista{display:flex;flex-direction:column;gap:8px}.vt-it{padding:10px 12px;border-radius:14px;background:var(--surface-2)}.vt-it b{color:var(--ink)}.vt-it p{margin:4px 0;color:var(--ink)}.vt-it small{color:var(--muted)}
+.top-busca{margin-right:6px}
+.bg-r{display:flex;flex-direction:column;gap:4px;margin-top:10px}.bg-it{min-height:52px}
+.pl-troca{align-self:center;color:#fff;opacity:.9;min-height:40px;font-size:14px;text-decoration:underline;background:none;border:0}
+.rest .pl-troca{color:var(--ink)}
+.pc-at{display:flex;gap:6px;padding:6px 2px}.pc-at .chip{white-space:nowrap}
+.sq-tag{display:inline-block;margin:4px 0;font-size:11px;font-weight:800;letter-spacing:.08em;color:#0B2F25;background:#C9B37E;border-radius:99px;padding:3px 10px}
+.dc-ini{margin:0 0 14px;padding:14px;border-radius:20px;background:var(--surface);border:1px solid var(--line);display:flex;flex-direction:column;gap:6px}.dc-ini b{color:var(--ink)}.dc-ini small{color:var(--muted)}
+.dc-ini .bar,.co-rg .bar{display:block;height:8px;border-radius:8px;background:var(--surface-2);overflow:hidden}.dc-ini .bar i,.co-rg .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),#C9B37E);border-radius:8px}
+.dc-pos{width:100%;box-sizing:border-box;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.08);color:#F2E6C4;font-size:14px;text-align:left}
+.rc-sem{margin:10px 0;padding:12px 14px;border-radius:20px;background:var(--surface);border:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
+.rc-l{display:flex;flex-direction:column;gap:6px}.rc-it{display:flex;gap:10px;align-items:center}.rc-it i{font-style:normal;font-size:22px}.rc-it b{display:block;color:var(--ink);font-size:14.5px}.rc-it small{color:var(--muted)}

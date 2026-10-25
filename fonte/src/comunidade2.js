@@ -117,11 +117,11 @@ async function abrirVideos(inicioId){
   });
 }
 /* entrada: item "Vídeos" no menu e botão de tela cheia nos vídeos do feed */
-const comNavRl = comNav; comNav = function(){ comNavRl.apply(this, arguments); const nav = document.querySelector("#t-juntas .cm-nav"); if(!nav || nav.querySelector('[data-cn="videos"]')) return;
+const comNavRl = comNav; comNav = function(){ comNavRl.apply(this, arguments); const nav = document.querySelector("#t-juntas .cm-nav"); if(true || !nav || nav.querySelector('[data-cn="videos"]')) return;   // aba "Vídeos" desligada: alunas não publicam mais vídeo
   const g = nav.querySelector('[data-cn="grupos"]'); g.insertAdjacentHTML("beforebegin", `<button data-cn="videos">${ic("play", 17)}<span>Vídeos</span></button>`);
   nav.querySelector('[data-cn="videos"]').onclick = () => abrirVideos(); nav.classList.add("cinco"); };
 const desenhaFeedRl = desenhaFeed; desenhaFeed = function(){ const r = desenhaFeedRl.apply(this, arguments);
-  document.querySelectorAll("#feed .pvid:not([data-rlb])").forEach(d => { d.dataset.rlb = 1; const post = d.closest(".post"); d.insertAdjacentHTML("beforeend", `<button class="rl-abre" aria-label="Ver em tela cheia">${ic("play", 14)} Tela cheia</button>`); d.querySelector(".rl-abre").onclick = e => { e.stopPropagation(); abrirVideos(post && post.dataset.id); }; });
+  if(false) document.querySelectorAll("#feed .pvid:not([data-rlb])").forEach(d => { d.dataset.rlb = 1; const post = d.closest(".post"); d.insertAdjacentHTML("beforeend", `<button class="rl-abre" aria-label="Ver em tela cheia">${ic("play", 14)} Tela cheia</button>`); d.querySelector(".rl-abre").onclick = e => { e.stopPropagation(); abrirVideos(post && post.dataset.id); }; });
   return r; };
 document.addEventListener("keydown", e => { if(e.key === "Escape" && $("rl") && $("sheet").hidden) fechaVideos(); });
 
@@ -137,8 +137,7 @@ const abrirGrupoC2 = abrirGrupo; abrirGrupo = async function(g){
 
 /* ---------- FOTO e VÍDEO no chat (melhor qualidade possível) ---------- */
 fotoChat = function(c){
-  menuLeve([["camera", "Tirar foto agora", () => pegaFotoChat(c, "environment")], ["image", "Escolher foto da galeria", () => pegaFotoChat(c, null)],
-    ["play", "Gravar vídeo (até 1 min)", () => pegaVideoChat(c, "environment")], ["play", "Escolher vídeo da galeria", () => pegaVideoChat(c, null)]]);
+  menuLeve([["camera", "Tirar foto agora", () => pegaFotoChat(c, "environment")], ["image", "Escolher foto da galeria", () => pegaFotoChat(c, null)]]);   // vídeo no chat desligado para alunas
 };
 function prevChat(c, midiaHtml, envia, limpa){
   let box = $("so-prev"); if(!box){ box = document.createElement("div"); box.id = "so-prev"; box.className = "so-prev priv"; document.body.appendChild(box); }

@@ -26,7 +26,7 @@ async function vCoach(){
   try{ const r = await SB2().rpc("admin_coach_resumo"); if(r.error) throw r.error; CO_D = r.data; if(!CO_D) throw new Error("sem acesso"); }
   catch(e){ $("adm-main").innerHTML = `<div class="head"><div><h1>Engajamento & Coach</h1><p class="muted">Ainda não ativado. Rode o SQL <b>coach.sql</b> no Supabase (SQL Editor) e abra esta tela de novo.</p></div></div>`; return; }
   const d = CO_D, c = d.config || {};
-  const abas = [["geral", "Visão geral"], ["mensagens", "Mensagens"], ["auto", "Automações"], ["inativas", "Inativas e segmentos"], ["config", "Configurações"]];
+  const abas = [["geral", "Visão geral"], ["mensagens", "Mensagens"], ["auto", "Automações"], ["inativas", "Inativas e segmentos"], ["coletivo", "Desafio coletivo"], ["config", "Configurações"]];
   const atalhos = [["notificacoes", "Notificações (Central)"], ["comunidade", "Comunidade"], ["equipe", "Time de Incentivo"], ["figurinhas", "Conquistas e figurinhas"], ["numeros", "Números do negócio"]].filter(([k]) => VIEWS[k] && podeVer(k));
   $("adm-main").innerHTML = `
     <div class="head"><div><h1>Engajamento & Coach</h1><p class="muted">A Coach CK Life é virtual e nunca finge ser uma pessoa. O servidor manda <b>no máximo ${int(c.max_dia)} recados por dia</b> para cada aluna (contando os lembretes), respeita o horário de silêncio e as preferências dela, e nunca usa ciclo, peso ou saúde.</p></div>
@@ -68,6 +68,7 @@ function coAba(ed){
       <div class="grid g4">${kpi("3 a 6 dias sem abrir", int(I.d3), coPct(I.d3, tot) + " das alunas", "alunos")}${kpi("7 a 13 dias", int(I.d7), coPct(I.d7, tot), "alunos")}${kpi("14 a 29 dias", int(I.d14), coPct(I.d14, tot), "alunos")}${kpi("30 dias ou mais", int(I.d30), "a Coach para de chamar depois de 30 dias", "alunos")}</div>
       <div class="nb-sec">Segmentos</div>
       <div class="grid g4">${kpi("Total de alunas", int(d.total), "sem contar a equipe", "alunos")}${kpi("Novas (7 dias)", int(d.novas7), "recebem as dicas da primeira semana", "alunos")}${kpi("Ativas no mês", int(d.mau), coPct(d.mau, tot) + " do total", "alunos")}${kpi("Mensagens ativas", int(d.mensagens), "no banco de recados", "coach")}</div>`;
+  } else if(CO_ABA === "coletivo"){ coColetivo(ed);
   } else if(CO_ABA === "config"){
     const hs = Array.from({ length: 24 }, (_, h) => h);
     box.innerHTML = `<div class="card eq-cfg">
@@ -139,5 +140,21 @@ function coEdita(m, ed){
     try{ const r = await SB2().rpc("admin_coach_msg_salvar", { p_id: m ? m.id : null, p_categoria: $("ce-cat").value, p_titulo: ti, p_texto: tx, p_tom: $("ce-tom").value, p_prioridade: Math.max(1, Math.min(10, +$("ce-pr").value || 5)), p_plano: $("ce-pl").value, p_ativo: $("ce-at").value === "1" });
       if(r.error) throw r.error; $("modal").hidden = true; document.body.style.overflow = ""; toast("Mensagem salva"); CO_M = null; coMensagens(ed); }
     catch(e){ b.disabled = false; toast(e.message || String(e)); } };
+}
+async function coColetivo(ed){
+  const box = $("co-corpo"); box.innerHTML = `<p class="muted">Carregando…</p>`; let L = [];
+  try{ const r = await SB2().rpc("admin_desafios_coletivos"); if(r.error) throw r.error; L = r.data || []; }catch(e){ box.innerHTML = `<p class="muted">Rode o SQL <b>inteligencia.sql</b> para ativar. (${esc(e.message || e)})</p>`; return; }
+  box.innerHTML = `<p class="muted">Meta de minutos de movimento somados pela comunidade. O total vem dos treinos reais registrados no período (nada estimado). Só um desafio ativo aparece por vez no app.</p>
+    ${ed ? `<button class="btn btn-accent btn-sm" id="dc-novo">+ Novo desafio coletivo</button>` : ""}
+    <div class="co-regras" style="margin-top:12px">${L.map(d => `<div class="card co-rg ${d.ativo ? "" : "off"}"><div class="co-rg-h"><b>${esc(d.titulo)}</b><button class="mod-sw ${ed ? "" : "needs-edit"}" role="switch" data-dca="${d.id}" aria-checked="${!!d.ativo}" aria-label="Ativar desafio"><i></i></button></div>
+      <small>${brD(d.ini)} a ${brD(d.fim)}</small><span class="bar"><i style="width:${Math.min(100, Math.round(100 * d.total / Math.max(1, d.meta)))}%"></i></span><small class="num">${int(d.total)} / ${int(d.meta)} minutos</small></div>`).join("") || `<p class="muted">Nenhum desafio coletivo ainda.</p>`}</div>`;
+  const nv = $("dc-novo"); if(nv) nv.onclick = () => { const hj = today();
+    modal("Novo desafio coletivo", `<div class="form"><div class="field"><label for="dc-t">Título</label><input class="input" id="dc-t" maxlength="80" value="100.000 minutos de movimento"></div>
+      <div class="row2"><div class="field"><label for="dc-m">Meta (minutos)</label><input class="input num" id="dc-m" value="100000"></div><div class="field"><label for="dc-i">Início</label><input class="input" type="date" id="dc-i" value="${hj}"></div></div>
+      <div class="field"><label for="dc-f">Fim</label><input class="input" type="date" id="dc-f" value="${addD(hj, 30)}"></div>
+      <div class="toolbar" style="justify-content:flex-end"><button class="btn btn-line" data-close>Cancelar</button><button class="btn btn-accent" id="dc-ok">Criar</button></div></div>`);
+    $("dc-ok").onclick = async () => { try{ const r = await SB2().rpc("admin_desafio_coletivo", { p_id: null, p_titulo: $("dc-t").value, p_meta: +$("dc-m").value, p_ini: $("dc-i").value, p_fim: $("dc-f").value, p_ativo: true }); if(r.error) throw r.error; $("modal").hidden = true; document.body.style.overflow = ""; toast("Desafio criado"); coColetivo(ed); }catch(e){ toast(e.message || String(e)); } }; };
+  box.querySelectorAll("[data-dca]").forEach(b => b.onclick = async () => { if(!ed) return toast("Seu acesso não permite mudar isso"); const on = b.getAttribute("aria-checked") !== "true";
+    try{ const r = await SB2().rpc("admin_desafio_coletivo", { p_id: b.dataset.dca, p_titulo: null, p_meta: null, p_ini: null, p_fim: null, p_ativo: on }); if(r.error) throw r.error; toast(on ? "Desafio ativado" : "Desafio pausado"); coColetivo(ed); }catch(e){ toast(e.message || String(e)); } });
 }
 VIEWS.coach = vCoach;

@@ -110,13 +110,17 @@ function insights(){
   const fav = Object.entries(T.reduce((o, t) => (o[t.nome] = (o[t.nome] || 0) + 1, o), {})).sort((a, b) => b[1] - a[1])[0];
   if(fav && fav[1] >= 2) I.push(["💚", "Seu treino favorito", `${fav[0]}: você já fez ${fav[1]} vezes.`, 1]);
   const rec = recordeSeq(); if(rec >= 3) I.push(["🔥", "Sua maior sequência", `${rec} dias seguidos. Você já provou que consegue.`, 1]);
+  const comMin = T.filter(t => t.min > 0); if(comMin.length >= 5){ const fx = [[0, 14, "até 15 minutos"], [15, 19, "15 a 20 minutos"], [20, 30, "20 a 30 minutos"], [31, 999, "mais de 30 minutos"]].map(([a, b, n]) => [n, comMin.filter(t => t.min >= a && t.min <= b).length]).sort((a, b) => b[1] - a[1])[0];
+    if(fx[1] / comMin.length >= .5) I.push(["⏱️", "O tamanho que encaixa", `Treinos de ${fx[0]} parecem encaixar melhor na sua rotina.`, 1]); }
+  const dw2 = dw.map((n, i) => [i, n]).sort((a, b) => b[1] - a[1]); if(dw2[1] && dw2[1][1] >= 2 && dw2[0][1] >= 2) I.push(["🗓️", "Seus dias de constância", `Você costuma manter mais constância às ${DSEM_NOME[Math.min(dw2[0][0], dw2[1][0])]}s e ${DSEM_NOME[Math.max(dw2[0][0], dw2[1][0])]}s.`.replace("sábados", "sábados").replace("domingos", "domingos"), 1]);
+  const vd = (ME.coach && ME.coach.voltasD) || []; if(vd.length && vd.some(d => { const pr = T.filter(t => t.d >= d).sort((a, b) => a.d.localeCompare(b.d))[0]; return pr && /^(c|q)-/.test(pr.rapido || ""); })) I.push(["🌱", "O que te ajuda a voltar", "Treinos rápidos ajudaram você a voltar.", 1]);
   return { I, poucos: false };
 }
 function insightsHTML(){
   const { I, poucos } = insights(), pro = typeof pode === "function" ? pode("graficos_avancados") : false;
-  if(poucos) return `<section class="ins-ini" id="ins-ini"><div class="ins-h"><span class="eyebrow">Seus insights</span></div><p class="muted" style="margin:0">Depois de 3 treinos, a Coach começa a mostrar o que funciona melhor para você. 💚</p></section>`;
+  if(poucos || !I.length || !modOn("insights")) return `<section class="ins-ini" id="ins-ini" hidden></section>`;
   const livres = I.filter(x => !x[3]), extras = I.filter(x => x[3]), mostra = pro ? I : livres;
-  return `<section class="ins-ini ${pro ? "pro" : ""}" id="ins-ini"><div class="ins-h"><span class="eyebrow">Seus insights</span>${pro ? `<span class="ins-pro">PRO</span>` : ""}</div>
+  return `<section class="ins-ini ${pro ? "pro" : ""}" id="ins-ini"><div class="ins-h"><span class="eyebrow">O CK Life aprendeu sobre você</span>${pro ? `<span class="ins-pro">PRO</span>` : ""}</div>
     ${mostra.map(([e, t, x]) => `<div class="ins-it"><i>${e}</i><div><b>${esc(t)}</b><p>${esc(x)}</p></div></div>`).join("")}
     ${!pro && extras.length ? `<button class="link ins-mais" id="ins-mais">Mais ${extras.length} insights no CK Life PRO</button>` : ""}</section>`;
 }
