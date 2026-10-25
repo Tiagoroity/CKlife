@@ -2620,6 +2620,18 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
 .dc-pos{width:100%;box-sizing:border-box;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.08);color:#F2E6C4;font-size:14px;text-align:left}
 .rc-sem{margin:10px 0;padding:12px 14px;border-radius:20px;background:var(--surface);border:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
 .rc-l{display:flex;flex-direction:column;gap:6px}.rc-it{display:flex;gap:10px;align-items:center}.rc-it i{font-style:normal;font-size:22px}.rc-it b{display:block;color:var(--ink);font-size:14.5px}.rc-it small{color:var(--muted)}
+/* ===== Início e Comunidade mais limpos ===== */
+.ins-toast{position:fixed;left:12px;right:12px;margin:0 auto;max-width:460px;bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:85;display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:18px;background:#0E3D32;color:#fff;border:1px solid rgba(201,179,126,.5);box-shadow:0 18px 40px -16px rgba(0,0,0,.55);opacity:0;transform:translateY(16px);transition:opacity .35s,transform .35s;box-sizing:border-box;cursor:pointer}
+.ins-toast.on{opacity:1;transform:none}
+.ins-toast i{font-style:normal;font-size:22px;line-height:1.2}.ins-toast small{display:block;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#C9B37E}
+.ins-toast b{display:block;font-size:14.5px}.ins-toast p{margin:2px 0 0;font-size:13.5px;color:#DCE9DF;line-height:1.4}
+.st-vit .so-st-av{display:grid;place-items:center;font-size:26px;background:conic-gradient(#C9B37E,#7BD3A0,#C9B37E)!important}
+#fd-modo{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:4px;gap:4px}
+#fd-modo button{min-height:42px;border-radius:12px;font-weight:700;font-size:14.5px;color:var(--ink);background:transparent;border:0}
+#fd-modo button[aria-pressed="true"]{background:var(--accent);color:#fff;box-shadow:0 6px 16px -10px rgba(46,125,90,.8)}
+:root[data-theme="dark"] #fd-modo button[aria-pressed="true"]{background:#4ECB86;color:#04170F}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #fd-modo button[aria-pressed="true"]{background:#4ECB86;color:#04170F}}
+.st-vit small{max-width:none!important;white-space:nowrap;font-size:11.5px;overflow:visible!important;text-overflow:clip!important}.st-vit{min-width:78px}
 </style>
 
 <!-- Entrar / criar conta -->
@@ -8191,7 +8203,7 @@ const rExplorarF1 = rExplorar; rExplorar = function(){
 if(!P.pente) P.pente = '<path d="M4 7h16"/><path d="M6 7v9M9 7v9M12 7v9M15 7v9M18 7v9"/><path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2"/>';
 const TUDO = [
   ["treinos", "Treinos", "treinar", "#2E7D5A", () => { TV = "programas"; tab("treinar"); }],
-  ["anual", "Plano anual", "calendar", "#0E3D32", () => abrirPrograma("anual"), () => PROGS.some(p => p.id === "anual")],
+  ["anual", "Plano anual", "calendar", "#3BAE74", () => abrirPrograma("anual"), () => PROGS.some(p => p.id === "anual")],
   ["cardapio", "Cardápio", "bowl", "#E0A21B", () => { DV = "cardapio"; tab("dieta"); }],
   ["receitas", "Receitas", "chef", "#E07B39", () => { DV = "receitas"; tab("dieta"); }],
   ["ciclo", "Meu Ciclo", "ciclo", "#C2557A", () => abrirCiclo(), () => typeof abrirCiclo === "function"],
@@ -8899,7 +8911,7 @@ const abrirPerfilEq = abrirPerfil; abrirPerfil = async function(u){
    Quem deixa o CK Life aberto (ou instalado na tela inicial) fica com a versão antiga até recarregar.
    O app confere a versão publicada ao abrir, ao voltar do segundo plano e a cada 5 minutos.
    Se houver versão nova, mostra a faixa "ATUALIZAR": um toque e pronto. Nunca aparece no meio do treino. */
-const CK_VER = "20261025004313";
+const CK_VER = "20261025005540";
 let CK_VER_NOVA = null;
 async function confereVersao(){
   if(!/^\d/.test(CK_VER) || !/^https?:/.test(location.protocol)) return;
@@ -9843,8 +9855,8 @@ function nbaDecide(){
   if(r) return { t: "Continuar treino", s: `Você parou no exercício ${r.i + 1} de ${r.n}: ${r.T.nome}.`, b: ["CONTINUAR TREINO", "ret"] };
   if(!feito && sem != null && sem >= 3) return { t: "Voltar ao plano", s: "Voltar também é progresso. Comece leve, sem compensar nada.", b: ["TREINO 5 MIN", "t5"] };
   if(semanaMudou() && !feito) return { t: "Semana difícil", s: "Essa semana vamos diminuir o tamanho do compromisso, não abandonar o processo.", b: ["VER PLANO B", "planob"], volta: 1 };
-  if(COACH().descanso[today()]) return { t: "Hoje é dia de descanso", s: "Descansar também faz parte da constância.", b: ["VER MISSÃO", "mis"] };
-  if(feito) return IOn("vitorias") ? { t: "Treino feito hoje 💚", s: "Registre algo bom que você percebeu em você.", b: ["REGISTRAR VITÓRIA", "vit"] } : { t: "Treino feito hoje 💚", s: "Veja como está sua semana.", b: ["VER MISSÃO", "mis"] };
+  if(COACH().descanso[today()]) return { t: "Hoje é dia de descanso", s: "Descansar também faz parte da constância.", b: ["VER MINHA SEMANA", "mis"] };
+  if(feito) return IOn("vitorias") ? { t: "Treino feito hoje 💚", s: "Registre algo bom que você percebeu em você.", b: ["REGISTRAR VITÓRIA", "vit"] } : { t: "Treino feito hoje 💚", s: "Veja como está sua semana.", b: ["VER MINHA SEMANA", "mis"] };
   if(H.h === "1" || H.e === "baixa") return { t: "Vamos no leve hoje", s: "Você contou que está cansada. Um alongamento já conta.", b: ["ALONGAMENTO", "alo"] };
   if(H.t && +H.t <= 10) return { t: "Pouco tempo hoje", s: "10 minutos já mantêm o seu compromisso.", b: ["TREINO 10 MIN", "t10"] };
   if(cDiaDoPlano()){ let T = null; try{ T = treinoDoDia(); }catch(e){}
@@ -9854,7 +9866,7 @@ function nbaDecide(){
 function nbaAcao(k){ SOM.tap && SOM.tap();
   if(k === "ret") return retomar(); if(k === "planob") return planoB(); if(k === "vit") return minhasVitorias(); if(k === "so") return soTenho(); if(k === "sem") return minhaSemanaMudou();
   if(k === "volta"){ delete ME.semanaMudou; save(); toast("De volta ao seu plano normal 💚"); return rerender(); }
-  if(k === "mis"){ const m = $("mis-ini"); return m && m.scrollIntoView({ behavior: "smooth", block: "center" }); }
+  if(k === "mis") return resumoSemana(semanaKey());
   return coachAcao(k); }
 function nbaPinta(){
   const co = $("coach-ini"); if(!co) return; const velho = $("nba-ini");
@@ -9985,6 +9997,49 @@ function reconhPinta(){ const ref = $("vit-hoje") || document.querySelector("#t-
     r2.insertAdjacentHTML("afterend", `<section class="rc-sem" id="rc-sem"><span class="eyebrow">Seus reconhecimentos da semana</span><div class="rc-l">${R.map(([e, t, s]) => `<div class="rc-it"><i>${e}</i><span><b>${t}</b><small>${esc(s)}</small></span></div>`).join("")}</div><small class="muted">Só você vê. Aqui ninguém compete com ninguém 💚</small></section>`); }); }
 const rJuntasI = rJuntas; rJuntas = function(){ const r = rJuntasI.apply(this, arguments); setTimeout(() => { try{ reconhPinta(); }catch(e){} }, 900); return r; };
 const abrirAppI = abrirApp; abrirApp = function(){ const r = abrirAppI.apply(this, arguments); setTimeout(() => dcCarrega().then(() => { if(TAB === "inicio") dcPinta(); }), 3000); return r; };
+
+/* ===================== INÍCIO E COMUNIDADE MAIS LIMPOS (pedido do Tiago, 25/10) =====================
+   Início: sai o cartão Desafio do dia / Missão da semana (a missão continua contando e comemorando por trás);
+   "O CK Life aprendeu sobre você" vira um aviso que aparece por 5 segundos e some (ao abrir o app e depois de uma ação).
+   Comunidade: sai a caixa "Treino feito? Conta como foi", a faixa Vitórias de hoje e os reconhecimentos;
+   "Minha vitória" vai para a fila dos Stories; publicar continua pelo botão + no topo. */
+
+/* ---------- Início: sem o cartão de missões ---------- */
+missaoPinta = function(){
+  try{ desafioHojeConfere(); const mudouSem = missaoSemanaConfere(); ["mis-ini", "ins-ini"].forEach(id => { const e = $(id); if(e) e.remove(); });
+    if(mudouSem) setTimeout(() => celebrar(["sem-" + semanaKey(), "x", 0, "🎯", "MISSÃO DA SEMANA CUMPRIDA", `Você treinou ${alvoSemana()} vezes essa semana. Constância é isso.`]), 900); }catch(e){ console.warn(e); }
+};
+
+/* ---------- Insights como aviso rápido (5 segundos) ---------- */
+let INS_T = 0;
+function insightAviso(){
+  if(!modOn("insights") || Date.now() - INS_T < 60000 || document.querySelector(".ent, .ent-bv, .coach-1o, #celebra:not([hidden])") || ($("play") && !$("play").hidden)) return;
+  const { I } = insights(); if(!I.length) return;
+  const pro = typeof pode === "function" && pode("graficos_avancados"), L = pro ? I : I.filter(x => !x[3]); if(!L.length) return;
+  ME.insIdx = ((ME.insIdx || 0) + 1) % L.length; const [e, t, x] = L[ME.insIdx]; INS_T = Date.now();
+  const v = $("ins-toast"); if(v) v.remove();
+  const d = document.createElement("div"); d.id = "ins-toast"; d.className = "ins-toast"; d.setAttribute("role", "status");
+  d.innerHTML = `<i>${e}</i><div><small>O CK Life aprendeu sobre você</small><b>${esc(t)}</b><p>${esc(x)}</p></div>`;
+  document.body.appendChild(d); requestAnimationFrame(() => d.classList.add("on"));
+  const some = () => { d.classList.remove("on"); setTimeout(() => d.remove(), 400); };
+  d.onclick = some; setTimeout(some, 5000);
+}
+const abrirAppL = abrirApp; abrirApp = function(){ const r = abrirAppL.apply(this, arguments); setTimeout(insightAviso, 9000); return r; };
+const fimPlayL = fimPlay; fimPlay = function(){ const r = fimPlayL.apply(this, arguments); setTimeout(insightAviso, 1500); return r; };
+const minhasVitoriasL = minhasVitorias; minhasVitorias = function(){ const r = minhasVitoriasL.apply(this, arguments); const ok = $("vt-ok"); if(ok) ok.addEventListener("click", () => setTimeout(insightAviso, 2500)); return r; };
+
+/* ---------- Comunidade mais limpa ---------- */
+vitoriasPinta = function(){ const v = $("vit-hoje"); if(v) v.remove(); };
+reconhPinta = function(){ const v = $("rc-sem"); if(v) v.remove(); };
+function comLimpa(){
+  const box = $("t-juntas"); if(!box) return;
+  const comp = $("cm-nova"); if(comp) comp.hidden = true;
+  const at = box.querySelector(".cm-atal"); if(at) at.hidden = true;
+  const hb = box.querySelector(".so-hb"); if(hb && !$("cm-pub")){ hb.insertAdjacentHTML("afterbegin", `<button class="iconbtn" id="cm-pub" aria-label="Nova publicação">${ic("plus", 20, 2.4)}</button>`); $("cm-pub").onclick = () => abreComposer(); }
+  const row = $("st-row"), novo = $("st-novo");
+  if(row && novo && !$("st-vit")){ novo.insertAdjacentHTML("afterend", `<button class="so-st st-vit" id="st-vit"><span class="so-st-av">💪</span><small>Minha vitória</small></button>`); $("st-vit").onclick = () => { SOM.tap && SOM.tap(); criarStory(); }; }
+}
+new MutationObserver(() => { if(TAB === "juntas") comLimpa(); }).observe($("t-juntas"), { childList: true, subtree: true });
 
 const TABS = [["inicio","Início"],["treinar","Treinos"],["dieta","Nutrição"],["juntas","Comunidade"],["explorar","Explorar"],["perfil","Perfil"],["evolucao","Evolução"]];
 const NAV = TABS.slice(0, 6), NAV_DE = { evolucao: "perfil" };

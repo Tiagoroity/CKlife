@@ -114,7 +114,7 @@ const rExplorarF1 = rExplorar; rExplorar = function(){
 if(!P.pente) P.pente = '<path d="M4 7h16"/><path d="M6 7v9M9 7v9M12 7v9M15 7v9M18 7v9"/><path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2"/>';
 const TUDO = [
   ["treinos", "Treinos", "treinar", "#2E7D5A", () => { TV = "programas"; tab("treinar"); }],
-  ["anual", "Plano anual", "calendar", "#0E3D32", () => abrirPrograma("anual"), () => PROGS.some(p => p.id === "anual")],
+  ["anual", "Plano anual", "calendar", "#3BAE74", () => abrirPrograma("anual"), () => PROGS.some(p => p.id === "anual")],
   ["cardapio", "Cardápio", "bowl", "#E0A21B", () => { DV = "cardapio"; tab("dieta"); }],
   ["receitas", "Receitas", "chef", "#E07B39", () => { DV = "receitas"; tab("dieta"); }],
   ["ciclo", "Meu Ciclo", "ciclo", "#C2557A", () => abrirCiclo(), () => typeof abrirCiclo === "function"],

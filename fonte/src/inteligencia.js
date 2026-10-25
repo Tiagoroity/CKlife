@@ -89,8 +89,8 @@ function nbaDecide(){
   if(r) return { t: "Continuar treino", s: `Você parou no exercício ${r.i + 1} de ${r.n}: ${r.T.nome}.`, b: ["CONTINUAR TREINO", "ret"] };
   if(!feito && sem != null && sem >= 3) return { t: "Voltar ao plano", s: "Voltar também é progresso. Comece leve, sem compensar nada.", b: ["TREINO 5 MIN", "t5"] };
   if(semanaMudou() && !feito) return { t: "Semana difícil", s: "Essa semana vamos diminuir o tamanho do compromisso, não abandonar o processo.", b: ["VER PLANO B", "planob"], volta: 1 };
-  if(COACH().descanso[today()]) return { t: "Hoje é dia de descanso", s: "Descansar também faz parte da constância.", b: ["VER MISSÃO", "mis"] };
-  if(feito) return IOn("vitorias") ? { t: "Treino feito hoje 💚", s: "Registre algo bom que você percebeu em você.", b: ["REGISTRAR VITÓRIA", "vit"] } : { t: "Treino feito hoje 💚", s: "Veja como está sua semana.", b: ["VER MISSÃO", "mis"] };
+  if(COACH().descanso[today()]) return { t: "Hoje é dia de descanso", s: "Descansar também faz parte da constância.", b: ["VER MINHA SEMANA", "mis"] };
+  if(feito) return IOn("vitorias") ? { t: "Treino feito hoje 💚", s: "Registre algo bom que você percebeu em você.", b: ["REGISTRAR VITÓRIA", "vit"] } : { t: "Treino feito hoje 💚", s: "Veja como está sua semana.", b: ["VER MINHA SEMANA", "mis"] };
   if(H.h === "1" || H.e === "baixa") return { t: "Vamos no leve hoje", s: "Você contou que está cansada. Um alongamento já conta.", b: ["ALONGAMENTO", "alo"] };
   if(H.t && +H.t <= 10) return { t: "Pouco tempo hoje", s: "10 minutos já mantêm o seu compromisso.", b: ["TREINO 10 MIN", "t10"] };
   if(cDiaDoPlano()){ let T = null; try{ T = treinoDoDia(); }catch(e){}
@@ -100,7 +100,7 @@ function nbaDecide(){
 function nbaAcao(k){ SOM.tap && SOM.tap();
   if(k === "ret") return retomar(); if(k === "planob") return planoB(); if(k === "vit") return minhasVitorias(); if(k === "so") return soTenho(); if(k === "sem") return minhaSemanaMudou();
   if(k === "volta"){ delete ME.semanaMudou; save(); toast("De volta ao seu plano normal 💚"); return rerender(); }
-  if(k === "mis"){ const m = $("mis-ini"); return m && m.scrollIntoView({ behavior: "smooth", block: "center" }); }
+  if(k === "mis") return resumoSemana(semanaKey());
   return coachAcao(k); }
 function nbaPinta(){
   const co = $("coach-ini"); if(!co) return; const velho = $("nba-ini");
