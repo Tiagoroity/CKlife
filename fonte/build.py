@@ -1,4 +1,5 @@
-import pathlib, shutil
+import pathlib, shutil, time, json
+VERSAO = time.strftime('%Y%m%d%H%M%S')
 s = pathlib.Path("src")
 base = (s/"shell.html").read_text()
 data = "\n".join((s/f).read_text() for f in ["receitas1.js","receitas2.js","receitas3.js","receitas4.js","treinos.js","casa.js"])
@@ -7,10 +8,10 @@ def monta(config, supa):
     h = h.replace("/*CONFIG*/", config).replace("<!--SUPABASE-->", supa)
     for k, f in [("NUVEM","nuvem.js"),("SONS","sons.js"),("BONECO","boneco.js"),("FOTOS","fotos.js"),("APP","app.js"),("ADMIN","admin.js")]:
         txt = (s/f).read_text()
-        if f == "app.js": txt = txt.replace("/*EXPANSAO*/", (s/"expansao.js").read_text()).replace("/*SOCIAL*/", (s/"social.js").read_text() + "\n" + (s/"stickers.js").read_text() + "\n" + (s/"meus-dados.js").read_text() + "\n" + (s/"experiencia.js").read_text() + "\n" + (s/"figurinhas.js").read_text() + "\n" + (s/"novidades.js").read_text() + "\n" + (s/"plano.js").read_text() + "\n" + (s/"treino-voz.js").read_text() + "\n" + (s/"navegacao.js").read_text() + "\n" + (s/"notificacoes.js").read_text() + "\n" + (s/"anuncios.js").read_text() + "\n" + (s/"modulos.js").read_text() + "\n" + (s/"plano-anual.js").read_text() + "\n" + (s/"cabelo-arte.js").read_text() + "\n" + (s/"cabelo.js").read_text() + "\n" + (s/"fase1.js").read_text() + "\n" + (s/"fase2.js").read_text() + "\n" + (s/"camera.js").read_text() + "\n" + (s/"comunidade2.js").read_text())
+        if f == "app.js": txt = txt.replace("/*EXPANSAO*/", (s/"expansao.js").read_text()).replace("/*SOCIAL*/", (s/"social.js").read_text() + "\n" + (s/"stickers.js").read_text() + "\n" + (s/"meus-dados.js").read_text() + "\n" + (s/"experiencia.js").read_text() + "\n" + (s/"figurinhas.js").read_text() + "\n" + (s/"novidades.js").read_text() + "\n" + (s/"plano.js").read_text() + "\n" + (s/"treino-voz.js").read_text() + "\n" + (s/"navegacao.js").read_text() + "\n" + (s/"notificacoes.js").read_text() + "\n" + (s/"anuncios.js").read_text() + "\n" + (s/"modulos.js").read_text() + "\n" + (s/"plano-anual.js").read_text() + "\n" + (s/"cabelo-arte.js").read_text() + "\n" + (s/"cabelo.js").read_text() + "\n" + (s/"fase1.js").read_text() + "\n" + (s/"fase2.js").read_text() + "\n" + (s/"camera.js").read_text() + "\n" + (s/"comunidade2.js").read_text() + "\n" + (s/"atualizar.js").read_text() + "\n" + (s/"entrada.js").read_text())
         if f == "admin.js": txt = txt.replace("/*ADMINXP*/", (s/"admin-xp.js").read_text() + "\n" + (s/"admin-seg.js").read_text() + "\n" + (s/"admin-mon.js").read_text() + "\n" + (s/"admin-not.js").read_text() + "\n" + (s/"admin-anuncios.js").read_text() + "\n" + (s/"admin-ux.js").read_text() + "\n" + (s/"admin-mod.js").read_text() + "\n" + (s/"admin-cabelo.js").read_text() + "\n" + (s/"admin-numeros.js").read_text() + "\n" + (s/"admin-equipe.js").read_text())
         h = h.replace("/*%s*/" % k, txt)
-    return h
+    return h.replace("__CK_VERSAO__", VERSAO)
 # 1) demonstração (Artifact): sem banco, dados no aparelho
 demo = monta("window.APP_CONFIG = {};", "")
 pathlib.Path("fitverde.html").write_text(demo)
@@ -27,6 +28,7 @@ site = monta(cfg, '<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-
 head = '<!doctype html>\n<html lang="pt-BR">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n<meta name="theme-color" content="#0E3D32">\n<link rel="icon" type="image/png" sizes="32x32" href="img/marca/favicon-32.png">\n<link rel="icon" type="image/png" sizes="16x16" href="img/marca/favicon-16.png">\n<link rel="icon" type="image/png" sizes="192x192" href="img/icone-192.png">\n<link rel="apple-touch-icon" href="img/apple-touch-icon.png">\n<link rel="manifest" href="manifest.webmanifest">\n<meta name="apple-mobile-web-app-capable" content="yes">\n<meta name="mobile-web-app-capable" content="yes">\n<meta name="apple-mobile-web-app-title" content="CK Life">\n<meta name="apple-mobile-web-app-status-bar-style" content="default">\n<meta name="description" content="CK Life · Create. Keep. Live. Treino, rotina, ciclo e comunidade para mulheres. Sua vida. Seu ritmo. Sua evolução.">\n<meta property="og:type" content="website">\n<meta property="og:site_name" content="CK Life">\n<meta property="og:title" content="CK Life · Create. Keep. Live.">\n<meta property="og:description" content="Sua vida. Seu ritmo. Sua evolução. Treino, rotina, ciclo e comunidade para mulheres.">\n<meta property="og:image" content="https://cklife.vercel.app/img/marca/og-ck-life.jpg">\n<meta property="og:url" content="https://cklife.vercel.app/">\n<meta name="twitter:card" content="summary_large_image">\n<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}</style>\n</head>\n<body>\n'
 out = pathlib.Path("ck-life/site"); out.mkdir(parents=True, exist_ok=True)
 (out/"index.html").write_text(head + site + "\n</body>\n</html>\n")
+(out/"versao.json").write_text(json.dumps({"v": VERSAO}))
 x = out/"xbot.json"
 if x.exists(): x.unlink()
 # fotos também na pasta da demonstração

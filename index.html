@@ -2408,6 +2408,55 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
 #v-admin .btn-line{border-color:#CFDCCB;color:#17211D}
 #v-admin .adm-top .btn-line{color:#fff;border-color:rgba(255,255,255,.28);background:rgba(255,255,255,.06)}
 .eq-av{overflow:hidden}.eq-av img{width:100%;height:100%;object-fit:cover}
+/* ===== Entrada no CK Life (cadastro emocional) ===== */
+.ent{position:fixed;inset:0;z-index:60;overflow-y:auto;background:radial-gradient(120% 80% at 50% 0%,#1E5B47 0%,#0E3D32 55%,#082A22 100%);color:#F5F8EF;display:flex;-webkit-overflow-scrolling:touch}
+.ent-bg{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 10%;opacity:.18;filter:saturate(.6);pointer-events:none;mask-image:linear-gradient(#000 0%,transparent 70%);-webkit-mask-image:linear-gradient(#000 0%,transparent 70%)}
+.ent-in{position:relative;width:100%;max-width:480px;margin:auto;padding:calc(28px + env(safe-area-inset-top,0px)) 22px calc(28px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:14px;min-height:100%;box-sizing:border-box;justify-content:center}
+.ent-dots{display:flex;gap:6px;justify-content:center;margin-bottom:auto;padding-bottom:18px}
+.ent-dots i{width:22px;height:4px;border-radius:4px;background:rgba(255,255,255,.22)}.ent-dots i.on{background:#C9B37E}
+.ent-eb{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#C9B37E}
+.ent-t{font-family:var(--display);font-size:clamp(28px,8vw,38px);font-weight:800;line-height:1.08;color:#fff;letter-spacing:-.02em;animation:entIn .6s both}
+.ent-t.menor{font-size:clamp(23px,6.4vw,30px)}
+.ent-grande{font-size:clamp(30px,9vw,42px);margin-top:10px;background:linear-gradient(90deg,#fff,#E8D9AE);-webkit-background-clip:text;background-clip:text;color:transparent;animation-delay:2.1s}
+.ent-l{margin:0;font-size:17px;line-height:1.5;color:#DCE9DF;animation:entIn .6s both;animation-delay:var(--d,0s)}
+.ent-l b{color:#fff}
+.ent-bt{display:flex;flex-direction:column;gap:6px;margin-top:auto;padding-top:22px;animation:entIn .6s both;animation-delay:.5s}
+.ent-forte .ent-bt{animation-delay:2.4s}
+.ent .btn.ent-cta,.ent-bv .btn.ent-cta{min-height:56px;width:100%;border-radius:18px;border:0;font-weight:800;font-size:16px;letter-spacing:.03em;background:linear-gradient(135deg,#F2E6C4,#C9B37E);color:#0B2F25;box-shadow:0 14px 34px -14px rgba(201,179,126,.7);display:flex;align-items:center;justify-content:center;gap:8px}
+.ent .btn.ent-cta:active{transform:scale(.98)}
+.ent .link.ent-pula,.ent-bv .link.ent-pula{color:#B9CFC2;align-self:center;min-height:44px;background:none;border:0;font-size:15px;text-decoration:underline;text-underline-offset:3px}
+.ent-volte{font-family:var(--display);font-size:46px;font-weight:800;color:#C9B37E;margin:4px 0;letter-spacing:.04em;animation:entPop .7s both;animation-delay:.95s}
+.ent-perg{font-size:18px;font-weight:600;color:#fff;margin:0;animation:entIn .6s both;animation-delay:1.2s}
+.ent-comp .ent-bt{animation-delay:1.4s}
+.ent-tem{list-style:none;margin:6px 0;padding:0;display:grid;gap:8px}
+.ent-tem li{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:11px 14px;font-weight:600;animation:entIn .5s both;animation-delay:var(--d)}
+.ent-dif{display:flex;flex-wrap:wrap;gap:8px}.ent-dif span{border:1px solid rgba(201,179,126,.45);color:#F2E6C4;border-radius:99px;padding:6px 12px;font-size:14px;animation:entIn .5s both;animation-delay:var(--d)}
+.ent-num{margin:4px 0;padding:16px;border-radius:18px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);font-size:16px;color:#E6F0E9;animation:entIn .6s both;animation-delay:1s}
+.ent-num b.num{font-size:28px;color:#F2E6C4;font-family:var(--display)}
+.coach-av{position:relative;width:64px;height:64px;border-radius:50%;padding:3px;background:conic-gradient(#C9B37E,#7BD3A0,#C9B37E);flex:none}
+.coach-av img{width:100%;height:100%;border-radius:50%;object-fit:cover;object-position:center 12%;border:2px solid #0E3D32;display:block;background:#0E3D32}
+.coach-av i{position:absolute;right:-2px;bottom:-2px;width:22px;height:22px;border-radius:50%;background:#C9B37E;color:#0B2F25;display:grid;place-items:center;border:2px solid #0E3D32}
+.coach-av.grande{width:96px;height:96px;align-self:center;animation:entPop .7s both}
+.coach-av.grande i{width:28px;height:28px}
+.ent-coach .ent-eb{align-self:center}.ent-coach .ent-t{text-align:center}
+.coach-bal{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:22px 22px 22px 6px;padding:18px;display:grid;gap:10px}
+.ent-msg{text-align:center;color:#F2E6C4;min-height:22px;margin:0}
+.ent-dias{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}.ent-dias .chip{min-width:62px;min-height:48px;font-weight:700}
+.ent-futuro{min-height:110px;resize:vertical;font-size:16px}
+.ent-bv{position:fixed;inset:0;z-index:70;background:rgba(5,25,19,.82);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;align-items:flex-end;justify-content:center;animation:entFade .3s both}
+.ent-bv-in{width:100%;max-width:480px;background:linear-gradient(180deg,#14503E,#0B3328);color:#fff;border-radius:28px 28px 0 0;padding:28px 22px calc(22px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:10px;text-align:center;animation:entUp .45s both}
+.ent-bv-in h1{font-size:clamp(24px,7vw,30px);color:#fff}.ent-bv-in p{margin:0 0 8px;color:#CFE0D4}
+.ent-burst{font-size:44px;animation:entPop .7s both}
+.ent-bv .btn.ent-sec{min-height:52px;width:100%;border-radius:16px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px}
+@keyframes entIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes entPop{0%{opacity:0;transform:scale(.6)}70%{transform:scale(1.06)}to{opacity:1;transform:none}}
+@keyframes entFade{from{opacity:0}}@keyframes entUp{from{transform:translateY(40px);opacity:0}}
+@media (prefers-reduced-motion:reduce){.ent *,.ent-bv *{animation:none!important}}
+@media (max-width:340px){.ent-in{padding-left:16px;padding-right:16px}.ent-l{font-size:16px}.ent-volte{font-size:38px}}
+/* faixa de atualização */
+.ck-atu{position:fixed;left:12px;right:12px;margin:0 auto;top:calc(10px + env(safe-area-inset-top,0px));z-index:90;max-width:460px;display:flex;align-items:center;gap:10px;padding:10px 10px 10px 14px;border-radius:18px;background:#0E3D32;color:#fff;box-shadow:0 18px 40px -16px rgba(0,0,0,.55);border:1px solid rgba(201,179,126,.4);animation:entIn .4s both;box-sizing:border-box}
+.ck-atu-i{font-size:20px}.ck-atu-t{flex:1;min-width:0;display:grid;line-height:1.25}.ck-atu-t b{font-size:14px}.ck-atu-t small{font-size:12px;color:#CFE0D4}
+.ck-atu .btn.ck-atu-b{min-height:44px;padding:0 14px;border-radius:12px;border:0;background:linear-gradient(135deg,#F2E6C4,#C9B37E);color:#0B2F25;font-weight:800;font-size:13px;white-space:nowrap}
 </style>
 
 <!-- Entrar / criar conta -->
@@ -8683,6 +8732,210 @@ const abrirPerfilEq = abrirPerfil; abrirPerfil = async function(u){
     const bn = b.querySelector(".eq-banner"); if(bn) bn.onclick = sobreEquipe; } }catch(e){}
   return r;
 };
+
+/* ===================== ATUALIZAR O APP =====================
+   Quem deixa o CK Life aberto (ou instalado na tela inicial) fica com a versão antiga até recarregar.
+   O app confere a versão publicada ao abrir, ao voltar do segundo plano e a cada 5 minutos.
+   Se houver versão nova, mostra a faixa "ATUALIZAR": um toque e pronto. Nunca aparece no meio do treino. */
+const CK_VER = "20261024230521";
+let CK_VER_NOVA = null;
+async function confereVersao(){
+  if(!/^\d/.test(CK_VER) || !/^https?:/.test(location.protocol)) return;
+  try{
+    const r = await fetch("/versao.json?t=" + Date.now(), { cache: "no-store" }); if(!r.ok) return;
+    const v = (await r.json()).v; if(v && v !== CK_VER){ CK_VER_NOVA = v; mostraAtualizar(); }
+  }catch(e){}
+}
+function mostraAtualizar(){
+  if(!CK_VER_NOVA || document.getElementById("ck-atu")) return;
+  const pl = document.getElementById("play"), ck = document.getElementById("cook");
+  if((pl && !pl.hidden) || (ck && !ck.hidden)){ setTimeout(mostraAtualizar, 20000); return; }   // espera o treino acabar
+  const d = document.createElement("div"); d.id = "ck-atu"; d.className = "ck-atu"; d.setAttribute("role", "status");
+  d.innerHTML = `<span class="ck-atu-i">✨</span><span class="ck-atu-t"><b>Nova versão do CK Life</b><small>Toque para atualizar. Seus dados ficam salvos.</small></span><button class="btn ck-atu-b" id="ck-atu-b">ATUALIZAR</button>`;
+  document.body.appendChild(d);
+  document.getElementById("ck-atu-b").onclick = async () => {
+    const b = document.getElementById("ck-atu-b"); b.disabled = true; b.textContent = "Atualizando…";
+    try{ if(typeof save === "function") save(); }catch(e){}
+    try{ if("caches" in window){ const k = await caches.keys(); await Promise.all(k.map(x => caches.delete(x))); } }catch(e){}
+    try{ const reg = await navigator.serviceWorker?.getRegistration(); if(reg) await reg.update(); }catch(e){}
+    location.replace(location.pathname + "?v=" + CK_VER_NOVA + location.hash);
+  };
+}
+setTimeout(confereVersao, 4000);
+setInterval(() => { if(!document.hidden) confereVersao(); }, 5 * 60 * 1000);
+document.addEventListener("visibilitychange", () => { if(!document.hidden) confereVersao(); });
+window.addEventListener("pageshow", e => { if(e.persisted) confereVersao(); });
+
+/* ===================== ENTRADA NO CK LIFE (cadastro como experiência) =====================
+   Intro emocional (5 telas) → perguntas do plano (com dias da semana, horário, o que faz desistir, o que trouxe,
+   mensagem para a eu do futuro) → compromisso "EU VOLTO POR MIM" → acordo → "Dessa vez, você não está sozinha"
+   → Legião CK Life (número real do banco, nunca inventado) → Coach CK Life → ativar avisos → plano pronto → boas-vindas.
+   Sem culpa, sem promessa de resultado: "Nós não prometemos resultado mágico. Prometemos não deixar você caminhar sem direção." */
+
+const COACH_IMG = "img/modelo.jpg";
+const FRASES_ID = ["Não buscamos perfeição. Buscamos constância.", "Você não precisa começar de novo. Precisa continuar.", "Um dia de cada vez. Uma escolha de cada vez.", "Mulheres que aparecem por elas mesmas.", "Pouco ainda conta.", "Voltar também é progresso.", "Seu ritmo. Sua evolução. Sua vida."];
+const ENT_INTRO = [
+  { t: "Você não entrou aqui só para treinar.", p: ["Você entrou para construir uma rotina que consiga manter."], bt: "QUERO COMEÇAR" },
+  { t: "Dessa vez você não precisa fazer tudo sozinha.", p: ["O CK Life vai estar com você nos treinos, na alimentação, na evolução e principalmente nos dias em que a motivação desaparecer."], bt: "Continuar" },
+  { t: "Não precisamos de perfeição.", p: ["Precisamos que você continue voltando."], bt: "Continuar" },
+  { t: "Existem outras mulheres começando, tentando, errando, evoluindo e recomeçando todos os dias.", p: ["A partir de agora você também faz parte disso."], bt: "Continuar", menor: true },
+  { t: "ESSE PROJETO PODE DAR CERTO.", p: ["Porque você não vai depender apenas da motivação.", "Nós vamos te acompanhar.", "Nós vamos te lembrar.", "Nós vamos celebrar.", "Nós vamos te ajudar a continuar."], bt: "ESTOU PRONTA" }
+];
+const ENT_POS_NOVA = ["compromisso", "acordo", "forte", "legiao", "coach", "avisos"], ENT_POS_VET = ["novo", "compromisso", "acordo", "coach", "avisos"];
+const entLista = () => OB && OB.veterana ? ENT_POS_VET : ENT_POS_NOVA;
+const ENT_DESISTIR = [["tempo", "Falta de tempo", "clock"], ["preguica", "Preguiça", "moon"], ["motivacao", "Falta de motivação", "bolt"], ["nao_sei", "Não saber o que fazer", "target"], ["animada", "Começo animada e depois paro", "flame"], ["imprevisivel", "Rotina imprevisível", "calendar"], ["cansaco", "Cansaço", "leaf"], ["outro", "Outro motivo", "star"]];
+const ENT_MOTIVO = [["disposicao", "Ter mais disposição", "bolt"], ["saude", "Cuidar da saúde", "heart"], ["autoestima", "Me sentir bem comigo", "star"], ["rotina", "Criar uma rotina", "calendar"], ["voltar", "Voltar a treinar", "repeat"], ["objetivo", "Um objetivo específico", "target"]];
+const ENT_HORARIO = [["manha", "Manhã", "Antes da correria começar", "sun", "07:00"], ["tarde", "Tarde", "Uma pausa no meio do dia", "sun", "13:00"], ["noite", "Noite", "Depois do trabalho", "moon", "19:00"], ["varia", "Varia bastante", "A gente se adapta", "repeat", "18:00"]];
+
+/* perguntas novas no meio do plano (as que já existiam continuam iguais) */
+(() => {
+  const iT = OBQ.findIndex(q => q.k === "tempo");
+  if(iT >= 0) OBQ[iT].o = [[10, "5 a 15 minutos", "Rápido e possível", "clock"], [20, "15 a 30 minutos", "O equilíbrio ideal", "clock"], [30, "30 a 45 minutos", "Treino completo", "clock"], [45, "45 minutos ou mais", "Sem pressa", "clock"]];
+  const iD = OBQ.findIndex(q => q.k === "dias");
+  if(iD >= 0) OBQ.splice(iD, 1, { k: "diasSem", custom: 1 },
+    { k: "horario", t: "Qual horário normalmente você consegue treinar?", s: "Vamos te lembrar perto do seu horário.", o: ENT_HORARIO.map(h => [h[0], h[1], h[2], h[3]]) },
+    { k: "desistir", t: "O que mais costuma fazer você desistir?", s: "Sem julgamento. É só pra gente te ajudar do jeito certo.", o: ENT_DESISTIR.map(d => [d[0], d[1], "", d[2]]) },
+    { k: "motivo", t: "O que fez você chegar até aqui?", s: "Vamos lembrar disso nos dias difíceis (só você vê).", o: ENT_MOTIVO.map(m => [m[0], m[1], "", m[2]]) },
+    { k: "futuro", custom: 1 });
+  OBFOTO.diasSem = "img/ex-agacho.jpg"; OBFOTO.horario = "img/ex-polichinelo.jpg"; OBFOTO.desistir = "img/ex-afundocasa.jpg"; OBFOTO.motivo = "img/modelo.jpg"; OBFOTO.futuro = "img/ex-pranchalat.jpg";
+})();
+
+const entTela = (cls, html, passo, total) => `<div class="ent ${cls || ""}"><img class="ent-bg" src="${COACH_IMG}" alt="" onerror="this.remove()"><div class="ent-in">${total ? `<div class="ent-dots">${Array.from({ length: total }, (_, i) => `<i class="${i <= passo ? "on" : ""}"></i>`).join("")}</div>` : ""}${html}</div></div>`;
+const entLinhas = L => L.map((p, i) => `<p class="ent-l" style="--d:${.15 + i * .18}s">${p}</p>`).join("");
+const entNome = () => esc((ME && ME.nome || "").split(" ")[0] || "você");
+let LEGIAO_N = null;
+async function legiaoHoje(){ if(LEGIAO_N !== null) return LEGIAO_N; try{ if(NU.ativo && NU.sb){ const r = await NU.sb.rpc("legiao_hoje"); if(!r.error && typeof r.data === "number") LEGIAO_N = r.data; } }catch(e){} return LEGIAO_N; }
+
+const onboardingBase = onboarding;
+onboarding = function(){
+  OB = OB || { i: 0, itens: [] };
+  if(OB.intro == null) OB.intro = 0;
+  const box = $("onb");
+  // 1) intro emocional
+  if(OB.intro < ENT_INTRO.length){
+    const s = ENT_INTRO[OB.intro];
+    box.innerHTML = entTela(OB.intro === 4 ? "ent-forte" : "", `<h1 class="ent-t ${s.menor ? "menor" : ""}">${s.t}</h1>${entLinhas(s.p)}
+      <div class="ent-bt"><button class="btn ent-cta" id="ent-ok">${s.bt}</button>${OB.intro === 0 ? `<button class="link ent-pula" id="ent-pula">Pular introdução</button>` : `<button class="link ent-pula" id="ent-volta">Voltar</button>`}</div>`, OB.intro, ENT_INTRO.length);
+    $("ent-ok").onclick = () => { SOM.tap && SOM.tap(); OB.intro++; onboarding(); window.scrollTo(0, 0); };
+    const p = $("ent-pula"); if(p) p.onclick = () => { OB.intro = ENT_INTRO.length; onboarding(); };
+    const v = $("ent-volta"); if(v) v.onclick = () => { OB.intro--; onboarding(); };
+    return;
+  }
+  const vis = OBQ.filter(q => !(q.pula && q.pula(OB))), q = vis[OB.i];
+  // 2) perguntas novas com tela própria
+  if(q && q.k === "diasSem"){
+    OB.diasSem = OB.diasSem || ["MO", "WE", "FR"];
+    const n = vis.length - 1, dots = `<div class="steps-dots">${vis.slice(0, n).map((_, i) => `<i class="${i <= OB.i ? "on" : ""}"></i>`).join("")}</div>`;
+    box.innerHTML = obHero("diasSem", `<button class="iconbtn sm" id="ob-back" aria-label="Voltar">${ic("back", 18)}</button>`, dots, "Em quais dias você quer treinar?", "Comece com o que dá para manter. Dá para mudar depois.") + `
+      <div class="ent-dias">${DSEM.map(([k, nm]) => `<button class="chip" data-d="${k}" aria-pressed="${OB.diasSem.includes(k)}">${nm}</button>`).join("")}</div>
+      <p class="hint" style="text-align:center">${OB.diasSem.length} ${OB.diasSem.length === 1 ? "dia" : "dias"} por semana${OB.diasSem.length >= 3 ? " · ótimo começo" : ""}</p>
+      <button class="btn btn-accent btn-block btn-lg" id="ob-next" ${OB.diasSem.length ? "" : "disabled"}>Continuar</button>`;
+    box.querySelectorAll("[data-d]").forEach(b => b.onclick = () => { const d = b.dataset.d; OB.diasSem = OB.diasSem.includes(d) ? OB.diasSem.filter(x => x !== d) : DSEM.map(x => x[0]).filter(k => k === d || OB.diasSem.includes(k)); SOM.tap && SOM.tap(); onboarding(); });
+    $("ob-back").onclick = () => { OB.i--; onboarding(); };
+    $("ob-next").onclick = () => { OB.dias = Math.max(2, Math.min(6, OB.diasSem.length)); OB.i++; SOM.check && SOM.check(); onboarding(); window.scrollTo(0, 0); };
+    return;
+  }
+  if(q && q.k === "futuro"){
+    const n = vis.length - 1, dots = `<div class="steps-dots">${vis.slice(0, n).map((_, i) => `<i class="${i <= OB.i ? "on" : ""}"></i>`).join("")}</div>`;
+    box.innerHTML = obHero("futuro", `<button class="iconbtn sm" id="ob-back" aria-label="Voltar">${ic("back", 18)}</button>`, dots, "Uma mensagem para a sua eu do futuro", "Opcional. Daqui a 30 dias a gente te mostra o que você escreveu hoje. Só você vê.") + `
+      <div class="field"><textarea class="input ent-futuro" id="ob-fut" maxlength="200" placeholder="Ex.: Quero voltar a ter disposição e cuidar de mim.">${esc(OB.futuro || "")}</textarea></div>
+      <button class="btn btn-accent btn-block btn-lg" id="ob-next">Guardar e continuar</button><button class="link" id="ob-sem" style="align-self:center">Prefiro não escrever agora</button>`;
+    $("ob-back").onclick = () => { OB.i--; onboarding(); };
+    const vai = guarda => { OB.futuro = guarda ? $("ob-fut").value.trim().slice(0, 200) : ""; OB.i++; SOM.check && SOM.check(); onboarding(); window.scrollTo(0, 0); };
+    $("ob-next").onclick = () => vai(true); $("ob-sem").onclick = () => vai(false);
+    return;
+  }
+  // 3) depois das medidas e antes do plano: compromisso, acordo, legião, coach e avisos
+  if(q && q.k === "pronto" && (OB.pos || 0) < entLista().length){ return entPos(); }
+  onboardingBase.apply(this, arguments);
+  if(q && q.k === "pronto"){ const nx = $("ob-next"); if(nx) nx.addEventListener("click", entSalva, true); }
+};
+function entPos(){
+  const box = $("onb"), k = entLista()[OB.pos || 0], nome = entNome();
+  const prox = () => { OB.pos = (OB.pos || 0) + 1; SOM.tap && SOM.tap(); if(OB.veterana){ if(OB.pos >= ENT_POS_VET.length) return entVetFim(); entPos(); } else onboarding(); window.scrollTo(0, 0); };
+  if(k === "novo"){
+    box.innerHTML = entTela("", `<span class="ent-eb">Novidade no CK Life</span><h1 class="ent-t">${nome}, o CK Life ficou mais perto de você. 💚</h1>
+      ${entLinhas(["Agora você tem uma Coach CK Life para te lembrar, comemorar com você e te buscar quando a rotina apertar.", "Leva menos de um minuto. Seu plano e seus dados continuam iguais."])}
+      <div class="ent-bt"><button class="btn ent-cta" id="ent-ok">QUERO CONHECER</button><button class="link ent-pula" id="ent-nao">Agora não</button></div>`);
+    $("ent-ok").onclick = prox;
+    $("ent-nao").onclick = () => { ME.entrada = { pulou: today() }; save(); OB = null; abrirApp(); };
+  } else if(k === "compromisso"){
+    box.innerHTML = entTela("ent-comp", `<span class="ent-eb">Antes de começar</span><h1 class="ent-t">UM COMPROMISSO COM VOCÊ.</h1>
+      ${entLinhas(["Não estamos pedindo que você nunca falhe.", "Não estamos pedindo que você nunca falte.", "Estamos pedindo apenas uma coisa:", "Quando a rotina apertar, quando bater preguiça ou quando você perder alguns dias…"])}
+      <p class="ent-volte">VOLTE.</p><p class="ent-perg">Você promete não abandonar você mesma só porque um dia não saiu perfeito?</p>
+      <div class="ent-bt"><button class="btn ent-cta" id="ent-ok">EU VOLTO POR MIM 💚</button></div>`);
+    $("ent-ok").onclick = () => { OB.compromisso = today(); vibra([30, 40, 60]); SOM.chime && SOM.chime(); prox(); };
+  } else if(k === "acordo"){
+    box.innerHTML = entTela("", `<h1 class="ent-t">Então nós temos um acordo.</h1>${entLinhas(["O CK Life vai fazer a parte dele.", "Agora começa a sua."])}<div class="ent-bt"><button class="btn ent-cta" id="ent-ok">Continuar</button></div>`);
+    $("ent-ok").onclick = prox;
+  } else if(k === "forte"){
+    box.innerHTML = entTela("ent-forte", `${entLinhas(["Talvez você já tenha começado antes.", "Talvez tenha parado.", "Talvez tenha prometido que dessa vez seria diferente.", "<b>Então vamos fazer diferente.</b>", "Você não precisa depender apenas da motivação."])}
+      <ul class="ent-tem">${["Tem treino.", "Tem plano.", "Tem comunidade.", "Tem acompanhamento.", "Tem outras mulheres tentando todos os dias."].map((t, i) => `<li style="--d:${1 + i * .15}s">💚 ${t}</li>`).join("")}</ul>
+      <p class="ent-l" style="--d:1.9s">E sempre que você precisar voltar, o CK Life vai estar aqui.</p>
+      <h1 class="ent-t ent-grande">DESSA VEZ, VOCÊ NÃO ESTÁ SOZINHA.</h1><div class="ent-bt"><button class="btn ent-cta" id="ent-ok">COMEÇAR MINHA JORNADA</button></div>`);
+    $("ent-ok").onclick = prox;
+  } else if(k === "legiao"){
+    box.innerHTML = entTela("ent-leg", `<span class="ent-eb">Legião CK Life</span><h1 class="ent-t">BEM-VINDA À LEGIÃO CK LIFE 💚</h1>
+      <p class="ent-l" style="--d:.15s">Uma comunidade de mulheres que decidiram aparecer por elas mesmas.</p>
+      <div class="ent-dif">${["Mulheres diferentes.", "Rotinas diferentes.", "Corpos diferentes.", "Objetivos diferentes."].map((t, i) => `<span style="--d:${.35 + i * .12}s">${t}</span>`).join("")}</div>
+      <p class="ent-l ent-dec" style="--d:.9s">Mas uma decisão em comum: <b>continuar.</b></p>
+      <p class="ent-num" id="ent-num">Todos os dias mulheres entram aqui tentando construir uma versão mais constante de si mesmas.</p>
+      <p class="ent-l" style="--d:1.2s">Hoje começa a sua história aqui.</p>
+      <div class="ent-bt"><button class="btn ent-cta" id="ent-ok">EU FAÇO PARTE</button></div>`);
+    legiaoHoje().then(n => { const el = $("ent-num"); if(el && n >= 20) el.innerHTML = `Hoje, <b class="num">${int(n)}</b> mulheres apareceram por elas mesmas.`; });   // número sempre do banco
+    $("ent-ok").onclick = prox;
+  } else if(k === "coach"){
+    box.innerHTML = entTela("ent-coach", `<div class="coach-av grande"><img src="${COACH_IMG}" alt="" onerror="this.remove()"><i>${ic("star", 12, 3)}</i></div><span class="ent-eb">Sua coach virtual CK Life</span>
+      <div class="coach-bal">${entLinhas([`Oi, ${nome}. 💚 Eu sou a Coach CK Life.`, "Vou aparecer por aqui de vez em quando para te lembrar dos seus treinos, comemorar suas vitórias e te buscar quando você der aquela sumida clássica. 😂", "Sem cobrança absurda.", "Sem perfeição.", "Só quero uma coisa de você: continue voltando."])}</div>
+      <div class="ent-bt"><button class="btn ent-cta" id="ent-ok">FECHADO 🤝</button></div>`);
+    $("ent-ok").onclick = prox;
+  } else if(k === "avisos"){
+    const ja = typeof pushLigado === "function" && pushLigado();
+    box.innerHTML = entTela("ent-coach", `<div class="coach-av grande"><img src="${COACH_IMG}" alt="" onerror="this.remove()"><i>${ic("bell", 12, 3)}</i></div><h1 class="ent-t">DEIXA A GENTE CAMINHAR COM VOCÊ?</h1>
+      ${entLinhas(["Treinos, conquistas, alimentação e aquele empurrãozinho quando você precisar."])}<p class="ent-l" style="--d:.4s;font-size:14px;opacity:.8">Você escolhe o que quer receber e pode mudar quando quiser.</p>
+      <div class="ent-bt"><button class="btn ent-cta" id="ent-ok">${ja ? "CONTINUAR" : "ATIVAR MINHA COACH"}</button>${ja ? "" : `<button class="link ent-pula" id="ent-nao">Agora não</button>`}</div><p class="ent-msg" id="ent-msg"></p>`);
+    $("ent-ok").onclick = async () => {
+      if(!ja && typeof ativarNotificacoes === "function"){ try{ await ativarNotificacoes(); }catch(e){} }   // pede a permissão do aparelho (nunca burla o sistema)
+      if(!$("sheet").hidden) return;   // no iPhone abre a explicação de como instalar; ela volta e toca de novo
+      OB.avisos = typeof pushLigado === "function" && pushLigado(); prox(); };
+    const nao = $("ent-nao"); if(nao) nao.onclick = () => { OB.avisos = false; const m = $("ent-msg"); if(m) m.textContent = "Tudo bem. Você pode ativar quando quiser em Perfil."; setTimeout(prox, 1200); };
+  }
+}
+/* quem já tinha conta antes da atualização: apresentação curta, uma vez só (não refaz o cadastro) */
+function entVeterana(){ OB = { i: 0, itens: [], intro: ENT_INTRO.length, veterana: 1, pos: 0 }; show("v-onb"); entPos(); }
+function entVetFim(){
+  const L = ME.lembrete;
+  ME.entrada = Object.assign({}, ME.entrada || {}, { compromisso: OB.compromisso || today(), veterana: true, entrou: today() });
+  if(OB.avisos && L && !L.celular){ L.celular = true; }
+  ME.boasVindas = "mostrar"; save(); OB = null; abrirApp();
+}
+/* ao concluir o plano: guarda as respostas novas e cria o lembrete no horário escolhido */
+function entSalva(){
+  try{
+    const h = ENT_HORARIO.find(x => x[0] === OB.horario);
+    ME.entrada = { horario: OB.horario || null, desistir: OB.desistir || null, motivo: OB.motivo || null, futuro: OB.futuro || "", futuroData: OB.futuro ? today() : null, compromisso: OB.compromisso || today(), diasSem: OB.diasSem || null, entrou: today() };
+    if(OB.diasSem && OB.diasSem.length && !ME.lembrete) ME.lembrete = { dias: OB.diasSem.slice(), hora: h ? h[4] : "19:00", antes: 20, celular: !!OB.avisos };
+    ME.boasVindas = "mostrar";
+  }catch(e){ console.warn(e); }
+}
+/* boas-vindas depois do plano: "{nome}, agora você faz parte do CK Life" com 3 ações */
+function entBoasVindas(){
+  if(!ME || ME.boasVindas !== "mostrar") return;
+  ME.boasVindas = today(); save();
+  if(ME.lembrete && ME.lembrete.celular && typeof sincLembrete === "function") setTimeout(() => sincLembrete(ME.lembrete), 2500);
+  const d = document.createElement("div"); d.className = "ent-bv"; d.id = "ent-bv";
+  d.innerHTML = `<div class="ent-bv-in"><div class="ent-burst">💚</div><h1>${entNome()}, agora você faz parte do CK Life. 💚</h1><p>Vamos construir isso juntas.</p>
+    <button class="btn ent-cta" data-bv="treino">${ic("play", 18)} FAZER MEU PRIMEIRO TREINO</button>
+    <button class="btn ent-sec" data-bv="comunidade">${ic("juntas", 18)} CONHECER A COMUNIDADE</button>
+    <button class="btn ent-sec" data-bv="rotina">${ic("clock", 18)} DEFINIR MINHA ROTINA</button>
+    <button class="link ent-pula" data-bv="x">Explorar o app</button></div>`;
+  document.body.appendChild(d); SOM.done && SOM.done(); if(typeof confete === "function") confete(d);
+  d.querySelectorAll("[data-bv]").forEach(b => b.onclick = () => { const a = b.dataset.bv; d.remove();
+    if(a === "treino") abrirTreinoPreview(treinoDoDia()); else if(a === "comunidade") tab("juntas"); else if(a === "rotina") editaLembrete(); });
+}
+const abrirAppEnt = abrirApp; abrirApp = function(){
+  if(ME && !ME.admin && ME.perfil && ME.perfil.local && !ME.entrada && !OB){ return entVeterana(); }
+  const r = abrirAppEnt.apply(this, arguments); setTimeout(entBoasVindas, 500); return r; };
 
 const TABS = [["inicio","Início"],["treinar","Treinos"],["dieta","Nutrição"],["juntas","Comunidade"],["explorar","Explorar"],["perfil","Perfil"],["evolucao","Evolução"]];
 const NAV = TABS.slice(0, 6), NAV_DE = { evolucao: "perfil" };
