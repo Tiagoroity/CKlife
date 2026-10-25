@@ -2426,3 +2426,38 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
 .ck-atu{position:fixed;left:12px;right:12px;margin:0 auto;top:calc(10px + env(safe-area-inset-top,0px));z-index:90;max-width:460px;display:flex;align-items:center;gap:10px;padding:10px 10px 10px 14px;border-radius:18px;background:#0E3D32;color:#fff;box-shadow:0 18px 40px -16px rgba(0,0,0,.55);border:1px solid rgba(201,179,126,.4);animation:entIn .4s both;box-sizing:border-box}
 .ck-atu-i{font-size:20px}.ck-atu-t{flex:1;min-width:0;display:grid;line-height:1.25}.ck-atu-t b{font-size:14px}.ck-atu-t small{font-size:12px;color:#CFE0D4}
 .ck-atu .btn.ck-atu-b{min-height:44px;padding:0 14px;border-radius:12px;border:0;background:linear-gradient(135deg,#F2E6C4,#C9B37E);color:#0B2F25;font-weight:800;font-size:13px;white-space:nowrap}
+/* ===== Coach CK Life no app ===== */
+.coach-ini{margin:14px 0;padding:16px;border-radius:24px;background:linear-gradient(150deg,#0E3D32 0%,#14503E 60%,#1B5C47 100%);color:#F5F8EF;border:1px solid rgba(201,179,126,.35);box-shadow:0 18px 40px -26px rgba(14,61,50,.8);display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden}
+.coach-ini::after{content:"";position:absolute;right:-40px;top:-40px;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,rgba(201,179,126,.22),transparent 70%);pointer-events:none}
+.coach-top{display:flex;align-items:center;gap:10px}
+.coach-top .coach-av{width:44px;height:44px}.coach-top .coach-av i{width:18px;height:18px;right:-3px;bottom:-3px}
+.coach-nm{display:grid;line-height:1.2}.coach-nm b{font-size:15px}.coach-nm small{font-size:12px;opacity:.75}
+.coach-ini .coach-nm b{color:#fff}.coach-ini .coach-nm small{color:#C9B37E;opacity:1;letter-spacing:.02em}
+.coach-tx{margin:0;font-size:16.5px;line-height:1.45;font-weight:500;color:#fff}
+.coach-q{margin:0;padding:12px 14px;border-left:3px solid #C9B37E;background:rgba(255,255,255,.06);border-radius:0 14px 14px 0;font-style:italic;color:#F2E6C4}
+.coach-eb{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#C9B37E}
+.coach-ac{display:flex;flex-wrap:wrap;gap:8px}.coach-ac.col{flex-direction:column}
+.coach-ac .btn{min-height:44px;border-radius:14px;font-weight:700;font-size:14px;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0 14px;flex:1 1 auto}
+.coach-b1{background:linear-gradient(135deg,#F2E6C4,#C9B37E);color:#0B2F25;border:0}
+.coach-b2{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.2)}
+.coach-lk{display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.1);padding-top:10px}
+.coach-chip{min-height:40px;border-radius:99px;padding:0 14px;background:transparent;border:1px solid rgba(201,179,126,.5);color:#F2E6C4;font-weight:600;font-size:13.5px;cursor:pointer}
+.coach-chip:active{background:rgba(201,179,126,.15)}
+.coach-sh{display:flex;flex-direction:column;gap:14px}
+.coach-sh .coach-b2{background:var(--surface-2);color:var(--ink);border:1px solid var(--line)}
+.coach-sh .coach-nm b{color:var(--ink)}.coach-sh .coach-nm small{color:var(--muted)}
+.coach-sh .coach-av img{border-color:var(--surface)}.coach-sh .coach-av i{border-color:var(--surface)}
+.coach-dif{display:grid;gap:8px}
+.coach-bal2{background:var(--accent-soft);color:var(--ink);border-radius:20px 20px 20px 6px;padding:14px 16px}.coach-bal2 p{margin:0;line-height:1.5}
+.coach-mt{font-family:var(--display);font-size:24px;line-height:1.2;font-weight:700;color:var(--ink);margin:6px 0;min-height:88px}
+.coach-mt.in{animation:entIn .45s both}
+.coach-lembra{margin:0;padding:12px 14px;border-radius:14px;background:var(--surface-2);color:var(--ink)}
+.coach-min{display:flex;flex-wrap:wrap;gap:8px}.coach-min .chip{min-height:46px;min-width:70px}
+.ent .btn.ent-cta.ent-sec2{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.25);box-shadow:none}
+.coach-pos{display:flex;align-items:center;gap:10px;text-align:left;background:rgba(255,255,255,.08);border:1px solid rgba(201,179,126,.35);border-radius:16px;padding:10px 12px;margin:4px 0;width:100%;box-sizing:border-box}
+.coach-pos .coach-av{width:38px;height:38px}.coach-pos .coach-av i{width:16px;height:16px}.coach-pos p{margin:0;color:#F2E6C4;font-size:14px;line-height:1.4}.coach-pos b{color:#fff}
+.coach-1o{position:fixed;inset:0;z-index:80;background:rgba(5,25,19,.86);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:20px;animation:entFade .3s both}
+.coach-1o-in{width:100%;max-width:420px;background:linear-gradient(180deg,#14503E,#0B3328);border:1px solid rgba(201,179,126,.4);border-radius:28px;padding:28px 22px;color:#fff;text-align:center;display:flex;flex-direction:column;gap:10px;animation:entPop .5s both}
+.coach-1o-in h1{font-size:clamp(26px,7.5vw,32px);color:#fff}.coach-1o-in p{margin:0;color:#DCE9DF;line-height:1.5}.coach-1o-q b{color:#F2E6C4}
+.coach-1o .btn.ent-cta{min-height:54px;width:100%;border-radius:16px;border:0;font-weight:800;background:linear-gradient(135deg,#F2E6C4,#C9B37E);color:#0B2F25;margin-top:6px}
+.coach-1o .link.ent-pula{color:#B9CFC2;min-height:44px;background:none;border:0;text-decoration:underline;font-size:14px}
