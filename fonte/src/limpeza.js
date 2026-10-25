@@ -35,8 +35,17 @@ function comLimpa(){
   const box = $("t-juntas"); if(!box) return;
   const comp = $("cm-nova"); if(comp) comp.hidden = true;
   const at = box.querySelector(".cm-atal"); if(at) at.hidden = true;
-  const hb = box.querySelector(".so-hb"); if(hb && !$("cm-pub")){ hb.insertAdjacentHTML("afterbegin", `<button class="iconbtn" id="cm-pub" aria-label="Nova publicação">${ic("plus", 20, 2.4)}</button>`); $("cm-pub").onclick = () => abreComposer(); }
+  // cabeçalho enxuto: notificações e "postar" entram na barra Feed · Grupos · Chats · Amigas; o título sai daqui e vai discreto para o topo
+  const nav = box.querySelector(".cm-nav"), head = box.querySelector(".so-head");
+  if(nav && !nav.querySelector(".cm-acts")){ nav.insertAdjacentHTML("beforeend", `<span class="cm-acts"><button class="iconbtn" id="cm-pub" aria-label="Nova publicação">${ic("plus", 20, 2.4)}</button></span>`);
+    $("cm-pub").onclick = () => abreComposer(); const nb = $("cm-not"); if(nb) nav.querySelector(".cm-acts").prepend(nb); }
+  if(head && nav) head.hidden = true;
   const row = $("st-row"), novo = $("st-novo");
   if(row && novo && !$("st-vit")){ novo.insertAdjacentHTML("afterend", `<button class="so-st st-vit" id="st-vit"><span class="so-st-av">💪</span><small>Minha vitória</small></button>`); $("st-vit").onclick = () => { SOM.tap && SOM.tap(); criarStory(); }; }
 }
 new MutationObserver(() => { if(TAB === "juntas") comLimpa(); }).observe($("t-juntas"), { childList: true, subtree: true });
+
+/* ---------- Topo: na Comunidade, só a logo + "Comunidade" discreto ---------- */
+function topoNome(){ const w = document.querySelector("#v-app .wordmark"); if(!w) return; if(!w.dataset.orig) w.dataset.orig = w.innerHTML;
+  const com = TAB === "juntas"; w.classList.toggle("wm-com", com); w.innerHTML = com ? `<span class="wm-sec">Comunidade</span>` : w.dataset.orig; }
+const tabL = tab; tab = function(){ const r = tabL.apply(this, arguments); try{ topoNome(); }catch(e){} return r; };

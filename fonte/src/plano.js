@@ -157,7 +157,7 @@ function pedeSelfie(v){
 
 /* ---------- Ao lado do nome só o ✓ (perfil verificado). A coroa Pro fica só sobre a foto (coroaDe / classe .cr). ---------- */
 const SELO_EQ = `<i class="sel-eq" role="button" tabindex="0" title="Equipe de Incentivo CK Life" aria-label="Equipe de Incentivo CK Life"><svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><defs><linearGradient id="seq" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2E7D5A"/><stop offset=".55" stop-color="#3DAA74"/><stop offset="1" stop-color="#E7B53C"/></linearGradient></defs><path fill="url(#seq)" d="M12 1.6l2.3 1.7 2.8-.4 1.2 2.6 2.6 1.2-.4 2.8 1.7 2.3-1.7 2.3.4 2.8-2.6 1.2-1.2 2.6-2.8-.4L12 22.4l-2.3-1.7-2.8.4-1.2-2.6-2.6-1.2.4-2.8L1.6 12l1.7-2.3-.4-2.8 2.6-1.2 1.2-2.6 2.8.4z"/><path fill="#fff" d="M12 16.6s-4.3-2.6-4.3-5.5A2.3 2.3 0 0 1 12 9.9a2.3 2.3 0 0 1 4.3 1.2c0 2.9-4.3 5.5-4.3 5.5z"/></svg></i>`;
-const selosP = u => { const p = PERFIS.get(u) || (EU && EU.user_id === u ? EU : {}); return `${p.verificada ? `<i class="sel-ver" title="Perfil verificado">✓</i>` : ""}${window.CK_EQUIPE && window.CK_EQUIPE.has(u) ? SELO_EQ : ""}`; };
+const selosP = u => { const p = PERFIS.get(u) || (EU && EU.user_id === u ? EU : {}); return `${coroaDe(u) ? `<i class="sel-cr" title="CK Life PRO" aria-label="CK Life PRO"></i>` : ""}${p.verificada ? `<i class="sel-ver" title="Perfil verificado">✓</i>` : ""}${window.CK_EQUIPE && window.CK_EQUIPE.has(u) ? SELO_EQ : ""}`; };
 
 /* ---------- Publicidade: só Free depois do 30º dia, só em espaços naturais (Feed e Explorar) ---------- */
 function anuncioHtml(local){
