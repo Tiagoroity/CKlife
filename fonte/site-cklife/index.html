@@ -118,11 +118,11 @@ section{position:relative}
 .num-g{font-family:var(--disp);font-size:clamp(54px,7vw,84px);font-weight:800;line-height:1}
 /* carrossel 3D */
 .carrossel{height:620px;perspective:1600px;display:grid;place-items:center;margin-top:10px;touch-action:pan-y}
-.anel{position:relative;width:230px;height:490px;transform-style:preserve-3d;transition:transform 1s cubic-bezier(.2,.8,.2,1)}
+.anel{position:relative;width:230px;height:490px;transform-style:preserve-3d;will-change:transform}
+.carrossel{cursor:grab;user-select:none;-webkit-user-select:none}.carrossel.arrasta{cursor:grabbing}.anel img{pointer-events:none;-webkit-user-drag:none}
 .anel figure{position:absolute;inset:0;margin:0;border-radius:32px;overflow:hidden;background:#000;border:2px solid rgba(232,217,174,.3);box-shadow:0 40px 80px -30px rgba(0,0,0,.8);backface-visibility:hidden}
 .anel figure img{width:100%;height:100%;object-fit:cover;object-position:top}
 .anel figcaption{position:absolute;left:0;right:0;bottom:0;padding:46px 12px 14px;background:linear-gradient(transparent,rgba(4,25,15,.92) 60%);font-weight:700;font-size:15px;text-align:center;white-space:nowrap}
-.car-bts{display:flex;gap:10px;justify-content:center;margin-top:10px}.car-bts button{width:52px;height:52px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:var(--glass);color:var(--ink);font-size:22px}
 /* passos */
 .passos{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;counter-reset:p}
 .passo{padding:30px;border-radius:var(--r);border:1px solid var(--line);background:rgba(255,255,255,.03);position:relative}
@@ -230,7 +230,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:20px;justify-content:space-between;
 </div></section>
 
 <section class="sec" id="app" style="padding-top:0"><div class="wrap">
-  <div class="sec-h c rv"><span class="eb">Por dentro do app</span><h2>Bonito. Simples. <span class="ouro">Seu.</span></h2><p>Arraste para ver as telas.</p></div>
+  <div class="sec-h c rv"><span class="eb">Por dentro do app</span><h2>Bonito. Simples. <span class="ouro">Seu.</span></h2><p>Passe o dedo para girar mais rápido.</p></div>
   <div class="carrossel" id="carrossel"><div class="anel" id="anel">
     <figure><img src="assets/app-inicio.jpg" alt="Seu dia, pensado para você" loading="lazy"><figcaption>Seu dia</figcaption></figure>
     <figure><img src="assets/app-dificil.jpg" alt="Hoje tá difícil? A Coach ajuda" loading="lazy"><figcaption>Hoje tá difícil?</figcaption></figure>
@@ -242,7 +242,6 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:20px;justify-content:space-between;
     <figure><img src="assets/app-comunidade.jpg" alt="Comunidade só de mulheres" loading="lazy"><figcaption>Comunidade</figcaption></figure>
     <figure><img src="assets/app-jornada.jpg" alt="Sua jornada, sua história" loading="lazy"><figcaption>Sua jornada</figcaption></figure>
   </div></div>
-  <div class="car-bts"><button id="car-ant" aria-label="Tela anterior">‹</button><button id="car-prox" aria-label="Próxima tela">›</button></div>
 </div></section>
 
 <section class="sec" style="padding-top:0"><div class="wrap vida">
@@ -343,11 +342,22 @@ $$(".tilt").forEach(c => { c.addEventListener("pointermove", e => { if(e.pointer
 /* ===== Carrossel 3D ===== */
 const anel = $("#anel"), figs = $$("#anel figure"), N = figs.length; let ang = 0;
 const raio = () => Math.round((anel.offsetWidth / 2) / Math.tan(Math.PI / N)) + 40;
-const monta = () => { const R = raio(); figs.forEach((f, i) => f.style.transform = `rotateY(${i * 360 / N}deg) translateZ(${R}px)`); anel.style.transform = `translateZ(${-R}px) rotateY(${ang}deg)`; };
-const gira = d => { ang += d * 360 / N; monta(); }; monta(); addEventListener("resize", monta);
-$("#car-prox").onclick = () => gira(-1); $("#car-ant").onclick = () => gira(1);
-let x0 = null; const car = $("#carrossel"); car.addEventListener("pointerdown", e => x0 = e.clientX); addEventListener("pointerup", e => { if(x0 === null) return; const dx = e.clientX - x0; if(Math.abs(dx) > 30) gira(dx < 0 ? -1 : 1); x0 = null; });
-let auto = setInterval(() => gira(-1), 3500); car.addEventListener("pointerenter", () => clearInterval(auto));
+let R0 = 0; const monta = () => { const R = R0 = raio(); figs.forEach((f, i) => f.style.transform = `rotateY(${i * 360 / N}deg) translateZ(${R}px)`); anel.style.transform = `translateZ(${-R}px) rotateY(${ang}deg)`; };
+monta(); addEventListener("resize", monta);
+/* gira sozinho sem parar; passar o dedo/mouse acelera e depois volta ao ritmo normal */
+const car = $("#carrossel"), BASE = -14; let vel = BASE, arr = null, vis = true, tAnt = 0;
+const quadro = t => { const dt = Math.min(.05, (t - (tAnt || t)) / 1000); tAnt = t;
+  if(!arr && vis){ vel += (BASE - vel) * Math.min(1, dt * 1.6); ang += vel * dt; anel.style.transform = `translateZ(${-R0}px) rotateY(${ang}deg)`; }
+  requestAnimationFrame(quadro); };
+requestAnimationFrame(quadro);
+new IntersectionObserver(es => vis = es[0].isIntersecting).observe(car);
+car.addEventListener("pointerdown", e => { arr = { x: e.clientX, y: e.clientY, t: performance.now(), on: false }; });
+addEventListener("pointermove", e => { if(!arr) return; const dx = e.clientX - arr.x, agora = performance.now();
+  if(!arr.on){ if(Math.abs(dx) < 6) return; if(Math.abs(e.clientY - arr.y) > Math.abs(dx)){ arr = null; return; } arr.on = true; car.classList.add("arrasta"); }
+  const d = dx * .35; ang += d; vel = Math.max(-500, Math.min(500, d / Math.max(.008, (agora - arr.t) / 1000)));
+  arr.x = e.clientX; arr.t = agora; anel.style.transform = `translateZ(${-R0}px) rotateY(${ang}deg)`; });
+const solta = () => { if(arr && performance.now() - arr.t > 120) vel = BASE; arr = null; car.classList.remove("arrasta"); };
+addEventListener("pointerup", solta); addEventListener("pointercancel", solta);
 /* ===== Foto com parallax ===== */
 const vi = $("#vida-img"); addEventListener("scroll", () => { const r = vi.getBoundingClientRect(); if(r.bottom < 0 || r.top > innerHeight) return; vi.style.transform = `scale(1.12) translateY(${(r.top / innerHeight - .5) * -30}px)`; }, { passive: true });
 /* ===== Luz de fundo em WebGL (leve; pausa fora da tela) ===== */
