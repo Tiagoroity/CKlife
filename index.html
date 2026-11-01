@@ -2659,6 +2659,11 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
 .cm-nav .cm-acts .iconbtn>*:not(.so-dot){pointer-events:none}
 .px-ck{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:95;max-width:520px;margin:0 auto;padding:14px 16px;border-radius:18px;background:var(--surface);color:var(--ink);border:1px solid var(--line);box-shadow:0 20px 50px -20px rgba(0,0,0,.5);font-size:14px}
 .px-ck p{margin:0 0 10px}.px-ck div{display:flex;gap:8px;justify-content:flex-end}
+
+/* painel: botão de WhatsApp com mensagem pronta */
+#v-admin .zap-bt{background:#25D366;color:#fff;border:0;min-height:30px;padding:0 9px;margin-left:6px;font-size:15px;box-shadow:none}
+#v-admin .zap-bt:hover{filter:brightness(.95)}
+.mbox .zap-op{background:var(--surface,#fff);padding:12px 14px;border-radius:14px;width:100%}
 </style>
 
 <!-- Entrar / criar conta -->
@@ -8940,7 +8945,7 @@ const abrirPerfilEq = abrirPerfil; abrirPerfil = async function(u){
    Quem deixa o CK Life aberto (ou instalado na tela inicial) fica com a versão antiga até recarregar.
    O app confere a versão publicada ao abrir, ao voltar do segundo plano e a cada 5 minutos.
    Se houver versão nova, mostra a faixa "ATUALIZAR": um toque e pronto. Nunca aparece no meio do treino. */
-const CK_VER = "20261101200543";
+const CK_VER = "20261101201206";
 let CK_VER_NOVA = null;
 async function confereVersao(){
   if(!/^\d/.test(CK_VER) || !/^https?:/.test(location.protocol)) return;
@@ -14202,6 +14207,58 @@ function avPinta(){
 }
 async function avMostra(){ if(!avSB()) return; avPinta(); try{ await avStatus(); }catch(e){ AV_EST = null; } if(!AV_EST){ const b = $("av-nova"); if(b) b.remove(); return; } avPinta(); }
 ["resumo", "alunos"].forEach(k => { const v0 = VIEWS[k]; if(!v0) return; VIEWS[k] = function(){ const r = v0.apply(this, arguments); setTimeout(avMostra, 0); setTimeout(() => { if(!$("av-nova") && AV_EST) avPinta(); }, 1200); return r; }; });
+
+/* ===================== Painel · WhatsApp com mensagem pronta =====================
+   Na lista de alunas, ao lado do WhatsApp: abre a conversa com a aluna e a mensagem certa para a fase dela,
+   já com o primeiro nome. Quem envia é a pessoa da equipe, no WhatsApp oficial (nada é enviado sozinho). */
+const ZAP_MSG = [
+  ["m1", "Boas-vindas", "Oi, {NOME}! Aqui é a Micaela, do CK Life 💚 Seja muito bem-vinda! Uma dica pra começar: na tela inicial toque em \"Hoje só tenho 5 min\" e faça seu primeiro treino. Leva pouquinho e já conta muito. Qualquer dúvida, é só me chamar aqui."],
+  ["m2", "Ainda não treinou", "Oi, {NOME}! Tudo bem? Conseguiu usar o app direitinho? Se ficou alguma dúvida, me fala que eu te ajudo. E se o dia estiver corrido, o treino de 5 minutos em casa já vale! 💚"],
+  ["m3", "Primeiro treino feito", "{NOME}, vi que você fez seu primeiro treino! Que orgulho! 🎉 Segunda começa uma turma nova do Desafio 21 dias, todas juntas. Quer entrar com a gente? É só ir em Treinos → Desafios."],
+  ["m4", "Teste acabando", "Oi, {NOME}! Passando pra te avisar que seu teste do Pro termina em 2 dias. Você já fez {X} treinos, que demais! 💚 Se quiser continuar com tudo liberado, o Pro está no app em Perfil → Plano. E se preferir seguir no gratuito, tudo bem também, você não perde nada."],
+  ["m5", "Teste acabou", "{NOME}, obrigada por esses 7 dias com a gente! 💚 Você continua no CK Life gratuito, com seus treinos e seu histórico. Quando quiser o Pro de volta, é só ir em Perfil → Plano."],
+  ["m6", "Ativa (pedir opinião)", "Oi, {NOME}! Vi que você está treinando direitinho, parabéns! 💪 Posso te pedir uma coisa? Me conta o que você mais gosta no app e o que podia melhorar. E se tiver uma amiga que também quer treinar em casa, chama ela pra treinar junto."],
+  ["m7", "Parada (convite leve)", "Oi, {NOME}! Senti sua falta por aqui 💚 Sem cobrança, tá? A vida corre. Quando der, que tal só 5 minutinhos hoje? Voltar também é progresso."],
+  ["m8", "Assinante Pro", "{NOME}, muito obrigada por assinar o Pro! 💚 Qualquer coisa que precisar, é só me chamar aqui. Se um dia quiser contar como está sendo sua experiência, a gente adoraria ouvir."]
+];
+const zDig = s => String(s || "").replace(/\D/g, "");
+const zNome = u => { const n = String(u.nome || "").trim().split(/\s+/)[0] || ""; return n ? n.charAt(0).toUpperCase() + n.slice(1).toLowerCase() : ""; };
+const zDias = d => { if(!d) return 999; const a = new Date(String(d).slice(0, 10) + "T12:00:00"), b = new Date(today() + "T12:00:00"); return Math.round((b - a) / 864e5); };
+/* fase da aluna → mensagem sugerida */
+function zFase(u){
+  const T = (u.treinos || []).filter(t => t && t.d), n = T.length, s = (typeof PLU !== "undefined" && PLU) ? PLU[u.id] : null;
+  const ult = n ? T.map(t => t.d).sort().pop() : null, cad = zDias(u.criado);
+  if(s && s.pro && !s.trial && ["kiwify", "apple", "google"].includes(s.provider)) return "m8";
+  if(s && s.pro && s.trial && s.fim){ const falta = -zDias(String(s.fim).slice(0, 10)); if(falta >= 0 && falta <= 2 && n >= 1) return "m4"; }
+  if(n === 0) return cad <= 1 ? "m1" : cad <= 7 ? "m2" : "m7";
+  if(zDias(ult) >= 7) return "m7";
+  if(n === 1) return "m3";
+  if(s && !s.pro && cad >= 7 && cad <= 9) return "m5";
+  return "m6";
+}
+function zTexto(k, u){ const m = ZAP_MSG.find(x => x[0] === k); const nome = zNome(u);
+  return m[2].replace(/\{NOME\}/g, nome || "tudo bem").replace(/^Oi, tudo bem!/, "Oi!").replace(/\{X\}/g, String((u.treinos || []).length)); }
+function zLink(u, k){ return F.lkWhats(u.whats, zTexto(k, u)); }
+function zAbre(u){
+  const sug = zFase(u), nome = zNome(u) || u.nome || "aluna";
+  const L = [ZAP_MSG.find(m => m[0] === sug)].concat(ZAP_MSG.filter(m => m[0] !== sug));
+  modal("WhatsApp · " + nome, `<p class="hint" style="margin:0 0 10px">Escolha a mensagem. Abre o WhatsApp com o texto pronto; é só conferir e enviar. A primeira é a sugerida para a fase dela.</p>
+    <div class="list" style="display:grid;gap:8px">${L.map((m, i) => `<button class="card zap-op" data-zk="${m[0]}" style="text-align:left;cursor:pointer;border:${i ? "1px solid var(--line)" : "2px solid var(--accent)"}">
+      <b>${i ? "" : "✓ Sugerida · "}${esc(m[1])}</b><br><small class="muted">${esc(zTexto(m[0], u).slice(0, 140))}${zTexto(m[0], u).length > 140 ? "…" : ""}</small></button>`).join("")}</div>`);
+  document.querySelectorAll("#mbox [data-zk]").forEach(b => b.onclick = () => { const url = zLink(u, b.dataset.zk); if(!url) return toast("WhatsApp inválido"); window.open(url, "_blank", "noopener"); });
+}
+/* coloca o botão ao lado do número em cada linha */
+function zLiga(){
+  const main = $("adm-main"); if(!main || SEC !== "alunos") return;
+  main.querySelectorAll("tbody tr").forEach(tr => {
+    if(tr.querySelector("[data-zap]")) return;
+    const ed = tr.querySelector("[data-ed]"); if(!ed) return; const u = DB().users.find(x => x.id === ed.dataset.ed); if(!u) return;
+    const td = tr.children[1]; if(!td || zDig(u.whats).length < 10) return;
+    td.insertAdjacentHTML("beforeend", ` <button class="btn btn-sm zap-bt" data-zap="${u.id}" title="Mandar mensagem no WhatsApp" aria-label="Mandar mensagem no WhatsApp para ${esc(u.nome || "")}">💬</button>`);
+    td.querySelector("[data-zap]").onclick = ev => { ev.stopPropagation(); zAbre(u); };
+  });
+}
+{ let zT = null; new MutationObserver(() => { clearTimeout(zT); zT = setTimeout(zLiga, 60); }).observe($("adm-main") || document.body, { childList: true, subtree: true }); }
 
 window.ADMIN = { abrir };
 })();
