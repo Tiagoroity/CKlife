@@ -20,5 +20,5 @@ self.addEventListener("notificationclick", e => {
   e.notification.close(); const dd = e.notification.data || {}; let url = dd.url || "/";
   try { const u = new URL(url, self.location.origin); url = u.href; } catch (er) { url = "/"; }
   const mesmo = url.startsWith(self.location.origin);
-  e.waitUntil(Promise.all([confirma(dd, "clique"), mesmo ? self.clients.matchAll({ type: "window", includeUncontrolled: true }).then(L => { const c = L.find(x => x.url.startsWith(self.location.origin)); if (c) { c.focus(); c.postMessage({ tipo: "push", url }); return; } return self.clients.openWindow(url); }) : self.clients.openWindow(url)]));
+  e.waitUntil(Promise.all([confirma(dd, "clique"), mesmo ? self.clients.matchAll({ type: "window", includeUncontrolled: true }).then(L => { const c = L.find(x => x.url.startsWith(self.location.origin)); if (c) { const outra = new URL(c.url).pathname.replace(/\/$/, "") !== new URL(url).pathname.replace(/\/$/, ""); if (outra && c.navigate) return c.navigate(url).then(w => w && w.focus()).catch(() => self.clients.openWindow(url)); c.focus(); c.postMessage({ tipo: "push", url }); return; } return self.clients.openWindow(url); }) : self.clients.openWindow(url)]));
 });
