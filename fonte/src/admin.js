@@ -15,7 +15,7 @@ const toast = F.toast;
 const ex = o => o && o.exemplo ? `<span class="ex">exemplo</span>` : "";
 const cidNome = id => (DB().cidades.find(c => +c.id === +id) || {}).nome || "";
 /* cidade da aluna: as do banco ou a que ela escolheu na lista do IBGE */
-const cidNomeU = u => cidNomeU(u) || (u.cidadeInfo && +u.cidadeInfo.id === +u.cidade ? u.cidadeInfo.nome + (u.cidadeInfo.uf ? " · " + u.cidadeInfo.uf : "") : "");
+const cidNomeU = u => cidNome(u.cidade) || (u.cidadeInfo && +u.cidadeInfo.id === +u.cidade ? u.cidadeInfo.nome + (u.cidadeInfo.uf ? " · " + u.cidadeInfo.uf : "") : "");
 const UF_NOME = { AC:"Acre", AL:"Alagoas", AP:"Amapá", AM:"Amazonas", BA:"Bahia", CE:"Ceará", DF:"Distrito Federal", ES:"Espírito Santo", GO:"Goiás", MA:"Maranhão", MT:"Mato Grosso", MS:"Mato Grosso do Sul", MG:"Minas Gerais", PA:"Pará", PB:"Paraíba", PR:"Paraná", PE:"Pernambuco", PI:"Piauí", RJ:"Rio de Janeiro", RN:"Rio Grande do Norte", RS:"Rio Grande do Sul", RO:"Rondônia", RR:"Roraima", SC:"Santa Catarina", SP:"São Paulo", SE:"Sergipe", TO:"Tocantins" };
 const ufU = u => (u.cidadeInfo && +u.cidadeInfo.id === +u.cidade && u.cidadeInfo.uf) || (DB().cidades.find(c => +c.id === +u.cidade) || {}).uf || "";
 const ufNomeU = u => UF_NOME[ufU(u)] || "Sem estado";
