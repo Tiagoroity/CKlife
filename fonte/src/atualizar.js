@@ -4,11 +4,19 @@
    Se houver versão nova, mostra a faixa "ATUALIZAR": um toque e pronto. Nunca aparece no meio do treino. */
 const CK_VER = "__CK_VERSAO__";
 let CK_VER_NOVA = null;
+const ATU_K = "ck_atu";
+const atuTentou = () => { try{ return JSON.parse(localStorage.getItem(ATU_K) || "null"); }catch(e){ return null; } };
+const atuLimpa = () => { try{ localStorage.removeItem(ATU_K); }catch(e){} const d = document.getElementById("ck-atu"); if(d) d.remove(); };
 async function confereVersao(){
   if(!/^\d/.test(CK_VER) || !/^https?:/.test(location.protocol)) return;
   try{
     const r = await fetch("/versao.json?t=" + Date.now(), { cache: "no-store" }); if(!r.ok) return;
-    const v = (await r.json()).v; if(v && v !== CK_VER){ CK_VER_NOVA = v; mostraAtualizar(); }
+    const v = String((await r.json()).v || "");
+    // só quando a versão publicada é MAIS NOVA que a aberta (nunca por versão igual ou mais antiga)
+    if(!/^\d{14}$/.test(v) || v <= CK_VER){ atuLimpa(); return; }
+    // acabou de tocar em ATUALIZAR para esta versão: não insiste por 10 minutos (o servidor pode levar um instante)
+    const t = atuTentou(); if(t && t.alvo === v && Date.now() - t.em < 10 * 60 * 1000) return;
+    CK_VER_NOVA = v; mostraAtualizar();
   }catch(e){}
 }
 function mostraAtualizar(){
@@ -21,6 +29,7 @@ function mostraAtualizar(){
   document.getElementById("ck-atu-b").onclick = async () => {
     const b = document.getElementById("ck-atu-b"); b.disabled = true; b.textContent = "Atualizando…";
     try{ if(typeof save === "function") save(); }catch(e){}
+    try{ localStorage.setItem(ATU_K, JSON.stringify({ alvo: CK_VER_NOVA, em: Date.now() })); }catch(e){}
     try{ if("caches" in window){ const k = await caches.keys(); await Promise.all(k.map(x => caches.delete(x))); } }catch(e){}
     try{ const reg = await navigator.serviceWorker?.getRegistration(); if(reg) await reg.update(); }catch(e){}
     location.replace(location.pathname + "?v=" + CK_VER_NOVA + location.hash);
@@ -30,3 +39,5 @@ setTimeout(confereVersao, 4000);
 setInterval(() => { if(!document.hidden) confereVersao(); }, 5 * 60 * 1000);
 document.addEventListener("visibilitychange", () => { if(!document.hidden) confereVersao(); });
 window.addEventListener("pageshow", e => { if(e.persisted) confereVersao(); });
+/* depois de atualizar, tira o "?v=..." do endereço (só aparência) */
+try{ const u = new URL(location.href); if(u.searchParams.get("v") && u.searchParams.get("v") <= CK_VER){ u.searchParams.delete("v"); history.replaceState(history.state, "", u.pathname + (u.search || "") + u.hash); } }catch(e){}
