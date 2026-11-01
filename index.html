@@ -7,8 +7,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="img/marca/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="img/marca/favicon-16.png">
 <link rel="icon" type="image/png" sizes="192x192" href="img/icone-192.png">
-<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
-<link rel="manifest" href="manifest.webmanifest">
+<script>(function(){var a=/^\/admin/.test(location.pathname)||location.hash.indexOf("#admin")===0;document.write('<link rel="apple-touch-icon" href="'+(a?'/img/admin/apple-touch-icon.png':'/img/apple-touch-icon.png')+'"><link rel="manifest" href="'+(a?'/manifest-admin.webmanifest':'/manifest.webmanifest')+'">');})();</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="CK Life">
@@ -8941,7 +8940,7 @@ const abrirPerfilEq = abrirPerfil; abrirPerfil = async function(u){
    Quem deixa o CK Life aberto (ou instalado na tela inicial) fica com a versão antiga até recarregar.
    O app confere a versão publicada ao abrir, ao voltar do segundo plano e a cada 5 minutos.
    Se houver versão nova, mostra a faixa "ATUALIZAR": um toque e pronto. Nunca aparece no meio do treino. */
-const CK_VER = "20261101195901";
+const CK_VER = "20261101200543";
 let CK_VER_NOVA = null;
 async function confereVersao(){
   if(!/^\d/.test(CK_VER) || !/^https?:/.test(location.protocol)) return;
