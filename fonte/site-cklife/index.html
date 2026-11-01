@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CK Life · Treino, rotina e comunidade para mulheres</title>
+<meta name="description" content="Treinos em casa de 5 a 45 minutos, uma Coach que te acompanha todos os dias, receitas simples e uma comunidade só de mulheres. Comece grátis.">
+<meta name="theme-color" content="#06231C">
+<link rel="canonical" href="https://cklife.com.br/">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icone-192.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CK Life">
+<meta property="og:title" content="CK Life · Dessa vez, você não está sozinha">
+<meta property="og:description" content="Treino em casa, Coach que te acompanha, receitas simples e comunidade só de mulheres. Comece grátis.">
+<meta property="og:image" content="https://cklife.com.br/assets/og-ck-life.jpg">
+<meta property="og:url" content="https://cklife.com.br/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"CK Life","applicationCategory":"HealthApplication","operatingSystem":"Android, iOS, Web","url":"https://cklife.com.br/","offers":[{"@type":"Offer","name":"CK Life Free","price":"0","priceCurrency":"BRL"},{"@type":"Offer","name":"CK Life PRO Mensal","price":"19.99","priceCurrency":"BRL"},{"@type":"Offer","name":"CK Life PRO Anual","price":"155.88","priceCurrency":"BRL"}]}</script>
+<style>
+:root{--bg:#04190F;--bg2:#06231C;--verde:#0E3D32;--verde2:#14503E;--acc:#4ECB86;--acc2:#3BAE74;--champ:#E8D9AE;--ouro:#C9B37E;--perola:#F7F1E1;--ink:#F3F7F2;--muted:#A9C2B5;--line:rgba(255,255,255,.1);--glass:rgba(255,255,255,.06);--r:24px;--disp:"Bricolage Grotesque","Avenir Next",system-ui,sans-serif;--body:"Figtree",system-ui,-apple-system,sans-serif}
+*{box-sizing:border-box}html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:clip}
+.hero,.sec,.final{overflow-x:clip}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%;display:block}a{color:inherit;text-decoration:none}button{font:inherit;cursor:pointer}
+h1,h2,h3{font-family:var(--disp);letter-spacing:-.025em;line-height:1.02;margin:0}
+.wrap{width:min(1180px,100% - 40px);margin-inline:auto}
+#luz{position:fixed;inset:0;width:100%;height:100%;z-index:-2;display:block}
+.grao{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.06;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+/* topo */
+.nav{position:fixed;top:0;left:0;right:0;z-index:50;transition:background .3s,backdrop-filter .3s,border-color .3s;border-bottom:1px solid transparent}
+.nav.sol{background:rgba(4,25,15,.72);backdrop-filter:blur(16px) saturate(1.4);-webkit-backdrop-filter:blur(16px) saturate(1.4);border-color:var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:20px;height:72px}
+.marca{display:flex;align-items:center;gap:10px;font-family:var(--disp);font-weight:800;font-size:22px}.marca img{width:40px;height:40px;border-radius:11px}.marca b{color:var(--champ);font-weight:800}
+.nav nav{display:flex;gap:26px;margin-left:auto;font-weight:600;font-size:15px;color:var(--muted)}.nav nav a:hover{color:var(--ink)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:0 26px;border-radius:999px;border:0;font-weight:800;font-size:16px;letter-spacing:.01em;transition:transform .2s,box-shadow .3s,background .3s;white-space:nowrap}
+.btn:active{transform:scale(.97)}
+.btn-ouro{background:linear-gradient(135deg,var(--perola),var(--champ) 45%,var(--ouro));color:#0B2F25;box-shadow:0 18px 40px -16px rgba(201,179,126,.7),inset 0 1px 0 rgba(255,255,255,.7)}
+.btn-ouro:hover{box-shadow:0 24px 54px -14px rgba(201,179,126,.9),inset 0 1px 0 rgba(255,255,255,.7);transform:translateY(-2px)}
+.btn-vidro{background:var(--glass);color:var(--ink);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(10px)}
+.btn-vidro:hover{background:rgba(255,255,255,.12)}
+.btn-sm{min-height:42px;padding:0 18px;font-size:14.5px}
+.brilho{position:relative;overflow:hidden}.brilho::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.55) 50%,transparent 65%);transform:translateX(-120%);animation:passa 3.6s 1.2s infinite}
+@keyframes passa{60%,100%{transform:translateX(120%)}}
+/* hero */
+.hero{min-height:100svh;padding:120px 0 60px;display:flex;align-items:center;position:relative}
+.hero .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--champ);padding:8px 14px;border-radius:999px;background:rgba(201,179,126,.1);border:1px solid rgba(201,179,126,.3)}
+.eyebrow i{width:8px;height:8px;border-radius:50%;background:var(--acc);box-shadow:0 0 12px var(--acc);animation:pulsa 2s infinite}
+@keyframes pulsa{50%{opacity:.4}}
+.hero h1{font-size:clamp(44px,7.2vw,92px);margin:22px 0 20px;font-weight:800}
+.hero h1 em{font-style:normal;background:linear-gradient(100deg,var(--perola),var(--champ) 40%,var(--acc) 90%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.sub{font-size:clamp(17px,1.6vw,20px);color:#D3E2D8;max-width:540px;margin:0 0 30px}
+.ctas{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.confia{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:22px;color:var(--muted);font-size:14.5px;font-weight:600}.confia span::before{content:"✓";color:var(--acc);margin-right:7px;font-weight:800}
+/* celular 3D */
+.palco{position:relative;height:min(680px,80vh);perspective:1400px;display:grid;place-items:center}
+.celular{position:relative;width:min(300px,68vw);aspect-ratio:9/19.2;border-radius:46px;transform-style:preserve-3d;transform:rotateY(-18deg) rotateX(8deg) rotateZ(2deg);transition:transform .25s ease-out;will-change:transform}
+.celular .corpo{position:absolute;inset:0;border-radius:46px;background:linear-gradient(145deg,#2a3a33,#0b1410 40%,#1c2a24);box-shadow:0 60px 120px -30px rgba(0,0,0,.8),0 0 0 2px rgba(232,217,174,.35),inset 0 0 0 7px #0a0f0d;transform:translateZ(0)}
+.celular .tela{position:absolute;inset:9px;border-radius:38px;overflow:hidden;background:#000;transform:translateZ(1px)}
+.celular .tela img{width:100%;height:100%;object-fit:cover;object-position:top;position:absolute;inset:0;opacity:0;transition:opacity .9s}
+.celular .tela img.on{opacity:1}
+.celular .ilha{position:absolute;top:18px;left:50%;width:30%;height:26px;border-radius:20px;background:#000;transform:translateX(-50%) translateZ(2px);z-index:3}
+.celular .reflexo{position:absolute;inset:9px;border-radius:38px;background:linear-gradient(115deg,rgba(255,255,255,.18),transparent 30%,transparent 70%,rgba(255,255,255,.06));transform:translateZ(3px);pointer-events:none;mix-blend-mode:screen}
+.celular .lateral{position:absolute;top:8%;bottom:8%;right:-1px;width:14px;border-radius:0 10px 10px 0;background:linear-gradient(90deg,#1b2622,#3b4b44);transform:rotateY(90deg) translateZ(7px);transform-origin:right}
+.halo{position:absolute;width:120%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(78,203,134,.35),rgba(201,179,126,.12) 40%,transparent 68%);filter:blur(10px);animation:respira 6s ease-in-out infinite}
+@keyframes respira{50%{transform:scale(1.08);opacity:.8}}
+.flutua{position:absolute;z-index:3;display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:18px;background:rgba(10,40,31,.62);border:1px solid rgba(232,217,174,.28);backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4);box-shadow:0 20px 50px -20px rgba(0,0,0,.7);font-size:14px;line-height:1.3;max-width:240px;animation:boia 7s ease-in-out infinite}
+.flutua b{display:block;font-size:14.5px}.flutua small{color:var(--muted);font-size:12.5px}.flutua .em{font-size:22px}
+.f1{top:10%;left:-4%;animation-delay:-1s}.f2{top:44%;right:-6%;animation-delay:-3s}.f3{bottom:9%;left:2%;animation-delay:-5s}
+@keyframes boia{50%{transform:translate3d(0,-14px,40px)}}
+/* faixa */
+.faixa{border-block:1px solid var(--line);background:rgba(255,255,255,.02);overflow:hidden;padding:18px 0}
+.faixa div{display:flex;gap:46px;width:max-content;animation:rola 32s linear infinite;font-family:var(--disp);font-weight:700;font-size:clamp(20px,2.6vw,30px);color:var(--champ);white-space:nowrap}
+.faixa span{display:inline-flex;align-items:center;gap:46px}.faixa span::after{content:"✦";color:var(--acc);font-size:.7em}
+@keyframes rola{to{transform:translateX(-50%)}}
+section{position:relative}
+.sec{padding:clamp(80px,12vw,150px) 0}
+.sec-h{max-width:780px;margin-bottom:54px}.sec-h.c{margin-inline:auto;text-align:center}
+.sec-h .eb{font-size:13px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--acc)}
+.sec-h h2{font-size:clamp(34px,5.2vw,64px);margin:14px 0 16px}.sec-h p{color:#C8D9CE;font-size:clamp(17px,1.5vw,19px);margin:0}
+.ouro{background:linear-gradient(100deg,var(--perola),var(--champ),var(--ouro));-webkit-background-clip:text;background-clip:text;color:transparent}
+/* promessa */
+.promessa{text-align:center}
+.promessa blockquote{margin:0 auto;max-width:980px;font-family:var(--disp);font-size:clamp(30px,4.6vw,58px);font-weight:700;line-height:1.1}
+.promessa blockquote span{display:block;color:var(--muted);font-size:.62em;margin-bottom:12px;font-weight:600}
+/* bento */
+.bento{display:grid;grid-template-columns:repeat(6,1fr);gap:16px}
+.card{position:relative;border-radius:var(--r);padding:28px;background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.02));border:1px solid var(--line);overflow:hidden;transform-style:preserve-3d;transition:transform .25s ease-out,border-color .3s;min-height:240px;display:flex;flex-direction:column;gap:10px}
+.card:hover{border-color:rgba(232,217,174,.35)}
+.card::before{content:"";position:absolute;inset:0;background:radial-gradient(500px circle at var(--mx,50%) var(--my,0%),rgba(232,217,174,.12),transparent 40%);pointer-events:none;opacity:0;transition:opacity .3s}.card:hover::before{opacity:1}
+.card .ic{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;font-size:26px;background:rgba(78,203,134,.12);border:1px solid rgba(78,203,134,.25)}
+.card h3{font-size:clamp(22px,2.2vw,28px);margin-top:6px}.card p{margin:0;color:#C3D5CA;font-size:16px}
+.card .img{margin:auto -28px -28px;height:200px;overflow:hidden;border-top:1px solid var(--line)}.card .img img{width:100%;height:100%;object-fit:cover;object-position:top}
+.c-4{grid-column:span 4}.c-3{grid-column:span 3}.c-2{grid-column:span 2}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}.chips span{padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid var(--line);font-size:14px;font-weight:600}
+.recado{margin-top:auto;padding:16px;border-radius:18px;background:linear-gradient(150deg,#0E3D32,#14503E);border:1px solid rgba(201,179,126,.4)}
+.recado small{color:var(--ouro);font-weight:800;letter-spacing:.08em;text-transform:uppercase;font-size:11px}.recado b{display:block;margin:6px 0 10px;font-size:16px;font-weight:600}
+.recado .bts{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.recado .bts span{text-align:center;font-size:12px;padding:8px 4px;border-radius:999px;border:1px solid rgba(201,179,126,.5);color:var(--champ)}
+.receitas{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:auto}.receitas img{border-radius:14px;aspect-ratio:1;object-fit:cover}
+.num-g{font-family:var(--disp);font-size:clamp(54px,7vw,84px);font-weight:800;line-height:1}
+/* carrossel 3D */
+.carrossel{height:620px;perspective:1600px;display:grid;place-items:center;margin-top:10px;touch-action:pan-y}
+.anel{position:relative;width:230px;height:490px;transform-style:preserve-3d;transition:transform 1s cubic-bezier(.2,.8,.2,1)}
+.anel figure{position:absolute;inset:0;margin:0;border-radius:32px;overflow:hidden;background:#000;border:2px solid rgba(232,217,174,.3);box-shadow:0 40px 80px -30px rgba(0,0,0,.8);backface-visibility:hidden}
+.anel figure img{width:100%;height:100%;object-fit:cover;object-position:top}
+.anel figcaption{position:absolute;left:0;right:0;bottom:0;padding:40px 16px 16px;background:linear-gradient(transparent,rgba(0,0,0,.8));font-weight:700;font-size:15px;text-align:center}
+.car-bts{display:flex;gap:10px;justify-content:center;margin-top:10px}.car-bts button{width:52px;height:52px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:var(--glass);color:var(--ink);font-size:22px}
+/* passos */
+.passos{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;counter-reset:p}
+.passo{padding:30px;border-radius:var(--r);border:1px solid var(--line);background:rgba(255,255,255,.03);position:relative}
+.passo::before{counter-increment:p;content:"0" counter(p);font-family:var(--disp);font-size:64px;font-weight:800;line-height:1;background:linear-gradient(180deg,var(--champ),rgba(232,217,174,.15));-webkit-background-clip:text;background-clip:text;color:transparent;display:block;margin-bottom:14px}
+.passo h3{font-size:24px;margin-bottom:8px}.passo p{margin:0;color:#C3D5CA}
+/* vida real */
+.vida{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center}
+.vida .foto{border-radius:32px;overflow:hidden;position:relative;aspect-ratio:4/5;border:1px solid rgba(232,217,174,.25)}
+.vida .foto img{width:100%;height:100%;object-fit:cover;object-position:center 20%;transform:scale(1.08);transition:transform .2s linear}
+.vida ul{list-style:none;padding:0;margin:26px 0 0;display:grid;gap:12px}
+.vida li{display:flex;gap:14px;padding:16px 18px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid var(--line)}.vida li b{display:block}.vida li span{color:var(--muted);font-size:15.5px}.vida li i{font-style:normal;font-size:24px}
+/* planos */
+.planos{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;align-items:stretch}
+.plano{position:relative;border-radius:30px;padding:32px 28px;background:linear-gradient(170deg,rgba(255,255,255,.07),rgba(255,255,255,.02));border:1px solid var(--line);display:flex;flex-direction:column;gap:14px;transform-style:preserve-3d;transition:transform .25s ease-out}
+.plano.top{background:linear-gradient(170deg,#14503E,#0B3328 60%,#0E3D32);border:1px solid rgba(232,217,174,.55);box-shadow:0 40px 90px -40px rgba(201,179,126,.55)}
+.plano .selo{position:absolute;top:-14px;left:50%;transform:translateX(-50%);padding:7px 16px;border-radius:999px;background:linear-gradient(135deg,var(--perola),var(--ouro));color:#0B2F25;font-size:12.5px;font-weight:800;letter-spacing:.06em;white-space:nowrap}
+.plano h3{font-size:24px}.plano .desc{color:var(--muted);font-size:15px;margin:0}
+.preco{display:flex;align-items:baseline;gap:6px;font-family:var(--disp);font-weight:800}.preco b{font-size:52px;letter-spacing:-.03em;line-height:1}.preco small{font-family:var(--body);color:var(--muted);font-size:15px;font-weight:600}
+.plano .obs{font-size:14px;color:var(--champ);margin:-6px 0 0;font-weight:600}
+.plano ul{list-style:none;padding:0;margin:4px 0 8px;display:grid;gap:10px;font-size:15.5px}.plano li{display:flex;gap:10px}.plano li::before{content:"✓";color:var(--acc);font-weight:800}
+.plano .btn{margin-top:auto;width:100%}
+.nota{text-align:center;color:var(--muted);font-size:14.5px;margin-top:22px}
+/* faq */
+.faq{max-width:860px;margin:0 auto;display:grid;gap:10px}
+.faq details{border-radius:20px;border:1px solid var(--line);background:rgba(255,255,255,.03);padding:0 22px;transition:background .3s}
+.faq details[open]{background:rgba(255,255,255,.06)}
+.faq summary{list-style:none;cursor:pointer;padding:20px 0;font-weight:700;font-size:17.5px;display:flex;justify-content:space-between;gap:16px;align-items:center}
+.faq summary::-webkit-details-marker{display:none}.faq summary::after{content:"+";font-size:26px;color:var(--champ);transition:transform .3s}.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{margin:0 0 20px;color:#C3D5CA}
+/* final */
+.final{text-align:center;padding:clamp(90px,14vw,170px) 0}
+.final h2{font-size:clamp(42px,7vw,96px);margin-bottom:22px}.final p{color:#C8D9CE;font-size:19px;max-width:620px;margin:0 auto 34px}
+footer{border-top:1px solid var(--line);padding:40px 0 120px;color:var(--muted);font-size:14.5px}
+footer .wrap{display:flex;flex-wrap:wrap;gap:20px;justify-content:space-between;align-items:center}footer nav{display:flex;gap:20px;flex-wrap:wrap}
+/* barra fixa no celular */
+.barra{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:60;display:none;transform:translateY(140%);transition:transform .4s cubic-bezier(.2,.8,.2,1)}
+.barra.on{transform:none}.barra .btn{width:100%;min-height:56px}
+/* cookies */
+.cookies{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:70;max-width:560px;margin:0 auto;padding:18px;border-radius:20px;background:rgba(6,35,28,.94);border:1px solid rgba(232,217,174,.3);backdrop-filter:blur(14px);box-shadow:0 30px 60px -20px rgba(0,0,0,.7);font-size:14.5px;display:none}
+.cookies.on{display:block}.cookies p{margin:0 0 12px;color:#D3E2D8}.cookies div{display:flex;gap:8px;justify-content:flex-end}
+/* revelar */
+.rv{opacity:0;transform:translateY(40px);transition:opacity .9s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1)}.rv.on{opacity:1;transform:none}
+.rv.d1{transition-delay:.1s}.rv.d2{transition-delay:.2s}.rv.d3{transition-delay:.3s}
+@media (max-width:980px){
+  .nav nav{display:none}.hero .wrap{grid-template-columns:1fr;text-align:center}.hero p.sub{margin-inline:auto}.ctas,.confia{justify-content:center}
+  .palco{height:600px;margin-top:10px}.f1{left:0}.f2{right:0}
+  .bento{grid-template-columns:1fr 1fr}.c-4,.c-3,.c-2{grid-column:span 2}
+  .passos,.planos{grid-template-columns:1fr}.plano.top{order:-1}.vida{grid-template-columns:1fr}
+  .barra{display:block}
+}
+@media (max-width:560px){body{font-size:16px}.eyebrow{font-size:10.5px;letter-spacing:.1em;padding:7px 12px}.nav .wrap{height:64px}.nav .btn-sm{display:none}.hero{padding-top:100px}.palco{height:540px}.flutua{font-size:13px;padding:10px 12px;max-width:200px}.f1{top:4%}.f2{top:46%}.f3{bottom:4%}
+  .card{padding:22px;min-height:0}.card .img{margin:auto -22px -22px}.carrossel{height:520px}.anel{width:200px;height:425px}.wrap{width:calc(100% - 32px)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<canvas id="luz" aria-hidden="true"></canvas><div class="grao" aria-hidden="true"></div>
+
+<header class="nav" id="nav"><div class="wrap">
+  <a class="marca" href="#topo" aria-label="CK Life"><img src="assets/icone-192.png" alt="" width="40" height="40">CK <b>Life</b></a>
+  <nav aria-label="Seções"><a href="#como">Como funciona</a><a href="#app">O app</a><a href="#planos">Planos</a><a href="#duvidas">Dúvidas</a></nav>
+  <a class="btn btn-ouro btn-sm cta" href="#" data-cta="nav">Começar grátis</a>
+</div></header>
+
+<main id="topo">
+<section class="hero"><div class="wrap">
+  <div>
+    <span class="eyebrow rv"><i></i>Treino · Rotina · Comunidade</span>
+    <h1 class="rv d1">Dessa vez, você <em>não está sozinha.</em></h1>
+    <p class="sub rv d2">Treinos em casa de 5 a 45 minutos, uma Coach que te acompanha todos os dias, receitas simples e uma comunidade só de mulheres. Tudo no seu ritmo.</p>
+    <div class="ctas rv d3"><a class="btn btn-ouro brilho cta" href="#" data-cta="hero">COMEÇAR GRÁTIS →</a><a class="btn btn-vidro" href="#planos">Ver planos</a></div>
+    <div class="confia rv d3"><span>Grátis para começar</span><span>Sem cartão de crédito</span><span>Funciona no celular</span></div>
+  </div>
+  <div class="palco" id="palco" aria-label="App CK Life no celular">
+    <div class="halo"></div>
+    <div class="celular" id="celular"><div class="corpo"></div><div class="lateral"></div>
+      <div class="tela" id="tela"><img class="on" src="assets/tela-inicio.jpg" alt="Tela inicial do CK Life com o treino do dia"><img src="assets/tela-execucao.jpg" alt="Treino em execução com contagem"><img src="assets/tela-concluido.jpg" alt="Treino concluído"><img src="assets/tela-evolucao.jpg" alt="Tela de evolução"></div>
+      <div class="ilha"></div><div class="reflexo"></div></div>
+    <div class="flutua f1"><span class="em">💚</span><span><b>Recado da Coach</b><small>Pouco ainda conta. Que tal 5 minutinhos?</small></span></div>
+    <div class="flutua f2"><span class="em">🔥</span><span><b>3 dias seguidos</b><small>Você está aparecendo por você</small></span></div>
+    <div class="flutua f3"><span class="em">⏱️</span><span><b>Treino de 5 min</b><small>Para os dias corridos</small></span></div>
+  </div>
+</div></section>
+
+<div class="faixa" aria-hidden="true"><div><span>Pouco ainda conta</span><span>Voltar também é progresso</span><span>Seu ritmo, sua evolução</span><span>Constância, não perfeição</span><span>Um dia de cada vez</span><span>Pouco ainda conta</span><span>Voltar também é progresso</span><span>Seu ritmo, sua evolução</span><span>Constância, não perfeição</span><span>Um dia de cada vez</span></div></div>
+
+<section class="sec promessa"><div class="wrap">
+  <blockquote class="rv"><span>A nossa promessa</span>Nós não prometemos resultado mágico. <span class="ouro" style="display:inline;font-size:1em;color:transparent">Prometemos não deixar você caminhar sem direção.</span></blockquote>
+</div></section>
+
+<section class="sec" id="como" style="padding-top:0"><div class="wrap">
+  <div class="sec-h rv"><span class="eb">Tudo em um app</span><h2>Feito para a sua <span class="ouro">vida real</span>.</h2><p>Não é só uma lista de treinos. O CK Life acompanha, lembra, comemora e te chama de volta quando a rotina aperta.</p></div>
+  <div class="bento">
+    <article class="card c-4 tilt rv"><div class="ic">💚</div><h3>Coach CK Life todo dia com você</h3><p>Uma coach virtual que manda o recado certo na hora certa, comemora suas vitórias e te busca quando você some, sem culpa e sem cobrança.</p>
+      <div class="recado"><small>Recado da Coach</small><b>Ontem não deu? Tudo bem. Hoje é um novo dia.</b><div class="bts"><span>Recados</span><span>Hoje tá difícil?</span><span>Preciso de motivação</span></div></div></article>
+    <article class="card c-2 tilt rv d1"><div class="ic">⏱️</div><h3>Treinos de 5, 10 e 15 min</h3><p>Dia corrido? Pouco ainda conta. Treinos curtos, em casa, sem equipamento.</p><div class="num-g ouro" style="margin-top:auto">5 min</div></article>
+    <article class="card c-2 tilt rv"><div class="ic">📅</div><h3>Plano do Ano</h3><p>52 semanas montadas pelo seu objetivo, nível e tempo. Nenhum treino se repete no ano.</p><div class="num-g ouro" style="margin-top:auto">52</div></article>
+    <article class="card c-2 tilt rv d1"><div class="ic">🎙️</div><h3>Treino guiado por voz</h3><p>Explicação antes de cada exercício, contagem 3, 2, 1 e incentivo até o fim.</p><div class="img"><img src="assets/tela-timer.jpg" alt="Treino guiado com cronômetro" loading="lazy"></div></article>
+    <article class="card c-2 tilt rv d2"><div class="ic">📸</div><h3>Câmera que conta repetições</h3><p>O celular reconhece o movimento e conta por você. Nada é gravado nem enviado.</p><div class="img"><img src="assets/ex-agacho.jpg" alt="Agachamento" loading="lazy"></div></article>
+    <article class="card c-3 tilt rv"><div class="ic">🥗</div><h3>200 receitas com foto</h3><p>Café, almoço, lanche e jantar. Cardápio da semana, diário e modo cozinha por voz.</p><div class="receitas"><img src="assets/receita-r1.jpg" alt="" loading="lazy"><img src="assets/receita-r40.jpg" alt="" loading="lazy"><img src="assets/receita-r90.jpg" alt="" loading="lazy"></div></article>
+    <article class="card c-3 tilt rv d1"><div class="ic">👯</div><h3>Comunidade só de mulheres</h3><p>Stories, grupos, chat e Parceira CK para treinar junto com uma amiga. Sem ranking de corpo, sem comparação.</p><div class="chips"><span>Stories</span><span>Grupos</span><span>Chat</span><span>Parceira CK</span><span>Squads</span></div></article>
+    <article class="card c-3 tilt rv"><div class="ic">🌙</div><h3>Meu Ciclo, privado</h3><p>Acompanhe seu ciclo e adapte o treino do dia, se quiser. Seus dados nunca são compartilhados.</p></article>
+    <article class="card c-3 tilt rv d1"><div class="ic">🏆</div><h3>Conquistas e Minha Jornada</h3><p>38 conquistas, resumo da semana e do mês e uma linha do tempo da sua história. Você vê o que está construindo.</p></article>
+  </div>
+</div></section>
+
+<section class="sec" id="app" style="padding-top:0"><div class="wrap">
+  <div class="sec-h c rv"><span class="eb">Por dentro do app</span><h2>Bonito. Simples. <span class="ouro">Seu.</span></h2><p>Arraste para ver as telas.</p></div>
+  <div class="carrossel" id="carrossel"><div class="anel" id="anel">
+    <figure><img src="assets/tela-objetivo.jpg" alt="" loading="lazy"><figcaption>Você escolhe seu objetivo</figcaption></figure>
+    <figure><img src="assets/tela-plano.jpg" alt="" loading="lazy"><figcaption>Seu plano fica pronto</figcaption></figure>
+    <figure><img src="assets/tela-inicio.jpg" alt="" loading="lazy"><figcaption>Seu treino de hoje</figcaption></figure>
+    <figure><img src="assets/tela-exercicio.jpg" alt="" loading="lazy"><figcaption>Cada exercício explicado</figcaption></figure>
+    <figure><img src="assets/tela-execucao.jpg" alt="" loading="lazy"><figcaption>Treino guiado</figcaption></figure>
+    <figure><img src="assets/tela-concluido.jpg" alt="" loading="lazy"><figcaption>Cada vitória comemorada</figcaption></figure>
+    <figure><img src="assets/tela-nutricao.jpg" alt="" loading="lazy"><figcaption>Receitas simples</figcaption></figure>
+    <figure><img src="assets/tela-evolucao.jpg" alt="" loading="lazy"><figcaption>Sua evolução</figcaption></figure>
+  </div></div>
+  <div class="car-bts"><button id="car-ant" aria-label="Tela anterior">‹</button><button id="car-prox" aria-label="Próxima tela">›</button></div>
+</div></section>
+
+<section class="sec" style="padding-top:0"><div class="wrap vida">
+  <div class="foto rv"><img id="vida-img" src="assets/modelo.jpg" alt="Mulher treinando com o CK Life" loading="lazy"></div>
+  <div class="rv d1"><div class="sec-h" style="margin-bottom:0"><span class="eb">Quando a vida aperta</span><h2>O CK Life <span class="ouro">se adapta</span> ao seu dia.</h2><p>Você não precisa recomeçar do zero. Precisa de um próximo passo pequeno.</p></div>
+    <ul>
+      <li><i>🫶</i><div><b>Hoje tá difícil?</b><span>Conte como está e receba uma opção leve: 5 minutos, alongamento, caminhada ou descanso.</span></div></li>
+      <li><i>🅱️</i><div><b>Plano B e "Hoje só tenho 10 min"</b><span>O app escolhe um treino real que cabe no seu tempo.</span></div></li>
+      <li><i>🌱</i><div><b>Olha quem voltou</b><span>Ficou uns dias sem treinar? A gente te recebe sem culpa e você continua de onde parou.</span></div></li>
+    </ul></div>
+</div></section>
+
+<section class="sec" style="padding-top:0"><div class="wrap">
+  <div class="sec-h c rv"><span class="eb">Começar é fácil</span><h2>Em 1 minuto você <span class="ouro">já está treinando</span>.</h2></div>
+  <div class="passos"><div class="passo rv"><h3>Crie sua conta grátis</h3><p>Só e-mail e senha. Sem cartão de crédito.</p></div><div class="passo rv d1"><h3>Conte seu objetivo</h3><p>Dias, horário e tempo que você tem. O plano se monta sozinho.</p></div><div class="passo rv d2"><h3>Comece hoje</h3><p>Abra no celular, instale na tela inicial e faça seu primeiro treino.</p></div></div>
+</div></section>
+
+<section class="sec" id="planos" style="padding-top:0"><div class="wrap">
+  <div class="sec-h c rv"><span class="eb">Planos</span><h2>Comece <span class="ouro">grátis</span>. Evolua quando quiser.</h2><p>O plano Free é seu para sempre. O PRO libera a experiência completa.</p></div>
+  <div class="planos">
+    <article class="plano tilt rv"><h3>CK Life Free</h3><p class="desc">Para começar hoje, sem pagar nada.</p><div class="preco"><b>R$ 0</b><small>para sempre</small></div>
+      <ul><li>Treino do dia</li><li>Treinos de 5, 10 e 15 minutos</li><li>Coach CK Life</li><li>Comunidade completa</li><li>Conquistas e Minha Jornada</li><li>Desafio de 7 dias</li><li>Receitas grátis</li></ul>
+      <a class="btn btn-vidro cta" href="#" data-cta="free">Começar grátis</a></article>
+    <article class="plano top tilt rv d1"><span class="selo">ECONOMIZE 35%</span><h3>PRO Anual</h3><p class="desc">A experiência completa por 12 meses.</p><div class="preco"><b>12x R$ 12,99</b></div><p class="obs">ou R$ 155,88 à vista no ano</p>
+      <ul><li>Tudo do Free</li><li>Programas e treinos completos</li><li>Todas as 200 receitas e cardápio semanal</li><li>Modo cozinha por voz</li><li>Ciclo inteligente</li><li>Evolução avançada e insights</li><li>Desafios de 21 e 30 dias</li><li>Figurinhas e filtros exclusivos</li><li>Sem anúncios</li></ul>
+      <a class="btn btn-ouro brilho checkout" href="https://pay.kiwify.com.br/izQCfTE" data-plano="pro_anual" data-valor="155.88" target="_blank" rel="noopener">Quero o PRO Anual</a></article>
+    <article class="plano tilt rv d2"><h3>PRO Mensal</h3><p class="desc">Tudo do PRO, renovado todo mês.</p><div class="preco"><b>R$ 19,99</b><small>por mês</small></div>
+      <ul><li>Tudo do Free</li><li>Programas e treinos completos</li><li>Todas as receitas e cardápio</li><li>Ciclo inteligente</li><li>Evolução avançada</li><li>Sem anúncios</li></ul>
+      <a class="btn btn-vidro checkout" href="https://pay.kiwify.com.br/8aZsaN7" data-plano="pro_mensal" data-valor="19.99" target="_blank" rel="noopener">Quero o PRO Mensal</a></article>
+  </div>
+  <p class="nota rv">Pagamento seguro pela Kiwify. Use o mesmo e-mail da sua conta CK Life para o PRO ativar sozinho. Cancele quando quiser: seus dados nunca são apagados.</p>
+</div></section>
+
+<section class="sec" id="duvidas" style="padding-top:0"><div class="wrap">
+  <div class="sec-h c rv"><span class="eb">Dúvidas</span><h2>Perguntas <span class="ouro">frequentes</span></h2></div>
+  <div class="faq rv">
+    <details><summary>É grátis mesmo?</summary><p>Sim. O plano Free é grátis para sempre e não pede cartão de crédito. Você só paga se quiser o PRO.</p></details>
+    <details><summary>Preciso de academia ou equipamento?</summary><p>Não. Os treinos são pensados para casa, com o peso do corpo. Se você tiver cadeira, mesa ou corda, o plano usa.</p></details>
+    <details><summary>Funciona no iPhone e no Android?</summary><p>Sim. O CK Life abre pelo navegador do celular e pode ser instalado na tela inicial, como um aplicativo.</p></details>
+    <details><summary>Tenho pouco tempo. Serve para mim?</summary><p>Serve. Existem treinos de 5, 10 e 15 minutos e o "Hoje só tenho…" escolhe um treino que cabe no seu tempo.</p></details>
+    <details><summary>Vocês prometem que eu vou emagrecer?</summary><p>Não prometemos resultado mágico. Prometemos não deixar você caminhar sem direção: treino, rotina, acompanhamento e comunidade para você manter a constância.</p></details>
+    <details><summary>Meus dados de ciclo e saúde ficam seguros?</summary><p>Sim. Ciclo, peso e saúde são privados, nunca são compartilhados e nunca são usados para anúncios.</p></details>
+    <details><summary>Como cancelo o PRO?</summary><p>Quando quiser, pela Kiwify. Você volta para o plano Free e nenhum dado seu é apagado.</p></details>
+  </div>
+</div></section>
+
+<section class="final"><div class="wrap">
+  <h2 class="rv">Dessa vez, você <span class="ouro">não está sozinha.</span></h2>
+  <p class="rv d1">Crie sua conta grátis e faça seu primeiro treino hoje. Pouco ainda conta.</p>
+  <a class="btn btn-ouro brilho cta rv d2" href="#" data-cta="final" style="min-height:62px;font-size:18px;padding:0 36px">COMEÇAR GRÁTIS AGORA →</a>
+</div></section>
+</main>
+
+<footer><div class="wrap"><a class="marca" href="#topo"><img src="assets/icone-192.png" alt="" width="40" height="40">CK <b>Life</b></a>
+  <nav><a href="#planos">Planos</a><a href="#duvidas">Dúvidas</a><a href="#" data-app="/">Entrar no app</a></nav><span>© 2026 CK Life · Create. Keep. Live.</span></div></footer>
+
+<div class="barra" id="barra"><a class="btn btn-ouro brilho cta" href="#" data-cta="barra">COMEÇAR GRÁTIS →</a></div>
+<div class="cookies" id="cookies" role="dialog" aria-label="Cookies"><p>Usamos cookies para medir nossos anúncios e melhorar o site. Você escolhe.</p><div><button class="btn btn-vidro btn-sm" id="ck-nao">Recusar</button><button class="btn btn-ouro btn-sm" id="ck-sim">Aceitar</button></div></div>
+
+<script>
+/* ===== Configuração ===== */
+const APP_URL = "https://cklife.vercel.app";      // trocar para https://app.cklife.com.br quando o subdomínio estiver ligado
+const PIXEL_ID = "1874194974017339";               // Pixel da Meta (cklife.com.br)
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const utm = location.search ? location.search : "";
+$$(".cta").forEach(a => a.href = APP_URL + "/" + utm);
+$$("[data-app]").forEach(a => a.href = APP_URL + a.dataset.app);
+/* ===== Pixel só com consentimento (LGPD) ===== */
+const CK = "ck_cookies";
+function pixel(){ if(window.fbq) return; !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js'); fbq('init', PIXEL_ID); fbq('track', 'PageView'); }
+const ev = (n, d) => { try{ window.fbq && fbq('track', n, d || {}); }catch(e){} };
+let ck = null; try{ ck = localStorage.getItem(CK); }catch(e){}
+if(ck === "sim") pixel(); else if(ck !== "nao") setTimeout(() => $("#cookies").classList.add("on"), 1800);
+$("#ck-sim").onclick = () => { try{ localStorage.setItem(CK, "sim"); }catch(e){} $("#cookies").classList.remove("on"); pixel(); };
+$("#ck-nao").onclick = () => { try{ localStorage.setItem(CK, "nao"); }catch(e){} $("#cookies").classList.remove("on"); };
+$$(".cta").forEach(a => a.addEventListener("click", () => ev("Lead", { content_name: "Começar grátis", origem: a.dataset.cta })));
+$$(".checkout").forEach(a => a.addEventListener("click", () => ev("InitiateCheckout", { content_name: a.dataset.plano, value: +a.dataset.valor, currency: "BRL" })));
+let viuPlanos = false; new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting && !viuPlanos){ viuPlanos = true; ev("ViewContent", { content_name: "Planos" }); } }), { threshold: .3 }).observe($("#planos"));
+/* ===== Topo, barra fixa e revelar ao rolar ===== */
+const nav = $("#nav"), barra = $("#barra");
+const aoRolar = () => { const y = scrollY; nav.classList.toggle("sol", y > 30); barra.classList.toggle("on", y > innerHeight * .9 && innerHeight + y < document.body.scrollHeight - 300 && !$("#cookies").classList.contains("on")); };
+addEventListener("scroll", aoRolar, { passive: true }); aoRolar();
+const io = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting){ e.target.classList.add("on"); io.unobserve(e.target); } }), { threshold: .12, rootMargin: "0px 0px -40px 0px" });
+$$(".rv").forEach(el => io.observe(el));
+const calmo = matchMedia("(prefers-reduced-motion: reduce)").matches;
+/* ===== Celular 3D: segue o dedo/mouse e a rolagem; telas trocam sozinhas ===== */
+const cel = $("#celular"), palco = $("#palco"); let alvo = { x: -18, y: 8 }, atual = { x: -18, y: 8 };
+palco.addEventListener("pointermove", e => { const r = palco.getBoundingClientRect(); alvo.x = ((e.clientX - r.left) / r.width - .5) * 40; alvo.y = -((e.clientY - r.top) / r.height - .5) * 24; });
+palco.addEventListener("pointerleave", () => { alvo = { x: -18, y: 8 }; });
+(function anima(){ if(!calmo){ const t = performance.now() / 1000, sy = Math.min(1, scrollY / innerHeight);
+  atual.x += (alvo.x + Math.sin(t * .6) * 4 - atual.x) * .06; atual.y += (alvo.y + Math.cos(t * .5) * 2 - atual.y) * .06;
+  cel.style.transform = `rotateY(${atual.x + sy * 25}deg) rotateX(${atual.y - sy * 10}deg) rotateZ(${2 - sy * 2}deg) translateY(${-sy * 40}px)`; } requestAnimationFrame(anima); })();
+const telas = $$("#tela img"); let ti = 0; setInterval(() => { telas[ti].classList.remove("on"); ti = (ti + 1) % telas.length; telas[ti].classList.add("on"); }, 3200);
+/* ===== Cartões com inclinação 3D e brilho ===== */
+$$(".tilt").forEach(c => { c.addEventListener("pointermove", e => { if(e.pointerType === "touch") return; const r = c.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+  c.style.transform = `perspective(900px) rotateY(${(x - .5) * 8}deg) rotateX(${-(y - .5) * 8}deg) translateZ(0)`; c.style.setProperty("--mx", x * 100 + "%"); c.style.setProperty("--my", y * 100 + "%"); });
+  c.addEventListener("pointerleave", () => { c.style.transform = ""; }); });
+/* ===== Carrossel 3D ===== */
+const anel = $("#anel"), figs = $$("#anel figure"), N = figs.length; let ang = 0;
+const raio = () => Math.round((anel.offsetWidth / 2) / Math.tan(Math.PI / N)) + 40;
+const monta = () => { const R = raio(); figs.forEach((f, i) => f.style.transform = `rotateY(${i * 360 / N}deg) translateZ(${R}px)`); anel.style.transform = `translateZ(${-R}px) rotateY(${ang}deg)`; };
+const gira = d => { ang += d * 360 / N; monta(); }; monta(); addEventListener("resize", monta);
+$("#car-prox").onclick = () => gira(-1); $("#car-ant").onclick = () => gira(1);
+let x0 = null; const car = $("#carrossel"); car.addEventListener("pointerdown", e => x0 = e.clientX); addEventListener("pointerup", e => { if(x0 === null) return; const dx = e.clientX - x0; if(Math.abs(dx) > 30) gira(dx < 0 ? -1 : 1); x0 = null; });
+let auto = setInterval(() => gira(-1), 3500); car.addEventListener("pointerenter", () => clearInterval(auto));
+/* ===== Foto com parallax ===== */
+const vi = $("#vida-img"); addEventListener("scroll", () => { const r = vi.getBoundingClientRect(); if(r.bottom < 0 || r.top > innerHeight) return; vi.style.transform = `scale(1.12) translateY(${(r.top / innerHeight - .5) * -30}px)`; }, { passive: true });
+/* ===== Luz de fundo em WebGL (leve; pausa fora da tela) ===== */
+(function(){ const c = $("#luz"), gl = c.getContext("webgl", { antialias: false, alpha: false }); if(!gl || calmo){ c.style.background = "radial-gradient(1200px 800px at 70% 10%,#14503E,#04190F 60%)"; return; }
+  const vs = "attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}";
+  const fs = `precision mediump float;uniform vec2 r;uniform float t;uniform float s;
+  float n(vec2 p){return sin(p.x)*sin(p.y);}
+  void main(){vec2 uv=gl_FragCoord.xy/r;vec2 p=uv*vec2(r.x/r.y,1.);float tt=t*.06;
+    float a=n(p*2.2+vec2(tt,tt*.7))+.5*n(p*4.1-vec2(tt*1.3,-tt));float b=n(p*1.6-vec2(-tt*.8,tt*1.1));
+    vec3 base=mix(vec3(.016,.098,.06),vec3(.024,.137,.11),uv.y);
+    vec3 verde=vec3(.18,.62,.42)*smoothstep(.2,1.2,a+.3)*.55;
+    vec3 ouro=vec3(.91,.85,.68)*smoothstep(.6,1.4,b+uv.y*.6-s*.4)*.22;
+    vec3 col=base+verde*(1.-s*.5)+ouro;col*=1.-length(uv-.5)*.55;gl_FragColor=vec4(col,1.);}`;
+  const sh = (t, src) => { const o = gl.createShader(t); gl.shaderSource(o, src); gl.compileShader(o); return o; };
+  const pr = gl.createProgram(); gl.attachShader(pr, sh(gl.VERTEX_SHADER, vs)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, fs)); gl.linkProgram(pr); gl.useProgram(pr);
+  const b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, b); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
+  const loc = gl.getAttribLocation(pr, "p"); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+  const uR = gl.getUniformLocation(pr, "r"), uT = gl.getUniformLocation(pr, "t"), uS = gl.getUniformLocation(pr, "s");
+  const tam = () => { const k = Math.min(1.5, devicePixelRatio) * .5; c.width = innerWidth * k; c.height = innerHeight * k; gl.viewport(0, 0, c.width, c.height); }; tam(); addEventListener("resize", tam);
+  const t0 = performance.now(); (function q(){ if(!document.hidden){ gl.uniform2f(uR, c.width, c.height); gl.uniform1f(uT, (performance.now() - t0) / 1000); gl.uniform1f(uS, Math.min(1, scrollY / (document.body.scrollHeight - innerHeight || 1))); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); } requestAnimationFrame(q); })();
+})();
+</script>
+</body>
+</html>

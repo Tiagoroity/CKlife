@@ -2618,3 +2618,5 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
 .cm-nav .cm-acts .iconbtn:active{transform:scale(.96)}
 .cm-nav .cm-acts .so-dot{position:absolute;top:-4px;right:-4px;min-width:17px;height:17px;font-size:10px;border:2px solid var(--surface)}
 .cm-nav .cm-acts .iconbtn>*:not(.so-dot){pointer-events:none}
+.px-ck{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:95;max-width:520px;margin:0 auto;padding:14px 16px;border-radius:18px;background:var(--surface);color:var(--ink);border:1px solid var(--line);box-shadow:0 20px 50px -20px rgba(0,0,0,.5);font-size:14px}
+.px-ck p{margin:0 0 10px}.px-ck div{display:flex;gap:8px;justify-content:flex-end}
