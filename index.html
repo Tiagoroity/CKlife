@@ -2686,6 +2686,7 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
       </div>
       <div class="field"><label for="c-whats">WhatsApp com DDD</label><input class="input" id="c-whats" inputmode="tel" autocomplete="tel" placeholder="(65) 99999-9999"></div>
       <div class="field"><label for="c-nasc">Data de nascimento</label><input class="input" id="c-nasc" type="date"></div>
+      <div class="field"><label for="c-uf">Estado</label><select class="input" id="c-uf"></select></div>
       <div class="field"><label for="c-cid">Cidade</label><select class="input" id="c-cid"></select></div>
       <button class="btn btn-grad btn-block btn-lg" type="submit">Começar minha evolução</button>
       <p class="hint" style="margin:0;text-align:center">7 dias de Premium grátis, sem anúncios. Sem compromisso.</p>
@@ -4204,7 +4205,7 @@ $("tg-login").onclick = () => modoAuth(false);
 $("tg-cad").onclick = () => modoAuth(true);
 function showLogin(){
   try{ const em = localStorage.getItem(KEY + "_email"); if(em && !$("l-email").value) $("l-email").value = em; }catch(e){}
-  $("c-cid").innerHTML = DB.cidades.filter(c => c.ativa).map(c => `<option value="${c.id}">${esc(c.nome)}${c.uf ? " · " + esc(c.uf) : ""}</option>`).join("");
+  if(!$("c-uf").options.length) ligaCidade("c-uf", "c-cid", null);
   show("v-login");
 }
 $("f-login").addEventListener("submit", async e => {
@@ -4243,17 +4244,18 @@ $("f-cad").addEventListener("submit", async e => {
   if($("c-senha").value !== $("c-senha2").value) return lmsg("As duas senhas estão diferentes.");
   if(DB.users.some(u => u.email === email)) return lmsg("Já existe uma conta com esse e-mail. Toque em Já tenho conta.");
   if(!v("c-nasc")) return lmsg("Informe sua data de nascimento.");
+  const cidInfo = cidadeEscolhida("c-uf", "c-cid"); if(!cidInfo) return lmsg("Escolha seu estado e sua cidade.");
   { const i = idade(v("c-nasc")), min = +(DB.config.idadeMinima || 18); if(i === null || i < min) return lmsg(`O CK Life é para maiores de ${min} anos.`); if(i > 110) return lmsg("Confira sua data de nascimento."); }
   const primeiro = false;
   let novoId = uid();
   if(NU.ativo){
     lmsg("Criando sua conta…", true);
     const r = await NU.cadastrar(email, $("c-senha").value); if(r.erro) return lmsg(r.erro);
-    const pend = { nome: v("c-nome"), whats: v("c-whats"), nasc: v("c-nasc"), cidade: +$("c-cid").value };
+    const pend = { nome: v("c-nome"), whats: v("c-whats"), nasc: v("c-nasc"), cidade: cidInfo.id, cidadeInfo: cidInfo };
     if(r.confirmar){ try{ localStorage.setItem(KEY + "_pend_" + email, JSON.stringify(pend)); }catch(e){} modoAuth(false); $("l-email").value = email; return lmsg("Enviamos um link para o seu e-mail. Toque nele para confirmar a conta e depois entre aqui com sua senha.", true); }
     await NU.carregar(DB, { id: r.id, email }, false); novoId = r.id;
   }
-  const u = { id: novoId, nome: v("c-nome"), email, senha: NU.ativo ? undefined : await hash($("c-senha").value), whats: v("c-whats"), nasc: v("c-nasc"), genero: "feminino", cidade: +$("c-cid").value, criado: today(),
+  const u = { id: novoId, nome: v("c-nome"), email, senha: NU.ativo ? undefined : await hash($("c-senha").value), whats: v("c-whats"), nasc: v("c-nasc"), genero: "feminino", cidade: cidInfo.id, cidadeInfo: cidInfo, criado: today(),
     admin: primeiro, perms: primeiro ? { total: true } : null, bloqueado: false, premium: { tipo: "teste", ate: addD(today(), 7) }, perfil: null, diario: {}, pesos: [], treinos: [], favs: [], voz: true };
   DB.users.push(u); save(); if(!NU.ativo) setSess(u.id); SOM.chime();
   entrar();
@@ -4403,7 +4405,7 @@ function entrar(){
   const modoAdm = modoAdmin();
   if(NU.ativo && NU.uid && !ME && !modoAdm){
     let pend = {}; try{ pend = JSON.parse(localStorage.getItem(KEY + "_pend_" + NU.email) || "{}"); }catch(e){}
-    ME = { id: NU.uid, email: NU.email, nome: pend.nome || String(NU.email || "").split("@")[0], whats: pend.whats || "", nasc: pend.nasc || null, cidade: pend.cidade || 1, genero: "feminino", criado: today(), bloqueado: false, premium: { tipo: "teste", ate: addD(today(), 7) }, perfil: null, diario: {}, pesos: [], treinos: [], favs: [], voz: true };
+    ME = { id: NU.uid, email: NU.email, nome: pend.nome || String(NU.email || "").split("@")[0], whats: pend.whats || "", nasc: pend.nasc || null, cidade: pend.cidade || 1, cidadeInfo: pend.cidadeInfo || undefined, genero: "feminino", criado: today(), bloqueado: false, premium: { tipo: "teste", ate: addD(today(), 7) }, perfil: null, diario: {}, pesos: [], treinos: [], favs: [], voz: true };
     DB.users.push(ME); save();
   }
   if(!ME){ modoAdm ? showAdminLogin() : showLogin(); return; }
@@ -4683,7 +4685,7 @@ const MSG_PADRAO = "Olá! Encontrei vocês pelo CK Life e gostaria de saber mais
 const lkWhats = (n, msg) => { const d = soDig(n).replace(/^55(?=\d{10,11}$)/, ""); return d.length >= 10 ? `https://wa.me/55${d}?text=${encodeURIComponent(msg || (DB.config && DB.config.msgWhats) || MSG_PADRAO)}` : ""; };
 const lkInsta = h => { h = String(h || "").trim(); if(!h) return ""; if(/^https?:\/\//i.test(h)) return h; return "https://instagram.com/" + h.replace(/^@/, "").replace(/^(www\.)?instagram\.com\//i, ""); };
 const lkSite = u => { u = String(u || "").trim(); return !u ? "" : /^https?:\/\//i.test(u) ? u : "https://" + u; };
-const xcidNome = id => (DB.cidades.find(c => +c.id === +id) || {}).nome || "";
+const xcidNome = id => window.ckCidNome ? window.ckCidNome(id) : ((DB.cidades.find(c => +c.id === +id) || {}).nome || "");
 const lkMapa = (end, cid) => end ? "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent([end, xcidNome(cid)].filter(Boolean).join(", ")) : "";
 function abreLink(url, tipo, id, acao){ if(!url) return toast("Link indisponível no momento"); xev(tipo, id, acao); SOM.tap(); window.open(url, "_blank", "noopener"); }
 
@@ -4698,7 +4700,7 @@ function escolheCidade(depois){
   const desenha = () => { const q = norm($("xc-q").value); const L = cids.filter(c => !q || norm(c.nome).includes(q));
     $("xc-l").innerHTML = L.map(c => `<div class="card xp-cidrow"><b>${esc(c.nome)}${c.uf ? ` <small class="muted">${esc(c.uf)}</small>` : ""}</b><div class="acts">${+c.id === +ME.cidade ? `<span class="st ok">Minha cidade</span>` : `<button class="btn btn-line btn-sm" data-ver="${c.id}">Só ver agora</button><button class="btn btn-accent btn-sm" data-minha="${c.id}">Mudar para esta</button>`}</div></div>`).join("") || `<p class="empty">Nenhuma cidade encontrada. Se a sua não aparece, fale com o suporte.</p>`;
     $("xc-l").querySelectorAll("[data-ver]").forEach(b => b.onclick = () => { XCID = +b.dataset.ver; fecharSheet(); toast(`Vendo ${xcidNome(XCID)}`); (depois || rerender)(); });
-    $("xc-l").querySelectorAll("[data-minha]").forEach(b => b.onclick = () => { ME.cidade = +b.dataset.minha; XCID = null; save(); SOM.check(); fecharSheet(); toast("Cidade atualizada"); (depois || rerender)(); }); };
+    $("xc-l").querySelectorAll("[data-minha]").forEach(b => b.onclick = () => { ME.cidade = +b.dataset.minha; { const c = DB.cidades.find(x => +x.id === ME.cidade); if(c) ME.cidadeInfo = { id: +c.id, nome: c.nome, uf: c.uf || "" }; } XCID = null; save(); SOM.check(); fecharSheet(); toast("Cidade atualizada"); (depois || rerender)(); }); };
   $("xc-q").oninput = desenha; desenha();
 }
 
@@ -8938,7 +8940,7 @@ const abrirPerfilEq = abrirPerfil; abrirPerfil = async function(u){
    Quem deixa o CK Life aberto (ou instalado na tela inicial) fica com a versão antiga até recarregar.
    O app confere a versão publicada ao abrir, ao voltar do segundo plano e a cada 5 minutos.
    Se houver versão nova, mostra a faixa "ATUALIZAR": um toque e pronto. Nunca aparece no meio do treino. */
-const CK_VER = "20261101165554";
+const CK_VER = "20261101175150";
 let CK_VER_NOVA = null;
 async function confereVersao(){
   if(!/^\d/.test(CK_VER) || !/^https?:/.test(location.protocol)) return;
@@ -10077,6 +10079,63 @@ function topoNome(){ const w = document.querySelector("#v-app .wordmark"); if(!w
   const com = TAB === "juntas"; w.classList.toggle("wm-com", com); w.innerHTML = com ? `<span class="wm-sec">Comunidade</span>` : w.dataset.orig; }
 const tabL = tab; tab = function(){ const r = tabL.apply(this, arguments); try{ topoNome(); }catch(e){} return r; };
 
+/* ===== Estado + cidade de todo o Brasil (lista oficial do IBGE) =====
+   As cidades que já existem no banco (as de MT) continuam com o mesmo número.
+   As outras usam o código do IBGE e a lista só é baixada quando a aluna escolhe o estado. */
+const UFS = [["AC","Acre"],["AL","Alagoas"],["AP","Amapá"],["AM","Amazonas"],["BA","Bahia"],["CE","Ceará"],["DF","Distrito Federal"],["ES","Espírito Santo"],["GO","Goiás"],["MA","Maranhão"],["MT","Mato Grosso"],["MS","Mato Grosso do Sul"],["MG","Minas Gerais"],["PA","Pará"],["PB","Paraíba"],["PR","Paraná"],["PE","Pernambuco"],["PI","Piauí"],["RJ","Rio de Janeiro"],["RN","Rio Grande do Norte"],["RS","Rio Grande do Sul"],["RO","Rondônia"],["RR","Roraima"],["SC","Santa Catarina"],["SP","São Paulo"],["SE","Sergipe"],["TO","Tocantins"]];
+let BR_CID = null, BR_PROM = null;
+function brCidades(){
+  if(BR_CID) return Promise.resolve(BR_CID);
+  if(!BR_PROM) BR_PROM = fetch("/cidades-br.json", { cache: "force-cache" }).then(r => { if(!r.ok) throw new Error("lista"); return r.json(); }).then(j => (BR_CID = j)).catch(e => { BR_PROM = null; throw e; });
+  return BR_PROM;
+}
+/* cidades de um estado: as do banco (mesmo número de sempre) + as do IBGE que ainda não estão no banco */
+async function cidadesDoUF(uf){
+  const doBanco = (DB.cidades || []).filter(c => c.uf === uf && c.ativa !== false).map(c => ({ id: +c.id, nome: c.nome }));
+  let ibge = [];
+  try{ ibge = ((await brCidades())[uf] || []).map(([id, nome]) => ({ id, nome })); }catch(e){ console.warn(e); }
+  const tem = new Set(doBanco.map(c => norm(c.nome)));
+  return doBanco.concat(ibge.filter(c => !tem.has(norm(c.nome)))).sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
+}
+/* qual estado é a cidade de alguém (para abrir já preenchido) */
+function ufDe(u){
+  if(!u) return "";
+  if(u.cidadeInfo && +u.cidadeInfo.id === +u.cidade) return u.cidadeInfo.uf || "";
+  const c = (DB.cidades || []).find(x => +x.id === +u.cidade); return (c && c.uf) || "";
+}
+/* nome da cidade de alguém, mesmo quando ela não está no banco */
+window.ckCidNome = (id, u) => {
+  if(id == null || id === "") return "";
+  const c = (DB.cidades || []).find(x => +x.id === +id); if(c) return c.nome;
+  const p = u || (typeof ME !== "undefined" ? ME : null);
+  return p && p.cidadeInfo && +p.cidadeInfo.id === +id ? p.cidadeInfo.nome : "";
+};
+/* liga os dois campos (estado e cidade) */
+function ligaCidade(ufSel, cidSel, u){
+  const selU = $(ufSel), selC = $(cidSel); if(!selU || !selC) return;
+  const ufAtual = ufDe(u);
+  selU.innerHTML = `<option value="">Escolha o estado</option>` + UFS.map(([s, n]) => `<option value="${s}" ${s === ufAtual ? "selected" : ""}>${esc(n)}</option>`).join("");
+  const enche = async (manter) => {
+    const uf = selU.value;
+    if(!uf){ selC.innerHTML = `<option value="">Primeiro escolha o estado</option>`; selC.disabled = true; return; }
+    selC.disabled = true; selC.innerHTML = `<option value="">Carregando cidades…</option>`;
+    const L = await cidadesDoUF(uf);
+    if(selU.value !== uf) return;
+    if(!L.length){ selC.innerHTML = `<option value="">Não foi possível carregar. Tente de novo.</option>`; selC.disabled = false; return; }
+    const atual = manter && u ? +u.cidade : null;
+    selC.innerHTML = `<option value="">Escolha a cidade</option>` + L.map(c => `<option value="${c.id}" ${c.id === atual ? "selected" : ""}>${esc(c.nome)}</option>`).join("");
+    selC.disabled = false;
+  };
+  selU.onchange = () => enche(false);
+  enche(true);
+}
+/* o que guardar junto com a cidade escolhida */
+function cidadeEscolhida(ufSel, cidSel){
+  const selU = $(ufSel), selC = $(cidSel); if(!selU || !selC || !selC.value) return null;
+  const o = selC.options[selC.selectedIndex];
+  return { id: +selC.value, nome: o ? o.textContent : "", uf: selU.value };
+}
+
 /* ===================== PIXEL DA META (medir anúncios) =====================
    Só funciona se a pessoa aceitar os cookies (LGPD). Nunca no painel do administrador.
    Eventos: PageView (abriu o app), CompleteRegistration (fez cadastro), EntrouNoApp (fez login / abriu já logada).
@@ -10183,15 +10242,16 @@ function menuFoto(){
   const t = $("ft-tira"); if(t) t.onclick = () => { delete ME.foto; save(); fecharSheet(); toast("Foto removida"); rPerfil(); atualizaTopo(); };
 }
 function editaDados(){
-  const cid = DB.cidades.filter(c => c.ativa || +c.id === +ME.cidade);
   sheet("Meus dados", `<div class="formgrid">
     <div class="field full"><label for="md-n">Nome</label><input class="input" id="md-n" value="${esc(ME.nome)}" autocomplete="name"></div>
     <div class="field full"><label for="md-w">WhatsApp</label><input class="input" id="md-w" inputmode="tel" value="${esc(mascaraTel(ME.whats || ""))}" placeholder="(65) 99999-9999"></div>
     <div class="field"><label for="md-d">Nascimento</label><input class="input" id="md-d" type="date" value="${esc(ME.nasc || "")}"></div>
-    <div class="field"><label for="md-c">Cidade</label><select class="input" id="md-c">${cid.map(c => `<option value="${c.id}" ${+c.id === +ME.cidade ? "selected" : ""}>${esc(c.nome)}</option>`).join("")}</select></div>
+    <div class="field"><label for="md-u">Estado</label><select class="input" id="md-u"></select></div>
+    <div class="field"><label for="md-c">Cidade</label><select class="input" id="md-c"></select></div>
     <div class="field full"><label>E-mail</label><input class="input" value="${esc(ME.email)}" disabled></div></div>
     <button class="btn btn-accent btn-block btn-lg" id="md-ok">Salvar meus dados</button>`);
-  $("md-ok").onclick = () => { const n = $("md-n").value.trim(); if(!n) return toast("Digite seu nome"); ME.nome = n; ME.whats = $("md-w").value.trim(); ME.nasc = $("md-d").value || ME.nasc; ME.cidade = +$("md-c").value; save(); SOM.check(); fecharSheet(); toast("Dados salvos"); rPerfil(); atualizaTopo(); };
+  ligaCidade("md-u", "md-c", ME);
+  $("md-ok").onclick = () => { const n = $("md-n").value.trim(); if(!n) return toast("Digite seu nome"); ME.nome = n; ME.whats = $("md-w").value.trim(); ME.nasc = $("md-d").value || ME.nasc; { const ci = cidadeEscolhida("md-u", "md-c"); if(ci){ ME.cidade = ci.id; ME.cidadeInfo = ci; } } save(); SOM.check(); fecharSheet(); toast("Dados salvos"); rPerfil(); atualizaTopo(); };
 }
 function convidar(){
   const url = location.origin + location.pathname.replace(/admin\/?$/, ""), txt = "Estou treinando em casa com o CK Life 💚 Treinos guiados, receitas com voz e muito mais. Vem comigo!";
@@ -11180,6 +11240,11 @@ const podeEditar = s => PERM.total || PERM[s] === "editar";
 const toast = F.toast;
 const ex = o => o && o.exemplo ? `<span class="ex">exemplo</span>` : "";
 const cidNome = id => (DB().cidades.find(c => +c.id === +id) || {}).nome || "";
+/* cidade da aluna: as do banco ou a que ela escolheu na lista do IBGE */
+const cidNomeU = u => cidNomeU(u) || (u.cidadeInfo && +u.cidadeInfo.id === +u.cidade ? u.cidadeInfo.nome + (u.cidadeInfo.uf ? " · " + u.cidadeInfo.uf : "") : "");
+const UF_NOME = { AC:"Acre", AL:"Alagoas", AP:"Amapá", AM:"Amazonas", BA:"Bahia", CE:"Ceará", DF:"Distrito Federal", ES:"Espírito Santo", GO:"Goiás", MA:"Maranhão", MT:"Mato Grosso", MS:"Mato Grosso do Sul", MG:"Minas Gerais", PA:"Pará", PB:"Paraíba", PR:"Paraná", PE:"Pernambuco", PI:"Piauí", RJ:"Rio de Janeiro", RN:"Rio Grande do Norte", RS:"Rio Grande do Sul", RO:"Rondônia", RR:"Roraima", SC:"Santa Catarina", SP:"São Paulo", SE:"Sergipe", TO:"Tocantins" };
+const ufU = u => (u.cidadeInfo && +u.cidadeInfo.id === +u.cidade && u.cidadeInfo.uf) || (DB().cidades.find(c => +c.id === +u.cidade) || {}).uf || "";
+const ufNomeU = u => UF_NOME[ufU(u)] || "Sem estado";
 const segNome = id => (DB().segmentos.find(c => +c.id === +id) || {}).nome || "";
 const anuNome = id => (DB().anunciantes.find(c => c.id === id) || {}).nome || "";
 const optCid = (sel, todas) => (todas ? `<option value="">Todas as cidades</option>` : "") + DB().cidades.map(c => `<option value="${c.id}" ${+sel === +c.id ? "selected" : ""}>${esc(c.nome)}${c.ativa ? "" : " (inativa)"}</option>`).join("");
@@ -11340,7 +11405,7 @@ function vResumo(){
       <div class="card"><h3>Alunas ativas por dia</h3>${barChart(al.serie, "alunos", "alunas")}</div>
     </div>
     <div class="grid g2">
-      <div class="card"><h3>Alunas por cidade</h3>${hbars(contaPor(al.U, u => cidNome(u.cidade) || "Sem cidade").slice(0, 10))}</div>
+      <div class="card"><h3>Alunas por cidade</h3>${hbars(contaPor(al.U, u => cidNomeU(u) || "Sem cidade").slice(0, 10))}<h3 style="margin-top:14px">Por estado</h3>${hbars(contaPor(al.U, ufNomeU).slice(0, 10))}</div>
       <div class="card"><h3>Retenção</h3><div class="grid g3" style="margin-top:8px">${kpi("1 dia", fmtRet(al.r1))}${kpi("7 dias", fmtRet(al.r7))}${kpi("30 dias", fmtRet(al.r30))}</div>
         <p class="hint" style="margin:10px 0 0">Das alunas cadastradas há pelo menos N dias, quantos voltaram depois desse prazo.</p>
         <div class="grid g2" style="margin-top:10px">${kpi("Treinos nos últimos 30 dias", int(treinos30))}${kpi("Cupons entregues", int(db.cupons.length), `${int(db.cupons.filter(c => c.usado).length)} usados`)}</div></div>
@@ -11457,7 +11522,7 @@ function vMetricas(){
     <div class="grid g3">
       <div class="card"><h3>Por faixa de idade</h3>${hbars(contaPor(unicos, u => faixa(F.idade(u.nasc)), faixaNomes))}</div>
       <div class="card"><h3>Por objetivo</h3>${hbars(contaPor(unicos, u => objNome(u)))}</div>
-      <div class="card"><h3>Por cidade</h3>${hbars(contaPor(unicos, u => cidNome(u.cidade) || "Sem cidade"))}</div>
+      <div class="card"><h3>Por cidade</h3>${hbars(contaPor(unicos, u => cidNomeU(u) || "Sem cidade"))}</div>
     </div>
     <div class="card"><h3>Por campanha</h3><div class="tbl"><table><thead><tr><th>Campanha</th><th>Anunciante</th><th>Impressões</th><th>Alcance</th><th>Cliques</th><th>Taxa de clique</th></tr></thead><tbody>
       ${porCamp.map(r => `<tr><td>${esc(r.c.titulo)}</td><td>${esc(anuNome(r.c.anunc))}</td><td class="num">${int(r.imp)}</td><td class="num">${int(r.alc)}</td><td class="num">${int(r.clk)}</td><td class="num">${pct(r.clk, r.imp)}</td></tr>`).join("") || `<tr><td colspan="6" class="empty">Sem campanhas</td></tr>`}
@@ -11581,7 +11646,7 @@ async function gerarPDF(o){
   y += 6;
   // público
   titulo("Quem viu seus anúncios", "Alunas únicas que viram o anúncio no período");
-  const blocos = [["Faixa de idade", contaPor(d.unicos, u => faixa(F.idade(u.nasc)), faixaNomes).filter(x => x.v)], ["Cidade", contaPor(d.unicos, u => cidNome(u.cidade) || "Sem cidade").slice(0, 6)], ["Objetivo no app", contaPor(d.unicos, u => objNome(u)).slice(0, 6)]];
+  const blocos = [["Faixa de idade", contaPor(d.unicos, u => faixa(F.idade(u.nasc)), faixaNomes).filter(x => x.v)], ["Cidade", contaPor(d.unicos, u => cidNomeU(u) || "Sem cidade").slice(0, 6)], ["Objetivo no app", contaPor(d.unicos, u => objNome(u)).slice(0, 6)]];
   novaPag(56); const bwid = (W - 2 * M - 8) / 3, y0 = y;
   blocos.forEach(([nome, L], k) => { const x = M + k * (bwid + 4); let yy = y0; cor([255, 255, 255], "fill"); cor(SUAVE, "draw"); doc.roundedRect(x, yy - 5, bwid, 54, 3, 3, "FD"); fonte(9, "bold"); cor(VERDE); doc.text(nome, x + 4, yy + 1); yy += 7; const tot = L.reduce((a, b) => a + b.v, 0) || 1; if(!L.length){ fonte(8); cor(CINZA); doc.text("Sem dados", x + 4, yy + 2); } L.slice(0, 6).forEach(it => { fonte(7.5); cor(TINTA); doc.text(doc.splitTextToSize(it.nome, bwid - 22)[0], x + 4, yy + 2); fonte(7.5, "bold"); doc.text(Math.round(100 * it.v / tot) + "%", x + bwid - 4, yy + 2, { align: "right" }); cor([233, 240, 231], "fill"); doc.roundedRect(x + 4, yy + 3.5, bwid - 8, 1.8, .9, .9, "F"); cor(MEIO, "fill"); doc.roundedRect(x + 4, yy + 3.5, Math.max(1.8, (bwid - 8) * it.v / tot), 1.8, .9, .9, "F"); yy += 7.3; }); });
   y = y0 + 56;
@@ -11615,20 +11680,21 @@ function vAlunos(){
     <div class="grid g4">${kpi("Cadastrados", int(al.total), `+${int(al.novos7)} nos últimos 7 dias`)}${kpi("Ativos", int(al.dau), `hoje · ${int(al.wau)} na semana · ${int(al.mau)} no mês`)}${kpi("Pro pago", int(al.pagos))}${kpi("Em teste grátis", int(al.teste), `${int(al.cortesia)} com cortesia`)}</div>
     <div class="card"><h3>Alunas ativas por dia</h3>${barChart(al.serie, "alunos", "alunas")}</div>
     <div class="grid g3">
-      <div class="card"><h3>Por cidade</h3>${hbars(contaPor(al.U, u => cidNome(u.cidade) || "Sem cidade"))}</div>
+      <div class="card"><h3>Por cidade</h3>${hbars(contaPor(al.U, u => cidNomeU(u) || "Sem cidade"))}</div>
       <div class="card"><h3>Por faixa de idade</h3>${hbars(contaPor(al.U, u => faixa(F.idade(u.nasc)), faixaNomes))}</div>
       <div class="card"><h3>Por gênero</h3>${hbars(contaPor(al.U, u => u.genero || "outro", { feminino: "Feminino", masculino: "Masculino", outro: "Outro" }))}</div>
     </div>
+    <div class="card"><h3>Por estado</h3>${hbars(contaPor(al.U, ufNomeU))}</div>
     <div class="card"><h3>Lista de alunas <span class="muted num" style="font-size:16px">(${L.length})</span></h3>
       <div class="toolbar" style="margin-bottom:10px"><input class="input" id="al-q" placeholder="Buscar por nome, e-mail ou WhatsApp" value="${esc(AF.q)}"><select class="input" id="al-p"><option value="">Todos os planos</option><option value="pago" ${AF.plano === "pago" ? "selected" : ""}>Pro pago</option><option value="teste" ${AF.plano === "teste" ? "selected" : ""}>Teste grátis</option><option value="cortesia" ${AF.plano === "cortesia" ? "selected" : ""}>Cortesia</option><option value="gratis" ${AF.plano === "gratis" ? "selected" : ""}>Gratuito</option></select></div>
       <div class="tbl"><table><thead><tr><th>Nome</th><th>WhatsApp</th><th>E-mail</th><th>Cidade</th><th>Idade</th><th>Gênero</th><th>Cadastro</th><th>Plano</th><th>Treinos</th><th>Anúncios</th><th></th></tr></thead><tbody>
-        ${L.slice(0, 300).map(u => { const [s, k] = statusPrem(u); return `<tr><td><b>${esc(u.nome)}</b>${ex(u)}${u.admin ? ` <span class="st ok">admin</span>` : ""}${u.bloqueado ? ` <span class="st bad">pausado</span>` : ""}</td><td>${esc(u.whats || "")}</td><td>${esc(u.email)}</td><td>${esc(cidNome(u.cidade))}</td><td class="num">${F.idade(u.nasc) ?? "-"}</td><td>${GEN[u.genero] || "-"}</td><td class="num">${brD(u.criado)}</td><td><span class="st ${k}">${s}</span></td><td class="num">${(u.treinos || []).length}</td><td class="num">${int(imps[u.id] || 0)}</td><td><button class="btn btn-line btn-sm needs-edit" data-ed="${u.id}">Editar</button></td></tr>`; }).join("") || `<tr><td colspan="11" class="empty">Nenhuma aluna encontrada.</td></tr>`}
+        ${L.slice(0, 300).map(u => { const [s, k] = statusPrem(u); return `<tr><td><b>${esc(u.nome)}</b>${ex(u)}${u.admin ? ` <span class="st ok">admin</span>` : ""}${u.bloqueado ? ` <span class="st bad">pausado</span>` : ""}</td><td>${esc(u.whats || "")}</td><td>${esc(u.email)}</td><td>${esc(cidNomeU(u))}</td><td class="num">${F.idade(u.nasc) ?? "-"}</td><td>${GEN[u.genero] || "-"}</td><td class="num">${brD(u.criado)}</td><td><span class="st ${k}">${s}</span></td><td class="num">${(u.treinos || []).length}</td><td class="num">${int(imps[u.id] || 0)}</td><td><button class="btn btn-line btn-sm needs-edit" data-ed="${u.id}">Editar</button></td></tr>`; }).join("") || `<tr><td colspan="11" class="empty">Nenhuma aluna encontrada.</td></tr>`}
       </tbody></table></div></div>`;
   $("al-c").onchange = e => { AF.cidade = e.target.value; rerender(); };
   $("al-p").onchange = e => { AF.plano = e.target.value; rerender(); };
   let tq; $("al-q").oninput = e => { clearTimeout(tq); tq = setTimeout(() => { AF.q = e.target.value; rerender(); const i = $("al-q"); i.focus(); i.setSelectionRange(i.value.length, i.value.length); }, 300); };
   const pb = $("al-prem"); if(pb) pb.onclick = () => formPremium();
-  $("al-csv").onclick = () => planilha(["Nome","WhatsApp","E-mail","Cidade","Idade","Gênero","Cadastro","Plano","Treinos","Anúncios vistos"], L.map(u => [u.nome, u.whats, u.email, cidNome(u.cidade), F.idade(u.nasc) ?? "", GEN[u.genero] || "", brD(u.criado), statusPrem(u)[0], (u.treinos || []).length, imps[u.id] || 0]), "Alunos");
+  $("al-csv").onclick = () => planilha(["Nome","WhatsApp","E-mail","Cidade","Idade","Gênero","Cadastro","Plano","Treinos","Anúncios vistos"], L.map(u => [u.nome, u.whats, u.email, cidNomeU(u), F.idade(u.nasc) ?? "", GEN[u.genero] || "", brD(u.criado), statusPrem(u)[0], (u.treinos || []).length, imps[u.id] || 0]), "Alunos");
   $("adm-main").querySelectorAll("[data-ed]").forEach(b => b.onclick = () => formAluno(db.users.find(u => u.id === b.dataset.ed)));
 }
 const DURS = [["7","7 dias"],["30","30 dias"],["90","3 meses"],["180","6 meses"],["365","1 ano"],["vitalicio","Vitalício"]];
@@ -11643,7 +11709,7 @@ function formAluno(u){
   modal("Editar aluna", `<div class="formgrid">
     <div class="field full"><label for="ua-n">Nome</label><input class="input" id="ua-n" value="${esc(u.nome)}"></div>
     <div class="field"><label for="ua-w">WhatsApp</label><input class="input" id="ua-w" value="${esc(u.whats || "")}"></div>
-    <div class="field"><label for="ua-c">Cidade</label><select class="input" id="ua-c">${optCid(u.cidade)}</select></div>
+    <div class="field"><label for="ua-c">Cidade</label><select class="input" id="ua-c">${DB().cidades.some(c => +c.id === +u.cidade) ? "" : `<option value="${esc(String(u.cidade ?? ""))}" selected>${esc(cidNomeU(u) || "Sem cidade")}</option>`}${optCid(u.cidade)}</select></div>
     ${F.nuvem && F.nuvem.ativo ? `<label class="field full" style="flex-direction:row;align-items:center;gap:10px;font-weight:600"><input type="checkbox" id="ua-s" value="1" style="width:20px;height:20px;accent-color:var(--accent)"> Enviar para a aluna um e-mail para criar senha nova</label>` : `<div class="field full"><label for="ua-s">Nova senha (deixe vazio para manter)</label><input class="input" id="ua-s" type="text" autocomplete="off" placeholder="Mínimo 6 caracteres"></div>`}
     <div class="field"><label for="ua-pd">Premium cortesia</label><select class="input" id="ua-pd"><option value="">Não mudar</option>${DURS.map(([k, n]) => `<option value="${k}">${n}</option>`).join("")}<option value="tirar">Tirar Premium</option></select></div>
     <div class="field"><span style="font-weight:700;font-size:13px">Situação atual</span><span class="st ${statusPrem(u)[1]}" style="align-self:flex-start">${statusPrem(u)[0]}</span></div>
@@ -11652,7 +11718,7 @@ function formAluno(u){
   $("ua-ok").onclick = async () => {
     const s = F.nuvem && F.nuvem.ativo ? ($("ua-s").checked ? "x" : "") : val("ua-s"); if(s && !(F.nuvem && F.nuvem.ativo) && s.length < 6){ $("ua-msg").innerHTML = `<div class="msg msg-bad">A senha precisa ter pelo menos 6 caracteres.</div>`; return; }
     if(u.id === ME.id && val("ua-b")){ $("ua-msg").innerHTML = `<div class="msg msg-bad">Você não pode pausar a sua própria conta.</div>`; return; }
-    u.nome = val("ua-n") || u.nome; u.whats = val("ua-w"); u.cidade = +val("ua-c"); u.bloqueado = val("ua-b");
+    u.nome = val("ua-n") || u.nome; u.whats = val("ua-w"); { const nc = val("ua-c"); if(String(nc) !== String(u.cidade ?? "")){ u.cidade = +nc || null; const c = DB().cidades.find(x => +x.id === +nc); u.cidadeInfo = c ? { id: +c.id, nome: c.nome, uf: c.uf || "" } : undefined; } } u.bloqueado = val("ua-b");
     if(s && F.nuvem && F.nuvem.ativo){ const e = await F.nuvem.reset(u.email); toast(e ? e : "Enviamos para a aluna um e-mail para criar a senha nova"); }
     else if(s) u.senha = await F.hash(s);
     const pd = val("ua-pd"); if(pd === "tirar") u.premium = null; else if(pd) aplicaPrem(u, pd);

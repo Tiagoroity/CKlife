@@ -14,6 +14,11 @@ const podeEditar = s => PERM.total || PERM[s] === "editar";
 const toast = F.toast;
 const ex = o => o && o.exemplo ? `<span class="ex">exemplo</span>` : "";
 const cidNome = id => (DB().cidades.find(c => +c.id === +id) || {}).nome || "";
+/* cidade da aluna: as do banco ou a que ela escolheu na lista do IBGE */
+const cidNomeU = u => cidNomeU(u) || (u.cidadeInfo && +u.cidadeInfo.id === +u.cidade ? u.cidadeInfo.nome + (u.cidadeInfo.uf ? " · " + u.cidadeInfo.uf : "") : "");
+const UF_NOME = { AC:"Acre", AL:"Alagoas", AP:"Amapá", AM:"Amazonas", BA:"Bahia", CE:"Ceará", DF:"Distrito Federal", ES:"Espírito Santo", GO:"Goiás", MA:"Maranhão", MT:"Mato Grosso", MS:"Mato Grosso do Sul", MG:"Minas Gerais", PA:"Pará", PB:"Paraíba", PR:"Paraná", PE:"Pernambuco", PI:"Piauí", RJ:"Rio de Janeiro", RN:"Rio Grande do Norte", RS:"Rio Grande do Sul", RO:"Rondônia", RR:"Roraima", SC:"Santa Catarina", SP:"São Paulo", SE:"Sergipe", TO:"Tocantins" };
+const ufU = u => (u.cidadeInfo && +u.cidadeInfo.id === +u.cidade && u.cidadeInfo.uf) || (DB().cidades.find(c => +c.id === +u.cidade) || {}).uf || "";
+const ufNomeU = u => UF_NOME[ufU(u)] || "Sem estado";
 const segNome = id => (DB().segmentos.find(c => +c.id === +id) || {}).nome || "";
 const anuNome = id => (DB().anunciantes.find(c => c.id === id) || {}).nome || "";
 const optCid = (sel, todas) => (todas ? `<option value="">Todas as cidades</option>` : "") + DB().cidades.map(c => `<option value="${c.id}" ${+sel === +c.id ? "selected" : ""}>${esc(c.nome)}${c.ativa ? "" : " (inativa)"}</option>`).join("");
@@ -174,7 +179,7 @@ function vResumo(){
       <div class="card"><h3>Alunas ativas por dia</h3>${barChart(al.serie, "alunos", "alunas")}</div>
     </div>
     <div class="grid g2">
-      <div class="card"><h3>Alunas por cidade</h3>${hbars(contaPor(al.U, u => cidNome(u.cidade) || "Sem cidade").slice(0, 10))}</div>
+      <div class="card"><h3>Alunas por cidade</h3>${hbars(contaPor(al.U, u => cidNomeU(u) || "Sem cidade").slice(0, 10))}<h3 style="margin-top:14px">Por estado</h3>${hbars(contaPor(al.U, ufNomeU).slice(0, 10))}</div>
       <div class="card"><h3>Retenção</h3><div class="grid g3" style="margin-top:8px">${kpi("1 dia", fmtRet(al.r1))}${kpi("7 dias", fmtRet(al.r7))}${kpi("30 dias", fmtRet(al.r30))}</div>
         <p class="hint" style="margin:10px 0 0">Das alunas cadastradas há pelo menos N dias, quantos voltaram depois desse prazo.</p>
         <div class="grid g2" style="margin-top:10px">${kpi("Treinos nos últimos 30 dias", int(treinos30))}${kpi("Cupons entregues", int(db.cupons.length), `${int(db.cupons.filter(c => c.usado).length)} usados`)}</div></div>
@@ -291,7 +296,7 @@ function vMetricas(){
     <div class="grid g3">
       <div class="card"><h3>Por faixa de idade</h3>${hbars(contaPor(unicos, u => faixa(F.idade(u.nasc)), faixaNomes))}</div>
       <div class="card"><h3>Por objetivo</h3>${hbars(contaPor(unicos, u => objNome(u)))}</div>
-      <div class="card"><h3>Por cidade</h3>${hbars(contaPor(unicos, u => cidNome(u.cidade) || "Sem cidade"))}</div>
+      <div class="card"><h3>Por cidade</h3>${hbars(contaPor(unicos, u => cidNomeU(u) || "Sem cidade"))}</div>
     </div>
     <div class="card"><h3>Por campanha</h3><div class="tbl"><table><thead><tr><th>Campanha</th><th>Anunciante</th><th>Impressões</th><th>Alcance</th><th>Cliques</th><th>Taxa de clique</th></tr></thead><tbody>
       ${porCamp.map(r => `<tr><td>${esc(r.c.titulo)}</td><td>${esc(anuNome(r.c.anunc))}</td><td class="num">${int(r.imp)}</td><td class="num">${int(r.alc)}</td><td class="num">${int(r.clk)}</td><td class="num">${pct(r.clk, r.imp)}</td></tr>`).join("") || `<tr><td colspan="6" class="empty">Sem campanhas</td></tr>`}
@@ -415,7 +420,7 @@ async function gerarPDF(o){
   y += 6;
   // público
   titulo("Quem viu seus anúncios", "Alunas únicas que viram o anúncio no período");
-  const blocos = [["Faixa de idade", contaPor(d.unicos, u => faixa(F.idade(u.nasc)), faixaNomes).filter(x => x.v)], ["Cidade", contaPor(d.unicos, u => cidNome(u.cidade) || "Sem cidade").slice(0, 6)], ["Objetivo no app", contaPor(d.unicos, u => objNome(u)).slice(0, 6)]];
+  const blocos = [["Faixa de idade", contaPor(d.unicos, u => faixa(F.idade(u.nasc)), faixaNomes).filter(x => x.v)], ["Cidade", contaPor(d.unicos, u => cidNomeU(u) || "Sem cidade").slice(0, 6)], ["Objetivo no app", contaPor(d.unicos, u => objNome(u)).slice(0, 6)]];
   novaPag(56); const bwid = (W - 2 * M - 8) / 3, y0 = y;
   blocos.forEach(([nome, L], k) => { const x = M + k * (bwid + 4); let yy = y0; cor([255, 255, 255], "fill"); cor(SUAVE, "draw"); doc.roundedRect(x, yy - 5, bwid, 54, 3, 3, "FD"); fonte(9, "bold"); cor(VERDE); doc.text(nome, x + 4, yy + 1); yy += 7; const tot = L.reduce((a, b) => a + b.v, 0) || 1; if(!L.length){ fonte(8); cor(CINZA); doc.text("Sem dados", x + 4, yy + 2); } L.slice(0, 6).forEach(it => { fonte(7.5); cor(TINTA); doc.text(doc.splitTextToSize(it.nome, bwid - 22)[0], x + 4, yy + 2); fonte(7.5, "bold"); doc.text(Math.round(100 * it.v / tot) + "%", x + bwid - 4, yy + 2, { align: "right" }); cor([233, 240, 231], "fill"); doc.roundedRect(x + 4, yy + 3.5, bwid - 8, 1.8, .9, .9, "F"); cor(MEIO, "fill"); doc.roundedRect(x + 4, yy + 3.5, Math.max(1.8, (bwid - 8) * it.v / tot), 1.8, .9, .9, "F"); yy += 7.3; }); });
   y = y0 + 56;
@@ -449,20 +454,21 @@ function vAlunos(){
     <div class="grid g4">${kpi("Cadastrados", int(al.total), `+${int(al.novos7)} nos últimos 7 dias`)}${kpi("Ativos", int(al.dau), `hoje · ${int(al.wau)} na semana · ${int(al.mau)} no mês`)}${kpi("Pro pago", int(al.pagos))}${kpi("Em teste grátis", int(al.teste), `${int(al.cortesia)} com cortesia`)}</div>
     <div class="card"><h3>Alunas ativas por dia</h3>${barChart(al.serie, "alunos", "alunas")}</div>
     <div class="grid g3">
-      <div class="card"><h3>Por cidade</h3>${hbars(contaPor(al.U, u => cidNome(u.cidade) || "Sem cidade"))}</div>
+      <div class="card"><h3>Por cidade</h3>${hbars(contaPor(al.U, u => cidNomeU(u) || "Sem cidade"))}</div>
       <div class="card"><h3>Por faixa de idade</h3>${hbars(contaPor(al.U, u => faixa(F.idade(u.nasc)), faixaNomes))}</div>
       <div class="card"><h3>Por gênero</h3>${hbars(contaPor(al.U, u => u.genero || "outro", { feminino: "Feminino", masculino: "Masculino", outro: "Outro" }))}</div>
     </div>
+    <div class="card"><h3>Por estado</h3>${hbars(contaPor(al.U, ufNomeU))}</div>
     <div class="card"><h3>Lista de alunas <span class="muted num" style="font-size:16px">(${L.length})</span></h3>
       <div class="toolbar" style="margin-bottom:10px"><input class="input" id="al-q" placeholder="Buscar por nome, e-mail ou WhatsApp" value="${esc(AF.q)}"><select class="input" id="al-p"><option value="">Todos os planos</option><option value="pago" ${AF.plano === "pago" ? "selected" : ""}>Pro pago</option><option value="teste" ${AF.plano === "teste" ? "selected" : ""}>Teste grátis</option><option value="cortesia" ${AF.plano === "cortesia" ? "selected" : ""}>Cortesia</option><option value="gratis" ${AF.plano === "gratis" ? "selected" : ""}>Gratuito</option></select></div>
       <div class="tbl"><table><thead><tr><th>Nome</th><th>WhatsApp</th><th>E-mail</th><th>Cidade</th><th>Idade</th><th>Gênero</th><th>Cadastro</th><th>Plano</th><th>Treinos</th><th>Anúncios</th><th></th></tr></thead><tbody>
-        ${L.slice(0, 300).map(u => { const [s, k] = statusPrem(u); return `<tr><td><b>${esc(u.nome)}</b>${ex(u)}${u.admin ? ` <span class="st ok">admin</span>` : ""}${u.bloqueado ? ` <span class="st bad">pausado</span>` : ""}</td><td>${esc(u.whats || "")}</td><td>${esc(u.email)}</td><td>${esc(cidNome(u.cidade))}</td><td class="num">${F.idade(u.nasc) ?? "-"}</td><td>${GEN[u.genero] || "-"}</td><td class="num">${brD(u.criado)}</td><td><span class="st ${k}">${s}</span></td><td class="num">${(u.treinos || []).length}</td><td class="num">${int(imps[u.id] || 0)}</td><td><button class="btn btn-line btn-sm needs-edit" data-ed="${u.id}">Editar</button></td></tr>`; }).join("") || `<tr><td colspan="11" class="empty">Nenhuma aluna encontrada.</td></tr>`}
+        ${L.slice(0, 300).map(u => { const [s, k] = statusPrem(u); return `<tr><td><b>${esc(u.nome)}</b>${ex(u)}${u.admin ? ` <span class="st ok">admin</span>` : ""}${u.bloqueado ? ` <span class="st bad">pausado</span>` : ""}</td><td>${esc(u.whats || "")}</td><td>${esc(u.email)}</td><td>${esc(cidNomeU(u))}</td><td class="num">${F.idade(u.nasc) ?? "-"}</td><td>${GEN[u.genero] || "-"}</td><td class="num">${brD(u.criado)}</td><td><span class="st ${k}">${s}</span></td><td class="num">${(u.treinos || []).length}</td><td class="num">${int(imps[u.id] || 0)}</td><td><button class="btn btn-line btn-sm needs-edit" data-ed="${u.id}">Editar</button></td></tr>`; }).join("") || `<tr><td colspan="11" class="empty">Nenhuma aluna encontrada.</td></tr>`}
       </tbody></table></div></div>`;
   $("al-c").onchange = e => { AF.cidade = e.target.value; rerender(); };
   $("al-p").onchange = e => { AF.plano = e.target.value; rerender(); };
   let tq; $("al-q").oninput = e => { clearTimeout(tq); tq = setTimeout(() => { AF.q = e.target.value; rerender(); const i = $("al-q"); i.focus(); i.setSelectionRange(i.value.length, i.value.length); }, 300); };
   const pb = $("al-prem"); if(pb) pb.onclick = () => formPremium();
-  $("al-csv").onclick = () => planilha(["Nome","WhatsApp","E-mail","Cidade","Idade","Gênero","Cadastro","Plano","Treinos","Anúncios vistos"], L.map(u => [u.nome, u.whats, u.email, cidNome(u.cidade), F.idade(u.nasc) ?? "", GEN[u.genero] || "", brD(u.criado), statusPrem(u)[0], (u.treinos || []).length, imps[u.id] || 0]), "Alunos");
+  $("al-csv").onclick = () => planilha(["Nome","WhatsApp","E-mail","Cidade","Idade","Gênero","Cadastro","Plano","Treinos","Anúncios vistos"], L.map(u => [u.nome, u.whats, u.email, cidNomeU(u), F.idade(u.nasc) ?? "", GEN[u.genero] || "", brD(u.criado), statusPrem(u)[0], (u.treinos || []).length, imps[u.id] || 0]), "Alunos");
   $("adm-main").querySelectorAll("[data-ed]").forEach(b => b.onclick = () => formAluno(db.users.find(u => u.id === b.dataset.ed)));
 }
 const DURS = [["7","7 dias"],["30","30 dias"],["90","3 meses"],["180","6 meses"],["365","1 ano"],["vitalicio","Vitalício"]];
@@ -477,7 +483,7 @@ function formAluno(u){
   modal("Editar aluna", `<div class="formgrid">
     <div class="field full"><label for="ua-n">Nome</label><input class="input" id="ua-n" value="${esc(u.nome)}"></div>
     <div class="field"><label for="ua-w">WhatsApp</label><input class="input" id="ua-w" value="${esc(u.whats || "")}"></div>
-    <div class="field"><label for="ua-c">Cidade</label><select class="input" id="ua-c">${optCid(u.cidade)}</select></div>
+    <div class="field"><label for="ua-c">Cidade</label><select class="input" id="ua-c">${DB().cidades.some(c => +c.id === +u.cidade) ? "" : `<option value="${esc(String(u.cidade ?? ""))}" selected>${esc(cidNomeU(u) || "Sem cidade")}</option>`}${optCid(u.cidade)}</select></div>
     ${F.nuvem && F.nuvem.ativo ? `<label class="field full" style="flex-direction:row;align-items:center;gap:10px;font-weight:600"><input type="checkbox" id="ua-s" value="1" style="width:20px;height:20px;accent-color:var(--accent)"> Enviar para a aluna um e-mail para criar senha nova</label>` : `<div class="field full"><label for="ua-s">Nova senha (deixe vazio para manter)</label><input class="input" id="ua-s" type="text" autocomplete="off" placeholder="Mínimo 6 caracteres"></div>`}
     <div class="field"><label for="ua-pd">Premium cortesia</label><select class="input" id="ua-pd"><option value="">Não mudar</option>${DURS.map(([k, n]) => `<option value="${k}">${n}</option>`).join("")}<option value="tirar">Tirar Premium</option></select></div>
     <div class="field"><span style="font-weight:700;font-size:13px">Situação atual</span><span class="st ${statusPrem(u)[1]}" style="align-self:flex-start">${statusPrem(u)[0]}</span></div>
@@ -486,7 +492,7 @@ function formAluno(u){
   $("ua-ok").onclick = async () => {
     const s = F.nuvem && F.nuvem.ativo ? ($("ua-s").checked ? "x" : "") : val("ua-s"); if(s && !(F.nuvem && F.nuvem.ativo) && s.length < 6){ $("ua-msg").innerHTML = `<div class="msg msg-bad">A senha precisa ter pelo menos 6 caracteres.</div>`; return; }
     if(u.id === ME.id && val("ua-b")){ $("ua-msg").innerHTML = `<div class="msg msg-bad">Você não pode pausar a sua própria conta.</div>`; return; }
-    u.nome = val("ua-n") || u.nome; u.whats = val("ua-w"); u.cidade = +val("ua-c"); u.bloqueado = val("ua-b");
+    u.nome = val("ua-n") || u.nome; u.whats = val("ua-w"); { const nc = val("ua-c"); if(String(nc) !== String(u.cidade ?? "")){ u.cidade = +nc || null; const c = DB().cidades.find(x => +x.id === +nc); u.cidadeInfo = c ? { id: +c.id, nome: c.nome, uf: c.uf || "" } : undefined; } } u.bloqueado = val("ua-b");
     if(s && F.nuvem && F.nuvem.ativo){ const e = await F.nuvem.reset(u.email); toast(e ? e : "Enviamos para a aluna um e-mail para criar a senha nova"); }
     else if(s) u.senha = await F.hash(s);
     const pd = val("ua-pd"); if(pd === "tirar") u.premium = null; else if(pd) aplicaPrem(u, pd);

@@ -142,7 +142,7 @@ const MSG_PADRAO = "Olá! Encontrei vocês pelo CK Life e gostaria de saber mais
 const lkWhats = (n, msg) => { const d = soDig(n).replace(/^55(?=\d{10,11}$)/, ""); return d.length >= 10 ? `https://wa.me/55${d}?text=${encodeURIComponent(msg || (DB.config && DB.config.msgWhats) || MSG_PADRAO)}` : ""; };
 const lkInsta = h => { h = String(h || "").trim(); if(!h) return ""; if(/^https?:\/\//i.test(h)) return h; return "https://instagram.com/" + h.replace(/^@/, "").replace(/^(www\.)?instagram\.com\//i, ""); };
 const lkSite = u => { u = String(u || "").trim(); return !u ? "" : /^https?:\/\//i.test(u) ? u : "https://" + u; };
-const xcidNome = id => (DB.cidades.find(c => +c.id === +id) || {}).nome || "";
+const xcidNome = id => window.ckCidNome ? window.ckCidNome(id) : ((DB.cidades.find(c => +c.id === +id) || {}).nome || "");
 const lkMapa = (end, cid) => end ? "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent([end, xcidNome(cid)].filter(Boolean).join(", ")) : "";
 function abreLink(url, tipo, id, acao){ if(!url) return toast("Link indisponível no momento"); xev(tipo, id, acao); SOM.tap(); window.open(url, "_blank", "noopener"); }
 
@@ -157,7 +157,7 @@ function escolheCidade(depois){
   const desenha = () => { const q = norm($("xc-q").value); const L = cids.filter(c => !q || norm(c.nome).includes(q));
     $("xc-l").innerHTML = L.map(c => `<div class="card xp-cidrow"><b>${esc(c.nome)}${c.uf ? ` <small class="muted">${esc(c.uf)}</small>` : ""}</b><div class="acts">${+c.id === +ME.cidade ? `<span class="st ok">Minha cidade</span>` : `<button class="btn btn-line btn-sm" data-ver="${c.id}">Só ver agora</button><button class="btn btn-accent btn-sm" data-minha="${c.id}">Mudar para esta</button>`}</div></div>`).join("") || `<p class="empty">Nenhuma cidade encontrada. Se a sua não aparece, fale com o suporte.</p>`;
     $("xc-l").querySelectorAll("[data-ver]").forEach(b => b.onclick = () => { XCID = +b.dataset.ver; fecharSheet(); toast(`Vendo ${xcidNome(XCID)}`); (depois || rerender)(); });
-    $("xc-l").querySelectorAll("[data-minha]").forEach(b => b.onclick = () => { ME.cidade = +b.dataset.minha; XCID = null; save(); SOM.check(); fecharSheet(); toast("Cidade atualizada"); (depois || rerender)(); }); };
+    $("xc-l").querySelectorAll("[data-minha]").forEach(b => b.onclick = () => { ME.cidade = +b.dataset.minha; { const c = DB.cidades.find(x => +x.id === ME.cidade); if(c) ME.cidadeInfo = { id: +c.id, nome: c.nome, uf: c.uf || "" }; } XCID = null; save(); SOM.check(); fecharSheet(); toast("Cidade atualizada"); (depois || rerender)(); }); };
   $("xc-q").oninput = desenha; desenha();
 }
 

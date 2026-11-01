@@ -237,7 +237,7 @@ $("tg-login").onclick = () => modoAuth(false);
 $("tg-cad").onclick = () => modoAuth(true);
 function showLogin(){
   try{ const em = localStorage.getItem(KEY + "_email"); if(em && !$("l-email").value) $("l-email").value = em; }catch(e){}
-  $("c-cid").innerHTML = DB.cidades.filter(c => c.ativa).map(c => `<option value="${c.id}">${esc(c.nome)}${c.uf ? " · " + esc(c.uf) : ""}</option>`).join("");
+  if(!$("c-uf").options.length) ligaCidade("c-uf", "c-cid", null);
   show("v-login");
 }
 $("f-login").addEventListener("submit", async e => {
@@ -276,17 +276,18 @@ $("f-cad").addEventListener("submit", async e => {
   if($("c-senha").value !== $("c-senha2").value) return lmsg("As duas senhas estão diferentes.");
   if(DB.users.some(u => u.email === email)) return lmsg("Já existe uma conta com esse e-mail. Toque em Já tenho conta.");
   if(!v("c-nasc")) return lmsg("Informe sua data de nascimento.");
+  const cidInfo = cidadeEscolhida("c-uf", "c-cid"); if(!cidInfo) return lmsg("Escolha seu estado e sua cidade.");
   { const i = idade(v("c-nasc")), min = +(DB.config.idadeMinima || 18); if(i === null || i < min) return lmsg(`O CK Life é para maiores de ${min} anos.`); if(i > 110) return lmsg("Confira sua data de nascimento."); }
   const primeiro = false;
   let novoId = uid();
   if(NU.ativo){
     lmsg("Criando sua conta…", true);
     const r = await NU.cadastrar(email, $("c-senha").value); if(r.erro) return lmsg(r.erro);
-    const pend = { nome: v("c-nome"), whats: v("c-whats"), nasc: v("c-nasc"), cidade: +$("c-cid").value };
+    const pend = { nome: v("c-nome"), whats: v("c-whats"), nasc: v("c-nasc"), cidade: cidInfo.id, cidadeInfo: cidInfo };
     if(r.confirmar){ try{ localStorage.setItem(KEY + "_pend_" + email, JSON.stringify(pend)); }catch(e){} modoAuth(false); $("l-email").value = email; return lmsg("Enviamos um link para o seu e-mail. Toque nele para confirmar a conta e depois entre aqui com sua senha.", true); }
     await NU.carregar(DB, { id: r.id, email }, false); novoId = r.id;
   }
-  const u = { id: novoId, nome: v("c-nome"), email, senha: NU.ativo ? undefined : await hash($("c-senha").value), whats: v("c-whats"), nasc: v("c-nasc"), genero: "feminino", cidade: +$("c-cid").value, criado: today(),
+  const u = { id: novoId, nome: v("c-nome"), email, senha: NU.ativo ? undefined : await hash($("c-senha").value), whats: v("c-whats"), nasc: v("c-nasc"), genero: "feminino", cidade: cidInfo.id, cidadeInfo: cidInfo, criado: today(),
     admin: primeiro, perms: primeiro ? { total: true } : null, bloqueado: false, premium: { tipo: "teste", ate: addD(today(), 7) }, perfil: null, diario: {}, pesos: [], treinos: [], favs: [], voz: true };
   DB.users.push(u); save(); if(!NU.ativo) setSess(u.id); SOM.chime();
   entrar();
@@ -436,7 +437,7 @@ function entrar(){
   const modoAdm = modoAdmin();
   if(NU.ativo && NU.uid && !ME && !modoAdm){
     let pend = {}; try{ pend = JSON.parse(localStorage.getItem(KEY + "_pend_" + NU.email) || "{}"); }catch(e){}
-    ME = { id: NU.uid, email: NU.email, nome: pend.nome || String(NU.email || "").split("@")[0], whats: pend.whats || "", nasc: pend.nasc || null, cidade: pend.cidade || 1, genero: "feminino", criado: today(), bloqueado: false, premium: { tipo: "teste", ate: addD(today(), 7) }, perfil: null, diario: {}, pesos: [], treinos: [], favs: [], voz: true };
+    ME = { id: NU.uid, email: NU.email, nome: pend.nome || String(NU.email || "").split("@")[0], whats: pend.whats || "", nasc: pend.nasc || null, cidade: pend.cidade || 1, cidadeInfo: pend.cidadeInfo || undefined, genero: "feminino", criado: today(), bloqueado: false, premium: { tipo: "teste", ate: addD(today(), 7) }, perfil: null, diario: {}, pesos: [], treinos: [], favs: [], voz: true };
     DB.users.push(ME); save();
   }
   if(!ME){ modoAdm ? showAdminLogin() : showLogin(); return; }
@@ -658,15 +659,16 @@ function menuFoto(){
   const t = $("ft-tira"); if(t) t.onclick = () => { delete ME.foto; save(); fecharSheet(); toast("Foto removida"); rPerfil(); atualizaTopo(); };
 }
 function editaDados(){
-  const cid = DB.cidades.filter(c => c.ativa || +c.id === +ME.cidade);
   sheet("Meus dados", `<div class="formgrid">
     <div class="field full"><label for="md-n">Nome</label><input class="input" id="md-n" value="${esc(ME.nome)}" autocomplete="name"></div>
     <div class="field full"><label for="md-w">WhatsApp</label><input class="input" id="md-w" inputmode="tel" value="${esc(mascaraTel(ME.whats || ""))}" placeholder="(65) 99999-9999"></div>
     <div class="field"><label for="md-d">Nascimento</label><input class="input" id="md-d" type="date" value="${esc(ME.nasc || "")}"></div>
-    <div class="field"><label for="md-c">Cidade</label><select class="input" id="md-c">${cid.map(c => `<option value="${c.id}" ${+c.id === +ME.cidade ? "selected" : ""}>${esc(c.nome)}</option>`).join("")}</select></div>
+    <div class="field"><label for="md-u">Estado</label><select class="input" id="md-u"></select></div>
+    <div class="field"><label for="md-c">Cidade</label><select class="input" id="md-c"></select></div>
     <div class="field full"><label>E-mail</label><input class="input" value="${esc(ME.email)}" disabled></div></div>
     <button class="btn btn-accent btn-block btn-lg" id="md-ok">Salvar meus dados</button>`);
-  $("md-ok").onclick = () => { const n = $("md-n").value.trim(); if(!n) return toast("Digite seu nome"); ME.nome = n; ME.whats = $("md-w").value.trim(); ME.nasc = $("md-d").value || ME.nasc; ME.cidade = +$("md-c").value; save(); SOM.check(); fecharSheet(); toast("Dados salvos"); rPerfil(); atualizaTopo(); };
+  ligaCidade("md-u", "md-c", ME);
+  $("md-ok").onclick = () => { const n = $("md-n").value.trim(); if(!n) return toast("Digite seu nome"); ME.nome = n; ME.whats = $("md-w").value.trim(); ME.nasc = $("md-d").value || ME.nasc; { const ci = cidadeEscolhida("md-u", "md-c"); if(ci){ ME.cidade = ci.id; ME.cidadeInfo = ci; } } save(); SOM.check(); fecharSheet(); toast("Dados salvos"); rPerfil(); atualizaTopo(); };
 }
 function convidar(){
   const url = location.origin + location.pathname.replace(/admin\/?$/, ""), txt = "Estou treinando em casa com o CK Life 💚 Treinos guiados, receitas com voz e muito mais. Vem comigo!";
