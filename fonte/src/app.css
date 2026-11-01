@@ -2666,3 +2666,9 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
 .cal-row.feito .cal-row-d{background:var(--c);color:#fff}
 .cal-hj{text-transform:capitalize}
 @media (max-width:360px){.cal-l{font-size:8.5px;letter-spacing:-.2px}.cal-g{gap:3px}.cal-card{padding:12px 10px}}
+.cal-prog{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 14px}
+.cal-prog>span{flex:1;min-width:0;display:flex;flex-direction:column}
+.cal-prog small{color:var(--muted);font-size:12px;font-weight:600}
+.cal-prog b{font-size:15.5px}
+.cal-prog em{font-style:normal;color:var(--muted);font-size:12.5px;line-height:1.35;margin-top:3px}
+.cal-prog .btn{flex:none}

@@ -6,7 +6,8 @@ const CAL_DSEM = ["domingo", "segunda", "terça", "quarta", "quinta", "sexta", "
 const CAL_MES = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
 const CAL_CURTO = { "Corpo todo": "Corpo", "Pernas e glúteos": "Pernas", "Glúteos em foco": "Glúteos", "Superior e core": "Braços", "Core e cardio": "Core", "HIIT": "HIIT", "Mobilidade": "Mobilid" };
 const CAL_COR = { "Corpo todo": "#1F9E89", "Pernas e glúteos": "#2E7D5A", "Glúteos em foco": "#C2547A", "Superior e core": "#4F6BD8", "Core e cardio": "#E08A2E", "HIIT": "#D9534F", "Mobilidade": "#8E6CD9" };
-const calCurto = n => CAL_CURTO[n] || String(n || "Treino").replace(/^Treino\s+/i, "").split(/[\s·—-]+/).slice(0, 2).join(" ").slice(0, 9);
+const calCurto = n => { if(CAL_CURTO[n]) return CAL_CURTO[n]; const t = String(n || "Treino").replace(/^Treino\s+/i, "").trim(), m = t.match(/^(\S+)\s+(\d+|[A-Z])$/);
+  return m ? (m[1].length > 5 ? m[1].slice(0, 4) : m[1]) + " " + m[2] : t.split(/[\s·—-]+/)[0].slice(0, 7); };
 const calCor = n => CAL_COR[n] || "#2E7D5A";
 let CAL_M = 0;   // 0 = mês atual, 1 = próximo, -1 = anterior...
 
@@ -72,7 +73,10 @@ function calMesHTML(){
   const lista = dias.filter(d => info[d].tipo === "plan" || info[d].tipo === "feito").map(d => { const I = info[d], dt = new Date(d + "T12:00:00"), T = I.T;
     return `<button class="cal-row ${I.tipo}" data-cd="${d}" style="--c:${esc(calCor(I.nome))}"><span class="cal-row-d"><b>${dt.getDate()}</b><small>${esc(CAL_DSEM[dt.getDay()].slice(0, 3))}</small></span><span class="cal-row-t"><b>${esc(I.nome)}</b><small>${I.tipo === "feito" ? "Feito ✓" : `${listaTreino(T).length} exercícios · ${minTreino(T)} min`}${calRel(d) ? " · " + calRel(d) : ""}</small></span>${ic("back", 15)}</button>`; }).join("");
   const focos = [...new Set(dias.map(d => info[d].nome).filter(Boolean))];
+  const pg = progAtual(), focoUnico = pg.id !== "anual" && new Set((pg.dias || []).map(x => String(x.nome).replace(/\s*\d+$/, ""))).size <= 1;
+  const progBox = `<div class="cal-prog"><span><small>Seu programa</small><b>${esc(pg.nome)}</b>${focoUnico ? `<em>Este programa treina sempre o mesmo foco. Para variar os dias (pernas, braços, core...), escolha o Plano do ano CK.</em>` : ""}</span><button class="btn btn-sm ${focoUnico ? "btn-accent" : "btn-line"}" id="cal-troca">Trocar programa</button></div>`;
   return `<div class="cal-mes">
+    ${CAL_M === 0 ? progBox : ""}
     ${topo}
     <div class="card cal-card">
       <div class="cal-h"><button class="iconbtn sm" data-cm="-1" aria-label="Mês anterior">${ic("back", 15)}</button><b>${CAL_MES[mes].replace(/^./, c => c.toUpperCase())} ${ano}</b><button class="iconbtn sm" data-cm="1" aria-label="Próximo mês" style="transform:rotate(180deg)" ${CAL_M >= 1 ? "disabled" : ""}>${ic("back", 15)}</button></div>
@@ -86,6 +90,7 @@ function calMesHTML(){
 }
 function calLiga(box){
   box.querySelectorAll("[data-cd]").forEach(b => b.onclick = () => { SOM.tap(); calSheet(b.dataset.cd); });
+  const tr = box.querySelector("#cal-troca"); if(tr) tr.onclick = () => { SOM.tap(); TV = "programas"; rTreinar(); window.scrollTo(0, 0); };
   box.querySelectorAll("[data-cm]").forEach(b => b.onclick = () => { CAL_M = Math.min(1, CAL_M + +b.dataset.cm); SOM.tap(); rTreinar(); });
 }
 
