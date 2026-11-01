@@ -51,7 +51,7 @@
 
 ### 3.1 Entrada no app (cadastro como experiência) · novo
 
-1. **Conta:** cadastro com nome, WhatsApp, nascimento, cidade, e-mail e senha. Também tem login, esqueci a senha e sessão que não cai.
+1. **Conta:** cadastro com nome, WhatsApp, nascimento, **estado e cidade de todo o Brasil** (lista oficial do IBGE, 5.571 municípios; as cidades de MT do banco mantêm o mesmo número), e-mail e senha. Em Meus dados ela troca estado e cidade. O painel mostra alunas por cidade e por estado. Também tem login, esqueci a senha e sessão que não cai.
 2. **5 telas de abertura**, emocionais, com a foto da modelo ao fundo e texto que entra aos poucos:
    - "Você não entrou aqui só para treinar." → QUERO COMEÇAR
    - "Dessa vez você não precisa fazer tudo sozinha."
