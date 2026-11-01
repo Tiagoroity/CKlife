@@ -1,0 +1,54 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<style>html,body{margin:0;background:#04190F;overflow:hidden}iframe{border:0;width:390px;height:844px;display:block}</style></head><body>
+<script>
+/* Vitrine: abre o app de teste com uma aluna de exemplo e leva até a tela pedida (?shot=...), para capturas reais em alta qualidade. Só para uso local. */
+const SHOT = new URLSearchParams(location.search).get("shot") || "inicio";
+const esp = ms => new Promise(r => setTimeout(r, ms));
+const d0 = new Date(); const dia = k => { const d = new Date(d0); d.setDate(d.getDate() - k); return d.toISOString().slice(0, 10); };
+const ANA = "a1a1a1a1-0000-4000-8000-000000000001";
+const AM = [["b1000000-0000-4000-8000-000000000001", "Juliana Rocha", "ju.rocha", "img/equipe/07.jpg"], ["b1000000-0000-4000-8000-000000000002", "Camila Duarte", "camiladuarte", "img/equipe/12.jpg"], ["b1000000-0000-4000-8000-000000000003", "Bianca Torres", "bia.torres", "img/equipe/21.jpg"], ["b1000000-0000-4000-8000-000000000004", "Larissa Mendes", "lari.mendes", "img/equipe/33.jpg"]];
+async function mini(src, s){ const im = new Image(); im.src = src; await im.decode(); const c = document.createElement("canvas"); c.width = c.height = s; const x = c.getContext("2d"), k = Math.max(s / im.width, s / im.height); x.drawImage(im, (s - im.width * k) / 2, (s - im.height * k) / 2, im.width * k, im.height * k); return c.toDataURL("image/jpeg", .86); }
+async function prepara(){
+  localStorage.clear();
+  ["MOCKNOV", "MOCKSOCIAL", "MOCKEXP"].forEach(k => localStorage.setItem(k, "1")); localStorage.setItem("MOCKPLANO", "pro"); localStorage.setItem("ck_cookies", "nao"); localStorage.setItem("cklife_db_v1_tema", "dark");
+  const foto = await mini("img/equipe/05.jpg", 320), fotos = await Promise.all(AM.map(a => mini(a[3], 200)));
+  const T = []; [1, 2, 3, 5, 6, 8, 10, 11, 13, 15, 17, 19].forEach((k, i) => T.push({ d: dia(k), h: 19, nome: ["Corpo todo A", "Glúteos em 15 min", "Corpo todo B", "Abdômen em 10 min"][i % 4], prog: null, min: 15 + (i % 3) * 5, kcal: 110 + i * 7, exs: 8 }));
+  T.reverse();
+  const dados = { nome: "Ana Clara", perfil: { objetivo: "definir", local: "casa", itens: ["cadeira"], nivel: "intermediario", tempo: 20, dias: 4, peso: 63, altura: 165 }, pesos: [{ d: dia(30), kg: 64.2 }, { d: dia(15), kg: 63.6 }, { d: dia(1), kg: 63 }],
+    prog: { id: "gluteos", ini: dia(20), feitos: 7, fator: 0 }, plano: "gluteos", treinos: T, favs: [], voz: true, diario: { [dia(0)]: { cafe: [], almoco: [], lanche: [], jantar: [], agua: 6 } },
+    entrada: { horario: "noite", desistir: "tempo", motivo: "disposicao", futuro: "", compromisso: dia(30), diasSem: ["MO", "WE", "FR", "SA"], entrou: dia(30) }, lembrete: { dias: ["MO", "WE", "FR", "SA", "SU"], hora: "19:00", antes: 20, celular: false },
+    boasVindas: dia(29), coach: { descanso: {}, voltas: 0 }, conqV2: dia(29), conq: { t1: dia(18), s3: dia(2), t10: dia(4) }, foto, missoes: {}, semanasOk: [], vitorias: [{ d: dia(3), k: "disposicao", t: "" }], coachFuso: "America/Sao_Paulo" };
+  const db = { alunas: [{ id: ANA, email: "ana@exemplo.com", nome: "Ana Clara", whats: "", nasc: "1994-05-10", cidade: 1, criado: dia(30), ultimo: dia(0), bloqueado: false, premium: { tipo: "vitalicio" }, dados }],
+    admins: [], colecoes: [], eventos: [], acessos: [], compras: [], users: [{ id: ANA, email: "ana@exemplo.com", password: "x" }], sess: ANA,
+    perfis: [{ user_id: ANA, username: "anaclara", nome: "Ana Clara", foto_mini: foto, bio: "Um dia de cada vez 💚", privado: false }],
+    posts: [], curtidas: [], comentarios: [], seguidores: [], stories: [], story_vistas: [], notificacoes: [], salvos: [] };
+  [[1, "Cuiabá"], [2, "Várzea Grande"]].forEach(([id, nome]) => db.colecoes.push({ nome: "cidades", id: String(id), dados: { id, nome, uf: "MT", ativa: true } }));
+  db.colecoes.push({ nome: "config", id: "1", dados: { nomeApp: "CK Life", checkout: "", suporte: "", treinosParaCupom: 8, premiumPreco: 19.9 } });
+  AM.forEach(([id, nome, user], i) => { db.perfis.push({ user_id: id, username: user, nome, foto_mini: fotos[i], privado: false }); db.seguidores.push({ seguidor: ANA, seguido: id, status: "ativo" }); });
+  const P = [[AM[0], "Treino de hoje feito! 20 minutinhos e já me sinto outra 💪", "img/ex-agacho.jpg", 40], [AM[1], "Receita da semana: panqueca de banana com aveia 🥞 Super fácil!", "img/receita-r40.jpg", 120], [AM[2], "Voltei depois de uma semana parada. Voltar também é progresso 💚", null, 260], [AM[3], "Alongamento antes de dormir virou meu ritual 🌙", "img/ex-along.jpg", 420]];
+  P.forEach(([a, texto, img, min], i) => { const id = "p" + i; db.posts.push({ id, user_id: a[0], nome: a[1], foto: fotos[AM.indexOf(a)], texto, img, criado: new Date(Date.now() - min * 60000).toISOString(), oculto: false });
+    AM.concat([[ANA]]).slice(0, 3 + (i % 3)).forEach(x => db.curtidas.push({ post_id: id, user_id: x[0] })); });
+  db.comentarios.push({ id: "c1", post_id: "p0", user_id: AM[1][0], nome: AM[1][1], foto: fotos[1], texto: "Arrasou! 🔥", criado: new Date(Date.now() - 20 * 60000).toISOString() });
+  localStorage.setItem("mocksb", JSON.stringify(db));
+}
+const ifr = document.createElement("iframe"); document.body.appendChild(ifr);
+const W = () => ifr.contentWindow, D = () => ifr.contentDocument, Q = s => D().querySelector(s);
+const clica = s => { const e = typeof s === "string" ? Q(s) : s; if(e) e.click(); return !!e; };
+const limpa = () => { D().querySelectorAll(".ent, .ent-bv, #ins-toast, #ck-atu, #px-ck, #coach-volta, .coach-1o, #res-ov").forEach(e => e.remove()); const c = Q("#celebra"); if(c) c.hidden = true; const pw = Q("#pw"); if(pw) pw.hidden = true; };
+const fixa = () => { D().getAnimations().forEach(a => { try{ a.finish(); }catch(e){} }); };
+(async () => {
+  await prepara(); ifr.src = "teste-nuvem.html?v=" + Date.now(); await new Promise(r => ifr.onload = r); await esp(6500); limpa();
+  const nav = t => clica(`#nav [data-tab="${t}"]`);
+  if(SHOT === "dificil"){ clica("#coach-ini [data-ca=dificil]"); await esp(500); clica("[data-dif=cansada]"); await esp(700); }
+  if(SHOT === "treinos"){ nav("treinar"); await esp(1200); }
+  if(["expl", "exec", "fim"].includes(SHOT)){ clica('#nba-ini [data-nb="plano"]') || clica("#coach-ini [data-ca=t5]"); await esp(900); clica("#tp-go"); await esp(2000); }
+  if(SHOT === "exec"){ clica("#pl-ja") || clica("#pl-ini"); await esp(5200); }
+  if(SHOT === "fim"){ for(let i = 0; i < 30 && !Q("#play .done-hero"); i++){ clica("#pl-skip") || clica("#pl-next") || clica("#pl-pula") || clica("#pl-ja"); await esp(400); } await esp(1500); limpa(); const pc = Q("#play .pc"); if(pc) pc.scrollTop = 0; }
+  if(SHOT === "nutricao"){ nav("dieta"); await esp(1200); }
+  if(SHOT === "receita"){ nav("dieta"); await esp(1200); const r = [...D().querySelectorAll("#t-dieta [data-r], #t-dieta [data-rec], #t-dieta .rcard, #t-dieta .rc")][0]; if(r) r.click(); await esp(1200); }
+  if(SHOT === "comunidade"){ nav("juntas"); await esp(3000); }
+  if(SHOT === "evolucao"){ nav("perfil"); await esp(900); const b = [...D().querySelectorAll("#t-perfil button, #t-perfil a")].find(x => /meu progresso|evolu/i.test(x.textContent)); if(b) b.click(); await esp(1500); }
+  if(SHOT === "jornada"){ nav("perfil"); await esp(900); clica("#xe-jor"); await esp(1200); }
+  limpa(); if(!["dificil", "receita", "jornada"].includes(SHOT)) W().scrollTo(0, 0); fixa(); await esp(400); fixa(); document.title = "OK " + SHOT;
+})();
+</script></body></html>
