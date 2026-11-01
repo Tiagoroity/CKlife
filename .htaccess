@@ -5,8 +5,8 @@ RewriteCond %{HTTPS} off [OR]
 RewriteCond %{HTTP_HOST} ^www\. [NC]
 RewriteRule ^ https://cklife.com.br%{REQUEST_URI} [L,R=301]
 # atalhos fáceis para divulgar
-RewriteRule ^app/?$ https://cklife.vercel.app/ [L,R=302]
-RewriteRule ^entrar/?$ https://cklife.vercel.app/ [L,R=302]
+RewriteRule ^app/?$ https://app.cklife.com.br/ [L,R=302]
+RewriteRule ^entrar/?$ https://app.cklife.com.br/ [L,R=302]
 # compressão
 <IfModule mod_deflate.c>
 AddOutputFilterByType DEFLATE text/html text/css application/javascript image/svg+xml application/json
