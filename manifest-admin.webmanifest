@@ -1,0 +1,32 @@
+{
+ "name": "CK Admin",
+ "short_name": "CK Admin",
+ "description": "Painel da equipe CK Life.",
+ "lang": "pt-BR",
+ "start_url": "/admin",
+ "scope": "/",
+ "display": "standalone",
+ "background_color": "#04190F",
+ "theme_color": "#04190F",
+ "icons": [
+  {
+   "src": "/img/admin/icone-192.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "/img/admin/icone-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "/img/admin/icone-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ],
+ "id": "/admin"
+}
