@@ -675,7 +675,9 @@ function convidar(){
   if(navigator.share) navigator.share({ title: "CK Life", text: txt, url }).catch(() => {});
   else window.open("https://wa.me/?text=" + encodeURIComponent(txt + " " + url), "_blank", "noopener");
 }
-const linkSuporte = () => { const d = String(DB.config.suporte || "").replace(/\D/g, ""); return d.length >= 10 ? "https://wa.me/" + (d.length <= 11 ? "55" + d : d) + "?text=" + encodeURIComponent("Oi! Preciso de ajuda com o CK Life.") : ""; };
+/* suporte: se for e-mail abre o e-mail; se for número abre o WhatsApp */
+const suporteEmail = () => { const s = String(DB.config.suporte || "").trim(); return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(s) ? s : ""; };
+const linkSuporte = () => { const em = suporteEmail(); if(em) return "mailto:" + em + "?subject=" + encodeURIComponent("Ajuda com o CK Life") + "&body=" + encodeURIComponent("Oi! Preciso de ajuda com o CK Life.\n\nMeu e-mail de cadastro: " + ((typeof ME !== "undefined" && ME && ME.email) || "")); const d = String(DB.config.suporte || "").replace(/\D/g, ""); return d.length >= 10 ? "https://wa.me/" + (d.length <= 11 ? "55" + d : d) + "?text=" + encodeURIComponent("Oi! Preciso de ajuda com o CK Life.") : ""; };
 /* 👑 em cima da foto: só quem PAGA o Pro (teste grátis não ganha coroa). Vem do servidor (perfis.pro_ate / meu_plano), nunca do app. */
 function coroaDe(u){ try{ const e = window.__ENT && window.__ENT.d;
   if(u === "eu" || (ME && u === ME.id) || (typeof NU !== "undefined" && NU.uid && u === NU.uid)){ if(e) return !!(e.pro && !e.trial); u = NU.uid; }
@@ -1495,7 +1497,7 @@ function rPerfil(){
     <div class="card" style="padding:6px 16px">
       ${setRow("p-conv", "share", "Convide uma amiga", "Treinar junto é mais gostoso")}
       ${setRow("px-share", "flame", "Compartilhar minha sequência", "Você escolhe se quer postar na Comunidade")}
-      ${linkSuporte() ? setRow("p-sup", "speaker", "Fale com o suporte", "Atendimento pelo WhatsApp") : ""}
+      ${linkSuporte() ? setRow("p-sup", "speaker", "Fale com o suporte", suporteEmail() ? "Atendimento por e-mail · " + suporteEmail() : "Atendimento pelo WhatsApp") : ""}
       ${setRow("p-sair", "logout", "Sair da conta", "")}
     </div>
     ${DB.config.suporte ? `<p class="hint" style="text-align:center;margin:0">Suporte: ${esc(DB.config.suporte)}</p>` : ""}`;
@@ -1503,7 +1505,7 @@ function rPerfil(){
   $("p-lemb").onclick = editaLembrete;
   $("p-dados").onclick = editaDados;
   $("p-conv").onclick = convidar;
-  const psu = $("p-sup"); if(psu) psu.onclick = () => window.open(linkSuporte(), "_blank", "noopener");
+  const psu = $("p-sup"); if(psu) psu.onclick = () => { const l = linkSuporte(); if(l.startsWith("mailto:")) location.href = l; else window.open(l, "_blank", "noopener"); };
   $("p-plano").onclick = () => abrirPrograma(progAtual().id);
   $("p-pref").onclick = editaPreferencias;
   $("p-obj").onclick = () => abrirObjetivo(p.objetivo);

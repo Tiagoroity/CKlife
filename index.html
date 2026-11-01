@@ -5630,7 +5630,7 @@ async function privacidade(){
   const pp = $("pv-perfil"); if(pp) pp.onclick = async () => { await garantePerfil(); editarPerfil(); };
   $("sheet-body").querySelectorAll("[data-desb]").forEach(b => b.onclick = async () => { try{ await q(SB().from("bloqueios").delete().eq("quem", NU.uid).eq("bloqueado", b.dataset.desb)); toast("Desbloqueada"); privacidade(); }catch(e){ toast(ERR_MSG(e)); } });
   $("pv-ciclo").onclick = () => { if(!confirm("Apagar todos os dados do Meu Ciclo?")) return; XP.ciclo.apagar().then(() => { CIC = null; toast("Dados do Meu Ciclo apagados"); }).catch(e => toast(XERR(e) ? XAVISO : "Não deu agora")); };
-  const s = $("pv-sup"); if(s) s.onclick = () => window.open(linkSuporte(), "_blank", "noopener");
+  const s = $("pv-sup"); if(s) s.onclick = () => { const l = linkSuporte(); if(l.startsWith("mailto:")) location.href = l; else window.open(l, "_blank", "noopener"); };
 }
 
 /* ---------- FEED ---------- */
@@ -8940,7 +8940,7 @@ const abrirPerfilEq = abrirPerfil; abrirPerfil = async function(u){
    Quem deixa o CK Life aberto (ou instalado na tela inicial) fica com a versão antiga até recarregar.
    O app confere a versão publicada ao abrir, ao voltar do segundo plano e a cada 5 minutos.
    Se houver versão nova, mostra a faixa "ATUALIZAR": um toque e pronto. Nunca aparece no meio do treino. */
-const CK_VER = "20261101175150";
+const CK_VER = "20261101180639";
 let CK_VER_NOVA = null;
 async function confereVersao(){
   if(!/^\d/.test(CK_VER) || !/^https?:/.test(location.protocol)) return;
@@ -10258,7 +10258,9 @@ function convidar(){
   if(navigator.share) navigator.share({ title: "CK Life", text: txt, url }).catch(() => {});
   else window.open("https://wa.me/?text=" + encodeURIComponent(txt + " " + url), "_blank", "noopener");
 }
-const linkSuporte = () => { const d = String(DB.config.suporte || "").replace(/\D/g, ""); return d.length >= 10 ? "https://wa.me/" + (d.length <= 11 ? "55" + d : d) + "?text=" + encodeURIComponent("Oi! Preciso de ajuda com o CK Life.") : ""; };
+/* suporte: se for e-mail abre o e-mail; se for número abre o WhatsApp */
+const suporteEmail = () => { const s = String(DB.config.suporte || "").trim(); return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(s) ? s : ""; };
+const linkSuporte = () => { const em = suporteEmail(); if(em) return "mailto:" + em + "?subject=" + encodeURIComponent("Ajuda com o CK Life") + "&body=" + encodeURIComponent("Oi! Preciso de ajuda com o CK Life.\n\nMeu e-mail de cadastro: " + ((typeof ME !== "undefined" && ME && ME.email) || "")); const d = String(DB.config.suporte || "").replace(/\D/g, ""); return d.length >= 10 ? "https://wa.me/" + (d.length <= 11 ? "55" + d : d) + "?text=" + encodeURIComponent("Oi! Preciso de ajuda com o CK Life.") : ""; };
 /* 👑 em cima da foto: só quem PAGA o Pro (teste grátis não ganha coroa). Vem do servidor (perfis.pro_ate / meu_plano), nunca do app. */
 function coroaDe(u){ try{ const e = window.__ENT && window.__ENT.d;
   if(u === "eu" || (ME && u === ME.id) || (typeof NU !== "undefined" && NU.uid && u === NU.uid)){ if(e) return !!(e.pro && !e.trial); u = NU.uid; }
@@ -11078,7 +11080,7 @@ function rPerfil(){
     <div class="card" style="padding:6px 16px">
       ${setRow("p-conv", "share", "Convide uma amiga", "Treinar junto é mais gostoso")}
       ${setRow("px-share", "flame", "Compartilhar minha sequência", "Você escolhe se quer postar na Comunidade")}
-      ${linkSuporte() ? setRow("p-sup", "speaker", "Fale com o suporte", "Atendimento pelo WhatsApp") : ""}
+      ${linkSuporte() ? setRow("p-sup", "speaker", "Fale com o suporte", suporteEmail() ? "Atendimento por e-mail · " + suporteEmail() : "Atendimento pelo WhatsApp") : ""}
       ${setRow("p-sair", "logout", "Sair da conta", "")}
     </div>
     ${DB.config.suporte ? `<p class="hint" style="text-align:center;margin:0">Suporte: ${esc(DB.config.suporte)}</p>` : ""}`;
@@ -11086,7 +11088,7 @@ function rPerfil(){
   $("p-lemb").onclick = editaLembrete;
   $("p-dados").onclick = editaDados;
   $("p-conv").onclick = convidar;
-  const psu = $("p-sup"); if(psu) psu.onclick = () => window.open(linkSuporte(), "_blank", "noopener");
+  const psu = $("p-sup"); if(psu) psu.onclick = () => { const l = linkSuporte(); if(l.startsWith("mailto:")) location.href = l; else window.open(l, "_blank", "noopener"); };
   $("p-plano").onclick = () => abrirPrograma(progAtual().id);
   $("p-pref").onclick = editaPreferencias;
   $("p-obj").onclick = () => abrirObjetivo(p.objetivo);
@@ -11995,7 +11997,7 @@ function vConfig(){
       <div class="field full"><label for="cf-ck">Link de pagamento do Premium (Kiwify, Hotmart, Mercado Pago...)</label><input class="input" id="cf-ck" value="${esc(c.checkout)}" placeholder="https://pay.kiwify.com.br/..."></div>
       <div class="field"><label for="cf-pr">Preço mensal do Premium (R$)</label><input class="input num" id="cf-pr" value="${esc(c.premiumPreco)}" inputmode="decimal"></div>
       <div class="field"><label for="cf-tc">Treinos para ganhar 1 cupom</label><input class="input num" id="cf-tc" value="${esc(c.treinosParaCupom)}" inputmode="numeric"></div>
-      <div class="field full"><label for="cf-sp">Contato de suporte (aparece no app)</label><input class="input" id="cf-sp" value="${esc(c.suporte)}" placeholder="WhatsApp (65) 99999-9999"></div>
+      <div class="field full"><label for="cf-sp">Contato de suporte (aparece no app)</label><input class="input" id="cf-sp" value="${esc(c.suporte)}" placeholder="suporte@cklife.com.br ou WhatsApp"><small class="muted">Pode ser um e-mail (abre o e-mail da aluna) ou um WhatsApp com DDD.</small></div>
     </div><button class="btn btn-accent needs-edit" id="cf-ok" style="margin-top:12px">Salvar</button></div>
     <div class="card" ${nEx ? "" : "hidden"}><h3>Dados de exemplo</h3><p style="margin:0 0 12px">${nEx ? `Há ${nEx} alunas, anunciantes, campanhas, parceiros e cobranças de exemplo para demonstrar o painel.` : "Os dados de exemplo já foram apagados."}</p>${nEx ? `<button class="btn btn-bad needs-edit" id="cf-clear">Apagar dados de exemplo</button>` : ""}</div>
     ${F.nuvem && F.nuvem.ativo ? `<div class="card"><h3>Seus dados</h3><p style="margin:0">Tudo fica salvo com segurança no banco de dados (Supabase) e aparece em qualquer aparelho em que você entrar.</p></div>` : ""}

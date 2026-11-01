@@ -324,7 +324,7 @@ async function privacidade(){
   const pp = $("pv-perfil"); if(pp) pp.onclick = async () => { await garantePerfil(); editarPerfil(); };
   $("sheet-body").querySelectorAll("[data-desb]").forEach(b => b.onclick = async () => { try{ await q(SB().from("bloqueios").delete().eq("quem", NU.uid).eq("bloqueado", b.dataset.desb)); toast("Desbloqueada"); privacidade(); }catch(e){ toast(ERR_MSG(e)); } });
   $("pv-ciclo").onclick = () => { if(!confirm("Apagar todos os dados do Meu Ciclo?")) return; XP.ciclo.apagar().then(() => { CIC = null; toast("Dados do Meu Ciclo apagados"); }).catch(e => toast(XERR(e) ? XAVISO : "Não deu agora")); };
-  const s = $("pv-sup"); if(s) s.onclick = () => window.open(linkSuporte(), "_blank", "noopener");
+  const s = $("pv-sup"); if(s) s.onclick = () => { const l = linkSuporte(); if(l.startsWith("mailto:")) location.href = l; else window.open(l, "_blank", "noopener"); };
 }
 
 /* ---------- FEED ---------- */
