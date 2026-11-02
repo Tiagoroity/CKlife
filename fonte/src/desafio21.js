@@ -470,9 +470,20 @@ function d21PoeCardEm(box, id, poe){
   if(old) old.outerHTML = h; else poe(box);
   const c = $(id); if(c) c.onclick = () => { if(!d21Insc()) d21Ev("challenge_viewed", { onde: id === "d21-card" ? "inicio" : "treinos" }); d21Abrir(d21Ed().fase === "finalizada" ? "jornada" : "hoje"); };
 }
+/* Desafios antigos (7/21/30 dias e turma de 21 dias) saem da vitrine: o espaço "Desafios" fica para o CK 21 Dias Juntas
+   e para os próximos desafios. Quem já está num desses continua vendo o próprio progresso (nada é apagado). */
+const d21AntigoAtivo = () => !!(ME && ME.desafio && !ME.desafio.fim);
+if(typeof turmaInicio === "function"){ const turmaInicio0 = turmaInicio; turmaInicio = function(){ if(d21AntigoAtivo()) return turmaInicio0.apply(this, arguments); }; }
+function d21LimpaAntigos(){
+  const ds = document.querySelector("#t-treinar .xe-desafios"); if(!ds) return;
+  if(!(typeof naTurma === "function" && naTurma())) ds.querySelectorAll(".turma").forEach(e => e.remove());
+  ds.querySelectorAll(".xe-des-row").forEach(e => e.remove());
+  const cnt = ds.querySelector(".sec-title .muted"); if(cnt && !d21AntigoAtivo()) cnt.remove();
+}
 const rTreinarD21 = rTreinar;
 rTreinar = function(){
   const r = rTreinarD21.apply(this, arguments);
+  try{ d21LimpaAntigos(); }catch(e){ console.warn(e); }
   try{ if(D21.st) d21PoeCard(); d21Carrega(false).then(() => { if(TAB === "treinar") d21PoeCard(); }); }catch(e){ console.warn(e); }
   return r;
 };
