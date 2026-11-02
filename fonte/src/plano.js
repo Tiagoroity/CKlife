@@ -9,7 +9,8 @@ const agoraServ = () => Date.now() + ENT.skew;
 async function carregaPlano(forca){
   if(!NU.ativo || !NU.sb || !NU.uid) return null;
   if(!forca && ENT.d && Date.now() - ENT.t < 300000) return ENT.d;
-  try{ const r = await NU.sb.rpc("meu_plano"); if(!r.error && r.data){ ENT.d = r.data; ENT.t = Date.now(); ENT.skew = new Date(r.data.agora).getTime() - Date.now(); } }catch(e){}
+  try{ const r = await NU.sb.rpc("meu_plano"); if(!r.error && r.data){ ENT.d = r.data; ENT.t = Date.now(); ENT.skew = new Date(r.data.agora).getTime() - Date.now();
+    try{ localStorage.setItem("ck_ent_vis", JSON.stringify({ u: NU.uid, d: today(), pro: !!r.data.pro, trial: !!r.data.trial, dias_restantes: r.data.dias_restantes, fim: r.data.fim || null })); }catch(e){} } }catch(e){}
   return ENT.d;
 }
 async function carregaPlanos(){
@@ -109,8 +110,10 @@ const fimTreinoPl = fimTreino; fimTreino = function(parcial){ fimTreinoPl.apply(
     ok.insertAdjacentHTML("afterend", `<button class="pw-mini" id="pw-fim"><span><i class='ckc' aria-hidden='true'></i> ${esc(o.titulo)}</span><small>${esc(o.subtitulo || "Ver condição especial")}</small></button>`); $("pw-fim").onclick = () => { NU.sb.rpc("oferta_evento", { p_id: o.id, p_tipo: "clique" }); registraEvento("offer_clicked", { campanha: o.campanha }); paywall("treino_concluido"); }; }, () => {}); };
 
 /* ---------- Início e Perfil: teste, último dia, oferta ---------- */
+/* só para exibir antes do servidor responder (evita a faixa aparecer atrasada e empurrar a tela); vale no mesmo dia e para a mesma conta */
+function entVisivel(){ try{ const c = JSON.parse(localStorage.getItem("ck_ent_vis") || "null"); return c && c.d === today() && NU && c.u === NU.uid ? c : null; }catch(e){ return null; } }
 function blocoPlano(onde){
-  const d = ENT.d; if(!d) return "";
+  const d = ENT.d || entVisivel(); if(!d) return "";
   if(d.pro && !d.trial){ if(onde !== "inicio") return ""; return `<div class="pl-bloco"><button class="pl-pro" data-pro="1"><span class="pl-cr"><i class='ckc' aria-hidden='true'></i></span><span><b>Você é CK Life Pro</b><small>${d.fim ? "Assinatura ativa até " + brD(String(d.fim).slice(0, 10)) : "Assinatura ativa"} · tudo liberado</small></span></button></div>`; }
   const of = d.oferta, dias = d.dias_restantes;
   let h = "";
@@ -176,7 +179,7 @@ const rExplorarPl = rExplorar; rExplorar = function(){ rExplorarPl.apply(this, a
 document.addEventListener("visibilitychange", async () => { if(document.hidden || !(NU.ativo && NU.sb && NU.uid)) return; const antes = pagou(); await carregaPlano(true);
   if(pagou() && ENT.d) ENT.d.oferta = null; if(antes !== pagou()){ if(pagou()){ $("pw") && $("pw").remove(); toast("Bem-vinda ao CK Life Pro!"); } if(!$("v-app").hidden) rerender(); atualizaTopo(); } });
 /* ---------- carga inicial ---------- */
-{ let n = 0; const t = setInterval(async () => { if(!(NU.ativo && NU.sb && NU.uid)){ if(++n > 60) clearInterval(t); return; } clearInterval(t);
+{ let n = 0; const t = setInterval(async () => { if(!(NU.ativo && NU.sb && NU.uid)){ if(++n > 300) clearInterval(t); return; } clearInterval(t);
   await carregaPlano(true); if(pagou()) ENT.d.oferta = null; if(emTrial() && NU.sb){ try{ const r = await NU.sb.rpc("oferta_ativar", { p_contexto: null }); if(r && r.data) ENT.d.oferta = r.data; }catch(e){} }
   try{ const r = await NU.sb.from("app_config").select("chave,valor").in("chave", ["treino_voz"]); (r.data || []).forEach(c => { if(c.chave === "treino_voz") ENT.cfgVoz = c.valor; }); }catch(e){}
-  if(ENT.d && !$("v-app").hidden){ rerender(); atualizaTopo(); } }, 1500); }
+  if(ENT.d && !$("v-app").hidden){ rerender(); atualizaTopo(); } }, 300); }

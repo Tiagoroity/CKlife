@@ -59,11 +59,13 @@ async function d21Carrega(forca){
   if(!forca && D21.st && Date.now() - D21.t < 90000) return D21.st;
   try{ const r = await SB().rpc("d21_estado"); if(r.error) throw r.error; D21.st = r.data || null; D21.t = Date.now();
     if(D21.st && D21.st.agora) D21.off = Date.parse(D21.st.agora) - Date.now();
-    try{ localStorage.setItem("ck_d21_cache", JSON.stringify(D21.st)); }catch(e){}
+    try{ localStorage.setItem("ck_d21_cache", JSON.stringify({ u: NU.uid, st: D21.st })); }catch(e){}
     d21Fila(); }
-  catch(e){ if(!D21.st){ try{ D21.st = JSON.parse(localStorage.getItem("ck_d21_cache") || "null"); }catch(x){} } }
+  catch(e){ if(!D21.st) D21.st = d21CacheLe(); }
   return D21.st;
 }
+/* última resposta salva no aparelho (mesma conta): o cartão aparece na hora ao abrir o app; o servidor confirma logo depois */
+function d21CacheLe(){ try{ const c = JSON.parse(localStorage.getItem("ck_d21_cache") || "null"); return c && c.u && NU && c.u === NU.uid ? c.st : null; }catch(e){ return null; } }
 const d21Ed = () => D21.st && D21.st.edicao;
 const d21Insc = () => D21.st && D21.st.inscrita && !D21.st.inscrita.saiu_em;
 const d21Dia = () => { const e = d21Ed(); return e ? Math.max(0, Math.min(22, +e.dia)) : 0; };
@@ -457,7 +459,7 @@ function d21CardHTML(id){
   return `<button class="d21-entrada" id="${id}"><span class="d21-eye">🔥 CK 21 DIAS JUNTAS</span><b>21 dias. Uma turma.<br>Um objetivo: não parar.</b>${+R.inscritas >= 5 ? `<small>${int(R.inscritas)} mulheres já estão dentro</small>` : ""}<span class="d21-entrada-bt">CONHECER DESAFIO</span></button>`;
 }
 function d21PoeCard(){
-  const box = $("t-inicio"); if(box) d21PoeCardEm(box, "d21-card", b => { const capa = b.querySelector(".capa"); if(capa) capa.insertAdjacentHTML("afterend", d21CardHTML("d21-card")); else b.insertAdjacentHTML("afterbegin", d21CardHTML("d21-card")); });
+  const box = $("t-inicio"); if(box) d21PoeCardEm(box, "d21-card", b => { const sd = b.querySelector(":scope > .sd"), capa = b.querySelector(".capa"); if(sd) sd.insertAdjacentHTML("beforebegin", d21CardHTML("d21-card")); else if(capa) capa.insertAdjacentHTML("afterend", d21CardHTML("d21-card")); else b.insertAdjacentHTML("afterbegin", d21CardHTML("d21-card")); });
   /* Treinos › Programas: junto dos outros desafios */
   const ds = document.querySelector("#t-treinar .xe-desafios");
   if(ds) d21PoeCardEm(ds, "d21-card-t", b => { const st = b.querySelector(".sec-title"); (st || b).insertAdjacentHTML(st ? "afterend" : "afterbegin", d21CardHTML("d21-card-t")); });
@@ -477,7 +479,7 @@ rTreinar = function(){
 const rInicioD21 = rInicio;
 rInicio = function(){
   const r = rInicioD21.apply(this, arguments);
-  try{ if(D21.st) d21PoeCard(); d21Carrega(false).then(() => { if(TAB === "inicio") d21PoeCard(); d21Retoma(); }); }catch(e){ console.warn(e); }
+  try{ if(!D21.st && d21On()) D21.st = d21CacheLe(); if(D21.st) d21PoeCard(); d21Carrega(false).then(() => { if(TAB === "inicio") d21PoeCard(); d21Retoma(); }); }catch(e){ console.warn(e); }
   return r;
 };
 /* volta para dentro se ela fechou o app lá dentro, ou se veio de um aviso (?d21=hoje|comunidade) */

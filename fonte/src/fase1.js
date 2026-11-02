@@ -213,7 +213,7 @@ function organizaInicio(){
     // 6) ordem final
     const recT = $("h-card") && $("h-card").closest(".sec-title");
     const aviso = box.querySelector(":scope > .notice"); if(aviso) aviso.classList.add("aviso-fino");
-    const ordem = [capa, aviso, sd, pv, box.querySelector(".tudo"), xi && !xi.hidden ? xi : null, sem, recT, rh, box.querySelector(".pr-fila")].filter(Boolean);
+    const ordem = [capa, aviso, $("d21-card"), sd, pv, box.querySelector(".tudo"), xi && !xi.hidden ? xi : null, sem, recT, rh, box.querySelector(".pr-fila")].filter(Boolean);
     const fim = [...box.querySelectorAll(":scope > .ad-card, :scope > .slogan")];
     const resto = [...box.children].filter(e => !ordem.includes(e) && !fim.includes(e) && e !== gav && e !== xi && !e.classList.contains("xe-dia"));
     [...ordem, ...resto, ...fim, gav].forEach(e => box.appendChild(e));

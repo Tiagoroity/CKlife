@@ -7416,7 +7416,8 @@ const agoraServ = () => Date.now() + ENT.skew;
 async function carregaPlano(forca){
   if(!NU.ativo || !NU.sb || !NU.uid) return null;
   if(!forca && ENT.d && Date.now() - ENT.t < 300000) return ENT.d;
-  try{ const r = await NU.sb.rpc("meu_plano"); if(!r.error && r.data){ ENT.d = r.data; ENT.t = Date.now(); ENT.skew = new Date(r.data.agora).getTime() - Date.now(); } }catch(e){}
+  try{ const r = await NU.sb.rpc("meu_plano"); if(!r.error && r.data){ ENT.d = r.data; ENT.t = Date.now(); ENT.skew = new Date(r.data.agora).getTime() - Date.now();
+    try{ localStorage.setItem("ck_ent_vis", JSON.stringify({ u: NU.uid, d: today(), pro: !!r.data.pro, trial: !!r.data.trial, dias_restantes: r.data.dias_restantes, fim: r.data.fim || null })); }catch(e){} } }catch(e){}
   return ENT.d;
 }
 async function carregaPlanos(){
@@ -7516,8 +7517,10 @@ const fimTreinoPl = fimTreino; fimTreino = function(parcial){ fimTreinoPl.apply(
     ok.insertAdjacentHTML("afterend", `<button class="pw-mini" id="pw-fim"><span><i class='ckc' aria-hidden='true'></i> ${esc(o.titulo)}</span><small>${esc(o.subtitulo || "Ver condição especial")}</small></button>`); $("pw-fim").onclick = () => { NU.sb.rpc("oferta_evento", { p_id: o.id, p_tipo: "clique" }); registraEvento("offer_clicked", { campanha: o.campanha }); paywall("treino_concluido"); }; }, () => {}); };
 
 /* ---------- Início e Perfil: teste, último dia, oferta ---------- */
+/* só para exibir antes do servidor responder (evita a faixa aparecer atrasada e empurrar a tela); vale no mesmo dia e para a mesma conta */
+function entVisivel(){ try{ const c = JSON.parse(localStorage.getItem("ck_ent_vis") || "null"); return c && c.d === today() && NU && c.u === NU.uid ? c : null; }catch(e){ return null; } }
 function blocoPlano(onde){
-  const d = ENT.d; if(!d) return "";
+  const d = ENT.d || entVisivel(); if(!d) return "";
   if(d.pro && !d.trial){ if(onde !== "inicio") return ""; return `<div class="pl-bloco"><button class="pl-pro" data-pro="1"><span class="pl-cr"><i class='ckc' aria-hidden='true'></i></span><span><b>Você é CK Life Pro</b><small>${d.fim ? "Assinatura ativa até " + brD(String(d.fim).slice(0, 10)) : "Assinatura ativa"} · tudo liberado</small></span></button></div>`; }
   const of = d.oferta, dias = d.dias_restantes;
   let h = "";
@@ -7583,10 +7586,10 @@ const rExplorarPl = rExplorar; rExplorar = function(){ rExplorarPl.apply(this, a
 document.addEventListener("visibilitychange", async () => { if(document.hidden || !(NU.ativo && NU.sb && NU.uid)) return; const antes = pagou(); await carregaPlano(true);
   if(pagou() && ENT.d) ENT.d.oferta = null; if(antes !== pagou()){ if(pagou()){ $("pw") && $("pw").remove(); toast("Bem-vinda ao CK Life Pro!"); } if(!$("v-app").hidden) rerender(); atualizaTopo(); } });
 /* ---------- carga inicial ---------- */
-{ let n = 0; const t = setInterval(async () => { if(!(NU.ativo && NU.sb && NU.uid)){ if(++n > 60) clearInterval(t); return; } clearInterval(t);
+{ let n = 0; const t = setInterval(async () => { if(!(NU.ativo && NU.sb && NU.uid)){ if(++n > 300) clearInterval(t); return; } clearInterval(t);
   await carregaPlano(true); if(pagou()) ENT.d.oferta = null; if(emTrial() && NU.sb){ try{ const r = await NU.sb.rpc("oferta_ativar", { p_contexto: null }); if(r && r.data) ENT.d.oferta = r.data; }catch(e){} }
   try{ const r = await NU.sb.from("app_config").select("chave,valor").in("chave", ["treino_voz"]); (r.data || []).forEach(c => { if(c.chave === "treino_voz") ENT.cfgVoz = c.valor; }); }catch(e){}
-  if(ENT.d && !$("v-app").hidden){ rerender(); atualizaTopo(); } }, 1500); }
+  if(ENT.d && !$("v-app").hidden){ rerender(); atualizaTopo(); } }, 300); }
 
 
 /* ===================== TREINO: EXPLICAÇÃO POR VOZ ANTES DE CADA EXERCÍCIO =====================
@@ -8611,7 +8614,7 @@ function organizaInicio(){
     // 6) ordem final
     const recT = $("h-card") && $("h-card").closest(".sec-title");
     const aviso = box.querySelector(":scope > .notice"); if(aviso) aviso.classList.add("aviso-fino");
-    const ordem = [capa, aviso, sd, pv, box.querySelector(".tudo"), xi && !xi.hidden ? xi : null, sem, recT, rh, box.querySelector(".pr-fila")].filter(Boolean);
+    const ordem = [capa, aviso, $("d21-card"), sd, pv, box.querySelector(".tudo"), xi && !xi.hidden ? xi : null, sem, recT, rh, box.querySelector(".pr-fila")].filter(Boolean);
     const fim = [...box.querySelectorAll(":scope > .ad-card, :scope > .slogan")];
     const resto = [...box.children].filter(e => !ordem.includes(e) && !fim.includes(e) && e !== gav && e !== xi && !e.classList.contains("xe-dia"));
     [...ordem, ...resto, ...fim, gav].forEach(e => box.appendChild(e));
@@ -9220,7 +9223,7 @@ const abrirPerfilEq = abrirPerfil; abrirPerfil = async function(u){
    Quem deixa o CK Life aberto (ou instalado na tela inicial) fica com a versão antiga até recarregar.
    O app confere a versão publicada ao abrir, ao voltar do segundo plano e a cada 5 minutos.
    Se houver versão nova, mostra a faixa "ATUALIZAR": um toque e pronto. Nunca aparece no meio do treino. */
-const CK_VER = "20261102005129";
+const CK_VER = "20261102005719";
 let CK_VER_NOVA = null;
 const ATU_K = "ck_atu";
 const atuTentou = () => { try{ return JSON.parse(localStorage.getItem(ATU_K) || "null"); }catch(e){ return null; } };
@@ -10969,11 +10972,13 @@ async function d21Carrega(forca){
   if(!forca && D21.st && Date.now() - D21.t < 90000) return D21.st;
   try{ const r = await SB().rpc("d21_estado"); if(r.error) throw r.error; D21.st = r.data || null; D21.t = Date.now();
     if(D21.st && D21.st.agora) D21.off = Date.parse(D21.st.agora) - Date.now();
-    try{ localStorage.setItem("ck_d21_cache", JSON.stringify(D21.st)); }catch(e){}
+    try{ localStorage.setItem("ck_d21_cache", JSON.stringify({ u: NU.uid, st: D21.st })); }catch(e){}
     d21Fila(); }
-  catch(e){ if(!D21.st){ try{ D21.st = JSON.parse(localStorage.getItem("ck_d21_cache") || "null"); }catch(x){} } }
+  catch(e){ if(!D21.st) D21.st = d21CacheLe(); }
   return D21.st;
 }
+/* última resposta salva no aparelho (mesma conta): o cartão aparece na hora ao abrir o app; o servidor confirma logo depois */
+function d21CacheLe(){ try{ const c = JSON.parse(localStorage.getItem("ck_d21_cache") || "null"); return c && c.u && NU && c.u === NU.uid ? c.st : null; }catch(e){ return null; } }
 const d21Ed = () => D21.st && D21.st.edicao;
 const d21Insc = () => D21.st && D21.st.inscrita && !D21.st.inscrita.saiu_em;
 const d21Dia = () => { const e = d21Ed(); return e ? Math.max(0, Math.min(22, +e.dia)) : 0; };
@@ -11367,7 +11372,7 @@ function d21CardHTML(id){
   return `<button class="d21-entrada" id="${id}"><span class="d21-eye">🔥 CK 21 DIAS JUNTAS</span><b>21 dias. Uma turma.<br>Um objetivo: não parar.</b>${+R.inscritas >= 5 ? `<small>${int(R.inscritas)} mulheres já estão dentro</small>` : ""}<span class="d21-entrada-bt">CONHECER DESAFIO</span></button>`;
 }
 function d21PoeCard(){
-  const box = $("t-inicio"); if(box) d21PoeCardEm(box, "d21-card", b => { const capa = b.querySelector(".capa"); if(capa) capa.insertAdjacentHTML("afterend", d21CardHTML("d21-card")); else b.insertAdjacentHTML("afterbegin", d21CardHTML("d21-card")); });
+  const box = $("t-inicio"); if(box) d21PoeCardEm(box, "d21-card", b => { const sd = b.querySelector(":scope > .sd"), capa = b.querySelector(".capa"); if(sd) sd.insertAdjacentHTML("beforebegin", d21CardHTML("d21-card")); else if(capa) capa.insertAdjacentHTML("afterend", d21CardHTML("d21-card")); else b.insertAdjacentHTML("afterbegin", d21CardHTML("d21-card")); });
   /* Treinos › Programas: junto dos outros desafios */
   const ds = document.querySelector("#t-treinar .xe-desafios");
   if(ds) d21PoeCardEm(ds, "d21-card-t", b => { const st = b.querySelector(".sec-title"); (st || b).insertAdjacentHTML(st ? "afterend" : "afterbegin", d21CardHTML("d21-card-t")); });
@@ -11387,7 +11392,7 @@ rTreinar = function(){
 const rInicioD21 = rInicio;
 rInicio = function(){
   const r = rInicioD21.apply(this, arguments);
-  try{ if(D21.st) d21PoeCard(); d21Carrega(false).then(() => { if(TAB === "inicio") d21PoeCard(); d21Retoma(); }); }catch(e){ console.warn(e); }
+  try{ if(!D21.st && d21On()) D21.st = d21CacheLe(); if(D21.st) d21PoeCard(); d21Carrega(false).then(() => { if(TAB === "inicio") d21PoeCard(); d21Retoma(); }); }catch(e){ console.warn(e); }
   return r;
 };
 /* volta para dentro se ela fechou o app lá dentro, ou se veio de um aviso (?d21=hoje|comunidade) */
