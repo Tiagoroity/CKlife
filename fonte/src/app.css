@@ -2894,3 +2894,7 @@ body.d21-on{overflow:hidden}
 .da-post h3{font-size:17px}
 body.d21-on .ins-toast{display:none}
 .d21-fimt .d21-meds{display:flex;justify-content:center;flex-wrap:wrap}.d21-fimt .d21-meds>*{min-width:84px}
+.d21-mais{border:0;background:rgba(255,255,255,.08);color:var(--dt);border-radius:999px;width:38px;height:38px;display:grid;place-items:center}
+.d21 .d21-sair{border:1px solid rgba(255,120,120,.45);background:rgba(255,90,90,.08);color:#FFB3B3;text-decoration:none;font:700 14px/1 Figtree,system-ui,sans-serif;border-radius:14px;padding:14px;align-self:stretch}
+.d21-sair-tx{color:var(--dm);text-align:center;font-size:12.5px;margin-top:-6px}
+.d21-o-sair{border:1px solid #E5A3A3;color:#B42318;background:transparent}
