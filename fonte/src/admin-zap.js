@@ -56,7 +56,7 @@ function zLiga(){
 /* ===== Alunas quentes: treinaram 2 vezes ou mais e ainda não pagam o Pro (são as que mais assinam) ===== */
 function zQuentes(){
   const lim = addD(today(), -14);
-  return DB().users.filter(u => !u.admin && !u.soAdmin && !u.exemplo).map(u => {
+  return DB().users.filter(u => !u.admin && !u.soAdmin && !u.exemplo && !ehTeste(u)).map(u => {
     const T = (u.treinos || []).filter(t => t && t.d), rec = T.filter(t => t.d >= lim).length, s = (typeof PLU !== "undefined" && PLU) ? PLU[u.id] : null;
     const pagando = s && s.pro && !s.trial && ["kiwify", "apple", "google"].includes(s.provider);
     return { u, n: T.length, rec, pagando, trial: !!(s && s.trial), ult: T.length ? T.map(t => t.d).sort().pop() : "" };
@@ -78,7 +78,7 @@ const zApp = u => !!(u.pwaInstalado || u.acApp);
 function zAppPinta(){
   const main = $("adm-main"); if(!main || SEC !== "alunos" || $("za-box")) return;
   const h = main.querySelector(".head"); if(!h) return;
-  const A = DB().users.filter(u => !u.admin && !u.soAdmin && !u.exemplo), ins = A.filter(zApp), falta = A.filter(u => !zApp(u)).sort((a, b) => String(b.acWeb || b.criado || "").localeCompare(String(a.acWeb || a.criado || "")));
+  const A = DB().users.filter(u => !u.admin && !u.soAdmin && !u.exemplo && !ehTeste(u)), ins = A.filter(zApp), falta = A.filter(u => !zApp(u)).sort((a, b) => String(b.acWeb || b.criado || "").localeCompare(String(a.acWeb || a.criado || "")));
   const web = falta.filter(u => u.acWeb), pc = A.length ? Math.round(100 * ins.length / A.length) : 0;
   const linha = u => `<div class="zq-row"><span class="zq-n">🌐</span><div class="zq-t"><b>${esc(u.nome || u.email)}</b><small>${u.acWeb ? "abriu pelo navegador em " + brD(u.acWeb) : "cadastro em " + brD(u.criado || "")}</small></div>${zDig(u.whats).length >= 10 ? `<button class="btn btn-sm zap-bt" data-za="${u.id}" aria-label="Mandar como instalar o app">💬</button>` : ""}</div>`;
   const zq = $("zq-box"), alvo = zq || h;

@@ -24,7 +24,7 @@ function ebOrigem(u){
 }
 window.ckOrigemAluna = u => ebOrigem(u).nome;
 function ebNumeros(){
-  const alunas = DB().users.filter(u => !u.admin && !u.soAdmin && !u.exemplo), sete = addD(today(), -6), M = {};
+  const alunas = DB().users.filter(u => !u.admin && !u.soAdmin && !u.exemplo && !ehTeste(u)), sete = addD(today(), -6), M = {};
   alunas.forEach(u => { const o = ebOrigem(u), m = M[o.k] = M[o.k] || { nome: o.nome, tipo: o.tipo, cad: 0, sem: 0, treinou: 0, pro: 0 };
     m.cad++; if((u.criado || "") >= sete) m.sem++; if((u.treinos || []).length) m.treinou++; if(ebPagando(u)) m.pro++; });
   return { M, total: alunas.length };
@@ -36,7 +36,7 @@ function ebCompart(){
   const ini = addD(today(), -29), E = (DB().eventos || []).filter(e => String(e.c).startsWith("sh:") && e.d >= ini), us = DB().users;
   const ab = E.filter(e => EB_SH[String(e.c).split(":")[1]]), env = E.filter(e => String(e.c).split(":")[1] === "share_menu_opened"), conv = E.filter(e => /invite_clicked/.test(String(e.c).split(":")[1]));
   const porTipo = {}; ab.forEach(e => { const k = EB_SH[String(e.c).split(":")[1]]; porTipo[k] = (porTipo[k] || 0) + 1; });
-  const chegaram = us.filter(u => !u.admin && !u.soAdmin && u.origem && u.origem.src === "convite"), quem = {};
+  const chegaram = us.filter(u => !u.admin && !u.soAdmin && !ehTeste(u) && u.origem && u.origem.src === "convite"), quem = {};
   chegaram.forEach(u => { const c = u.origem.anuncio || "?"; quem[c] = (quem[c] || 0) + 1; });
   const top = Object.entries(quem).sort((a, b) => b[1] - a[1]).slice(0, 10).map(([c, n]) => { const d = us.find(u => u.convite === c); return `<tr><td>${d ? esc(d.nome || "Aluna") : `<span class="muted">código ${esc(c)}</span>`}</td><td class="num"><b>${int(n)}</b></td></tr>`; }).join("");
   return `<div class="card"><h3>Compartilhamentos das alunas</h3><p class="hint" style="margin:0 0 10px">Últimos 30 dias. Quando a aluna conclui algo, ela pode mandar o cartão da conquista para fora do app (Instagram, WhatsApp...). O convite leva um link com código dela; quem se cadastra por ele aparece aqui. Cliques no link não dá para contar sem a pessoa entrar no app.</p>
@@ -92,7 +92,7 @@ function ebForm(e){
 }
 /* alunas sem origem (cadastradas antes do rastreio): marcar à mão */
 function ebSemOrigem(pode){
-  const L = DB().users.filter(u => !u.admin && !u.soAdmin && !u.exemplo && !u.origem && !ebManual().some(x => x.id === u.id)).sort((a, b) => (b.criado || "").localeCompare(a.criado || ""));
+  const L = DB().users.filter(u => !u.admin && !u.soAdmin && !u.exemplo && !ehTeste(u) && !u.origem && !ebManual().some(x => x.id === u.id)).sort((a, b) => (b.criado || "").localeCompare(a.criado || ""));
   if(!L.length || !pode) return;
   const dias = [...new Set(L.map(u => u.criado).filter(Boolean))].slice(0, 6);
   const opts = `<option value="meta">Anúncio Meta</option>${ebLista().map(e => `<option value="e:${esc(e.id)}">Embaixadora: ${esc(e.nome)}</option>`).join("")}<option value="direto">Direto / indicação</option>`;

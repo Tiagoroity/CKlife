@@ -106,7 +106,7 @@ let DASH = null, DASH_T = 0;
 const relT = s => { const d = (Date.now() - new Date(s).getTime()) / 6e4; return d < 1 ? "agora" : d < 60 ? `há ${Math.round(d)} min` : d < 1440 ? `há ${Math.round(d / 60)} h` : `há ${Math.round(d / 1440)} d`; };
 function vDashboard(){
   const db = DB(), al = metricasAlunos(), ini = addD(today(), -29), hoje = today();
-  const treinos30 = db.users.reduce((a, u) => a + (u.treinos || []).filter(x => x.d >= ini).length, 0), treinosHoje = db.users.reduce((a, u) => a + (u.treinos || []).filter(x => x.d === hoje).length, 0);
+  const treinos30 = al.U.reduce((a, u) => a + (u.treinos || []).filter(x => x.d >= ini).length, 0), treinosHoje = al.U.reduce((a, u) => a + (u.treinos || []).filter(x => x.d === hoje).length, 0);
   const adsNoAr = db.campanhas.filter(c => c.ativa && c.inicio <= hoje && (!c.fim || c.fim >= hoje)).length;
   const conv = al.total ? al.pagos / al.total : 0, mesAtras = db.pagamentos.filter(p => p.status !== "pago" && p.venc < hoje).length;
   const D = DASH, h = new Date().getHours();

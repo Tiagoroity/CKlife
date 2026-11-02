@@ -125,11 +125,13 @@ let PLU = null, VENDAS = null, PLU_T = 0;
 function catPlano(u){ const s = PLU && PLU[u.id]; if(s){ if(!s.pro) return "gratis"; if(s.trial) return "teste"; return ["kiwify", "apple", "google"].includes(s.provider) ? "pago" : "cortesia"; }
   if(!F.isPremium(u)) return "gratis"; return u.premium.tipo === "vitalicio" ? "cortesia" : u.premium.tipo; }
 /* compras feitas pela equipe (testes) não entram nos números; continuam na lista, marcadas como "teste da equipe" */
+/* conta de teste (nome ou e-mail com "teste"): aparece na lista, mas não entra em nenhuma conta do painel */
+const ehTeste = u => !!u && /teste/i.test(String(u.nome || "") + " " + String(u.email || ""));
 const vendaEquipe = v => { const e = String(v.email || "").toLowerCase(); return (DB().users || []).some(u => (u.admin || u.soAdmin) && ((v.user_id && u.id === v.user_id) || (e && String(u.email || "").toLowerCase() === e))); };
-const vendaOk = v => ["order_approved", "subscription_renewed"].includes(v.evento) && v.status === "processado" && !vendaEquipe(v);
+const vendaOk = v => ["order_approved", "subscription_renewed"].includes(v.evento) && v.status === "processado" && !vendaEquipe(v) && !/teste/i.test(String(v.email || "") + " " + String(v.nome || ""));
 const vendasMes = (m = today().slice(0, 7)) => (VENDAS || []).filter(v => vendaOk(v) && String(v.quando).slice(0, 7) === m).reduce((s, v) => s + (+v.valor || 0), 0);
 function metricasAlunos(cidade){
-  const db = DB(), U = db.users.filter(u => !u.soAdmin && (!cidade || +u.cidade === +cidade));
+  const db = DB(), Ulista = db.users.filter(u => !u.soAdmin && (!cidade || +u.cidade === +cidade)), U = Ulista.filter(u => !ehTeste(u));
   const ids = new Set(U.map(u => u.id));
   const sinal = {}; U.forEach(u => { const ds = new Set([u.ultimo, u.acApp, u.acWeb, u.criado, ...((u.treinos || []).map(t => t && t.d))].filter(Boolean)); ds.forEach(d => (sinal[d] = sinal[d] || []).push(u.id)); });
   const acc = d => [...new Set([...(db.acessos[d] || []).filter(id => ids.has(id)), ...(sinal[d] || [])])];
@@ -137,7 +139,7 @@ function metricasAlunos(cidade){
   const ult = n => Array.from({ length: n }, (_, i) => addD(today(), -i));
   const ret = n => { const base = U.filter(u => u.criado <= addD(today(), -n)); if(!base.length) return null; const dias = [...new Set([...Object.keys(db.acessos), ...Object.keys(sinal)])], ok = base.filter(u => dias.some(d => d >= addD(u.criado, n) && acc(d).includes(u.id))).length; return ok / base.length; };
   return {
-    U, total: U.length, novos7: U.filter(u => u.criado >= addD(today(), -6)).length,
+    U, Ulista, total: U.length, novos7: U.filter(u => u.criado >= addD(today(), -6)).length,
     dau: acc(today()).length, wau: uni(ult(7)), mau: uni(ult(30)),
     pagos: U.filter(u => catPlano(u) === "pago" && !u.admin).length,
     teste: U.filter(u => catPlano(u) === "teste").length,
@@ -162,7 +164,7 @@ function vResumo(){
   const anAt = db.anunciantes.filter(a => a.ativo), mrr = anAt.reduce((s, a) => s + (+a.valor || 0), 0);
   const mes = today().slice(0, 7), pg = db.pagamentos.filter(p => p.ref === mes);
   const rec = pg.filter(p => p.status === "pago").reduce((s, p) => s + +p.valor, 0), ab = pg.filter(p => p.status !== "pago").reduce((s, p) => s + +p.valor, 0);
-  const treinos30 = db.users.reduce((a, u) => a + (u.treinos || []).filter(x => x.d >= ini).length, 0);
+  const treinos30 = al.U.reduce((a, u) => a + (u.treinos || []).filter(x => x.d >= ini).length, 0);
   const temEx = db.users.some(u => u.exemplo) || db.anunciantes.some(a => a.exemplo);
   $("adm-main").innerHTML = `
     <div class="head"><div><span class="adm-ola">${(h => h < 12 ? "Bom dia" : h < 18 ? "Boa tarde" : "Boa noite")(new Date().getHours())}, ${esc(((ME && ME.nome) || "").split(" ")[0])} · ${new Date().toLocaleDateString("pt-BR", { weekday: "long", day: "numeric", month: "long" })}</span><h1>Resumo</h1><p class="muted">Visão geral do app e dos anúncios. Anúncios: últimos 30 dias.</p></div></div>
@@ -447,7 +449,7 @@ const statusPrem = u => { const s = PLU && PLU[u.id]; if(s && s.pro){ const ate 
 function vAlunos(){
   const db = DB(), al = metricasAlunos(AF.cidade);
   const imps = {}; db.eventos.forEach(e => { if(e.t === "imp") imps[e.u] = (imps[e.u] || 0) + 1; });
-  let L = al.U;
+  let L = al.Ulista || al.U;
   if(AF.q){ const q = AF.q.toLowerCase(); L = L.filter(u => (u.nome + " " + u.email + " " + (u.whats || "")).toLowerCase().includes(q)); }
   if(AF.plano) L = L.filter(u => catPlano(u) === AF.plano);
   L = L.slice().sort((a, b) => (b.criado || "").localeCompare(a.criado || ""));
@@ -465,7 +467,7 @@ function vAlunos(){
     <div class="card"><h3>Lista de alunas <span class="muted num" style="font-size:16px">(${L.length})</span></h3>
       <div class="toolbar" style="margin-bottom:10px"><input class="input" id="al-q" placeholder="Buscar por nome, e-mail ou WhatsApp" value="${esc(AF.q)}"><select class="input" id="al-p"><option value="">Todos os planos</option><option value="pago" ${AF.plano === "pago" ? "selected" : ""}>Pro pago</option><option value="teste" ${AF.plano === "teste" ? "selected" : ""}>Teste grátis</option><option value="cortesia" ${AF.plano === "cortesia" ? "selected" : ""}>Cortesia</option><option value="gratis" ${AF.plano === "gratis" ? "selected" : ""}>Gratuito</option></select></div>
       <div class="tbl"><table><thead><tr><th>Nome</th><th>WhatsApp</th><th>E-mail</th><th>Cidade</th><th>Idade</th><th>Gênero</th><th>Cadastro</th><th>Plano</th><th>Treinos</th><th>Anúncios</th><th></th></tr></thead><tbody>
-        ${L.slice(0, 300).map(u => { const [s, k] = statusPrem(u); return `<tr><td><b>${esc(u.nome)}</b>${ex(u)}${u.admin ? ` <span class="st ok">admin</span>` : ""}${u.bloqueado ? ` <span class="st bad">pausado</span>` : ""}</td><td>${esc(u.whats || "")}</td><td>${esc(u.email)}</td><td>${esc(cidNomeU(u))}</td><td class="num">${F.idade(u.nasc) ?? "-"}</td><td>${GEN[u.genero] || "-"}</td><td class="num">${brD(u.criado)}</td><td><span class="st ${k}">${s}</span></td><td class="num">${(u.treinos || []).length}</td><td class="num">${int(imps[u.id] || 0)}</td><td><button class="btn btn-line btn-sm needs-edit" data-ed="${u.id}">Editar</button></td></tr>`; }).join("") || `<tr><td colspan="11" class="empty">Nenhuma aluna encontrada.</td></tr>`}
+        ${L.slice(0, 300).map(u => { const [s, k] = statusPrem(u); return `<tr><td><b>${esc(u.nome)}</b>${ex(u)}${ehTeste(u) ? ` <span class="st off">teste · não conta</span>` : ""}${u.admin ? ` <span class="st ok">admin</span>` : ""}${u.bloqueado ? ` <span class="st bad">pausado</span>` : ""}</td><td>${esc(u.whats || "")}</td><td>${esc(u.email)}</td><td>${esc(cidNomeU(u))}</td><td class="num">${F.idade(u.nasc) ?? "-"}</td><td>${GEN[u.genero] || "-"}</td><td class="num">${brD(u.criado)}</td><td><span class="st ${k}">${s}</span></td><td class="num">${(u.treinos || []).length}</td><td class="num">${int(imps[u.id] || 0)}</td><td><button class="btn btn-line btn-sm needs-edit" data-ed="${u.id}">Editar</button></td></tr>`; }).join("") || `<tr><td colspan="11" class="empty">Nenhuma aluna encontrada.</td></tr>`}
       </tbody></table></div></div>`;
   $("al-c").onchange = e => { AF.cidade = e.target.value; rerender(); };
   $("al-p").onchange = e => { AF.plano = e.target.value; rerender(); };
@@ -717,7 +719,7 @@ function vCidades(){
   $("adm-main").innerHTML = `
     <div class="head"><div><h1>Cidades</h1><p class="muted">Aparecem no cadastro da aluna e servem para segmentar anúncios.</p></div><button class="btn btn-accent needs-edit" id="ci-new">+ Nova cidade</button></div>
     <div class="tbl"><table><thead><tr><th>Cidade</th><th>UF</th><th>Alunas</th><th>Anunciantes</th><th>Status</th><th></th></tr></thead><tbody>
-      ${db.cidades.map(c => `<tr><td><b>${esc(c.nome)}</b></td><td>${esc(c.uf)}</td><td class="num">${db.users.filter(u => +u.cidade === +c.id).length}</td><td class="num">${db.anunciantes.filter(a => +a.cidade === +c.id).length}</td><td><span class="st ${c.ativa ? "ok" : "off"}">${c.ativa ? "Ativa" : "Inativa"}</span></td><td><button class="btn btn-line btn-sm needs-edit" data-tg="${c.id}">${c.ativa ? "Desativar" : "Ativar"}</button></td></tr>`).join("")}
+      ${db.cidades.map(c => `<tr><td><b>${esc(c.nome)}</b></td><td>${esc(c.uf)}</td><td class="num">${db.users.filter(u => +u.cidade === +c.id && !ehTeste(u)).length}</td><td class="num">${db.anunciantes.filter(a => +a.cidade === +c.id).length}</td><td><span class="st ${c.ativa ? "ok" : "off"}">${c.ativa ? "Ativa" : "Inativa"}</span></td><td><button class="btn btn-line btn-sm needs-edit" data-tg="${c.id}">${c.ativa ? "Desativar" : "Ativar"}</button></td></tr>`).join("")}
     </tbody></table></div>`;
   const n = $("ci-new"); if(n) n.onclick = () => {
     modal("Nova cidade", `<div class="formgrid"><div class="field"><label for="ci-n">Nome</label><input class="input" id="ci-n"></div><div class="field"><label for="ci-u">UF</label><input class="input" id="ci-u" maxlength="2"></div></div><button class="btn btn-accent" id="ci-ok">Adicionar</button>`);
