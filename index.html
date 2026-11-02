@@ -9360,7 +9360,7 @@ const abrirPerfilEq = abrirPerfil; abrirPerfil = async function(u){
    Quem deixa o CK Life aberto (ou instalado na tela inicial) fica com a versão antiga até recarregar.
    O app confere a versão publicada ao abrir, ao voltar do segundo plano e a cada 5 minutos.
    Se houver versão nova, mostra a faixa "ATUALIZAR": um toque e pronto. Nunca aparece no meio do treino. */
-const CK_VER = "20261102202556";
+const CK_VER = "20261102203151";
 let CK_VER_NOVA = null;
 const ATU_K = "ck_atu";
 const atuTentou = () => { try{ return JSON.parse(localStorage.getItem(ATU_K) || "null"); }catch(e){ return null; } };
@@ -11672,7 +11672,8 @@ function ppTela(html, cls){
   return box;
 }
 /* nada aberto por cima (treino, Pro, outra janela, recado da Coach) */
-const ppLivre = () => $("sheet").hidden && $("play").hidden && !$("pw")?.offsetParent && !document.querySelector(".ent:not(.pp), .coach-1o, #ck-inst, #res-ov, .modal:not([hidden]), #d21");
+const ppVis = el => !!el && !el.hidden && el.getClientRects().length > 0 && getComputedStyle(el).display !== "none" && getComputedStyle(el).visibility !== "hidden";
+const ppLivre = () => $("sheet").hidden && $("play").hidden && !ppVis($("pw")) && ![...document.querySelectorAll(".ent:not(.pp), .coach-1o, #ck-inst, #res-ov, .modal:not([hidden]), #d21")].some(ppVis);
 
 /* decide a próxima tela.  Ciclo: instalar → (abrir pelo ícone) → primeiro treino + avisos → (avisos que faltaram) → fim */
 const ppPodeAvisar = () => PUSH_OK() && !(ehIOS() && !instalado());
@@ -11837,7 +11838,26 @@ function ppCombinado(d, h, avisa, icone){
 /* tela de passagem: o plano dela ficou pronto e já seguimos para o compromisso no celular */
 function ppPreparo(){
   ppTela(`<div class="pp-ok">${ic("check", 34, 2.6)}</div><span class="ent-eb">Plano pronto</span>
-    <h1 class="ent-t pp-t">${entNome()}, seu plano está pronto 💚</h1><p class="pp-sub">Agora, o primeiro passo do seu compromisso.</p>`, "pp-fim");
+    <h1 class="ent-t pp-t">${entNome()}, seu plano está pronto 💚</h1><p class="pp-sub">Agora, o primeiro passo do seu compromisso.</p>
+    <div class="pp-bt"><button class="btn ent-cta" id="pp-seg" style="opacity:0;transition:opacity .3s">CONTINUAR</button></div>`, "pp-fim pp-prep");
+  $("pp-seg").onclick = ppSegue;
+  setTimeout(() => { const b = $("pp-seg"); if(b) b.style.opacity = 1; }, 1200);
+  setTimeout(() => { const b = $("pp"); if(b && b.classList.contains("pp-prep")) ppSegue(); }, 2600);   // nunca fica parada aqui
+}
+/* sai da tela "plano pronto" de qualquer jeito: termina o cadastro se precisar e abre o passo de baixar o app */
+function ppSegue(){
+  try{ if(ppQuandoLivre.t){ clearInterval(ppQuandoLivre.t); ppQuandoLivre.t = null; } }catch(e){}
+  try{ if(!$("v-onb").hidden){ const nx = $("ob-next"); if(nx) nx.click(); } }catch(e){ errRegistra("ppSegue: " + (e && e.message)); }
+  try{
+    if(ME && ME.perfil){
+      ME.boasVindas = today();
+      if(!ME.passos) ME.passos = { ini: today(), etapa: "inst" };
+      save();
+      if($("v-app").hidden){ try{ abrirApp(); }catch(e){ errRegistra("ppSegue abrirApp: " + (e && e.message)); } }
+      return ppRoda();
+    }
+  }catch(e){ errRegistra("ppSegue: " + (e && e.message)); }
+  ppFecha();
 }
 
 /* Início: lembrete visível até ela fazer o primeiro treino (só para quem marcou) */
@@ -11881,7 +11901,7 @@ entBoasVindas = function(){
   }catch(e){ console.warn(e); }
   return ppBV.apply(this, arguments);
 };
-function ppQuandoLivre(){ if(ppQuandoLivre.t) return; let n = 0; const t = ppQuandoLivre.t = setInterval(() => { if(++n > 300){ ppQuandoLivre.t = null; clearInterval(t); return; } if(!$("v-app").hidden && ppLivre()){ clearInterval(t); ppQuandoLivre.t = null; ppRoda(); } }, 600); }
+function ppQuandoLivre(){ if(ppQuandoLivre.t) return; let n = 0; const t = ppQuandoLivre.t = setInterval(() => { if(++n > 300){ ppQuandoLivre.t = null; clearInterval(t); return; } if(!$("v-app").hidden && (ppLivre() || ($("pp") && $("pp").classList.contains("pp-prep")))){ clearInterval(t); ppQuandoLivre.t = null; ppRoda(); } }, 600); }
 /* iPhone: abriu pelo ícone e entrou → continua de onde parou */
 { const abrirPP = abrirApp; abrirApp = function(){ const r = abrirPP.apply(this, arguments);
   try{ if(ME && ME.passos && !ME.passos.fim && ME.boasVindas !== "mostrar" && !(typeof modoAdmin === "function" && modoAdmin())) setTimeout(ppQuandoLivre, 900); }catch(e){}
@@ -11918,7 +11938,7 @@ if(/^https?:/.test(location.protocol) && !/localhost|127\.0\.0\.1/.test(location
   setInterval(errEnvia, 15000);
 }
 /* só no teste local */
-if(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) window.__PP = { roda: ppRoda, me: () => ME, salva: ppSalva, livre: ppLivre, ent: k => { OB = { i: 0, itens: [], intro: 9, pos: ENT_POS_NOVA.indexOf(k) }; show("v-onb"); entPos(); }, dias: () => { OB = { i: OBQ.findIndex(q => q.k === "diasSem"), itens: [], intro: 9 }; show("v-onb"); onboarding(); } };
+if(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) window.__PP = { prep: ppPreparo, roda: ppRoda, me: () => ME, salva: ppSalva, livre: ppLivre, ent: k => { OB = { i: 0, itens: [], intro: 9, pos: ENT_POS_NOVA.indexOf(k) }; show("v-onb"); entPos(); }, dias: () => { OB = { i: OBQ.findIndex(q => q.k === "diasSem"), itens: [], intro: 9 }; show("v-onb"); onboarding(); } };
 
 /* ===================== PIXEL DA META (medir anúncios) =====================
    Só funciona se a pessoa aceitar os cookies (LGPD). Nunca no painel do administrador.
