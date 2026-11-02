@@ -84,6 +84,8 @@ N.carregar = async (DB, user, modoAdm) => {
     const ev = await q(sb.from("eventos").select("t,c,u,d").eq("u", user.id).eq("d", hoje()));
     DB.eventos = ev;
   }
+  /* o e-mail que vale é o do login (se ele foi trocado, a cópia antiga guardada na conta é corrigida e salva) */
+  { const eu = DB.users.find(u => u.id === user.id); if(eu && user.email && eu.email !== user.email){ eu.email = user.email; fotografa(DB); const s = SNAP && SNAP.users; if(s) delete s[user.id]; return; } }
   fotografa(DB);
 };
 N.cadastrar = async (email, senha) => {
