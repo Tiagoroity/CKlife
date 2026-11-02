@@ -449,7 +449,7 @@ const statusPrem = u => { const s = PLU && PLU[u.id]; if(s && s.pro){ const ate 
 function vAlunos(){
   const db = DB(), al = metricasAlunos(AF.cidade);
   const imps = {}; db.eventos.forEach(e => { if(e.t === "imp") imps[e.u] = (imps[e.u] || 0) + 1; });
-  let L = al.Ulista || al.U;
+  let L = AF.q && /teste/i.test(AF.q) ? (al.Ulista || al.U) : al.U;   // contas de teste só aparecem se você buscar "teste"
   if(AF.q){ const q = AF.q.toLowerCase(); L = L.filter(u => (u.nome + " " + u.email + " " + (u.whats || "")).toLowerCase().includes(q)); }
   if(AF.plano) L = L.filter(u => catPlano(u) === AF.plano);
   L = L.slice().sort((a, b) => (b.criado || "").localeCompare(a.criado || ""));
