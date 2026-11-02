@@ -113,7 +113,7 @@ const shConvDesafio = D => `Estou fazendo o ${D[1] === 21 ? "CK 21 Dias Juntas" 
 const pad2 = n => String(n).padStart(2, "0");
 /* treino que acabou de terminar: dentro de desafio, Plano B ou treino normal */
 function shDoTreino(t){
-  const pb = shPlanoBAtivo();
+  const pb = shEmDesafio() ? 0 : shPlanoBAtivo();
   if(pb) return { tipo: "planob", emoji: "💚", titulo: "PLANO B CONCLUÍDO", frases: [`Hoje eu só tinha ${pb} minutos.\nE fiz os ${pb}.`, "Pouco ainda conta.", "Feito é melhor que perfeito."] };
   const z = typeof desafioAtual === "function" ? desafioAtual() : null;
   if(z && ME.desafio && !(ME.desafio.fim && ME.desafio.fim < today())){
@@ -136,31 +136,26 @@ function shDaConquista(c){
   return { tipo: c[1] === "s" ? "sequencia" : "medalha", emoji: c[3], titulo: c[4], frases: [c[5], "Mais uma conquista na minha jornada. 💚"].filter(Boolean) };
 }
 
-/* ---------- ligações ---------- */
-/* fim do treino: "Compartilhar conquista" abre o cartão; Stories da comunidade continua como opção dentro dele */
+/* ---------- ligações: SÓ dentro de desafio. Fora de desafio o app fica exatamente como era. ---------- */
+const shEmDesafio = () => { const z = typeof desafioAtual === "function" ? desafioAtual() : null; return !!(z && ME.desafio && !(ME.desafio.fim && ME.desafio.fim < today())); };
+/* fim do treino feito durante um desafio: "Compartilhar conquista" abre o cartão do dia do desafio */
 const fimTreinoSh = fimTreino;
 fimTreino = function(parcial){
   const r = fimTreinoSh.apply(this, arguments);
   try{
-    const t = (ME.treinos || []).slice(-1)[0]; if(parcial || !t) return r;
-    const o = shDoTreino(t); if(o.tipo === "planob") SH_PB = null;
-    o.comunidade = () => compartilharConquista(t);
-    let b = $("fim-conq");
-    if(!b){ const ok = $("fim-ok"); if(ok){ ok.insertAdjacentHTML("beforebegin", `<button class="btn btn-accent btn-lg btn-block" id="fim-conq"></button>`); b = $("fim-conq"); } }
-    if(b){ b.innerHTML = `${ic("share", 18)} Compartilhar conquista`; b.onclick = () => ckCompartilhar(o); }
-    const old = $("fim-share"); if(old) old.hidden = true;   // o cartão novo substitui o antigo (mesma função, mais formatos)
-    const ok = $("fim-ok"); if(ok && !ok.dataset.sh){ ok.dataset.sh = 1; ok.textContent = "Continuar"; }
-    const h = document.querySelector("#play .done-hero h2"); if(h && !/🔥/.test(h.textContent) && o.tipo !== "planob") h.textContent = "🔥 " + h.textContent;
-    if(o.tipo === "planob" && h){ h.textContent = "💚 Plano B concluído!"; const p = h.nextElementSibling; if(p && p.tagName === "P") p.textContent = "Pouco ainda conta. E você fez."; }
+    const t = (ME.treinos || []).slice(-1)[0]; if(parcial || !t || (PL && PL.T && PL.T.d21) || !shEmDesafio()) return r;
+    SH_PB = null; const o = shDoTreino(t); if(!/^desafio/.test(o.tipo)) return r;
+    const b = $("fim-conq"); if(b){ b.innerHTML = `${ic("share", 18)} Compartilhar conquista`; b.onclick = () => ckCompartilhar(o); }
   }catch(e){ console.warn(e); }
   return r;
 };
-/* celebração de conquista (medalhas, sequência, desafio concluído, aniversário...) */
+/* celebração de desafio concluído: botão Compartilhar usa o cartão do desafio */
 const celebrarSh = celebrar;
 celebrar = async function(c){
   const r = await celebrarSh.apply(this, arguments);
   try{
-    const b = $("ce-share"); if(b && c){ b.innerHTML = `${ic("share", 18)} Compartilhar conquista`; b.onclick = () => { const bx = $("celebra"); if(bx){ bx.hidden = true; bx.innerHTML = ""; } ckCompartilhar(shDaConquista(c)); }; }
+    const o = c && shDaConquista(c), b = $("ce-share");
+    if(b && o && o.tipo === "desafio_ok") b.onclick = () => { const bx = $("celebra"); if(bx){ bx.hidden = true; bx.innerHTML = ""; } ckCompartilhar(o); };
   }catch(e){ console.warn(e); }
   return r;
 };
