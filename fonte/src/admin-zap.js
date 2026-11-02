@@ -44,6 +44,7 @@ function zLiga(){
   main.querySelectorAll("tbody tr").forEach(tr => {
     if(tr.querySelector("[data-zap]")) return;
     const ed = tr.querySelector("[data-ed]"); if(!ed) return; const u = DB().users.find(x => x.id === ed.dataset.ed); if(!u) return;
+    const nm0 = tr.children[0]; if(nm0 && !nm0.querySelector(".al-app")){ const ap = zApp(u); nm0.insertAdjacentHTML("beforeend", `<br><small class="al-app ${ap ? "ok" : ""}">${ap ? "📲 app instalado" : u.acWeb ? "🌐 usa pelo navegador" : "❔ ainda não abriu desde 01/11"}</small>`); }
     const nm = tr.children[0]; if(nm && !nm.querySelector(".al-orig") && window.ckOrigemAluna){ const o = window.ckOrigemAluna(u); if(o && !/^Direto/.test(o)) nm.insertAdjacentHTML("beforeend", `<br><small class="al-orig">via ${esc(o)}</small>`); }
     const td = tr.children[1]; if(!td || zDig(u.whats).length < 10) return;
     td.insertAdjacentHTML("beforeend", ` <button class="btn btn-sm zap-bt" data-zap="${u.id}" title="Mandar mensagem no WhatsApp" aria-label="Mandar mensagem no WhatsApp para ${esc(u.nome || "")}">💬</button>`);
@@ -71,3 +72,19 @@ function zQuentesPinta(){
   main.querySelectorAll("[data-zq]").forEach(b => b.onclick = () => { const u = DB().users.find(x => x.id === b.dataset.zq); if(u) zAbre(u); });
 }
 { let zqT = null; new MutationObserver(() => { clearTimeout(zqT); zqT = setTimeout(zQuentesPinta, 80); }).observe($("adm-main") || document.body, { childList: true }); }
+
+/* ===== App na tela do celular: quantas instalaram e quem falta (com a mensagem "Como instalar o app") ===== */
+const zApp = u => !!(u.pwaInstalado || u.acApp);
+function zAppPinta(){
+  const main = $("adm-main"); if(!main || SEC !== "alunos" || $("za-box")) return;
+  const h = main.querySelector(".head"); if(!h) return;
+  const A = DB().users.filter(u => !u.admin && !u.soAdmin && !u.exemplo), ins = A.filter(zApp), falta = A.filter(u => !zApp(u)).sort((a, b) => String(b.acWeb || b.criado || "").localeCompare(String(a.acWeb || a.criado || "")));
+  const web = falta.filter(u => u.acWeb), pc = A.length ? Math.round(100 * ins.length / A.length) : 0;
+  const linha = u => `<div class="zq-row"><span class="zq-n">🌐</span><div class="zq-t"><b>${esc(u.nome || u.email)}</b><small>${u.acWeb ? "abriu pelo navegador em " + brD(u.acWeb) : "cadastro em " + brD(u.criado || "")}</small></div>${zDig(u.whats).length >= 10 ? `<button class="btn btn-sm zap-bt" data-za="${u.id}" aria-label="Mandar como instalar o app">💬</button>` : ""}</div>`;
+  const zq = $("zq-box"), alvo = zq || h;
+  alvo.insertAdjacentHTML("afterend", `<div class="card zq-card" id="za-box"><div class="zq-h"><b>📲 App na tela do celular</b><small class="muted">Conta quem abriu o CK Life pelo app instalado (registro a partir de 01/11/2026; quem não abriu desde então ainda não aparece).</small></div>
+    <div class="grid g3" style="margin:10px 0">${kpi("Instalaram", int(ins.length), pc + "% das alunas", "", 1)}${kpi("Usam pelo navegador", int(web.length), "abriram sem instalar")}${kpi("Sem registro ainda", int(falta.length - web.length), "não abriram desde 01/11")}</div>
+    ${falta.length ? `<details><summary><b>Ver quem ainda não instalou (${falta.length})</b> · toque em 💬 para mandar o passo a passo</summary><div class="zq-lista" style="margin-top:8px">${falta.slice(0, 60).map(linha).join("")}</div>${falta.length > 60 ? `<p class="muted">Mostrando as 60 mais recentes.</p>` : ""}</details>` : `<p class="muted" style="margin:0">Todas já instalaram 🎉</p>`}</div>`);
+  main.querySelectorAll("[data-za]").forEach(b => b.onclick = () => { const u = DB().users.find(x => x.id === b.dataset.za); const url = u && zLink(u, "m9"); if(url) window.open(url, "_blank", "noopener"); });
+}
+{ let zaT = null; new MutationObserver(() => { clearTimeout(zaT); zaT = setTimeout(zAppPinta, 120); }).observe($("adm-main") || document.body, { childList: true }); }

@@ -119,3 +119,8 @@ rPerfil = function(){
 /* gatilhos: ao voltar para o Início (depois do 1º treino ou em outro dia) */
 const rInicioInst = rInicio;
 rInicio = function(){ const r = rInicioInst.apply(this, arguments); setTimeout(instAgenda, 800); return r; };
+
+/* registra, uma vez por dia, se ela abriu pelo app instalado ou pelo navegador (o painel mostra quem ainda não instalou) */
+{ const abrirAppAc = abrirApp; abrirApp = function(){ const r = abrirAppAc.apply(this, arguments);
+  try{ if(ME && !(typeof modoAdmin === "function" && modoAdmin())){ const k = instalado() ? "acApp" : "acWeb"; if(ME[k] !== today()){ ME[k] = today(); if(k === "acApp" && !ME.pwaInstalado) ME.pwaInstalado = today(); save(); } } }catch(e){}
+  return r; }; }
