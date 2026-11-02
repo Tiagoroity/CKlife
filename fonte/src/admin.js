@@ -125,10 +125,10 @@ let PLU = null, VENDAS = null, PLU_T = 0;
 function catPlano(u){ const s = PLU && PLU[u.id]; if(s){ if(!s.pro) return "gratis"; if(s.trial) return "teste"; return ["kiwify", "apple", "google"].includes(s.provider) ? "pago" : "cortesia"; }
   if(!F.isPremium(u)) return "gratis"; return u.premium.tipo === "vitalicio" ? "cortesia" : u.premium.tipo; }
 /* compras feitas pela equipe (testes) não entram nos números; continuam na lista, marcadas como "teste da equipe" */
-/* conta de teste (nome ou e-mail com "teste"): aparece na lista, mas não entra em nenhuma conta do painel */
-const ehTeste = u => !!u && /teste/i.test(String(u.nome || "") + " " + String(u.email || ""));
+/* conta de teste (NOME com "teste", só o nome): aparece na lista, mas não entra em nenhuma conta do painel */
+const ehTeste = u => !!u && /teste/i.test(String(u.nome || ""));
 const vendaEquipe = v => { const e = String(v.email || "").toLowerCase(); return (DB().users || []).some(u => (u.admin || u.soAdmin) && ((v.user_id && u.id === v.user_id) || (e && String(u.email || "").toLowerCase() === e))); };
-const vendaOk = v => ["order_approved", "subscription_renewed"].includes(v.evento) && v.status === "processado" && !vendaEquipe(v) && !/teste/i.test(String(v.email || "") + " " + String(v.nome || ""));
+const vendaOk = v => ["order_approved", "subscription_renewed"].includes(v.evento) && v.status === "processado" && !vendaEquipe(v) && !/teste/i.test(String(v.nome || ""));
 const vendasMes = (m = today().slice(0, 7)) => (VENDAS || []).filter(v => vendaOk(v) && String(v.quando).slice(0, 7) === m).reduce((s, v) => s + (+v.valor || 0), 0);
 function metricasAlunos(cidade){
   const db = DB(), Ulista = db.users.filter(u => !u.soAdmin && (!cidade || +u.cidade === +cidade)), U = Ulista.filter(u => !ehTeste(u));
