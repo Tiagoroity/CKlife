@@ -12,10 +12,13 @@ const ebSlug = s => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toL
 const ebLista = () => (DB().embaixadoras = DB().embaixadoras || []);
 const ebPagando = u => { const s = (typeof PLU !== "undefined" && PLU) ? PLU[u.id] : null; return !!(s && s.pro && !s.trial && ["kiwify", "apple", "google"].includes(s.provider)); };
 /* de onde a aluna veio */
+const ebManual = () => (DB().origemManual = DB().origemManual || []);
 function ebOrigem(u){
-  const o = u.origem || {};
-  if(o.e){ const e = ebLista().find(x => x.id === o.e); return { k: "emb:" + o.e, nome: e ? e.nome : o.e, tipo: "Embaixadora" }; }
-  if(o.src){ const ad = /meta|facebook|instagram|^fb$|^ig$/i.test(o.src); return { k: ad ? "meta" : "src:" + o.src, nome: ad ? "Anúncio Meta" : o.src, tipo: ad ? "Anúncio" : "Campanha" }; }
+  const man = !u.origem && ebManual().find(x => x.id === u.id);
+  const o = u.origem || (man && man.o) || {};
+  if(o.e){ const e = ebLista().find(x => x.id === o.e); return { k: "emb:" + o.e, nome: e ? e.nome : o.e, tipo: "Embaixadora" + (man ? " (marcada à mão)" : "") }; }
+  if(o.src === "direto") return { k: "direto_ind", nome: "Direto / indicação", tipo: "Marcada à mão" };
+  if(o.src){ const ad = /meta|facebook|instagram|^fb$|^ig$/i.test(o.src); return { k: ad ? "meta" : "src:" + o.src, nome: ad ? "Anúncio Meta" : o.src, tipo: (ad ? "Anúncio" : "Campanha") + (man ? " (inclui marcadas à mão)" : "") }; }
   return { k: "direto", nome: "Direto / sem origem", tipo: "Direto" };
 }
 window.ckOrigemAluna = u => ebOrigem(u).nome;
@@ -40,6 +43,7 @@ function vEmbaixadoras(){
     </div>
     <div class="card"><h3>De onde vêm as alunas</h3><p class="hint" style="margin:0 0 10px">Todas as ${int(total)} alunas cadastradas. A origem passou a ser registrada a partir de 01/11/2026; quem entrou antes aparece em "Direto / sem origem".</p>
       <div class="tbl"><table><thead><tr><th>Origem</th><th>Cadastros</th><th>Já treinaram</th><th>Assinaram o Pro</th></tr></thead><tbody>${orig.map(m => `<tr><td><b>${esc(m.nome)}</b><br><small class="muted">${esc(m.tipo)}</small></td><td class="num">${int(m.cad)}</td><td class="num">${int(m.treinou)} <small class="muted">(${ebPct(m.treinou, m.cad)})</small></td><td class="num">${int(m.pro)}</td></tr>`).join("") || `<tr><td colspan="4" class="empty">Sem alunas ainda.</td></tr>`}</tbody></table></div></div>`;
+  ebSemOrigem(pode);
   const n = $("eb-n"); if(n) n.onclick = () => ebForm(null);
   document.querySelectorAll("[data-eb-cp]").forEach(b => b.onclick = () => F.copyText(ebLink(b.dataset.ebCp), "Link copiado. É só mandar para ela 💚"));
   document.querySelectorAll("[data-eb-ed]").forEach(b => b.onclick = () => ebForm(ebLista().find(x => x.id === b.dataset.ebEd)));
@@ -70,5 +74,24 @@ function ebForm(e){
     save(); fechar(); rerender();
     if(novo) F.copyText(ebLink(id), "Embaixadora criada e link copiado 💚");
   };
+}
+/* alunas sem origem (cadastradas antes do rastreio): marcar à mão */
+function ebSemOrigem(pode){
+  const L = DB().users.filter(u => !u.admin && !u.soAdmin && !u.exemplo && !u.origem && !ebManual().some(x => x.id === u.id)).sort((a, b) => (b.criado || "").localeCompare(a.criado || ""));
+  if(!L.length || !pode) return;
+  const dias = [...new Set(L.map(u => u.criado).filter(Boolean))].slice(0, 6);
+  const opts = `<option value="meta">Anúncio Meta</option>${ebLista().map(e => `<option value="e:${esc(e.id)}">Embaixadora: ${esc(e.nome)}</option>`).join("")}<option value="direto">Direto / indicação</option>`;
+  $("adm-main").insertAdjacentHTML("beforeend", `<div class="card eb-sem"><h3>Alunas sem origem <span class="muted num" style="font-size:16px">(${L.length})</span></h3>
+    <p class="hint" style="margin:0 0 10px">Entraram antes de o app registrar a origem, então ele não tem como saber sozinho. Se você sabe de onde vieram (por exemplo, as do dia em que o anúncio começou), marque aqui. Fica anotado como "marcada à mão".</p>
+    <div class="eb-rap">${dias.map(d => { const n = L.filter(u => u.criado === d).length; return `<button class="btn btn-line btn-sm" data-eb-dia="${esc(d)}">Marcar as ${n} de ${esc(brD(d))} como Anúncio Meta</button>`; }).join("")}</div>
+    <div class="eb-lista">${L.slice(0, 80).map(u => `<label class="eb-al"><input type="checkbox" value="${esc(u.id)}"><span><b>${esc(u.nome || u.email)}</b><small>cadastro ${esc(brD(u.criado))}</small></span></label>`).join("")}</div>
+    <div class="toolbar" style="gap:8px;flex-wrap:wrap;margin-top:10px"><select class="input" id="eb-sel" style="max-width:260px">${opts}</select><button class="btn btn-accent btn-sm" id="eb-marca">Marcar selecionadas</button></div></div>`);
+  const marca = (ids, v) => { if(!ids.length) return toast("Selecione pelo menos uma aluna");
+    const o = v === "meta" ? { src: "meta", manual: true } : v.startsWith("e:") ? { e: v.slice(2), manual: true } : { src: "direto", manual: true };
+    ids.forEach(id => { const m = ebManual(), x = m.find(y => y.id === id); if(x) x.o = o; else m.push({ id, o, em: today() }); });
+    save(); toast(ids.length + (ids.length === 1 ? " aluna marcada" : " alunas marcadas")); rerender(); };
+  document.querySelectorAll("[data-eb-dia]").forEach(b => b.onclick = () => { const d = b.dataset.ebDia, ids = L.filter(u => u.criado === d).map(u => u.id);
+    confirmar(`Marcar as ${ids.length} alunas cadastradas em ${brD(d)} como vindas do Anúncio Meta? Dá para mudar depois.`, () => marca(ids, "meta")); });
+  $("eb-marca").onclick = () => marca([...document.querySelectorAll(".eb-al input:checked")].map(i => i.value), $("eb-sel").value);
 }
 VIEWS.embaixadoras = typeof comVendas === "function" ? comVendas(vEmbaixadoras) : vEmbaixadoras;

@@ -2744,6 +2744,11 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
 #v-admin .zq-t small{color:var(--muted);font-size:12.5px}
 #v-admin .al-orig{display:inline-block;margin-top:2px;font-size:11.5px;font-weight:700;color:#8A5A12;background:#FCE7C3;border-radius:6px;padding:1px 6px}
 #v-admin .eb-link{word-break:break-all}
+#v-admin .eb-rap{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+#v-admin .eb-lista{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:6px;max-height:340px;overflow:auto}
+#v-admin .eb-al{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--line);border-radius:12px;background:#fff;cursor:pointer}
+#v-admin .eb-al input{width:18px;height:18px;accent-color:var(--accent)}
+#v-admin .eb-al span{display:grid}#v-admin .eb-al small{color:var(--muted);font-size:12px}
 </style>
 
 <!-- Entrar / criar conta -->
@@ -3276,7 +3281,7 @@ N.sb = sb;
 const pad = n => String(n).padStart(2, "0");
 const hoje = () => { const d = new Date(); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; };
 const menosDias = n => { const d = new Date(); d.setDate(d.getDate() - n); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; };
-const LISTAS = ["cidades","segmentos","anunciantes","campanhas","parceiros","profissionais","avisos","receitasExtras","exercExtras","pagamentos","cupons","empresas","servicos","produtos","banners","categorias","exercAjustes","embaixadoras"];
+const LISTAS = ["cidades","segmentos","anunciantes","campanhas","parceiros","profissionais","avisos","receitasExtras","exercExtras","pagamentos","cupons","empresas","servicos","produtos","banners","categorias","exercAjustes","embaixadoras","origemManual"];
 const UNICOS = ["config","freq","receitasOcultas","receitasPlano","modulos"];
 const COLS_USER = ["id","email","nome","whats","nasc","cidade","criado","ultimo","bloqueado","premium"];
 const FORA = new Set(["senha","admin","perms","adminDesde","exemplo","genero", ...COLS_USER]);
@@ -3284,7 +3289,7 @@ const J = x => JSON.stringify(x === undefined ? null : x);
 async function q(p){ const r = await p; if(r.error) throw r.error; return r.data; }
 
 N.vazio = () => ({ versao: 1, nuvem: true, criado: hoje(), config: { nomeApp: "CK Life", checkout: C.KIWIFY_URL || "", suporte: C.SUPORTE || "", treinosParaCupom: 8, premiumPreco: 19.9 }, freq: { cliques: 25, minutos: 4, intervalo: 3, maxDia: 6 },
-  users: [], eventos: [], acessos: {}, cidades: [], segmentos: [], anunciantes: [], campanhas: [], pagamentos: [], profissionais: [], parceiros: [], cupons: [], avisos: [], receitasExtras: [], receitasOcultas: [], exercExtras: [], empresas: [], servicos: [], produtos: [], banners: [], categorias: [], exercAjustes: [], embaixadoras: [], receitasPlano: {}, modulos: {} });
+  users: [], eventos: [], acessos: {}, cidades: [], segmentos: [], anunciantes: [], campanhas: [], pagamentos: [], profissionais: [], parceiros: [], cupons: [], avisos: [], receitasExtras: [], receitasOcultas: [], exercExtras: [], empresas: [], servicos: [], produtos: [], banners: [], categorias: [], exercAjustes: [], embaixadoras: [], origemManual: [], receitasPlano: {}, modulos: {} });
 
 /* linha da tabela <-> pessoa no app */
 function paraUser(r, adm){
@@ -9025,7 +9030,7 @@ const abrirPerfilEq = abrirPerfil; abrirPerfil = async function(u){
    Quem deixa o CK Life aberto (ou instalado na tela inicial) fica com a versão antiga até recarregar.
    O app confere a versão publicada ao abrir, ao voltar do segundo plano e a cada 5 minutos.
    Se houver versão nova, mostra a faixa "ATUALIZAR": um toque e pronto. Nunca aparece no meio do treino. */
-const CK_VER = "20261101211811";
+const CK_VER = "20261101212416";
 let CK_VER_NOVA = null;
 const ATU_K = "ck_atu";
 const atuTentou = () => { try{ return JSON.parse(localStorage.getItem(ATU_K) || "null"); }catch(e){ return null; } };
@@ -14712,10 +14717,13 @@ const ebSlug = s => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toL
 const ebLista = () => (DB().embaixadoras = DB().embaixadoras || []);
 const ebPagando = u => { const s = (typeof PLU !== "undefined" && PLU) ? PLU[u.id] : null; return !!(s && s.pro && !s.trial && ["kiwify", "apple", "google"].includes(s.provider)); };
 /* de onde a aluna veio */
+const ebManual = () => (DB().origemManual = DB().origemManual || []);
 function ebOrigem(u){
-  const o = u.origem || {};
-  if(o.e){ const e = ebLista().find(x => x.id === o.e); return { k: "emb:" + o.e, nome: e ? e.nome : o.e, tipo: "Embaixadora" }; }
-  if(o.src){ const ad = /meta|facebook|instagram|^fb$|^ig$/i.test(o.src); return { k: ad ? "meta" : "src:" + o.src, nome: ad ? "Anúncio Meta" : o.src, tipo: ad ? "Anúncio" : "Campanha" }; }
+  const man = !u.origem && ebManual().find(x => x.id === u.id);
+  const o = u.origem || (man && man.o) || {};
+  if(o.e){ const e = ebLista().find(x => x.id === o.e); return { k: "emb:" + o.e, nome: e ? e.nome : o.e, tipo: "Embaixadora" + (man ? " (marcada à mão)" : "") }; }
+  if(o.src === "direto") return { k: "direto_ind", nome: "Direto / indicação", tipo: "Marcada à mão" };
+  if(o.src){ const ad = /meta|facebook|instagram|^fb$|^ig$/i.test(o.src); return { k: ad ? "meta" : "src:" + o.src, nome: ad ? "Anúncio Meta" : o.src, tipo: (ad ? "Anúncio" : "Campanha") + (man ? " (inclui marcadas à mão)" : "") }; }
   return { k: "direto", nome: "Direto / sem origem", tipo: "Direto" };
 }
 window.ckOrigemAluna = u => ebOrigem(u).nome;
@@ -14740,6 +14748,7 @@ function vEmbaixadoras(){
     </div>
     <div class="card"><h3>De onde vêm as alunas</h3><p class="hint" style="margin:0 0 10px">Todas as ${int(total)} alunas cadastradas. A origem passou a ser registrada a partir de 01/11/2026; quem entrou antes aparece em "Direto / sem origem".</p>
       <div class="tbl"><table><thead><tr><th>Origem</th><th>Cadastros</th><th>Já treinaram</th><th>Assinaram o Pro</th></tr></thead><tbody>${orig.map(m => `<tr><td><b>${esc(m.nome)}</b><br><small class="muted">${esc(m.tipo)}</small></td><td class="num">${int(m.cad)}</td><td class="num">${int(m.treinou)} <small class="muted">(${ebPct(m.treinou, m.cad)})</small></td><td class="num">${int(m.pro)}</td></tr>`).join("") || `<tr><td colspan="4" class="empty">Sem alunas ainda.</td></tr>`}</tbody></table></div></div>`;
+  ebSemOrigem(pode);
   const n = $("eb-n"); if(n) n.onclick = () => ebForm(null);
   document.querySelectorAll("[data-eb-cp]").forEach(b => b.onclick = () => F.copyText(ebLink(b.dataset.ebCp), "Link copiado. É só mandar para ela 💚"));
   document.querySelectorAll("[data-eb-ed]").forEach(b => b.onclick = () => ebForm(ebLista().find(x => x.id === b.dataset.ebEd)));
@@ -14770,6 +14779,25 @@ function ebForm(e){
     save(); fechar(); rerender();
     if(novo) F.copyText(ebLink(id), "Embaixadora criada e link copiado 💚");
   };
+}
+/* alunas sem origem (cadastradas antes do rastreio): marcar à mão */
+function ebSemOrigem(pode){
+  const L = DB().users.filter(u => !u.admin && !u.soAdmin && !u.exemplo && !u.origem && !ebManual().some(x => x.id === u.id)).sort((a, b) => (b.criado || "").localeCompare(a.criado || ""));
+  if(!L.length || !pode) return;
+  const dias = [...new Set(L.map(u => u.criado).filter(Boolean))].slice(0, 6);
+  const opts = `<option value="meta">Anúncio Meta</option>${ebLista().map(e => `<option value="e:${esc(e.id)}">Embaixadora: ${esc(e.nome)}</option>`).join("")}<option value="direto">Direto / indicação</option>`;
+  $("adm-main").insertAdjacentHTML("beforeend", `<div class="card eb-sem"><h3>Alunas sem origem <span class="muted num" style="font-size:16px">(${L.length})</span></h3>
+    <p class="hint" style="margin:0 0 10px">Entraram antes de o app registrar a origem, então ele não tem como saber sozinho. Se você sabe de onde vieram (por exemplo, as do dia em que o anúncio começou), marque aqui. Fica anotado como "marcada à mão".</p>
+    <div class="eb-rap">${dias.map(d => { const n = L.filter(u => u.criado === d).length; return `<button class="btn btn-line btn-sm" data-eb-dia="${esc(d)}">Marcar as ${n} de ${esc(brD(d))} como Anúncio Meta</button>`; }).join("")}</div>
+    <div class="eb-lista">${L.slice(0, 80).map(u => `<label class="eb-al"><input type="checkbox" value="${esc(u.id)}"><span><b>${esc(u.nome || u.email)}</b><small>cadastro ${esc(brD(u.criado))}</small></span></label>`).join("")}</div>
+    <div class="toolbar" style="gap:8px;flex-wrap:wrap;margin-top:10px"><select class="input" id="eb-sel" style="max-width:260px">${opts}</select><button class="btn btn-accent btn-sm" id="eb-marca">Marcar selecionadas</button></div></div>`);
+  const marca = (ids, v) => { if(!ids.length) return toast("Selecione pelo menos uma aluna");
+    const o = v === "meta" ? { src: "meta", manual: true } : v.startsWith("e:") ? { e: v.slice(2), manual: true } : { src: "direto", manual: true };
+    ids.forEach(id => { const m = ebManual(), x = m.find(y => y.id === id); if(x) x.o = o; else m.push({ id, o, em: today() }); });
+    save(); toast(ids.length + (ids.length === 1 ? " aluna marcada" : " alunas marcadas")); rerender(); };
+  document.querySelectorAll("[data-eb-dia]").forEach(b => b.onclick = () => { const d = b.dataset.ebDia, ids = L.filter(u => u.criado === d).map(u => u.id);
+    confirmar(`Marcar as ${ids.length} alunas cadastradas em ${brD(d)} como vindas do Anúncio Meta? Dá para mudar depois.`, () => marca(ids, "meta")); });
+  $("eb-marca").onclick = () => marca([...document.querySelectorAll(".eb-al input:checked")].map(i => i.value), $("eb-sel").value);
 }
 VIEWS.embaixadoras = typeof comVendas === "function" ? comVendas(vEmbaixadoras) : vEmbaixadoras;
 
