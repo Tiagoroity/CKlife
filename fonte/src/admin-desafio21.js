@@ -91,56 +91,56 @@ function daSumidas(dia){
     el.querySelectorAll("[data-dsz]").forEach(b => b.onclick = () => { const u = us.find(y => y.id === b.dataset.dsz); const url = u && F.lkWhats(u.whats, msg(u)); if(url) window.open(url, "_blank", "noopener"); });
   }).catch(() => { const el = $("da-sum"); if(el) el.querySelector("p").textContent = "Não deu para carregar agora."; });
 }
-/* ---------- pacote de publicações: 3 por dia, programadas (a Micaela só revisa) ---------- */
+/* Publicações automáticas: poucas e com sentido. Toda publicação tem resposta por emoji (check-in), ligada ao dia da turma. */
+const DA_SEM = ["Semana 1: adaptação. O objetivo é criar o hábito, não se matar.", "Semana 2: progressão. Um pouco mais de tempo em cada exercício.", "Semana 3: a mais intensa. Você já está pronta pra ela."];
+/* tarde: pergunta que puxa quem ainda não treinou (varia pelo dia) */
+const DA_TARDE = [
+  ["⏰ AINDA DÁ TEMPO! QUAL É O SEU PLANO?", ["🔥 Já fiz", "💪 Vou depois do trabalho", "🌙 Vou à noite", "💚 Hoje vai ser Plano B"]],
+  ["⚡ COMO ESTÁ SUA ENERGIA PRO TREINO DE HOJE?", ["⚡ Lá em cima", "🙂 Dá pra ir", "😴 Baixinha, mas vou", "✅ Já treinei"]],
+  ["🙋‍♀️ QUEM VAI TREINAR JUNTO COMIGO MAIS TARDE?", ["🙋‍♀️ Eu vou!", "✅ Já fiz o meu", "💚 Vou no Plano B"]],
+  ["🤔 O QUE ESTÁ TE SEGURANDO HOJE?", ["⏰ Falta de tempo", "😴 Cansaço", "🧠 Preguiça mesmo", "✅ Nada, já treinei!"]]];
+/* noite: fecha o dia com sentido (como foi + sentimento) */
 const DA_NOITE = [
-  { tipo: "checkin", titulo: "COMO VOCÊ ESTÁ HOJE?", opcoes: ["🔥 Tô voando", "💪 Tô firme", "🥵 Tá puxado", "💚 Mas não vou parar"] },
-  { tipo: "enquete", titulo: "QUE HORAS VOCÊ TREINOU HOJE?", opcoes: ["Manhã", "Tarde", "Noite", "Ainda vou 💪"] },
-  { tipo: "mensagem", titulo: "Recado da Micaela 💚", texto: "Se hoje foi corrido, lembra: Plano B de 10 minutos conta. Não precisa ser perfeito, precisa ser seu." },
-  { tipo: "enquete", titulo: "O QUE MAIS TE AJUDA A NÃO PARAR?", opcoes: ["A turma 👭", "Ver meu calendário", "Os recados", "Me sentir melhor"] },
-  { tipo: "checkin", titulo: "COMO ESTÁ SUA ENERGIA HOJE?", opcoes: ["⚡ Lá em cima", "🙂 Boa", "😴 Baixinha"] },
-  { tipo: "mensagem", titulo: "Orgulho de vocês 🔥", texto: "Cada uma que apareceu hoje está construindo algo que ninguém tira. Amanhã a gente continua." },
-  { tipo: "enquete", titulo: "BEBEU ÁGUA HOJE?", opcoes: ["Bati a meta 💧", "Quase lá", "Vou caprichar amanhã"] }];
-const DA_MARCOS = { 7: ["🎉 UMA SEMANA JUNTAS!", "7 dias. Uma semana inteira de turma. Quem chegou até aqui merece se orgulhar."], 14: ["🏆 14 DIAS!", "Dois terços do caminho. Falta pouco e a turma está mais forte do que nunca."], 21: ["👑 DIA 21: A GENTE CONSEGUIU!", "21 dias juntas. Não 21 dias perfeitos. Obrigada por cada treino, cada check-in, cada volta."] };
-/* recados de motivação (não são treino): manhã, tarde e fim do dia */
-const DA_MANHA = ["Bom dia, turma! ☀️ Hoje não precisa ser perfeito. Precisa ser seu.", "Quem acordou com preguiça levanta a mão 🙋‍♀️ Normal! O treino de hoje cabe no seu dia.", "Lembrete do dia: você não está fazendo isso sozinha. Tem uma turma inteira com você 💚", "Uma garrafinha de água do lado e bora. Pequenas escolhas, grandes resultados.", "Seu eu de daqui a 21 dias vai agradecer o que você fizer hoje.", "Disciplina é lembrar o que você quer. Bom dia, turma! 🔥", "Não espere a vontade aparecer. Comece, que ela vem junto."];
-const DA_TARDE = ["Ainda dá tempo! ⏰ Se não treinou ainda, separa 20 minutinhos depois do trabalho.", "Já foi? Vai mais tarde? Qualquer hora conta. O importante é aparecer 💪", "Metade do dia já foi. O treino de hoje ainda está esperando por você 🔥", "Tá corrido? Plano B de 10 minutos existe pra isso. Feito é melhor que perfeito.", "Pausa pra água e pra lembrar: você prometeu isso pra você 💚", "Quem treinou de manhã: orgulho! Quem vai de noite: estamos esperando 🙌", "O cansaço vai passar. O orgulho de ter feito fica."];
-const DA_FIMDIA = ["Ainda dá tempo! 🌙 10 minutos antes de dormir e o dia conta.", "Hoje não deu? Tudo bem. Amanhã a turma está aqui de novo, te esperando 💚", "Quem treinou hoje: descanse com orgulho. Quem ainda não: o Plano B cabe agora.", "Fim de dia. Bebe uma água, alonga 5 minutinhos e dorme bem. Amanhã tem mais 💤", "Cada dia que você aparece é um voto na mulher que você quer ser.", "Não compare seu dia com o de ninguém. Compare com o seu de ontem.", "Boa noite, turma. Amanhã a gente continua juntas 💚"];
-/* fase de espera (antes do Dia 1): movimenta quem já entrou */
+  ["🌙 COMO FOI SEU DIA DE TREINO?", ["✅ Fiz completo", "💚 Fiz o Plano B", "🌱 Amanhã eu volto"], "checkin"],
+  ["📊 QUAL EXERCÍCIO DE HOJE FOI O MAIS DIFÍCIL?", ["🦵 Os de perna", "💪 Os de braço", "🧘‍♀️ Prancha e abdômen", "🏃‍♀️ O cardio"], "enquete"],
+  ["💧 E A ÁGUA HOJE?", ["💧 Bati a meta", "🥤 Quase lá", "🙈 Esqueci, amanhã eu capricho"], "enquete"],
+  ["💬 COMO VOCÊ SE SENTIU DEPOIS DO TREINO?", ["😍 Maravilhosa", "🥵 Destruída (no bom sentido)", "💪 Mais forte", "😌 Leve"], "checkin"],
+  ["📊 DE 1 A 3, QUÃO DIFÍCIL FOI HOJE?", ["🙂 Tranquilo", "😅 Puxado", "🥵 Muito difícil"], "enquete"],
+  ["📊 O QUE MAIS TE AJUDA A NÃO PARAR?", ["👭 A turma", "📅 Ver meu calendário", "📢 Os recados da Micaela", "💚 Me sentir melhor"], "enquete"],
+  ["😴 COMO ESTÁ SEU SONO NESSES DIAS?", ["😴 Dormindo melhor", "😐 Igual", "🥱 Ainda ruim"], "enquete"]];
+const DA_MARCOS = { 7: ["🎉 UMA SEMANA JUNTAS!", "7 dias de turma. Quem chegou até aqui merece se orgulhar."], 14: ["🏆 14 DIAS!", "Dois terços do caminho. Falta pouco."], 21: ["👑 DIA 21: A GENTE CONSEGUIU!", "21 dias juntas. Não 21 dias perfeitos. Obrigada por cada treino e cada check-in."] };
+/* antes do Dia 1: aquece o grupo (2 por dia, sempre com resposta em emoji) */
 const DA_ESPERA = [
-  { h: 9, tipo: "mensagem", titulo: "Bem-vinda à turma! 💚", texto: "Que bom ter você aqui. Nos próximos dias a gente se prepara junto: escolha seu cantinho, sua hora e chame uma amiga. Quando o Dia 1 chegar, ninguém começa sozinha." },
-  { h: 13, tipo: "enquete", titulo: "QUAL SEU MAIOR OBJETIVO NESSES 21 DIAS?", opcoes: ["Criar o hábito de treinar", "Ter mais energia", "Me sentir mais forte", "Cuidar mais de mim"] },
-  { h: 20, tipo: "chamada", titulo: "CHAMA UMA AMIGA 👭", texto: "Quem treina com amiga desiste menos. Manda seu convite pelo botão \"Traga uma amiga\" e ela entra na mesma turma." },
-  { h: 9, tipo: "mensagem", titulo: "Prepara o cantinho 🧘‍♀️", texto: "Um espaço pra deitar no chão, roupa confortável e uma garrafinha de água. Só isso. O resto a gente faz junto." },
-  { h: 13, tipo: "enquete", titulo: "QUE HORAS VOCÊ VAI TREINAR?", opcoes: ["Manhã", "Almoço", "Tarde", "Noite"] },
-  { h: 20, tipo: "checkin", titulo: "COMO VOCÊ ESTÁ PRA COMEÇAR?", opcoes: ["🔥 Ansiosa pra começar", "💪 Pronta", "😅 Com um friozinho na barriga", "💚 Vou com calma"] },
-  { h: 9, tipo: "mensagem", titulo: "Normal, Hard ou Supreme? 🤔", texto: "Escolheu seu modo? Dá pra trocar a qualquer momento. Começar no Normal e subir depois é uma ótima ideia." },
-  { h: 13, tipo: "enquete", titulo: "JÁ TREINOU EM CASA ANTES?", opcoes: ["Nunca, vai ser a primeira vez", "Já, mas parei", "Já treino às vezes"] },
-  { h: 20, tipo: "mensagem", titulo: "Ninguém aqui é perfeita 💚", texto: "21 dias juntas. Não 21 dias perfeitos. Se um dia não der, a turma segue e você segue junto. Sem culpa." }];
+  ["💚 BEM-VINDA À TURMA! DE ONDE VOCÊ VAI TREINAR?", "Quanto mais gente se apresentar, mais forte a turma fica.", ["🏠 Sala", "🛏️ Quarto", "🌳 Quintal ou varanda", "🏢 Academia do prédio"]],
+  ["🎯 QUAL SEU MAIOR OBJETIVO NESSES 21 DIAS?", null, ["🔁 Criar o hábito", "⚡ Ter mais energia", "💪 Me sentir mais forte", "💚 Cuidar mais de mim"]],
+  ["⏰ QUE HORAS VOCÊ VAI TREINAR?", "Dica: escolha a mesma hora no seu lembrete do desafio.", ["🌅 Manhã", "☀️ Almoço", "🌤️ Tarde", "🌙 Noite"]],
+  ["👭 VAI TRAZER UMA AMIGA?", "Quem treina com amiga desiste menos. O botão \"Traga uma amiga\" fica no Hoje do desafio.", ["🙋‍♀️ Já chamei!", "👀 Vou chamar", "💪 Vou sozinha mesmo"]],
+  ["⚡ JÁ ESCOLHEU SEU MODO?", "Dá pra trocar quando quiser. Começar no Normal e subir depois é uma ótima ideia.", ["🌱 Normal", "🔥 Hard", "👑 Supreme", "🤔 Ainda não sei"]],
+  ["🏋️ JÁ TREINOU EM CASA ANTES?", null, ["🆕 Vai ser a primeira vez", "🔁 Já, mas parei", "✅ Já treino às vezes"]]];
 async function daGeraPosts(){
   const e = DA.ed, D = e.dias_pub && e.dias_pub.length ? e.dias_pub : (e.dias || []), agora = Date.now(), hoje = today(), dSP = iso => new Date(Date.parse(iso) - 3 * 36e5).toISOString().slice(0, 10), ja = new Set((DA.posts || []).map(p => dSP(p.publicar_em) + "|" + (p.titulo || "")));
   const L = [], hora = (dt, h, m) => new Date(`${dt}T${String(h).padStart(2, "0")}:${String(m || 0).padStart(2, "0")}:00-03:00`).toISOString();
   const op = arr => (arr || []).map((t, k) => ({ id: "o" + (k + 1), t }));
   const add = (dt, n, h, m, p) => { const quando = hora(dt, h, m); if(Date.parse(quando) <= agora || ja.has(dt + "|" + p.titulo)) return; ja.add(dt + "|" + p.titulo); L.push({ edicao_id: e.id, dia: n || null, publicar_em: quando, fixado: false, notificar: false, resultado: "sempre", multipla: false, pode_mudar: true, opcoes: [], botao: null, texto: null, ...p }); };
-  // fase de espera: de hoje até a véspera do Dia 1 (3 recados por dia + contagem)
+  // antes do Dia 1: 2 por dia (10h pergunta para se conhecer; 20h contagem com check-in)
   let k = 0;
   for(let dt = hoje > (e.inscricao_ini || hoje) ? hoje : (e.inscricao_ini || hoje); dt < e.inicio; dt = addD(dt, 1)){
-    const faltam = Math.round((Date.parse(e.inicio + "T12:00:00Z") - Date.parse(dt + "T12:00:00Z")) / 864e5);
-    for(let j = 0; j < 3; j++){ const x = DA_ESPERA[(k * 3 + j) % DA_ESPERA.length]; add(dt, 0, x.h, 0, { tipo: x.tipo, titulo: j === 2 && faltam <= 3 ? (faltam === 1 ? "🔥 É AMANHÃ!" : `⏳ FALTAM ${faltam} DIAS`) : x.titulo, texto: j === 2 && faltam <= 3 ? (faltam === 1 ? "Amanhã começa o Dia 1. Deixa a roupa separada e a garrafinha cheia. A turma vai estar aqui 💚" : `Faltam ${faltam} dias pro Dia 1. Já escolheu seu modo e a hora do seu lembrete?`) : (x.texto || null), opcoes: j === 2 && faltam <= 3 ? [] : op(x.opcoes), tipo: j === 2 && faltam <= 3 ? "chamada" : x.tipo }); }
+    const faltam = Math.round((Date.parse(e.inicio + "T12:00:00Z") - Date.parse(dt + "T12:00:00Z")) / 864e5), x = DA_ESPERA[k % DA_ESPERA.length];
+    add(dt, 0, 10, 0, { tipo: "enquete", titulo: x[0], texto: x[1], opcoes: op(x[2]) });
+    add(dt, 0, 20, 0, { tipo: "checkin", titulo: faltam === 1 ? "🔥 É AMANHÃ! COMO VOCÊ ESTÁ?" : `⏳ FALTAM ${faltam} DIAS! COMO VOCÊ ESTÁ?`, texto: faltam === 1 ? "Amanhã começa o Dia 1. Separa a roupa e enche a garrafinha 💚" : null, opcoes: op(["🔥 Ansiosa pra começar", "💪 Pronta", "😅 Friozinho na barriga", "💚 Vou com calma"]) });
     k++;
   }
-  // os 21 dias: 6 recados por dia (só a abertura e o check-in têm botão de treino; o resto é motivação)
+  // os 21 dias: 4 por dia, cada uma com sentido e resposta por emoji
   for(let n = 1; n <= 21; n++){
-    const dt = addD(e.inicio, n - 1), dd = D[n - 1] || {}, r = (n - 1) % 7;
-    add(dt, n, 7, 0, { tipo: "chamada", titulo: DA_MARCOS[n] ? DA_MARCOS[n][0] : `🔥 DIA ${n}/21 COMEÇOU!`, texto: (DA_MARCOS[n] ? DA_MARCOS[n][1] + "\n\n" : "") + `Hoje: ${dd.titulo || "treino do dia"}. ${dd.msg || "Bora juntas?"}`, botao: "treino" });
-    add(dt, n, 10, 0, { tipo: "mensagem", titulo: "Recado da manhã ☀️", texto: DA_MANHA[r] });
-    add(dt, n, 13, 0, { tipo: "checkin", titulo: "JÁ FOI OU VAI MAIS TARDE?", opcoes: op(["Já fui 🔥", "Vou mais tarde 💪", "Vou à noite 🌙", "Hoje é Plano B 💚"]) });
-    add(dt, n, 16, 0, { tipo: "mensagem", titulo: "Ainda dá tempo ⏰", texto: DA_TARDE[r], botao: "treino" });
-    const x = DA_NOITE[r];
-    add(dt, n, 19, 30, { tipo: x.tipo, titulo: x.titulo, texto: x.texto || null, opcoes: op(x.opcoes) });
-    add(dt, n, 21, 30, { tipo: "mensagem", titulo: "Antes de dormir 🌙", texto: DA_FIMDIA[r] });
+    const dt = addD(e.inicio, n - 1), dd = D[n - 1] || {}, sem = Math.floor((n - 1) / 7), t = DA_TARDE[(n - 1) % DA_TARDE.length], no = DA_NOITE[(n - 1) % DA_NOITE.length];
+    add(dt, n, 7, 0, { tipo: "chamada", titulo: DA_MARCOS[n] ? DA_MARCOS[n][0] : `🔥 DIA ${n}/21: ${String(dd.titulo || "TREINO DO DIA").toUpperCase()}`,
+      texto: (DA_MARCOS[n] ? DA_MARCOS[n][1] + "\n\n" : "") + (dd.msg || "Bora juntas?") + (n % 7 === 1 ? "\n\n" + DA_SEM[sem] : "") + "\n\nReage aqui se você vem hoje 👇", botao: "treino" });
+    add(dt, n, 12, 0, { tipo: "checkin", titulo: "JÁ TREINOU OU VAI MAIS TARDE?", opcoes: op(["🔥 Já fui", "💪 Vou mais tarde", "🌙 Vou à noite", "💚 Hoje é Plano B"]) });
+    add(dt, n, 17, 0, { tipo: "checkin", titulo: t[0], opcoes: op(t[1]), botao: "treino" });
+    add(dt, n, 21, 0, { tipo: n === 21 ? "checkin" : (no[2] || "checkin"), titulo: n === 21 ? "👑 COMO VOCÊ TERMINA OS 21 DIAS?" : no[0], opcoes: op(n === 21 ? ["😍 Orgulhosa", "💪 Mais forte", "🔁 Quero a próxima turma", "🥹 Emocionada"] : no[1]) });
   }
   if(!L.length) return toast("Não há dias futuros sem publicação para gerar.");
-  if(!confirm(`Programar ${L.length} publicações? Antes do Dia 1: 3 recados por dia para aquecer o grupo. Nos 21 dias: até 6 por dia (7h, 10h, 13h, 16h, 19h30 e 21h30). Você pode editar ou apagar qualquer uma. Nenhuma avisa no celular (o aviso do dia e o lembrete já são automáticos).`)) return;
+  if(!confirm(`Programar ${L.length} publicações? Antes do Dia 1: 2 por dia (10h e 20h). Nos 21 dias: 4 por dia (7h, 12h, 17h e 21h). Todas com resposta por emoji. Você pode editar ou apagar qualquer uma. Nenhuma avisa no celular.`)) return;
   try{ for(let i = 0; i < L.length; i += 50){ const r = await SB2().from("d21_posts").insert(L.slice(i, i + 50)); if(r.error) throw r.error; } toast(`${L.length} publicações programadas 💚`); daComunidade(); }
   catch(err){ toast("Não deu para gerar: " + (err.message || "erro")); }
 }
