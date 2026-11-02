@@ -59,7 +59,7 @@ const rInicioF1 = rInicio; rInicio = function(){
   const m = metas(ME), tt = totais(today()), x = dia(today()), ag = x.agua || 0, pk = m.kcal ? Math.min(1, tt.kcal / m.kcal) : 0, pa = m.agua ? Math.min(1, ag / m.agua) : 0;
   const prox = REFS.find(([k]) => !(x[k] || []).length), nOk = (hojeFeito ? 1 : 0) + (pk >= .8 ? 1 : 0) + (pa >= 1 ? 1 : 0);
   const anel = (f, cor) => { const C = 2 * Math.PI * 17; return `<svg class="sd-r" viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="17" class="bg"/><circle cx="22" cy="22" r="17" class="fg" style="stroke:${cor};stroke-dasharray:${C};stroke-dashoffset:${C * (1 - f)}"/></svg>`; };
-  const sem = semanaAtualDias(), nSem = sem.filter(d => feitos.has(d)).length, metaS = ME.perfil.dias || 3;
+  const sem = semanaAtualDias(), nSem = sem.filter(d => feitos.has(d)).length, metaS = (ME.perfil && ME.perfil.dias) || 3;
   const html = `<section class="sd card" aria-label="Seu dia">
     <div class="sd-h"><div><span class="eyebrow">Seu dia</span><b>${nOk === 3 ? "Dia completo. Que orgulho! 💚" : nOk ? `${nOk} de 3 feitos` : "Três passos para hoje"}</b></div><span class="sd-sem num" title="Treinos nesta semana">${ic("calendar", 13)} ${nSem}/${metaS} na semana</span></div>
     <div class="sd-l ${hojeFeito ? "ok" : ""}"><span class="sd-a">${anel(hojeFeito ? 1 : 0, "#3DDC6E")}${ic(hojeFeito ? "check" : "treinar", 16, 2.4)}</span>
@@ -89,7 +89,7 @@ const fimTreinoF1 = fimTreino; fimTreino = function(parcial){
   const r = fimTreinoF1.apply(this, arguments);
   try{
     const hero = document.querySelector("#play .done-hero"); if(!hero || parcial) return r;
-    const sem = semanaAtualDias(), feitos = diasTreino(), n = sem.filter(d => feitos.has(d)).length, meta = ME.perfil.dias || 3, bateu = n >= meta;
+    const sem = semanaAtualDias(), feitos = diasTreino(), n = sem.filter(d => feitos.has(d)).length, meta = (ME.perfil && ME.perfil.dias) || 3, bateu = n >= meta;
     const bol = sem.map(d => `<i class="${feitos.has(d) ? "on" : ""} ${d === today() ? "hj" : ""}"></i>`).join("");
     const st = hero.querySelector(".done-stats");
     if(st) st.insertAdjacentHTML("afterend", `<div class="fim-sem ${bateu ? "ok" : ""}"><div class="fim-bol">${bol}</div><b>${bateu ? "Meta da semana batida! 🏆" : `${n} de ${meta} treinos na semana`}</b><small>${bateu ? "Tudo que vier agora é bônus." : `Falta${meta - n === 1 ? "" : "m"} ${meta - n} para bater sua meta.`}</small></div>`);

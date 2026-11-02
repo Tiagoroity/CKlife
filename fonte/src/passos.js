@@ -19,6 +19,22 @@ const ppPasso = (n, txt, lado) => `<li style="--d:${.2 + n * .12}s"><span class=
 const ppTile = svg => `<span class="pp-tile" aria-hidden="true">${svg}</span>`;
 const ppDots = i => `<div class="pp-dots" aria-label="Passo ${i} de 3">${[1, 2, 3].map(n => `<i class="${n < i ? "ok" : n === i ? "on" : ""}"></i>`).join("")}</div>`;
 
+/* registra este celular para receber avisos. Não depende da comunidade estar pronta; tenta de novo até conseguir. */
+async function ppInscreve(){
+  if(!PUSH_OK() || Notification.permission !== "granted") return false;
+  for(let k = 0; k < 15; k++){
+    if(NU && NU.ativo && NU.sb && NU.uid){
+      try{
+        const reg = SWREG || await navigator.serviceWorker.ready; let sub = await reg.pushManager.getSubscription();
+        if(!sub) sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64u(VAPID) });
+        const j = sub.toJSON(), r = await NU.sb.from("push_inscricoes").upsert({ endpoint: j.endpoint, user_id: NU.uid, p256dh: j.keys.p256dh, auth: j.keys.auth });
+        if(!r.error) return true;
+      }catch(e){ console.warn("avisos", e); }
+    }
+    await new Promise(r => setTimeout(r, 2000));
+  }
+  return false;
+}
 function ppSalva(o){ ME.passos = Object.assign({}, ME.passos || {}, o); save(); }
 function ppFecha(){ const b = $("pp"); if(b) b.remove(); document.body.classList.remove("pp-on"); }
 function ppTela(html, cls){
@@ -39,7 +55,7 @@ function ppRoda(){
   if(e === "avisos"){
     const pode = PUSH_OK() && !(ehIOS() && !instalado());
     if(!pode || Notification.permission === "denied"){ ppSalva({ etapa: "treino" }); return ppRoda(); }
-    if(Notification.permission === "granted"){ try{ inscrevePush(true).catch(() => {}); }catch(er){} ppSalva({ etapa: "treino", avisos: ME.passos.avisos || today() }); return ppRoda(); }
+    if(Notification.permission === "granted"){ ppInscreve(); ppSalva({ etapa: "treino", avisos: ME.passos.avisos || today() }); return ppRoda(); }
     return ppAvisos();
   }
   if(e === "treino"){ if((ME.treinos || []).length){ ppSalva({ fim: today() }); return ppFecha(); } return ppTreino(); }
@@ -111,7 +127,7 @@ function ppAvisos(){
   $("pp-ativa").onclick = async () => {
     const b = $("pp-ativa"); b.disabled = true;
     let p = "default"; try{ p = await Notification.requestPermission(); }catch(e){}
-    if(p === "granted"){ try{ await inscrevePush(true); }catch(e){} SOM.done && SOM.done(); ppSalva({ avisos: today() }); toast("Avisos ativados 💚"); return prox(); }
+    if(p === "granted"){ await ppInscreve(); SOM.done && SOM.done(); ppSalva({ avisos: today() }); toast("Avisos ativados 💚"); return prox(); }
     const m = $("pp-msg"); if(m) m.textContent = "Tudo bem. Dá para ativar depois em Perfil › Avisos no celular.";
     setTimeout(prox, 1400);
   };
@@ -147,7 +163,7 @@ function ppTreino(){
     const d = dia === "hoje" ? today() : addD(today(), 1);
     if(dia === "hoje" && h <= hhmm(new Date())){ m.textContent = "Esse horário já passou. Escolha mais tarde ou toque em Agora."; return; }
     ME.primeiro = { dia: d, hora: h }; ppSalva({ fim: today(), marcou: today() });
-    if(pushLigado()) await ppLembreteServidor(d, h);
+    if(pushLigado()){ await ppInscreve(); await ppLembreteServidor(d, h); }
     ppCombinado(d, h);
   };
 }
@@ -212,11 +228,19 @@ entBoasVindas = function(){
   }catch(e){ console.warn(e); }
   return ppBV.apply(this, arguments);
 };
-function ppQuandoLivre(){ let n = 0; const t = setInterval(() => { if(++n > 30){ clearInterval(t); return; } if(!$("v-app").hidden && ppLivre()){ clearInterval(t); ppRoda(); } }, 600); }
+function ppQuandoLivre(){ if(ppQuandoLivre.t) return; let n = 0; const t = ppQuandoLivre.t = setInterval(() => { if(++n > 300){ ppQuandoLivre.t = null; clearInterval(t); return; } if(!$("v-app").hidden && ppLivre()){ clearInterval(t); ppQuandoLivre.t = null; ppRoda(); } }, 600); }
 /* iPhone: abriu pelo ícone e entrou → continua de onde parou */
 { const abrirPP = abrirApp; abrirApp = function(){ const r = abrirPP.apply(this, arguments);
   try{ if(ME && ME.passos && !ME.passos.fim && ME.boasVindas !== "mostrar" && !(typeof modoAdmin === "function" && modoAdmin())) setTimeout(ppQuandoLivre, 900); }catch(e){}
   return r; }; }
+
+/* ao abrir o app: quem já permitiu avisos neste celular fica registrada (vale para todas, novas e antigas) */
+{ let ppGarantiu = false; const abrirAv = abrirApp; abrirApp = function(){ const r = abrirAv.apply(this, arguments);
+  try{ if(!ppGarantiu && !(typeof modoAdmin === "function" && modoAdmin()) && PUSH_OK() && Notification.permission === "granted"){ ppGarantiu = true; setTimeout(() => ppInscreve(), 4000); } }catch(e){}
+  return r; }; }
+
+/* Início só desenha quando o plano dela já existe (durante o cadastro, a nuvem pode pedir para redesenhar antes) */
+{ const rInicioSeg = rInicio; rInicio = function(){ if(!ME || !ME.perfil) return; return rInicioSeg.apply(this, arguments); }; }
 
 /* ===================== Erros do app → painel (sem dado pessoal) ===================== */
 const ERR_RUIDO = /ResizeObserver|^Script error|vibrate|Non-Error promise|AbortError|Load failed|NetworkError|Failed to fetch|NotAllowedError|The operation was aborted|cancel/i;

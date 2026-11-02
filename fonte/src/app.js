@@ -741,7 +741,7 @@ function ligaOlhos(raiz){ (raiz || document).querySelectorAll('input[type="passw
 new MutationObserver(() => ligaOlhos()).observe(document.body, { childList: true, subtree: true }); ligaOlhos();
 function rInicio(){
   const T = treinoDoDia(), p = progAtual(), feitos = diasTreino(), hojeFeito = feitos.has(today());
-  const sem = semanaAtualDias(), nSem = sem.filter(d => feitos.has(d)).length, meta = ME.perfil.dias || 3;
+  const sem = semanaAtualDias(), nSem = sem.filter(d => feitos.has(d)).length, meta = (ME.perfil && ME.perfil.dias) || 3;
   const L = ME.treinos || [], min = L.reduce((a, t) => a + (t.min || 0), 0), s = streak();
   const tot = p.semanas * p.diasSem, pr = Math.min(100, Math.round(100 * ((ME.prog && ME.prog.feitos) || 0) / tot));
   const av = (DB.avisos || []).filter(a => a.ativo).slice(-1)[0], m = metas(ME), tt = totais(today()), x = dia(today()), ultimo = L.slice(-1)[0];
@@ -1404,7 +1404,7 @@ function medalhas(){
     { id:"m1", nome:"Primeiro passo", desc:"Fez o primeiro treino", ic:"star", ok: n >= 1 },
     { id:"m3", nome:"Em chamas", desc:"3 dias seguidos ativo", ic:"flame", ok: s >= 3 },
     { id:"m7", nome:"Semana perfeita", desc:"7 dias seguidos ativo", ic:"flame", ok: s >= 7 },
-    { id:"mmeta", nome:"Meta da semana", desc:"Bateu os treinos da semana", ic:"target", ok: nSem >= (ME.perfil.dias || 3) },
+    { id:"mmeta", nome:"Meta da semana", desc:"Bateu os treinos da semana", ic:"target", ok: nSem >= ((ME.perfil && ME.perfil.dias) || 3) },
     { id:"m10", nome:"10 treinos", desc:"Completou 10 treinos", ic:"treinar", ok: n >= 10 },
     { id:"m25", nome:"25 treinos", desc:"Completou 25 treinos", ic:"treinar", ok: n >= 25 },
     { id:"m50", nome:"50 treinos", desc:"Completou 50 treinos", ic:"trophy", ok: n >= 50 },

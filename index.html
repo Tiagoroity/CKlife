@@ -8587,7 +8587,7 @@ const rInicioF1 = rInicio; rInicio = function(){
   const m = metas(ME), tt = totais(today()), x = dia(today()), ag = x.agua || 0, pk = m.kcal ? Math.min(1, tt.kcal / m.kcal) : 0, pa = m.agua ? Math.min(1, ag / m.agua) : 0;
   const prox = REFS.find(([k]) => !(x[k] || []).length), nOk = (hojeFeito ? 1 : 0) + (pk >= .8 ? 1 : 0) + (pa >= 1 ? 1 : 0);
   const anel = (f, cor) => { const C = 2 * Math.PI * 17; return `<svg class="sd-r" viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="17" class="bg"/><circle cx="22" cy="22" r="17" class="fg" style="stroke:${cor};stroke-dasharray:${C};stroke-dashoffset:${C * (1 - f)}"/></svg>`; };
-  const sem = semanaAtualDias(), nSem = sem.filter(d => feitos.has(d)).length, metaS = ME.perfil.dias || 3;
+  const sem = semanaAtualDias(), nSem = sem.filter(d => feitos.has(d)).length, metaS = (ME.perfil && ME.perfil.dias) || 3;
   const html = `<section class="sd card" aria-label="Seu dia">
     <div class="sd-h"><div><span class="eyebrow">Seu dia</span><b>${nOk === 3 ? "Dia completo. Que orgulho! 💚" : nOk ? `${nOk} de 3 feitos` : "Três passos para hoje"}</b></div><span class="sd-sem num" title="Treinos nesta semana">${ic("calendar", 13)} ${nSem}/${metaS} na semana</span></div>
     <div class="sd-l ${hojeFeito ? "ok" : ""}"><span class="sd-a">${anel(hojeFeito ? 1 : 0, "#3DDC6E")}${ic(hojeFeito ? "check" : "treinar", 16, 2.4)}</span>
@@ -8617,7 +8617,7 @@ const fimTreinoF1 = fimTreino; fimTreino = function(parcial){
   const r = fimTreinoF1.apply(this, arguments);
   try{
     const hero = document.querySelector("#play .done-hero"); if(!hero || parcial) return r;
-    const sem = semanaAtualDias(), feitos = diasTreino(), n = sem.filter(d => feitos.has(d)).length, meta = ME.perfil.dias || 3, bateu = n >= meta;
+    const sem = semanaAtualDias(), feitos = diasTreino(), n = sem.filter(d => feitos.has(d)).length, meta = (ME.perfil && ME.perfil.dias) || 3, bateu = n >= meta;
     const bol = sem.map(d => `<i class="${feitos.has(d) ? "on" : ""} ${d === today() ? "hj" : ""}"></i>`).join("");
     const st = hero.querySelector(".done-stats");
     if(st) st.insertAdjacentHTML("afterend", `<div class="fim-sem ${bateu ? "ok" : ""}"><div class="fim-bol">${bol}</div><b>${bateu ? "Meta da semana batida! 🏆" : `${n} de ${meta} treinos na semana`}</b><small>${bateu ? "Tudo que vier agora é bônus." : `Falta${meta - n === 1 ? "" : "m"} ${meta - n} para bater sua meta.`}</small></div>`);
@@ -9350,7 +9350,7 @@ const abrirPerfilEq = abrirPerfil; abrirPerfil = async function(u){
    Quem deixa o CK Life aberto (ou instalado na tela inicial) fica com a versão antiga até recarregar.
    O app confere a versão publicada ao abrir, ao voltar do segundo plano e a cada 5 minutos.
    Se houver versão nova, mostra a faixa "ATUALIZAR": um toque e pronto. Nunca aparece no meio do treino. */
-const CK_VER = "20261102195653";
+const CK_VER = "20261102200622";
 let CK_VER_NOVA = null;
 const ATU_K = "ck_atu";
 const atuTentou = () => { try{ return JSON.parse(localStorage.getItem(ATU_K) || "null"); }catch(e){ return null; } };
@@ -11631,6 +11631,22 @@ const ppPasso = (n, txt, lado) => `<li style="--d:${.2 + n * .12}s"><span class=
 const ppTile = svg => `<span class="pp-tile" aria-hidden="true">${svg}</span>`;
 const ppDots = i => `<div class="pp-dots" aria-label="Passo ${i} de 3">${[1, 2, 3].map(n => `<i class="${n < i ? "ok" : n === i ? "on" : ""}"></i>`).join("")}</div>`;
 
+/* registra este celular para receber avisos. Não depende da comunidade estar pronta; tenta de novo até conseguir. */
+async function ppInscreve(){
+  if(!PUSH_OK() || Notification.permission !== "granted") return false;
+  for(let k = 0; k < 15; k++){
+    if(NU && NU.ativo && NU.sb && NU.uid){
+      try{
+        const reg = SWREG || await navigator.serviceWorker.ready; let sub = await reg.pushManager.getSubscription();
+        if(!sub) sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64u(VAPID) });
+        const j = sub.toJSON(), r = await NU.sb.from("push_inscricoes").upsert({ endpoint: j.endpoint, user_id: NU.uid, p256dh: j.keys.p256dh, auth: j.keys.auth });
+        if(!r.error) return true;
+      }catch(e){ console.warn("avisos", e); }
+    }
+    await new Promise(r => setTimeout(r, 2000));
+  }
+  return false;
+}
 function ppSalva(o){ ME.passos = Object.assign({}, ME.passos || {}, o); save(); }
 function ppFecha(){ const b = $("pp"); if(b) b.remove(); document.body.classList.remove("pp-on"); }
 function ppTela(html, cls){
@@ -11651,7 +11667,7 @@ function ppRoda(){
   if(e === "avisos"){
     const pode = PUSH_OK() && !(ehIOS() && !instalado());
     if(!pode || Notification.permission === "denied"){ ppSalva({ etapa: "treino" }); return ppRoda(); }
-    if(Notification.permission === "granted"){ try{ inscrevePush(true).catch(() => {}); }catch(er){} ppSalva({ etapa: "treino", avisos: ME.passos.avisos || today() }); return ppRoda(); }
+    if(Notification.permission === "granted"){ ppInscreve(); ppSalva({ etapa: "treino", avisos: ME.passos.avisos || today() }); return ppRoda(); }
     return ppAvisos();
   }
   if(e === "treino"){ if((ME.treinos || []).length){ ppSalva({ fim: today() }); return ppFecha(); } return ppTreino(); }
@@ -11723,7 +11739,7 @@ function ppAvisos(){
   $("pp-ativa").onclick = async () => {
     const b = $("pp-ativa"); b.disabled = true;
     let p = "default"; try{ p = await Notification.requestPermission(); }catch(e){}
-    if(p === "granted"){ try{ await inscrevePush(true); }catch(e){} SOM.done && SOM.done(); ppSalva({ avisos: today() }); toast("Avisos ativados 💚"); return prox(); }
+    if(p === "granted"){ await ppInscreve(); SOM.done && SOM.done(); ppSalva({ avisos: today() }); toast("Avisos ativados 💚"); return prox(); }
     const m = $("pp-msg"); if(m) m.textContent = "Tudo bem. Dá para ativar depois em Perfil › Avisos no celular.";
     setTimeout(prox, 1400);
   };
@@ -11759,7 +11775,7 @@ function ppTreino(){
     const d = dia === "hoje" ? today() : addD(today(), 1);
     if(dia === "hoje" && h <= hhmm(new Date())){ m.textContent = "Esse horário já passou. Escolha mais tarde ou toque em Agora."; return; }
     ME.primeiro = { dia: d, hora: h }; ppSalva({ fim: today(), marcou: today() });
-    if(pushLigado()) await ppLembreteServidor(d, h);
+    if(pushLigado()){ await ppInscreve(); await ppLembreteServidor(d, h); }
     ppCombinado(d, h);
   };
 }
@@ -11824,11 +11840,19 @@ entBoasVindas = function(){
   }catch(e){ console.warn(e); }
   return ppBV.apply(this, arguments);
 };
-function ppQuandoLivre(){ let n = 0; const t = setInterval(() => { if(++n > 30){ clearInterval(t); return; } if(!$("v-app").hidden && ppLivre()){ clearInterval(t); ppRoda(); } }, 600); }
+function ppQuandoLivre(){ if(ppQuandoLivre.t) return; let n = 0; const t = ppQuandoLivre.t = setInterval(() => { if(++n > 300){ ppQuandoLivre.t = null; clearInterval(t); return; } if(!$("v-app").hidden && ppLivre()){ clearInterval(t); ppQuandoLivre.t = null; ppRoda(); } }, 600); }
 /* iPhone: abriu pelo ícone e entrou → continua de onde parou */
 { const abrirPP = abrirApp; abrirApp = function(){ const r = abrirPP.apply(this, arguments);
   try{ if(ME && ME.passos && !ME.passos.fim && ME.boasVindas !== "mostrar" && !(typeof modoAdmin === "function" && modoAdmin())) setTimeout(ppQuandoLivre, 900); }catch(e){}
   return r; }; }
+
+/* ao abrir o app: quem já permitiu avisos neste celular fica registrada (vale para todas, novas e antigas) */
+{ let ppGarantiu = false; const abrirAv = abrirApp; abrirApp = function(){ const r = abrirAv.apply(this, arguments);
+  try{ if(!ppGarantiu && !(typeof modoAdmin === "function" && modoAdmin()) && PUSH_OK() && Notification.permission === "granted"){ ppGarantiu = true; setTimeout(() => ppInscreve(), 4000); } }catch(e){}
+  return r; }; }
+
+/* Início só desenha quando o plano dela já existe (durante o cadastro, a nuvem pode pedir para redesenhar antes) */
+{ const rInicioSeg = rInicio; rInicio = function(){ if(!ME || !ME.perfil) return; return rInicioSeg.apply(this, arguments); }; }
 
 /* ===================== Erros do app → painel (sem dado pessoal) ===================== */
 const ERR_RUIDO = /ResizeObserver|^Script error|vibrate|Non-Error promise|AbortError|Load failed|NetworkError|Failed to fetch|NotAllowedError|The operation was aborted|cancel/i;
@@ -12047,7 +12071,7 @@ function ligaOlhos(raiz){ (raiz || document).querySelectorAll('input[type="passw
 new MutationObserver(() => ligaOlhos()).observe(document.body, { childList: true, subtree: true }); ligaOlhos();
 function rInicio(){
   const T = treinoDoDia(), p = progAtual(), feitos = diasTreino(), hojeFeito = feitos.has(today());
-  const sem = semanaAtualDias(), nSem = sem.filter(d => feitos.has(d)).length, meta = ME.perfil.dias || 3;
+  const sem = semanaAtualDias(), nSem = sem.filter(d => feitos.has(d)).length, meta = (ME.perfil && ME.perfil.dias) || 3;
   const L = ME.treinos || [], min = L.reduce((a, t) => a + (t.min || 0), 0), s = streak();
   const tot = p.semanas * p.diasSem, pr = Math.min(100, Math.round(100 * ((ME.prog && ME.prog.feitos) || 0) / tot));
   const av = (DB.avisos || []).filter(a => a.ativo).slice(-1)[0], m = metas(ME), tt = totais(today()), x = dia(today()), ultimo = L.slice(-1)[0];
@@ -12710,7 +12734,7 @@ function medalhas(){
     { id:"m1", nome:"Primeiro passo", desc:"Fez o primeiro treino", ic:"star", ok: n >= 1 },
     { id:"m3", nome:"Em chamas", desc:"3 dias seguidos ativo", ic:"flame", ok: s >= 3 },
     { id:"m7", nome:"Semana perfeita", desc:"7 dias seguidos ativo", ic:"flame", ok: s >= 7 },
-    { id:"mmeta", nome:"Meta da semana", desc:"Bateu os treinos da semana", ic:"target", ok: nSem >= (ME.perfil.dias || 3) },
+    { id:"mmeta", nome:"Meta da semana", desc:"Bateu os treinos da semana", ic:"target", ok: nSem >= ((ME.perfil && ME.perfil.dias) || 3) },
     { id:"m10", nome:"10 treinos", desc:"Completou 10 treinos", ic:"treinar", ok: n >= 10 },
     { id:"m25", nome:"25 treinos", desc:"Completou 25 treinos", ic:"treinar", ok: n >= 25 },
     { id:"m50", nome:"50 treinos", desc:"Completou 50 treinos", ic:"trophy", ok: n >= 50 },
