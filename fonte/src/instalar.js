@@ -28,9 +28,8 @@ function instPodeConvidar(){
   if($("v-app").hidden || !$("v-onb").hidden || !$("v-login").hidden) return false;
   const s = instLe(); if((s.vezes || 0) >= INST_MAX) return false;
   if(s.nao && s.nao > addD(today(), -INST_ESPERA)) return false;
-  // primeira experiência relevante: já concluiu um treino, ou está voltando em outro dia
-  const treinou = (ME.treinos || []).length > 0, voltou = ME.criado && ME.criado < today();
-  return treinou || voltou;
+  // vale para todas que ainda não instalaram (pedido da equipe em 02/11/2026); continua respeitando "Agora não" (7 dias) e o limite de 3 convites
+  return true;
 }
 /* nada aberto por cima (treino, celebração, outra janela, apresentação) */
 const instLivre = () => $("sheet").hidden && $("play").hidden && (!$("celebra") || $("celebra").hidden) && !$("pw")?.offsetParent
