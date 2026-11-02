@@ -9223,7 +9223,7 @@ const abrirPerfilEq = abrirPerfil; abrirPerfil = async function(u){
    Quem deixa o CK Life aberto (ou instalado na tela inicial) fica com a versão antiga até recarregar.
    O app confere a versão publicada ao abrir, ao voltar do segundo plano e a cada 5 minutos.
    Se houver versão nova, mostra a faixa "ATUALIZAR": um toque e pronto. Nunca aparece no meio do treino. */
-const CK_VER = "20261102010456";
+const CK_VER = "20261102011411";
 let CK_VER_NOVA = null;
 const ATU_K = "ck_atu";
 const atuTentou = () => { try{ return JSON.parse(localStorage.getItem(ATU_K) || "null"); }catch(e){ return null; } };
@@ -11059,14 +11059,14 @@ function d21Repinta(){ try{ void document.body.offsetHeight; requestAnimationFra
 function d21Pinta(){
   const box = $("d21"); if(!box || !D21.aberto) return; const e = d21Ed(); if(!e) return d21Fechar();
   const dentro = d21Insc(), aba = dentro ? D21.aba : "conhecer", sc = box.querySelector(".d21-body"), y = sc && sc.dataset.aba === aba ? sc.scrollTop : 0;
-  box.innerHTML = `<header class="d21-top"><button class="d21-volta" id="d21-x">${ic("back", 16)} CK Life</button><span class="d21-marca">🔥 CK 21 DIAS JUNTAS</span>${dentro ? `<button class="d21-mais" id="d21-op" aria-label="Opções do desafio">${ic("gear", 18)}</button>` : `<span class="d21-ed">#${d21Pad(e.numero)}</span>`}</header>
+  box.innerHTML = `<header class="d21-top"><button class="d21-volta" id="d21-x">${ic("back", 16)} CK Life</button><span class="d21-marca">🔥 CK 21 DIAS JUNTAS</span>${dentro ? `<button class="d21-mais" id="d21-op" aria-label="Configurações do desafio" title="Configurações"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.14 12.94c.04-.31.06-.62.06-.94s-.02-.63-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.62l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96a7.03 7.03 0 0 0-1.62-.94l-.36-2.54A.48.48 0 0 0 13.92 2h-3.84a.48.48 0 0 0-.48.41l-.36 2.54c-.59.24-1.13.56-1.62.94l-2.39-.96a.48.48 0 0 0-.59.22L2.72 8.47a.48.48 0 0 0 .12.62l2.03 1.58c-.05.31-.07.63-.07.94s.02.63.06.94l-2.03 1.58a.49.49 0 0 0-.12.62l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.48.48 0 0 0-.12-.62l-2.01-1.58zM12 15.6a3.6 3.6 0 1 1 0-7.2 3.6 3.6 0 0 1 0 7.2z"/></svg></button>` : `<span class="d21-ed">#${d21Pad(e.numero)}</span>`}</header>
     <main class="d21-body" data-aba="${aba}">${aba === "conhecer" ? d21Conhecer() : aba === "comunidade" ? d21ComunidadeHTML() : aba === "jornada" ? d21JornadaHTML() : d21HojeHTML()}</main>
     ${aba === "conhecer" ? `<div class="d21-rodape"><button class="d21-bt" id="d21-entrar">QUERO PARTICIPAR</button></div>` : ""}
     ${dentro ? `<nav class="d21-nav">${[["hoje", "flame", "Hoje"], ["comunidade", "people", "Comunidade"], ["jornada", "trophy", "Jornada"]].map(([k, i, t]) => `<button data-d21tab="${k}" aria-current="${aba === k}">${ic(i, 20)}<span>${t}</span></button>`).join("")}</nav>` : ""}`;
   const b2 = box.querySelector(".d21-body"); if(b2 && y) b2.scrollTop = y;
   $("d21-x").onclick = d21Fechar;
   const op = $("d21-op"); if(op) op.onclick = () => {
-    sheet("Opções do desafio", `<div class="d21-conf"><p class="hint" style="margin:0">CK 21 Dias Juntas · Edição #${d21Pad(e.numero)}</p>
+    sheet("Configurações do desafio", `<div class="d21-conf"><p class="hint" style="margin:0">CK 21 Dias Juntas · Edição #${d21Pad(e.numero)}</p>
       <button class="btn btn-line btn-block" id="d21-o-modo">Trocar meu modo (Normal, Hard, Supreme)</button>
       <button class="btn btn-line btn-block" id="d21-o-jor">Ver minha jornada</button>
       <button class="btn btn-line btn-block" id="d21-o-ck">Voltar ao CK Life (continuo no desafio)</button>
