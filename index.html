@@ -309,7 +309,10 @@ const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAl
 const utm = location.search ? location.search : "";
 /* o link para o app leva a escolha de cookies feita aqui (aceitou = 1, recusou = 0), para não perguntar de novo */
 const ckEscolha = () => { try{ const v = localStorage.getItem("ck_cookies"); return v === "sim" ? "1" : v === "nao" ? "0" : ""; }catch(e){ return ""; } };
-const linkApp = (path, comUtm) => { const u = new URL(APP_URL + path); if(comUtm && utm) new URLSearchParams(utm).forEach((v, k) => u.searchParams.set(k, v)); const c = ckEscolha(); if(c) u.searchParams.set("ck", c); return u.toString(); };
+/* embaixadora: guarda o último link de embaixadora aberto aqui (30 dias) e leva para o app */
+try{ const e = (new URLSearchParams(location.search).get("e") || "").toLowerCase().replace(/[^a-z0-9_-]/g, "").slice(0, 40); if(e) localStorage.setItem("ck_emb", JSON.stringify({ e, t: Date.now() })); else if(new URLSearchParams(location.search).get("utm_source")) localStorage.removeItem("ck_emb"); }catch(err){}
+const embAtual = () => { try{ const o = JSON.parse(localStorage.getItem("ck_emb") || "null"); return o && Date.now() - o.t < 30 * 864e5 ? o.e : ""; }catch(e){ return ""; } };
+const linkApp = (path, comUtm) => { const u = new URL(APP_URL + path); if(comUtm && utm) new URLSearchParams(utm).forEach((v, k) => u.searchParams.set(k, v)); const em = embAtual(); if(em && !u.searchParams.get("utm_source")) u.searchParams.set("e", em); const c = ckEscolha(); if(c) u.searchParams.set("ck", c); return u.toString(); };
 const atualizaLinks = () => { $$(".cta").forEach(a => a.href = linkApp("/", true)); $$("[data-app]").forEach(a => a.href = linkApp(a.dataset.app, false)); };
 atualizaLinks();
 /* ===== Pixel só com consentimento (LGPD) ===== */
