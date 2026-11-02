@@ -9241,7 +9241,7 @@ const abrirPerfilEq = abrirPerfil; abrirPerfil = async function(u){
    Quem deixa o CK Life aberto (ou instalado na tela inicial) fica com a versão antiga até recarregar.
    O app confere a versão publicada ao abrir, ao voltar do segundo plano e a cada 5 minutos.
    Se houver versão nova, mostra a faixa "ATUALIZAR": um toque e pronto. Nunca aparece no meio do treino. */
-const CK_VER = "20261102020417";
+const CK_VER = "20261102120126";
 let CK_VER_NOVA = null;
 const ATU_K = "ck_atu";
 const atuTentou = () => { try{ return JSON.parse(localStorage.getItem(ATU_K) || "null"); }catch(e){ return null; } };
@@ -15581,6 +15581,7 @@ async function avMostra(){ if(!avSB()) return; avPinta(); try{ await Promise.all
    já com o primeiro nome. Quem envia é a pessoa da equipe, no WhatsApp oficial (nada é enviado sozinho). */
 const ZAP_MSG = [
   ["m1", "Boas-vindas", "Oi, {NOME}! Aqui é a Micaela, do CK Life 💚 Seja muito bem-vinda! Uma dica pra começar: na tela inicial toque em \"Hoje só tenho 5 min\" e faça seu primeiro treino. Leva pouquinho e já conta muito. Qualquer dúvida, é só me chamar aqui."],
+  ["m9", "Como instalar o app", "Oi, {NOME}! 💚 Aqui é a Micaela do CK Life.\n\nPra deixar o app na tela do seu celular, igual um aplicativo normal, é rapidinho:\n\n👉 Abra este link: https://app.cklife.com.br\n\n📱 *Se for iPhone:*\n1. Abra o link no *Safari*\n2. Toque no botão *Compartilhar* (o quadradinho com a setinha pra cima, embaixo da tela)\n3. Escolha *\"Adicionar à Tela de Início\"*\n4. Toque em *Adicionar*\n\n🤖 *Se for Android:*\n1. Abra o link no *Chrome*\n2. Toque nos *3 pontinhos* no canto de cima\n3. Escolha *\"Instalar app\"* ou *\"Adicionar à tela inicial\"*\n4. Confirme em *Instalar*\n\nPronto! O ícone do CK Life aparece na sua tela e você entra direto. 🔥\n\n⚠️ Se abriu o link pelo Instagram ou WhatsApp e não aparecer a opção, toque nos 3 pontinhos e escolha *\"Abrir no navegador\"* (Safari ou Chrome).\n\nQualquer dúvida, me chama aqui! 💚"],
   ["m2", "Ainda não treinou", "Oi, {NOME}! Tudo bem? Conseguiu usar o app direitinho? Se ficou alguma dúvida, me fala que eu te ajudo. E se o dia estiver corrido, o treino de 5 minutos em casa já vale! 💚"],
   ["m3", "Primeiro treino feito", "{NOME}, vi que você fez seu primeiro treino! Que orgulho! 🎉 Segunda começa uma turma nova do Desafio 21 dias, todas juntas. Quer entrar com a gente? É só ir em Treinos → Desafios."],
   ["m4", "Teste acabando", "Oi, {NOME}! Passando pra te avisar que seu teste do Pro termina em 2 dias. Você já fez {X} treinos, que demais! 💚 Se quiser continuar com tudo liberado, o Pro está no app em Perfil → Plano. E se preferir seguir no gratuito, tudo bem também, você não perde nada."],
