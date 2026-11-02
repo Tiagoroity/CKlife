@@ -39,7 +39,8 @@ onboarding = function(){
   // 1) intro emocional
   if(OB.intro < ENT_INTRO.length){
     const s = ENT_INTRO[OB.intro];
-    box.innerHTML = entTela(OB.intro === 4 ? "ent-forte" : "", `<h1 class="ent-t ${s.menor ? "menor" : ""}">${s.t}</h1>${entLinhas(s.p)}
+    const tem = ENT_INTRO.length < 2 ? `<ul class="ent-tem ent-abre-l">${[["play", "Treinos em casa de 5 a 45 minutos"], ["star", "Uma Coach que te lembra e comemora com você"], ["juntas", "Uma comunidade só de mulheres"]].map(([i, t], k) => `<li style="--d:${.5 + k * .15}s">${ic(i, 16, 2.2)}${t}</li>`).join("")}</ul>` : "";
+    box.innerHTML = entTela(ENT_INTRO.length < 2 ? "ent-abre" : OB.intro === 4 ? "ent-forte" : "", `<span class="ent-eb">Bem-vinda ao CK Life, ${entNome()} 💚</span><h1 class="ent-t ${s.menor ? "menor" : ""}">${s.t}</h1>${entLinhas(s.p)}${tem}
       <div class="ent-bt"><button class="btn ent-cta" id="ent-ok">${s.bt}</button>${ENT_INTRO.length < 2 ? "" : OB.intro === 0 ? `<button class="link ent-pula" id="ent-pula">Pular introdução</button>` : `<button class="link ent-pula" id="ent-volta">Voltar</button>`}</div>`, OB.intro, ENT_INTRO.length > 1 ? ENT_INTRO.length : 0);
     $("ent-ok").onclick = () => { SOM.tap && SOM.tap(); OB.intro++; onboarding(); window.scrollTo(0, 0); };
     const p = $("ent-pula"); if(p) p.onclick = () => { OB.intro = ENT_INTRO.length; onboarding(); };
@@ -92,7 +93,11 @@ function entPos(){
       <p class="ent-volte">VOLTE.</p>
       ${entLinhas(["Não precisa ser perfeito. Eu sou a Coach CK Life e vou te lembrar disso. 💚"])}
       <div class="ent-bt"><button class="btn ent-cta" id="ent-ok">EU VOLTO POR MIM 💚</button></div>`);
-    $("ent-ok").onclick = () => { OB.compromisso = today(); vibra([30, 40, 60]); SOM.chime && SOM.chime(); prox(); };
+    $("ent-ok").onclick = () => { OB.compromisso = today(); vibra([30, 40, 60]); SOM.chime && SOM.chime();
+      if(OB.veterana) return prox();
+      // aluna nova: o compromisso já salva o plano e leva direto para baixar o app (sem a tela de plano no meio)
+      try{ if(typeof ppPreparo === "function") ppPreparo(); }catch(e){}
+      prox(); const nx = $("ob-next"); if(nx && entLista().length <= (OB && OB.pos || 0)) nx.click(); };
   } else if(k === "acordo"){
     box.innerHTML = entTela("", `<h1 class="ent-t">Então nós temos um acordo.</h1>${entLinhas(["O CK Life vai fazer a parte dele.", "Agora começa a sua."])}<div class="ent-bt"><button class="btn ent-cta" id="ent-ok">Continuar</button></div>`);
     $("ent-ok").onclick = prox;

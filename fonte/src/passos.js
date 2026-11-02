@@ -17,7 +17,7 @@ const ppSvg = {
 };
 const ppPasso = (n, txt, lado) => `<li style="--d:${.2 + n * .12}s"><span class="pp-n">${n}</span><span class="pp-tx">${txt}</span>${lado || ""}</li>`;
 const ppTile = svg => `<span class="pp-tile" aria-hidden="true">${svg}</span>`;
-const ppDots = i => `<div class="pp-dots" aria-label="Passo ${i} de 3">${[1, 2, 3].map(n => `<i class="${n < i ? "ok" : n === i ? "on" : ""}"></i>`).join("")}</div>`;
+const ppDots = i => `<div class="pp-dots" aria-label="Passo ${i} de 2">${[1, 2].map(n => `<i class="${n < i ? "ok" : n === i ? "on" : ""}"></i>`).join("")}</div>`;
 
 /* registra este celular para receber avisos. Não depende da comunidade estar pronta; tenta de novo até conseguir. */
 async function ppInscreve(){
@@ -47,22 +47,23 @@ function ppTela(html, cls){
 /* nada aberto por cima (treino, Pro, outra janela, recado da Coach) */
 const ppLivre = () => $("sheet").hidden && $("play").hidden && !$("pw")?.offsetParent && !document.querySelector(".ent:not(.pp), .coach-1o, #ck-inst, #res-ov, .modal:not([hidden]), #d21");
 
-/* decide a próxima tela */
+/* decide a próxima tela.  Ciclo: instalar → (abrir pelo ícone) → primeiro treino + avisos → (avisos que faltaram) → fim */
+const ppPodeAvisar = () => PUSH_OK() && !(ehIOS() && !instalado());
+const ppPrecisaIcone = () => ppCelular() && !instalado();
 function ppRoda(){
   if(!ME || !ME.passos || ME.passos.fim) return ppFecha();
-  const e = ME.passos.etapa || "inst";
-  if(e === "inst"){ if(instalado() || !ppCelular()){ ppSalva({ etapa: "avisos" }); return ppRoda(); } return ppInstalar(); }
-  if(e === "avisos"){
-    const pode = PUSH_OK() && !(ehIOS() && !instalado());
-    if(!pode || Notification.permission === "denied"){ ppSalva({ etapa: "treino" }); return ppRoda(); }
-    if(Notification.permission === "granted"){ ppInscreve(); ppSalva({ etapa: "treino", avisos: ME.passos.avisos || today() }); return ppRoda(); }
-    return ppAvisos();
+  let e = ME.passos.etapa || "inst";
+  if(e === "inst"){ if(instalado() || !ppCelular()){ ppSalva({ etapa: "treino" }); return ppRoda(); } return ppInstalar(); }
+  if(e === "treino"){
+    if((ME.treinos || []).length){ ppSalva({ fim: today() }); return ppFecha(); }
+    if(ME.primeiro && !ME.primeiro.feito) return ppAvisosFaltam();   // já marcou no navegador: só falta o aviso
+    return ppTreino();
   }
-  if(e === "treino"){ if((ME.treinos || []).length){ ppSalva({ fim: today() }); return ppFecha(); } return ppTreino(); }
+  if(e === "avisos"){ if(!ME.primeiro){ ppSalva({ etapa: "treino" }); return ppRoda(); } return ppAvisosFaltam(); }
   ppSalva({ fim: today() }); ppFecha();
 }
 
-/* ---------- 1) deixar na tela do celular ---------- */
+/* ---------- 1) baixar o app ---------- */
 function ppInstalar(){
   try{ instMarcaSessao(); }catch(e){}   // o convite antigo não aparece de novo nesta visita
   const ios = ehIOS(), safari = ios && !/CriOS|FxiOS|EdgiOS|OPiOS|GSA\//i.test(navigator.userAgent), dentro = navInterno(), nativo = !!PEDIDO_INSTALAR && !ios && !dentro;
@@ -74,12 +75,11 @@ function ppInstalar(){
     cta = `<button class="btn ent-cta" id="pp-copia">${ic("share", 18)} COPIAR LINK DO APP</button>`;
   } else if(ios){
     guia = `<div class="pp-guia"><div class="pp-guia-h"><span class="pp-chip">iPhone</span>${safari ? "Faça aqui no Safari" : "Abra <b>app.cklife.com.br</b> no Safari e faça:"}</div>
-      <ol class="pp-passos">${ppPasso(1, `Toque em <b>Compartilhar</b><small>ou em ⋯ e depois Compartilhar</small>`, ppTile(ppSvg.share))}${ppPasso(2, `Toque em <b>Adicionar à Tela de Início</b><small>role a lista se precisar</small>`, ppTile(ppSvg.mais))}${ppPasso(3, `Toque em <b>Adicionar</b>`, `<span class="pp-pill">Adicionar</span>`)}</ol>
-      <p class="pp-chave">${ic("check", 16, 2.4)}<span>Depois, abra pelo <b>ícone</b> e entre com <b>${ppEmail()}</b>.</span></p></div>`;
+      <ol class="pp-passos">${ppPasso(1, `Toque em <b>Compartilhar</b><small>ou em ⋯ e depois Compartilhar</small>`, ppTile(ppSvg.share))}${ppPasso(2, `Toque em <b>Adicionar à Tela de Início</b><small>role a lista se precisar</small>`, ppTile(ppSvg.mais))}${ppPasso(3, `Toque em <b>Adicionar</b>`, `<span class="pp-pill">Adicionar</span>`)}</ol></div>`;
     cta = `<button class="btn ent-cta" id="pp-feito">JÁ ADICIONEI ${ic("check", 18, 2.6)}</button>`;
   } else if(nativo){
     guia = `<p class="pp-mini">Uma janelinha do celular vai pedir para confirmar. É só tocar em <b>Instalar</b>.</p>`;
-    cta = `<button class="btn ent-cta" id="pp-nativo">${ic("plus", 18, 2.6)} INSTALAR AGORA</button>`;
+    cta = `<button class="btn ent-cta" id="pp-nativo">${ic("plus", 18, 2.6)} BAIXAR O APP</button>`;
   } else {
     guia = `<div class="pp-guia"><div class="pp-guia-h"><span class="pp-chip">Android</span>${sam ? "No navegador Samsung:" : "No Chrome:"}</div>
       <ol class="pp-passos">${sam ? ppPasso(1, `Toque no menu <b>☰</b> na barra de baixo`, ppTile(ppSvg.pontos)) + ppPasso(2, `Escolha <b>Adicionar página a</b> › <b>Tela inicial</b>`, ppTile(ppSvg.mais))
@@ -88,83 +88,100 @@ function ppInstalar(){
   }
   ppTela(`${ppDots(1)}
     <div class="pp-hero"><img src="img/passos-celular.webp" alt="" onerror="this.parentNode.remove()"></div>
-    <span class="ent-eb">Passo 1 de 3 · 30 segundos</span>
-    <h1 class="ent-t pp-t">Seu compromisso merece um lugar na sua tela</h1>
+    <span class="ent-eb">Seu compromisso · passo 1 de 2</span>
+    <h1 class="ent-t pp-t">Leve o CK Life para a sua tela</h1>
     <p class="pp-sub">Assim seu treino fica <b>a um toque</b> e o lembrete chega na hora certa.</p>
     ${guia}<div class="pp-bt">${cta}<button class="pp-pula" id="pp-nao">pular por enquanto</button></div>`, "pp-inst");
-  const prox = () => { ppSalva({ etapa: "avisos" }); ppRoda(); };
+  const prox = () => { ppSalva({ etapa: "treino" }); ppRoda(); };
   $("pp-nao").onclick = () => { try{ instGrava({ nao: today() }); }catch(e){} prox(); };
   const nat = $("pp-nativo"); if(nat) nat.onclick = async () => {
     const p = PEDIDO_INSTALAR; PEDIDO_INSTALAR = null; if(!p) return prox();
-    try{ p.prompt(); const r = await p.userChoice; if(r && r.outcome === "accepted"){ try{ instGrava({ ok: true }); }catch(e){} SOM.done && SOM.done(); ppSalva({ inst: today() }); toast("Pronto! O CK Life está na sua tela 💚"); } }catch(e){}
+    try{ p.prompt(); const r = await p.userChoice; if(r && r.outcome === "accepted"){ try{ instGrava({ ok: true }); }catch(e){} SOM.done && SOM.done(); ppSalva({ inst: today(), etapa: "treino" }); return ppAbraIcone(); } }catch(e){}
     prox(); };
   const cp = $("pp-copia"); if(cp) cp.onclick = async () => { try{ await navigator.clipboard.writeText("https://app.cklife.com.br"); toast("Link copiado. Cole no " + (ehIOS() ? "Safari" : "Chrome") + " 💚"); }catch(e){ toast("O link é app.cklife.com.br"); } };
-  const fe = $("pp-feito"); if(fe) fe.onclick = () => ehIOS() ? ppAbraIcone() : (ppSalva({ inst: today() }), prox());
+  const fe = $("pp-feito"); if(fe) fe.onclick = () => { ppSalva({ inst: today(), etapa: "treino" }); ppAbraIcone(); };
 }
-/* iPhone: os avisos só funcionam abrindo pelo ícone */
-function ppAbraIcone(){
-  ppSalva({ inst: today(), etapa: "avisos" });
-  ppTela(`${ppDots(1)}<div class="pp-ok">${ic("check", 34, 2.6)}</div>
-    <span class="ent-eb">Quase lá</span><h1 class="ent-t pp-t">Agora abra o CK Life pelo ícone 💚</h1>
-    <p class="pp-sub">Toque no ícone na sua tela e entre com <b>${ppEmail()}</b>. Você continua daqui.</p>
+/* depois de instalar: ela continua pelo ícone (no iPhone os avisos só funcionam assim) */
+function ppAbraIcone(motivo){
+  const treino = motivo === "treino";
+  ppTela(`${ppDots(treino ? 2 : 1)}<div class="pp-ok">${ic(treino ? "play" : "check", 34, 2.6)}</div>
+    <span class="ent-eb">${treino ? "Seu treino está pronto" : "Quase lá"}</span>
+    <h1 class="ent-t pp-t">${treino ? "Agora é só abrir o CK Life pelo ícone 💚" : "Agora abra o CK Life pelo ícone 💚"}</h1>
+    <p class="pp-sub">${treino ? "Toque no ícone na sua tela e depois em <b>Começar</b>. Seu treino de 5 minutos vai estar logo no Início." : "Toque no ícone na sua tela" + (ehIOS() ? ` e entre com <b>${ppEmail()}</b>` : "") + ". Lá você marca seu primeiro treino."}</p>
     <div class="pp-icone"><img src="img/icone-192.png" alt="" width="64" height="64" onerror="this.remove()"><b>CK Life</b></div>
-    <div class="pp-bt"><button class="link ent-pula" id="pp-aqui">Continuar aqui no navegador</button></div>`, "pp-abra");
-  $("pp-aqui").onclick = () => { ppSalva({ etapa: "treino" }); ppRoda(); };
+    <div class="pp-bt"><button class="pp-pula" id="pp-aqui">continuar aqui no navegador</button></div>`, "pp-abra");
+  $("pp-aqui").onclick = () => { if(treino){ ppSalva({ fim: today() }); ppFecha(); const q = QUICK.find(x => x.id === PP_TREINO) || QUICK[0]; abrirTreinoPreview(treinoRapido(q)); } else ppRoda(); };
 }
 
-/* ---------- 2) avisos ---------- */
-function ppAvisos(){
-  const hh = ppHoraBase();
-  ppTela(`${ppDots(2)}
-    <div class="pp-notif" aria-hidden="true"><img src="img/icone-192.png" alt="" width="38" height="38" onerror="this.remove()"><div><span><b>CK Life</b><small>agora</small></span><strong>Hora do seu primeiro treino 💚</strong><p>São só 5 minutos. A gente está junto.</p></div></div>
-    <div class="pp-notif pp-notif2" aria-hidden="true"><img src="img/icone-192.png" alt="" width="38" height="38" onerror="this.remove()"><div><span><b>CK Life</b><small>${esc(hh)}</small></span><strong>Recado da Coach</strong><p>Pouco ainda conta. Bora?</p></div></div>
-    <span class="ent-eb">Passo 2 de 3</span>
-    <h1 class="ent-t pp-t">Deixa a gente te lembrar</h1>
-    <p class="pp-sub">Do seu treino, das suas conquistas e quando a rotina apertar. Sem spam.</p>
-    <div class="pp-bt"><button class="btn ent-cta" id="pp-ativa">${ic("bell", 18, 2.4)} ATIVAR MEUS AVISOS</button><button class="pp-pula" id="pp-nao">pular por enquanto</button></div><p class="pp-msg" id="pp-msg" role="status"></p>`, "pp-av");
-  const prox = () => { ppSalva({ etapa: "treino" }); ppRoda(); };
-  $("pp-nao").onclick = prox;
-  $("pp-ativa").onclick = async () => {
-    const b = $("pp-ativa"); b.disabled = true;
-    let p = "default"; try{ p = await Notification.requestPermission(); }catch(e){}
-    if(p === "granted"){ await ppInscreve(); SOM.done && SOM.done(); ppSalva({ avisos: today() }); toast("Avisos ativados 💚"); return prox(); }
-    const m = $("pp-msg"); if(m) m.textContent = "Tudo bem. Dá para ativar depois em Perfil › Avisos no celular.";
-    setTimeout(prox, 1400);
-  };
+/* ---------- 2) primeiro treino + avisos (uma tela só) ---------- */
+async function ppPedeAvisos(){
+  if(!ppPodeAvisar()) return false;
+  if(Notification.permission === "granted"){ ppInscreve(); return true; }
+  if(Notification.permission === "denied") return false;
+  let p = "default"; try{ p = await Notification.requestPermission(); }catch(e){}
+  if(p === "granted"){ ppInscreve(); ppSalva({ avisos: today() }); return true; }
+  return false;
 }
-
-/* ---------- 3) ela marca o primeiro treino ---------- */
 function ppTreino(){
   const q = QUICK.find(x => x.id === PP_TREINO) || QUICK[0], base = ppHoraBase();
   const agora = new Date(), hhmm = d => String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
   const minHoje = () => { const d = new Date(Date.now() + 30 * 6e4); d.setMinutes(d.getMinutes() < 30 ? 30 : 60, 0, 0); return hhmm(d); };
   let dia = base > hhmm(agora) && agora.getHours() < 21 ? "hoje" : "amanha";
-  const avOk = pushLigado();
-  ppTela(`${ppDots(3)}
-    <span class="ent-eb">Passo 3 de 3</span>
+  ppTela(`${ppDots(2)}
+    <span class="ent-eb">Seu compromisso · passo 2 de 2</span>
     <h1 class="ent-t pp-t">Quando vai ser seu primeiro treino?</h1>
-    <p class="pp-sub">Escolha um momento que caiba de verdade no seu dia.</p>
-    <div class="pp-tr"><div class="pp-tr-ic">${ic("play", 22, 2.4)}</div><div><b>${esc(q.nome)}</b><div class="pp-tags"><span>5 min</span><span>Em pé</span><span>Sem equipamento</span><span>Sala ou quarto</span></div></div></div>
-    <button class="btn ent-cta" id="pp-agora">${ic("play", 18, 2.4)} AGORA, ESTOU PRONTA</button>
-    <div class="pp-ou"><span>ou escolha o seu momento</span></div>
+    <div class="pp-notif pp-notif-p" aria-hidden="true"><img src="img/icone-192.png" alt="" width="34" height="34" onerror="this.remove()"><div><span><b>CK Life</b><small>na hora marcada</small></span><strong>Hora do seu primeiro treino 💚</strong></div></div>
     <div class="pp-seg" role="radiogroup" aria-label="Dia"><button role="radio" data-d="hoje">Hoje</button><button role="radio" data-d="amanha">Amanhã</button></div>
     <label class="pp-hora"><span>${ic("clock", 18, 2.2)} Horário</span><input type="time" id="pp-h" value="${dia === "hoje" && base <= hhmm(agora) ? minHoje() : base}" step="300"></label>
-    <button class="btn ent-sec" id="pp-marca">${ic("bell", 18, 2.2)} MARCAR MEU LEMBRETE</button>
-    <p class="pp-msg" id="pp-msg" role="status">${avOk ? "" : "Sem os avisos ativados, o lembrete aparece quando você abrir o app."}</p>
+    <button class="btn ent-cta" id="pp-marca">${ic("bell", 18, 2.4)} MARCAR E ME AVISAR</button>
+    <p class="pp-msg" id="pp-msg" role="status"></p>
+    <div class="pp-ou"><span>ou</span></div>
+    <button class="btn ent-sec" id="pp-agora">${ic("play", 18, 2.4)} QUERO TREINAR AGORA · 5 MIN</button>
     <div class="pp-bt"><button class="pp-pula" id="pp-depois">depois eu vejo</button></div>`, "pp-tre");
   const pinta = () => document.querySelectorAll("#pp [data-d]").forEach(b => { const on = b.dataset.d === dia; b.classList.toggle("on", on); b.setAttribute("aria-checked", on); });
   document.querySelectorAll("#pp [data-d]").forEach(b => b.onclick = () => { dia = b.dataset.d; pinta(); });
   pinta();
   $("pp-depois").onclick = () => { ppSalva({ fim: today(), pulouTreino: today() }); ppFecha(); };
-  $("pp-agora").onclick = () => { ppSalva({ fim: today(), agora: today() }); ppFecha(); abrirTreinoPreview(treinoRapido(q)); };
+  $("pp-agora").onclick = async () => {
+    await ppPedeAvisos();                                   // aproveita o toque para ligar os avisos
+    ME.primeiro = { dia: today(), hora: hhmm(new Date()), agora: true }; save();
+    if(ppPrecisaIcone()){ ppSalva({ etapa: "treino" }); return ppAbraIcone("treino"); }   // treinar pelo app instalado
+    ppSalva({ fim: today(), agora: today() }); ppFecha(); abrirTreinoPreview(treinoRapido(q));
+  };
   $("pp-marca").onclick = async () => {
     const h = ($("pp-h").value || "").slice(0, 5), m = $("pp-msg");
     if(!/^\d\d:\d\d$/.test(h)){ m.textContent = "Escolha um horário."; return; }
     const d = dia === "hoje" ? today() : addD(today(), 1);
-    if(dia === "hoje" && h <= hhmm(new Date())){ m.textContent = "Esse horário já passou. Escolha mais tarde ou toque em Agora."; return; }
-    ME.primeiro = { dia: d, hora: h }; ppSalva({ fim: today(), marcou: today() });
-    if(pushLigado()){ await ppInscreve(); await ppLembreteServidor(d, h); }
-    ppCombinado(d, h);
+    if(dia === "hoje" && h <= hhmm(new Date())){ m.textContent = "Esse horário já passou. Escolha mais tarde."; return; }
+    const ok = await ppPedeAvisos();                        // marcar = ligar os avisos (o celular pede uma vez só)
+    ME.primeiro = { dia: d, hora: h }; save();
+    if(ok){ await ppInscreve(); await ppLembreteServidor(d, h); ppSalva({ fim: today(), marcou: today() }); return ppCombinado(d, h, true); }
+    if(ppPodeAvisar() && Notification.permission === "denied"){ ppSalva({ fim: today(), marcou: today() }); return ppCombinado(d, h, false); }
+    // iPhone pelo navegador: o aviso só funciona pelo ícone → continua lá
+    ppSalva({ etapa: "avisos", marcou: today() }); ppCombinado(d, h, false, true);
+  };
+}
+/* abriu pelo ícone depois de marcar no navegador: falta só ligar o aviso do horário dela */
+function ppAvisosFaltam(){
+  const p = ME.primeiro;
+  if(!p || p.feito || !ppPodeAvisar() || Notification.permission !== "default"){
+    if(ppPodeAvisar() && Notification.permission === "granted" && p && !p.agora && p.dia >= today()){ ppInscreve().then(() => ppLembreteServidor(p.dia, p.hora)); }
+    ppSalva({ fim: today() }); return ppFecha();
+  }
+  const quando = p.agora ? "Seu treino de 5 minutos está pronto" : `${p.dia === today() ? "Hoje" : p.dia === addD(today(), 1) ? "Amanhã" : "No dia marcado"} às ${p.hora}`;
+  ppTela(`${ppDots(2)}
+    <div class="pp-notif" aria-hidden="true"><img src="img/icone-192.png" alt="" width="38" height="38" onerror="this.remove()"><div><span><b>CK Life</b><small>${esc(p.agora ? "agora" : p.hora)}</small></span><strong>Hora do seu primeiro treino 💚</strong><p>São só 5 minutos. A gente está junto.</p></div></div>
+    <span class="ent-eb">Último toque</span>
+    <h1 class="ent-t pp-t">${esc(quando)}${p.agora ? "" : " é o seu momento"} 💚</h1>
+    <p class="pp-sub">Ative os avisos para a gente te lembrar na hora.</p>
+    <div class="pp-bt"><button class="btn ent-cta" id="pp-ativa">${ic("bell", 18, 2.4)} ATIVAR MEUS AVISOS</button><button class="pp-pula" id="pp-nao">agora não</button></div><p class="pp-msg" id="pp-msg" role="status"></p>`, "pp-av");
+  $("pp-nao").onclick = () => { ppSalva({ fim: today() }); ppFecha(); try{ rInicio(); }catch(e){} };
+  $("pp-ativa").onclick = async () => {
+    $("pp-ativa").disabled = true;
+    const ok = await ppPedeAvisos();
+    if(ok){ await ppInscreve(); if(!p.agora && p.dia >= today()) await ppLembreteServidor(p.dia, p.hora); SOM.done && SOM.done(); toast("Avisos ativados 💚"); }
+    else { const m = $("pp-msg"); if(m) m.textContent = "Tudo bem. Dá para ativar depois em Perfil › Avisos no celular."; }
+    setTimeout(() => { ppSalva({ fim: today() }); ppFecha(); try{ rInicio(); }catch(e){} }, ok ? 300 : 1400);
   };
 }
 /* um lembrete só, no dia e hora que ela escolheu (o servidor manda mesmo com o app fechado) */
@@ -177,14 +194,23 @@ async function ppLembreteServidor(d, h){
     return !r.error;
   }catch(e){ return false; }
 }
-function ppCombinado(d, h){
+function ppCombinado(d, h, avisa, icone){
   const quando = (d === today() ? "Hoje" : "Amanhã") + " às " + h;
+  const txt = avisa ? "A gente te avisa na hora. São só 5 minutos, em pé, no seu cantinho."
+    : icone ? "Para o aviso chegar, abra o CK Life <b>pelo ícone</b> na sua tela e ative os avisos. É um toque."
+    : "Abra o CK Life nesse horário: seu treino de 5 minutos vai estar logo no Início.";
   ppTela(`<div class="pp-ok">${ic("check", 34, 2.6)}</div><span class="ent-eb">Combinado</span>
     <h1 class="ent-t pp-t">${esc(quando)} é o seu momento 💚</h1>
-    <p class="pp-sub">${pushLigado() ? "A gente te avisa na hora. São só 5 minutos, em pé, no seu cantinho." : "Abra o CK Life nesse horário: seu treino de 5 minutos vai estar logo no Início."}</p>
-    <div class="pp-bt"><button class="btn ent-cta" id="pp-ir">IR PARA O APP</button></div>`, "pp-fim");
+    <p class="pp-sub">${txt}</p>
+    ${icone ? `<div class="pp-icone"><img src="img/icone-192.png" alt="" width="64" height="64" onerror="this.remove()"><b>CK Life</b></div>` : ""}
+    <div class="pp-bt">${icone ? `<button class="pp-pula" id="pp-ir">continuar aqui no navegador</button>` : `<button class="btn ent-cta" id="pp-ir">IR PARA O APP</button>`}</div>`, "pp-fim");
   try{ confete($("pp")); SOM.done && SOM.done(); }catch(e){}
-  $("pp-ir").onclick = () => { ppFecha(); try{ rInicio(); }catch(e){} };
+  $("pp-ir").onclick = () => { if(icone) ppSalva({ fim: today() }); ppFecha(); try{ rInicio(); }catch(e){} };
+}
+/* tela de passagem: o plano dela ficou pronto e já seguimos para o compromisso no celular */
+function ppPreparo(){
+  ppTela(`<div class="pp-ok">${ic("check", 34, 2.6)}</div><span class="ent-eb">Plano pronto</span>
+    <h1 class="ent-t pp-t">${entNome()}, seu plano está pronto 💚</h1><p class="pp-sub">Agora, o primeiro passo do seu compromisso.</p>`, "pp-fim");
 }
 
 /* Início: lembrete visível até ela fazer o primeiro treino (só para quem marcou) */
@@ -196,7 +222,7 @@ rInicio = function(){
     if(p && !p.feito && !(ME.treinos || []).length && p.dia >= addD(today(), -1) && box && !$("pp-card")){
       const q = QUICK.find(x => x.id === PP_TREINO) || QUICK[0], quando = p.dia === today() ? "hoje às " + p.hora : p.dia === addD(today(), 1) ? "amanhã às " + p.hora : "às " + p.hora;
       const alvo = box.querySelector(".sd") || box.firstElementChild;
-      const html = `<button class="pp-card" id="pp-card"><span class="pp-card-ic">${ic("play", 20, 2.4)}</span><span><b>Seu primeiro treino: ${esc(quando)}</b><small>${esc(q.nome)} · em pé, sem equipamento</small></span><span class="pp-card-bt">Começar</span></button>`;
+      const html = `<button class="pp-card" id="pp-card"><span class="pp-card-ic">${ic("play", 20, 2.4)}</span><span><b>${p.agora ? "Seu primeiro treino está te esperando 💚" : "Seu primeiro treino: " + esc(quando)}</b><small>${esc(q.nome)} · em pé, sem equipamento</small></span><span class="pp-card-bt">Começar</span></button>`;
       if(alvo) alvo.insertAdjacentHTML("beforebegin", html); else box.insertAdjacentHTML("afterbegin", html);
       $("pp-card").onclick = () => abrirTreinoPreview(treinoRapido(q));
     }
