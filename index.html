@@ -2760,6 +2760,179 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
 .sh-alt{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .sh-hint{text-align:center;margin:0;font-size:12.5px}
 #sheet.sh-top{z-index:45}
+/* ===== CK 21 DIAS JUNTAS: experiência própria ===== */
+.d21{--f1:#FF7A3D;--f2:#E2562B;--f3:#FFB547;--d0:#0A1712;--d1:#10251D;--d2:#173327;--dl:rgba(255,255,255,.1);--dt:#F4F7F2;--dm:rgba(244,247,242,.66);position:fixed;inset:0;z-index:18;background:radial-gradient(120% 60% at 50% -10%,#3A1A0E 0%,var(--d0) 55%);color:var(--dt);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);animation:sobe .22s ease-out}
+body.d21-on{overflow:hidden}
+.d21-top{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--dl)}
+.d21-volta{border:0;background:rgba(255,255,255,.08);color:var(--dt);border-radius:999px;padding:8px 12px 8px 8px;font:700 13px/1 Figtree,system-ui,sans-serif;display:flex;align-items:center;gap:4px}
+.d21-marca{flex:1;text-align:center;font:800 13px/1 'Bricolage Grotesque',system-ui,sans-serif;letter-spacing:.06em;color:var(--f3)}
+.d21-ed{font:700 12px/1 Figtree,system-ui,sans-serif;color:var(--dm);min-width:44px;text-align:right}
+.d21-body{flex:1;overflow-y:auto;padding:16px 16px 110px;display:flex;flex-direction:column;gap:14px;max-width:560px;width:100%;margin:0 auto;-webkit-overflow-scrolling:touch}
+.d21-nav{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:center;gap:4px;padding:8px 12px calc(8px + env(safe-area-inset-bottom,0px));background:rgba(10,23,18,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--dl)}
+.d21-nav button{flex:1;max-width:160px;border:0;background:none;color:var(--dm);display:flex;flex-direction:column;align-items:center;gap:3px;font:700 12px/1 Figtree,system-ui,sans-serif;padding:6px;border-radius:14px}
+.d21-nav button[aria-current="true"]{color:var(--f1);background:rgba(255,122,61,.12)}
+.d21-eye{font:800 12px/1.2 Figtree,system-ui,sans-serif;letter-spacing:.12em;color:var(--f3)}
+.d21-hero{text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;padding:8px 0 4px}
+.d21-hero-s{padding:0}
+.d21-titulo{font:800 32px/1.05 'Bricolage Grotesque',system-ui,sans-serif;margin:0;color:#fff}
+.d21-frase{margin:0;color:var(--dm);font:italic 600 15px/1.4 Figtree,system-ui,sans-serif}
+.d21-gr{font:800 64px/1 'Bricolage Grotesque',system-ui,sans-serif;color:#fff}
+.d21-gr small{font-size:.42em;color:var(--dm)}
+.d21-barra{width:100%;height:12px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden}
+.d21-barra i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--f2),var(--f1),var(--f3))}
+.d21-barra-tx{width:100%;display:flex;justify-content:space-between;font:700 13px/1 Figtree,system-ui,sans-serif;color:var(--dm)}
+.d21-pill{background:rgba(255,122,61,.14);color:#FFD8C2;border:1px solid rgba(255,122,61,.28);border-radius:999px;padding:8px 14px;font:700 14px/1.2 Figtree,system-ui,sans-serif}
+.d21-pill:empty{display:none}
+.d21-card{background:var(--d1);border:1px solid var(--dl);border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:8px}
+.d21-card h3{margin:0;font:800 17px/1.2 'Bricolage Grotesque',system-ui,sans-serif;color:#fff}
+.d21-card p{margin:0;color:var(--dm);line-height:1.5}
+.d21-card b{color:#fff}
+.d21-sec{margin:6px 0 -4px;font:800 13px/1 Figtree,system-ui,sans-serif;letter-spacing:.1em;color:var(--f3)}
+.d21-bt{border:0;border-radius:16px;padding:15px 18px;background:linear-gradient(135deg,var(--f2),var(--f1));color:#fff;font:800 15px/1 Figtree,system-ui,sans-serif;letter-spacing:.03em;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;text-decoration:none;box-shadow:0 12px 28px -14px rgba(255,122,61,.8)}
+.d21-bt:disabled{opacity:.6}
+.d21-bt-xl{padding:20px;font-size:17px}
+.d21-bt-2{background:rgba(255,255,255,.08);box-shadow:none;border:1px solid var(--dl)}
+.d21-bts2{display:flex;gap:8px;flex-wrap:wrap}
+.d21-bts2 .d21-bt{flex:1;min-width:140px}
+.d21-planob{border:1px dashed rgba(185,221,178,.5);background:rgba(46,125,90,.14);color:#CFEBC8;border-radius:16px;padding:14px;font:700 15px/1 Figtree,system-ui,sans-serif;display:flex;justify-content:center;align-items:center;gap:8px}
+.d21-planob span{font-size:12px;background:rgba(185,221,178,.18);padding:4px 8px;border-radius:999px}
+.d21-modos{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.d21-modo{border:1px solid var(--dl);background:var(--d2);color:var(--dt);border-radius:14px;padding:12px 8px;display:flex;flex-direction:column;gap:4px;align-items:center;text-align:center;position:relative}
+.d21-modo b{font:800 15px/1 'Bricolage Grotesque',system-ui,sans-serif}
+.d21-modo small{font-size:11.5px;color:var(--dm);line-height:1.25}
+.d21-modo em{font:800 10px/1 Figtree,system-ui,sans-serif;font-style:normal;color:#1d0d05;background:var(--f3);border-radius:999px;padding:3px 6px;text-transform:uppercase}
+.d21-modo[aria-pressed="true"]{border-color:var(--f1);background:rgba(255,122,61,.16);box-shadow:inset 0 0 0 1px var(--f1)}
+.d21-modos-s .d21-modo{padding:10px 6px}
+.d21-missao{display:flex;flex-direction:column;gap:8px}
+.d21-m{display:flex;align-items:center;gap:12px;background:var(--d1);border:1px solid var(--dl);border-radius:16px;padding:12px 14px}
+.d21-m>i{font-style:normal;font-size:22px;width:28px;text-align:center}
+.d21-m>div{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.d21-m b{font:800 12.5px/1.2 Figtree,system-ui,sans-serif;letter-spacing:.06em;color:#fff}
+.d21-m small{color:var(--dm);font-size:13.5px;line-height:1.3}
+.d21-m button{border:0;border-radius:999px;background:rgba(255,122,61,.18);color:#FFD8C2;font:800 13px/1 Figtree,system-ui,sans-serif;padding:9px 12px;white-space:nowrap}
+.d21-m em{font-style:normal;font-weight:800;color:#7EE2A0;font-size:18px}
+.d21-m.ok{border-color:rgba(126,226,160,.35);background:rgba(46,125,90,.16)}
+.d21-feito{border-color:rgba(126,226,160,.4);background:linear-gradient(160deg,rgba(46,125,90,.35),var(--d1))}
+.d21-feito small{color:var(--dm)}
+.d21-volta-c{border-color:rgba(255,181,71,.35);background:rgba(255,181,71,.08)}
+.d21-mica{flex-direction:row;align-items:flex-start;gap:12px}
+.d21-av{flex:0 0 auto;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--f2),var(--f3));color:#fff;font:800 16px/1 'Bricolage Grotesque',system-ui,sans-serif}
+.d21-mica b{font:800 12px/1 Figtree,system-ui,sans-serif;letter-spacing:.06em;color:var(--f3)}
+.d21-zap{display:flex;justify-content:center;align-items:center;gap:8px;border-radius:16px;padding:13px;background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.35);color:#9EF0BC;font:700 14px/1 Figtree,system-ui,sans-serif;text-decoration:none}
+.d21-relogio{display:flex;align-items:baseline;justify-content:center;gap:6px}
+.d21-relogio b{font:800 46px/1 'Bricolage Grotesque',system-ui,sans-serif;color:#fff;background:rgba(255,255,255,.07);border-radius:14px;padding:8px 10px;min-width:72px;text-align:center}
+.d21-relogio small{font:800 10px/1 Figtree,system-ui,sans-serif;letter-spacing:.1em;color:var(--dm);margin-right:6px}
+.d21-capa{border-radius:24px;padding:28px 18px;text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center;background:linear-gradient(180deg,rgba(10,23,18,.2),rgba(10,23,18,.92)),var(--capa,radial-gradient(circle at 50% 0%,#E2562B,#3A1A0E 70%));background-size:cover;background-position:center;min-height:240px;justify-content:flex-end}
+.d21-capa h1{margin:0;font:800 30px/1.05 'Bricolage Grotesque',system-ui,sans-serif;color:#fff}
+.d21-tag{font:800 11px/1 Figtree,system-ui,sans-serif;letter-spacing:.12em;background:rgba(255,255,255,.14);padding:6px 10px;border-radius:999px}
+.d21-capa-n{color:#FFD8C2;font-weight:700}
+.d21-cont{text-align:center;align-items:center}
+.d21-cont small{color:var(--dm)}
+.d21-lista{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.d21-lista li{display:flex;gap:12px;align-items:flex-start;color:var(--dm);line-height:1.45;font-size:14.5px}
+.d21-lista i{font-style:normal;font-size:20px}
+.d21-desc{white-space:normal}
+.d21-cta-fixo{position:sticky;bottom:0;padding:8px 0 4px;background:linear-gradient(0deg,var(--d0) 60%,transparent)}
+.d21.d21-ok{position:fixed;inset:0;z-index:19;display:grid;background:rgba(10,23,18,.96);display:grid;place-items:center;padding:24px;text-align:center}
+.d21-ok>div{display:flex;flex-direction:column;gap:12px;align-items:center;max-width:360px;width:100%}
+.d21-ok h2{margin:0;font:800 30px/1.1 'Bricolage Grotesque',system-ui,sans-serif;color:#fff}
+.d21-ok p{margin:0;color:var(--dm)}
+.d21-ok small{color:var(--dm)}
+.d21-ok-em{font-size:64px;line-height:1}
+.d21-com-top{display:flex;flex-direction:column;gap:4px}
+.d21-com-top b{font:800 18px/1.2 'Bricolage Grotesque',system-ui,sans-serif}
+.d21-com-top small{color:var(--dm);line-height:1.4}
+.d21-vazio{text-align:center;color:var(--dm);padding:30px 10px}
+.d21-vazio .link{color:var(--f1)}
+.d21-post{background:var(--d1);border:1px solid var(--dl);border-radius:20px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.d21-post.fix{border-color:rgba(255,122,61,.45);background:linear-gradient(170deg,rgba(255,122,61,.12),var(--d1) 50%)}
+.d21-post header{display:flex;align-items:center;gap:10px}
+.d21-post header div{flex:1;display:flex;flex-direction:column;gap:2px}
+.d21-post header b{font:800 12px/1 Figtree,system-ui,sans-serif;letter-spacing:.06em}
+.d21-post header small{color:var(--dm);font-size:12px}
+.d21-post header em{font:800 10.5px/1 Figtree,system-ui,sans-serif;font-style:normal;letter-spacing:.06em;color:var(--f3);background:rgba(255,181,71,.12);padding:5px 7px;border-radius:999px}
+.d21-post h3{margin:0;font:800 20px/1.2 'Bricolage Grotesque',system-ui,sans-serif;color:#fff}
+.d21-post p{margin:0;color:var(--dm);line-height:1.5}
+.d21-reac{display:flex;gap:6px;flex-wrap:wrap}
+.d21-reac button{border:1px solid var(--dl);background:rgba(255,255,255,.05);color:var(--dt);border-radius:999px;padding:7px 11px;font:700 15px/1 Figtree,system-ui,sans-serif;display:flex;gap:5px;align-items:center;min-height:36px}
+.d21-reac button span{font-size:13px;color:var(--dm)}
+.d21-reac button[aria-pressed="true"]{border-color:var(--f1);background:rgba(255,122,61,.18)}
+.d21-ops{display:flex;flex-direction:column;gap:7px}
+.d21-ops small{color:var(--dm);font-size:12px}
+.d21-op{position:relative;overflow:hidden;border:1px solid var(--dl);background:rgba(255,255,255,.04);color:var(--dt);border-radius:12px;padding:12px;display:flex;justify-content:space-between;gap:8px;font:700 14.5px/1.2 Figtree,system-ui,sans-serif;text-align:left}
+.d21-op i{position:absolute;inset:0 auto 0 0;background:rgba(255,122,61,.18)}
+.d21-op span,.d21-op b{position:relative}
+.d21-op.meu{border-color:var(--f1)}
+.d21-op:disabled{opacity:1}
+.d21-cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.d21-dia{background:var(--d1);border:1px solid var(--dl);border-radius:12px;padding:6px 0;display:flex;flex-direction:column;align-items:center;gap:2px}
+.d21-dia small{font:700 10.5px/1 Figtree,system-ui,sans-serif;color:var(--dm)}
+.d21-dia i{font-style:normal;font-size:18px;line-height:1.2}
+.d21-dia.hoje{border-color:var(--f1);background:rgba(255,122,61,.14)}
+.d21-dia.feito{background:rgba(46,125,90,.2)}
+.d21-dia.fut,.d21-dia.antes{opacity:.5}
+.d21-leg{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;font-size:12px;color:var(--dm)}
+.d21-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:100%}
+.d21-stats div{background:var(--d1);border:1px solid var(--dl);border-radius:14px;padding:12px 6px;text-align:center;display:flex;flex-direction:column;gap:4px}
+.d21-stats b{font:800 22px/1 'Bricolage Grotesque',system-ui,sans-serif;color:#fff}
+.d21-stats small{font-size:11.5px;color:var(--dm);line-height:1.2}
+.d21-gentil{text-align:center;color:#CFEBC8;margin:0;font-weight:600}
+.d21-meds{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:100%}
+.d21-meds>*{border:1px solid var(--dl);background:var(--d1);color:var(--dt);border-radius:14px;padding:10px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:26px;line-height:1}
+.d21-meds small{font:700 10.5px/1.2 Figtree,system-ui,sans-serif;color:var(--dm);text-align:center}
+.d21-meds .ok{border-color:rgba(255,181,71,.45);background:rgba(255,181,71,.1)}
+.d21-meds button:disabled{opacity:.45}
+.d21-meds:empty{display:none}
+.d21-hist small{color:var(--dm)}
+.d21-sair{border:0;background:none;color:var(--dm);text-decoration:underline;font-size:13px;align-self:center;padding:14px}
+.d21-conf{display:flex;flex-direction:column;gap:12px}
+.d21-conf p{margin:0;line-height:1.5}
+.d21-nota{display:grid;grid-template-columns:repeat(11,1fr);gap:4px}
+.d21-nota button{border:1px solid var(--dl);background:var(--d2);color:var(--dt);border-radius:8px;padding:9px 0;font:700 13px/1 Figtree,system-ui,sans-serif}
+.d21-nota button.on{background:var(--f1);border-color:var(--f1)}
+.d21-lb{display:flex;flex-direction:column;gap:6px;color:var(--dm);font-size:14px}
+.d21-lb textarea{background:var(--d2);border:1px solid var(--dl);border-radius:12px;color:var(--dt);padding:10px;font:inherit;resize:vertical}
+.d21-chk{display:flex;gap:8px;align-items:center;color:var(--dt)}
+.d21-fim{gap:14px}
+.d21-fimt{align-items:center;text-align:center;gap:12px;justify-content:center;overflow-y:auto}
+.d21-fimt h2{font:800 32px/1.05 'Bricolage Grotesque',system-ui,sans-serif;color:#fff;margin:0}
+.d21-fimt p{margin:0;color:#E6EFE4;max-width:340px}
+.d21-fimt .d21-bt{max-width:380px}
+.d21-fimt .d21-bt-2{border-color:rgba(255,255,255,.18);color:#fff}
+.d21-fimt .d21-pill{color:#FFD8C2}
+/* entrada no CK Life normal */
+.d21-entrada{border:0;width:100%;text-align:left;border-radius:22px;padding:18px;margin:4px 0;display:flex;flex-direction:column;gap:8px;color:#fff;background:radial-gradient(120% 140% at 100% 0%,#E2562B 0%,#3A1A0E 45%,#0A1712 100%);box-shadow:0 18px 40px -22px rgba(226,86,43,.8)}
+.d21-entrada b{font:800 21px/1.15 'Bricolage Grotesque',system-ui,sans-serif}
+.d21-entrada small{color:#FFD8C2;font-weight:600}
+.d21-entrada .d21-eye{color:#FFB547}
+.d21-entrada-bt{align-self:flex-start;background:#fff;color:#3A1A0E;border-radius:999px;padding:10px 14px;font:800 13px/1 Figtree,system-ui,sans-serif;letter-spacing:.04em}
+.d21-entrada.fim{background:radial-gradient(120% 140% at 100% 0%,#B98A2E 0%,#2B2410 50%,#0A1712 100%)}
+@media (prefers-reduced-motion:reduce){.d21{animation:none}}
+/* painel: CK 21 Dias Juntas */
+.da-ed{display:flex;flex-direction:column;gap:8px}.da-ed h3{margin:0}
+.da-ed-top{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.da-seg{margin:0 0 14px;max-width:620px}
+.da-dias-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}.da-dias-top p{flex:1;min-width:240px}
+.da-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;margin-top:12px}
+.da-dia{border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:12px;text-align:left;display:flex;flex-direction:column;gap:4px;color:var(--ink)}
+.da-dia small{font-weight:800;letter-spacing:.06em;color:var(--accent)}.da-dia span{font-size:12.5px}
+.da-dia.hoje{border-color:#E2562B;box-shadow:inset 0 0 0 1px #E2562B}
+.da-its{display:flex;flex-direction:column;gap:6px;margin-bottom:6px}
+.da-it{display:grid;grid-template-columns:minmax(120px,2fr) 1fr 70px 70px auto;gap:6px;align-items:center}
+.da-it-bt{display:flex;gap:2px}.da-it-bt button{border:1px solid var(--line);background:var(--surface);border-radius:8px;width:30px;height:34px}
+@media (max-width:620px){.da-it{grid-template-columns:1fr 1fr}.da-it select:first-child{grid-column:1/-1}}
+.da-funil{display:flex;flex-direction:column;gap:8px}
+.da-fl{display:grid;grid-template-columns:120px 1fr 60px;gap:8px;align-items:center}
+.da-fl div,.da-bar{height:12px;background:var(--surface-2);border-radius:999px;overflow:hidden}
+.da-fl i,.da-bar i{display:block;height:100%;background:linear-gradient(90deg,#E2562B,#FF7A3D);border-radius:999px}
+.da-fl small{grid-column:2/-1;color:var(--muted);font-size:12px;margin-top:-4px}
+.da-top{margin:0;padding-left:18px;line-height:1.7}
+.da-prev{display:flex;flex-direction:column;gap:8px}.da-prev h2{margin:0}.da-prev h3{margin:8px 0 0;font-size:15px}.da-prev ol{margin:0;padding-left:20px;line-height:1.7}
+.da-prev-eye{font-weight:800;letter-spacing:.1em;color:#E2562B;font-size:12px}
+.da-prev .card{display:flex;flex-direction:column;gap:2px;padding:10px}
+.da-post h3{font-size:17px}
+body.d21-on .ins-toast{display:none}
+.d21-fimt .d21-meds{display:flex;justify-content:center;flex-wrap:wrap}.d21-fimt .d21-meds>*{min-width:84px}
 </style>
 
 <!-- Entrar / criar conta -->
@@ -9041,7 +9214,7 @@ const abrirPerfilEq = abrirPerfil; abrirPerfil = async function(u){
    Quem deixa o CK Life aberto (ou instalado na tela inicial) fica com a versão antiga até recarregar.
    O app confere a versão publicada ao abrir, ao voltar do segundo plano e a cada 5 minutos.
    Se houver versão nova, mostra a faixa "ATUALIZAR": um toque e pronto. Nunca aparece no meio do treino. */
-const CK_VER = "20261101232151";
+const CK_VER = "20261101235610";
 let CK_VER_NOVA = null;
 const ATU_K = "ck_atu";
 const atuTentou = () => { try{ return JSON.parse(localStorage.getItem(ATU_K) || "null"); }catch(e){ return null; } };
@@ -10728,6 +10901,473 @@ celebrar = async function(c){
   }catch(e){ console.warn(e); }
   return r;
 };
+
+/* ===================== 🔥 CK 21 DIAS JUNTAS (experiência própria dentro do CK Life) =====================
+   - Edições em turma: todas no mesmo dia (o dia vem do servidor, fuso America/Sao_Paulo).
+   - "App dentro do app": tela própria por cima do CK Life (Hoje · Comunidade · Jornada).
+     "← CK Life" só fecha a tela; não sai do desafio. "Sair do desafio" fica na Jornada, com confirmação.
+   - Reaproveita login, exercícios, player de treino, água, receitas, avisos e compartilhar do CK Life.
+   - Comunidade controlada: só a equipe publica; participante reage, vota e faz check-in.
+   - Sem edição publicada pela equipe, nada disso aparece no app. */
+const D21 = { st: null, t: 0, off: 0, aba: "hoje", feed: null, feedFim: false, vistos: new Set(), aberto: false, pend: null };
+const D21_K = "ck_d21_in", D21_FILA = "ck_d21_fila";
+const D21_MODOS = { normal: ["Normal", "Para começar firme"], hard: ["Hard", "Mais tempo e menos descanso"], supreme: ["Supreme", "Volume e intensidade máximos"] };
+const D21_REACOES = ["🔥", "💚", "💪", "😍", "🥵"];
+const d21On = () => !!(NU && NU.ativo && NU.sb && NU.uid);
+const d21Ev = (n, p) => { try{ registraEvento(n, p || {}); }catch(e){} };
+const d21Pad = n => String(n).padStart(2, "0");
+
+/* ---------- plano-base dos 21 dias (a equipe edita no painel; isto é só o ponto de partida) ---------- */
+window.CK_D21_PLANO = function(){
+  const C = ["polichinelo", "corrida", "skater", "escalador", "agachsalto", "burpee"], CO = ["prancha", "abdsupra", "abdinfra", "bicicleta", "deadbug", "russo", "pranchalat", "hollow"];
+  const P = { full: ["agacho", "flexjoelho", "escalador", "ponte", "polichinelo", "prancha"], pernas: ["agacho", "afundocasa", "sumocasa", "wallsit", "panturrilha"], gluteo: ["ponte", "coice", "elevlatdeit", "hidrante", "pontealt"],
+    sup: ["flexjoelho", "flexdiam", "pike", "toqueombro", "supermann"], core: ["prancha", "abdsupra", "bicicleta", "deadbug", "pranchalat"], hiit: ["polichinelo", "agachsalto", "escalador", "skater", "corrida", "burpee"],
+    mob: ["along", "crianca", "alongquad", "perdigueiro", "ponte"] };
+  const DIAS = [
+    ["Full body + cardio", "full", "full", 2, "Dia 1. Hoje a gente só precisa começar. Bora juntas?"],
+    ["Pernas + cardio", "pernas", "pernas", 1, "Pernas firmes, cabeça leve. Faz no seu ritmo."],
+    ["Superior + core", "sup", "core", 0, "Braços, costas e abdômen. Respira e vai."],
+    ["Cardio leve", "hiit", null, 0, "Coração acelerado, sem pressa de ser perfeita."],
+    ["Glúteos + cardio", "gluteo", "gluteo", 1, "Glúteos ativados. Aperta no topo de cada movimento."],
+    ["Core + cardio", "core", "core", 1, "Centro do corpo forte = tudo fica mais fácil."],
+    ["Recuperação ativa", "mob", null, 0, "Recuperar também é treino. E conta como dia oficial 💚"],
+    ["Pernas + cardio", "pernas", "pernas", 2, "Semana 2 começou. Um pouco mais de tempo em cada exercício."],
+    ["Superior + cardio", "sup", "sup", 1, "Hoje os braços trabalham e o coração acompanha."],
+    ["HIIT", "hiit", null, 0, "Curto e intenso. Pausa quando precisar."],
+    ["Glúteos + core", "gluteo", "core", 1, "Força de dentro pra fora."],
+    ["Full body resistência", "full", "full", 2, "Metade do caminho chegando. Olha você aqui!"],
+    ["Cardio + core", "hiit", "core", 1, "Suar hoje é presente pro seu amanhã."],
+    ["Recuperação ativa", "mob", null, 0, "14 dias juntas. Hoje é dia de soltar o corpo."],
+    ["Full body força", "full", "full", 2, "Semana 3: a mais intensa. Você está pronta."],
+    ["Pernas + HIIT", "pernas", "hiit", 2, "Pernas e fôlego. Você já é outra pessoa que no Dia 1."],
+    ["Superior + core", "sup", "core", 1, "Postura de quem não desiste."],
+    ["Cardio intenso", "hiit", null, 0, "Hoje é o dia de suar de verdade. No seu limite, não no da outra."],
+    ["Glúteos + pernas", "gluteo", "pernas", 1, "Faltam só 3 dias. Que orgulho!"],
+    ["Mobilidade + core leve", "mob", "core", 0, "Prepara o corpo pro grande final."],
+    ["Desafio final 🏆", "full", "hiit", 2, "DIA 21. Você chegou. Hoje a turma fecha junta!"]];
+  return DIAS.map(([titulo, a, b, nb, msg], i) => {
+    const sem = Math.floor(i / 7), seg = [35, 40, 45][sem], desc = [20, 20, 15][sem], mob = a === "mob";
+    const itens = [...P[a].map(id => [id, "t", mob ? 40 : seg, mob ? 10 : desc]), ...(b ? P[b].slice(0, nb + 2) : []).filter(id => !P[a].includes(id)).map(id => [id, "t", seg, desc])].slice(0, 8);
+    const base = mob ? 1 : sem === 2 ? 3 : 2;
+    return { titulo, foco: a, msg, itens, descRodada: mob ? 15 : 45,
+      rodadas: { normal: base, hard: mob ? 2 : base + 1, supreme: mob ? 2 : base + 2 },
+      cardio: { min: mob ? 5 : [6, 8, 10][sem], itens: C.slice((i % 3), (i % 3) + 4).map(id => [id, "t", 40, 20]) },
+      planob: { itens: [...P[a].slice(0, 3), C[i % C.length], CO[i % CO.length]].map(id => [id, "t", 40, 20]), rodadas: 2 },
+      receita: null, missao: ["Beber água a cada treino", "Dormir 7 horas hoje", "10 minutos de caminhada extra", "Comer uma fruta no lanche", "Alongar 5 minutos antes de dormir"][i % 5] };
+  });
+};
+
+/* ---------- dados ---------- */
+async function d21Carrega(forca){
+  if(!d21On()) return null;
+  if(!forca && D21.st && Date.now() - D21.t < 90000) return D21.st;
+  try{ const r = await SB().rpc("d21_estado"); if(r.error) throw r.error; D21.st = r.data || null; D21.t = Date.now();
+    if(D21.st && D21.st.agora) D21.off = Date.parse(D21.st.agora) - Date.now();
+    try{ localStorage.setItem("ck_d21_cache", JSON.stringify(D21.st)); }catch(e){}
+    d21Fila(); }
+  catch(e){ if(!D21.st){ try{ D21.st = JSON.parse(localStorage.getItem("ck_d21_cache") || "null"); }catch(x){} } }
+  return D21.st;
+}
+const d21Ed = () => D21.st && D21.st.edicao;
+const d21Insc = () => D21.st && D21.st.inscrita && !D21.st.inscrita.saiu_em;
+const d21Dia = () => { const e = d21Ed(); return e ? Math.max(0, Math.min(22, +e.dia)) : 0; };
+const d21Regs = () => (D21.st && D21.st.registros) || [];
+const d21Reg = d => d21Regs().find(r => +r.dia === d);
+const d21Agora = () => Date.now() + D21.off;
+function d21DiaConteudo(d){ const e = d21Ed(), L = (e && e.dias) || []; return L[d - 1] || null; }
+/* conclusões que não chegaram ao servidor (sem internet): reenviadas no mesmo dia */
+async function d21Fila(){
+  let L = []; try{ L = JSON.parse(localStorage.getItem(D21_FILA) || "[]"); }catch(e){}
+  if(!L.length || !D21.st) return; const resta = [];
+  for(const x of L){ if(x.hoje !== D21.st.hoje) continue; try{ const r = await SB().rpc("d21_registrar", { p_edicao: x.ed, p_tipo: x.tipo, p_modo: x.modo, p_min: x.min }); if(r.error) resta.push(x); }catch(e){ resta.push(x); } }
+  try{ localStorage.setItem(D21_FILA, JSON.stringify(resta)); }catch(e){}
+}
+
+/* ---------- números da jornada ---------- */
+function d21Jornada(){
+  const R = d21Regs(), hoje = d21Dia(), feitos = new Set(R.map(r => +r.dia)), entrou = D21.st && D21.st.inscrita && D21.st.inscrita.entrou;
+  const e = d21Ed(), diaEntrou = e && entrou ? Math.max(1, Math.floor((Date.parse(entrou) - 3 * 36e5 - Date.parse(e.inicio + "T00:00:00Z")) / 864e5) + 1) : 1;
+  let atual = 0, melhor = 0, run = 0;
+  for(let d = 1; d <= Math.min(hoje, 21); d++){ if(feitos.has(d)){ run++; melhor = Math.max(melhor, run); } else if(d < hoje) run = 0; }
+  atual = feitos.has(hoje) || feitos.has(hoje - 1) ? run : 0;
+  const perdidos = []; for(let d = Math.max(1, diaEntrou); d < Math.min(hoje, 22); d++) if(!feitos.has(d)) perdidos.push(d);
+  const voltou = R.some(r => +r.dia > 2 && !feitos.has(+r.dia - 1) && !feitos.has(+r.dia - 2) && R.some(x => +x.dia < +r.dia - 2));
+  return { completos: R.filter(r => r.tipo === "completo").length, planob: R.filter(r => r.tipo === "planob").length, total: R.length, perdidos, atual, melhor, diaEntrou, feitos, voltou };
+}
+function d21Medalhas(){
+  const J = d21Jornada();
+  return [["primeiro", "🏅", "Primeiro passo", J.total >= 1], ["d3", "🔥", "3 dias", J.total >= 3], ["d7", "💪", "7 dias", J.total >= 7], ["planob", "💚", "Plano B", J.planob >= 1],
+    ["voltei", "🔄", "Eu voltei", J.voltou], ["d14", "🏆", "14 dias", J.total >= 14], ["d21", "👑", "21 dias", J.total >= 21], ["fim", "🎉", "Desafio concluído", J.feitos.has(21)]];
+}
+
+/* ---------- treino do dia (mesmo para todas; muda só a execução) ---------- */
+function d21Monta(itens, rodadas, descRodada, modo, extra){
+  const mult = { normal: 1, hard: 1.2, supreme: 1.4 }[modo] || 1, md = { normal: 1, hard: .75, supreme: .5 }[modo] || 1, steps = [];
+  const its = (itens || []).filter(i => i && META[i[0]]).map(([id, m, v, d]) => ({ id: troca(id), modo: m === "r" ? "r" : "t", val: Math.max(m === "r" ? 3 : 10, Math.round((+v || 30) * mult)), desc: Math.round((+d || 0) * md), sets: 1 }));
+  for(let r = 0; r < Math.max(1, rodadas || 1); r++) its.forEach((it, k) => steps.push({ ...it, rodada: r + 1, rodadas: Math.max(1, rodadas || 1), desc: k === its.length - 1 ? Math.round((descRodada || it.desc) * md) : it.desc }));
+  if(steps.length) steps[steps.length - 1].desc = 0;
+  return { steps, cor: "#E2562B", ...extra };
+}
+function d21Treino(tipo){
+  const e = d21Ed(), d = d21Dia(), D = d21DiaConteudo(d); if(!e || !D) return null;
+  const modo = (D21.st.inscrita && D21.st.inscrita.modo) || "normal", base = { ed: e.id, dia: d, modo };
+  if(tipo === "planob"){ const pb = D.planob || {}; return d21Monta(pb.itens && pb.itens.length ? pb.itens : D.itens.slice(0, 5).map(i => [i[0], i[1], 40, 20]), pb.rodadas || 2, 20, "normal", { nome: `Dia ${d21Pad(d)} · Plano B (10 min)`, sub: "CK 21 Dias Juntas · Plano B", d21: { ...base, planob: true } }); }
+  if(tipo === "cardio"){ const c = D.cardio || {}; const its = c.itens && c.itens.length ? c.itens : [["polichinelo", "t", 40, 20], ["corrida", "t", 40, 20], ["skater", "t", 40, 20], ["escalador", "t", 40, 20]];
+    const porRod = its.reduce((a, i) => a + (+i[2] || 40) + (+i[3] || 0), 0) / 60; return d21Monta(its, Math.max(1, Math.round((c.min || 8) / Math.max(1, porRod))), 20, "normal", { nome: `Dia ${d21Pad(d)} · Movimento`, sub: "CK 21 Dias Juntas · Cardio", d21: { ...base, cardio: true } }); }
+  const rod = (D.rodadas && D.rodadas[modo]) || { normal: 2, hard: 3, supreme: 4 }[modo];
+  return d21Monta(D.itens, rod, D.descRodada || 45, modo, { nome: `Dia ${d21Pad(d)} · ${D.titulo}`, sub: `CK 21 Dias Juntas · ${D21_MODOS[modo][0]}`, d21: base });
+}
+const d21Min = T => T ? minTreino(T) : 0;
+function d21Comecar(tipo){
+  const T = d21Treino(tipo); if(!T || !T.steps.length) return toast("O treino de hoje ainda está sendo preparado. Tente daqui a pouco 💚");
+  d21Ev(tipo === "planob" ? "challenge_plan_b_used" : "challenge_day_started", { dia: T.d21.dia, modo: T.d21.modo, tipo: tipo || "treino" });
+  if(tipo !== "cardio") SB().rpc("d21_iniciou", { p_edicao: T.d21.ed, p_modo: tipo === "planob" ? "planob" : T.d21.modo }).then(() => {}, () => {});
+  abrirTreinoPreview(T);
+}
+
+/* ---------- a casca da experiência ---------- */
+function d21Abrir(aba){
+  if(!d21Ed()) return;
+  let box = $("d21"); if(!box){ box = document.createElement("div"); box.id = "d21"; box.className = "d21"; box.setAttribute("role", "dialog"); box.setAttribute("aria-label", "CK 21 Dias Juntas"); document.body.appendChild(box); }
+  if(!D21.aberto) d21Ev("challenge_entered", { dia: d21Dia() });
+  D21.aberto = true; if(aba) D21.aba = aba; box.hidden = false; document.body.classList.add("d21-on");
+  if(d21Insc()) try{ localStorage.setItem(D21_K, d21Ed().id); }catch(e){}
+  d21Pinta();
+  d21Carrega(true).then(() => { if(D21.aberto) d21Pinta(); });
+}
+function d21Fechar(){
+  const box = $("d21"); if(box){ box.hidden = true; box.innerHTML = ""; }
+  if(D21.aberto) d21Ev("challenge_exited_to_ck", { dia: d21Dia() });
+  D21.aberto = false; document.body.classList.remove("d21-on"); try{ localStorage.removeItem(D21_K); }catch(e){}
+  if(TAB === "inicio") rInicio();
+}
+function d21Pinta(){
+  const box = $("d21"); if(!box || !D21.aberto) return; const e = d21Ed(); if(!e) return d21Fechar();
+  const dentro = d21Insc(), aba = dentro ? D21.aba : "conhecer", sc = box.querySelector(".d21-body"), y = sc && sc.dataset.aba === aba ? sc.scrollTop : 0;
+  box.innerHTML = `<header class="d21-top"><button class="d21-volta" id="d21-x">${ic("back", 16)} CK Life</button><span class="d21-marca">🔥 CK 21 DIAS JUNTAS</span><span class="d21-ed">#${d21Pad(e.numero)}</span></header>
+    <main class="d21-body" data-aba="${aba}">${aba === "conhecer" ? d21Conhecer() : aba === "comunidade" ? d21ComunidadeHTML() : aba === "jornada" ? d21JornadaHTML() : d21HojeHTML()}</main>
+    ${dentro ? `<nav class="d21-nav">${[["hoje", "flame", "Hoje"], ["comunidade", "people", "Comunidade"], ["jornada", "trophy", "Jornada"]].map(([k, i, t]) => `<button data-d21tab="${k}" aria-current="${aba === k}">${ic(i, 20)}<span>${t}</span></button>`).join("")}</nav>` : ""}`;
+  const b2 = box.querySelector(".d21-body"); if(b2 && y) b2.scrollTop = y;
+  $("d21-x").onclick = d21Fechar;
+  box.querySelectorAll("[data-d21tab]").forEach(b => b.onclick = () => { D21.aba = b.dataset.d21tab; d21Pinta(); box.querySelector(".d21-body").scrollTop = 0; if(D21.aba === "comunidade") d21CarregaFeed(true); });
+  if(aba === "conhecer") d21LigaConhecer(); else if(aba === "comunidade") d21LigaFeed(); else if(aba === "jornada") d21LigaJornada(); else d21LigaHoje();
+  d21Relogio();
+}
+/* contagem regressiva / próximo dia (um timer só) */
+let D21_TIMER = null;
+function d21Relogio(){
+  clearInterval(D21_TIMER);
+  const pinta = () => { document.querySelectorAll("[data-d21ate]").forEach(el => { const ms = +el.dataset.d21ate - d21Agora(); if(ms <= 0){ el.innerHTML = "agora"; clearInterval(D21_TIMER); setTimeout(() => d21Carrega(true).then(d21Pinta), 1500); return; }
+    const d = Math.floor(ms / 864e5), h = Math.floor(ms % 864e5 / 36e5), m = Math.floor(ms % 36e5 / 6e4);
+    el.innerHTML = el.dataset.fmt === "curto" ? `${d ? d + "d " : ""}${d21Pad(h)}h ${d21Pad(m)}min` : `<b>${d21Pad(d)}</b><small>DIAS</small><b>${d21Pad(h)}</b><small>HORAS</small><b>${d21Pad(m)}</b><small>MIN</small>`; }); };
+  if(document.querySelector("[data-d21ate]")){ pinta(); D21_TIMER = setInterval(pinta, 20000); }
+}
+const d21Meia = data => Date.parse(data + "T00:00:00-03:00");   // meia-noite em Brasília
+const d21Data = d => { const [a, m, dd] = d.split("-"); return `${dd}/${m}`; };
+
+/* ---------- página antes de entrar ---------- */
+function d21Conhecer(){
+  const e = d21Ed(), R = D21.st.resumo || {}, fase = e.fase, antes = fase === "inscricoes" || fase === "aguardando";
+  const rec = { iniciante: "normal", intermediario: "hard", avancado: "supreme" }[(ME.perfil && ME.perfil.nivel) || ""] || "normal";
+  D21.modoEscolha = D21.modoEscolha || rec;
+  return `<section class="d21-capa" ${e.capa ? `style="--capa:url('${esc(e.capa)}')"` : ""}><span class="d21-tag">EDIÇÃO #${d21Pad(e.numero)}</span><h1>🔥 ${esc(e.nome.toUpperCase())}</h1><p class="d21-frase">“${esc(e.frase)}”</p>
+      <div class="d21-capa-n">${+R.inscritas ? `<b class="num">${int(R.inscritas)}</b> ${+R.inscritas === 1 ? "mulher inscrita" : "mulheres inscritas"}` : "Seja uma das primeiras da turma"}</div></section>
+    ${antes ? `<div class="d21-card d21-cont"><span class="d21-eye">COMEÇAMOS EM</span><div class="d21-relogio" data-d21ate="${d21Meia(e.inicio)}"></div><small>${d21Data(e.inicio)} a ${d21Data(e.fim)}</small></div>`
+      : `<div class="d21-card d21-cont"><span class="d21-eye">A TURMA ESTÁ NO</span><div class="d21-gr">DIA ${d21Pad(d21Dia())}<small>/21</small></div><small>Você entra hoje e segue junto com a turma. ${d21Data(e.inicio)} a ${d21Data(e.fim)}</small></div>`}
+    ${e.descricao ? `<div class="d21-card"><p class="d21-desc">${esc(e.descricao).replace(/\n/g, "<br>")}</p></div>` : ""}
+    <div class="d21-card"><h3>Como funciona</h3><ul class="d21-lista">
+      <li><i>📅</i><span><b>21 dias, uma turma.</b> Todas começam e terminam juntas. Perdeu um dia? Você continua com a turma, sem ficar para trás.</span></li>
+      <li><i>🏋️</i><span><b>Treino em casa, o mesmo para todas.</b> Força + cardio, planejado em 3 semanas: adaptação, progressão e intensidade. Tem dia de recuperação ativa.</span></li>
+      <li><i>⚡</i><span><b>Normal, Hard ou Supreme.</b> O mesmo treino, com mais ou menos tempo, descanso e voltas. Você escolhe e pode trocar.</span></li>
+      <li><i>💚</i><span><b>Plano B de 10 minutos.</b> Dia corrido? Ainda conta como presença.</span></li>
+      <li><i>💬</i><span><b>Comunidade com a Micaela.</b> Recados, enquetes e check-ins todo dia. Você reage e vota.</span></li>
+      <li><i>💧</i><span><b>Água e receita do dia</b>, junto com o que você já usa no CK Life.</span></li></ul></div>
+    <div class="d21-card"><h3>Escolha seu modo</h3><div class="d21-modos">${Object.entries(D21_MODOS).map(([k, [n, s]]) => `<button class="d21-modo" data-d21modo="${k}" aria-pressed="${D21.modoEscolha === k}"><b>${n}</b><small>${s}</small>${k === rec ? `<em>recomendado</em>` : ""}</button>`).join("")}</div></div>
+    <div class="d21-card d21-regras"><h3>Combinados da turma</h3><p>21 dias juntas, não 21 dias perfeitos. Sem comparação de corpos. Respeite seus limites: se sentir dor, pare. Não prometemos quilos perdidos: prometemos constância.</p></div>
+    <div class="d21-cta-fixo"><button class="d21-bt" id="d21-entrar">QUERO PARTICIPAR</button></div>`;
+}
+function d21LigaConhecer(){
+  document.querySelectorAll("[data-d21modo]").forEach(b => b.onclick = () => { D21.modoEscolha = b.dataset.d21modo; document.querySelectorAll("[data-d21modo]").forEach(x => x.setAttribute("aria-pressed", x === b)); });
+  const b = $("d21-entrar"); if(b) b.onclick = async () => {
+    b.disabled = true; b.classList.add("carregando");
+    try{ const r = await SB().rpc("d21_entrar", { p_edicao: d21Ed().id, p_modo: D21.modoEscolha || "normal" }); if(r.error) throw r.error;
+      d21Ev("challenge_joined", { modo: D21.modoEscolha }); await d21Carrega(true);
+      SOM.done ? SOM.done() : SOM.check && SOM.check(); vibra([30, 40, 30]); D21.aba = "hoje"; d21Pinta(); d21BemVinda(); }
+    catch(e){ toast(navigator.onLine === false ? "Sem internet agora. Tente de novo quando conectar." : "Não deu para entrar agora. Tente de novo."); b.disabled = false; b.classList.remove("carregando"); }
+  };
+}
+function d21BemVinda(){
+  const el = document.createElement("div"); el.className = "d21 d21-ok";
+  el.innerHTML = `<div><div class="d21-ok-em">🔥</div><h2>VOCÊ ESTÁ DENTRO!</h2><p>Agora você faz parte do CK 21 Dias Juntas.</p>
+    ${typeof pushLigado === "function" && !pushLigado() ? `<button class="d21-bt" id="d21-av">Ativar avisos do desafio</button><small>Te avisamos quando o dia começar e quando a Micaela deixar recado.</small>` : ""}
+    <button class="d21-bt ${typeof pushLigado === "function" && !pushLigado() ? "d21-bt-2" : ""}" id="d21-okk">Bora!</button></div>`;
+  document.body.appendChild(el); try{ confete(el); }catch(e){}
+  const av = el.querySelector("#d21-av"); if(av) av.onclick = async () => { try{ await ativarNotificacoes(); }catch(e){} el.remove(); };
+  el.querySelector("#d21-okk").onclick = () => el.remove();
+}
+
+/* ---------- HOJE ---------- */
+function d21HojeHTML(){
+  const e = d21Ed(), R = D21.st.resumo || {}, fase = e.fase, d = d21Dia();
+  if(fase === "inscricoes" || fase === "aguardando") return `<section class="d21-hero"><span class="d21-eye">COMEÇAMOS EM</span><div class="d21-relogio" data-d21ate="${d21Meia(e.inicio)}"></div>
+      <p class="d21-frase">“${esc(e.frase)}”</p><div class="d21-pill">👭 ${int(R.inscritas || 0)} ${+R.inscritas === 1 ? "mulher na turma" : "mulheres na turma"}</div></section>
+    <div class="d21-card"><h3>Preparação</h3><ul class="d21-lista"><li><i>📍</i><span>Escolha um cantinho com espaço para deitar no chão.</span></li><li><i>👟</i><span>Tênis, roupa confortável e uma garrafa de água.</span></li><li><i>⏰</i><span>Decida a hora do seu treino. 20 a 40 minutos por dia.</span></li><li><i>🔔</i><span>Ative os avisos para saber quando o Dia 1 começar.</span></li></ul>
+    ${typeof pushLigado === "function" && !pushLigado() ? `<button class="d21-bt d21-bt-2" id="d21-av2">Ativar avisos</button>` : ""}</div>
+    ${d21MiniFeedHTML()}${d21ZapHTML()}`;
+  if(fase === "finalizada" || d > 21) return d21FinalHTML();
+  const J = d21Jornada(), reg = d21Reg(d), D = d21DiaConteudo(d) || {}, modo = D21.st.inscrita.modo || "normal", T = d21Treino(), Tb = d21Treino("planob"), Tc = d21Treino("cardio");
+  const x = dia(today()), m = metas(ME), L = c => (c * .25).toFixed(1).replace(".", ",");
+  const rec = d21Receita(D, d), outras = Math.max(0, (+R.treinaram_hoje || 0) - (reg ? 1 : 0));
+  let aviso = "";
+  if(!reg && d > 1 && J.diaEntrou < d){ const ult = Math.max(0, ...d21Regs().map(r => +r.dia)), gap = d - (ult || J.diaEntrou - 1) - 1;
+    if(gap >= 3 && ult) aviso = `<div class="d21-card d21-volta-c"><b>🔥 VOCÊ VOLTOU!</b><p>A turma está no Dia ${d}. Você não precisa recuperar tudo. Vamos continuar juntas?</p></div>`;
+    else if(gap >= 1 && !d21Reg(d - 1)) aviso = `<div class="d21-card d21-volta-c"><b>Ontem não deu? 💚</b><p>Tudo bem. A turma está no Dia ${d} e você continua com a gente.</p></div>`;
+    if(aviso && !D21.voltouEv){ D21.voltouEv = 1; d21Ev("challenge_returned", { dia: d, gap }); } }
+  const amanha = d < 21 ? d21Meia(addD(D21.st.hoje, 1)) : 0;
+  return `<section class="d21-hero"><span class="d21-eye">DIA ${d21Pad(d)} DE 21</span><h1 class="d21-titulo">${esc(D.titulo || "Treino do dia")}</h1>
+      <p class="d21-frase">“${esc(e.frase)}”</p><div class="d21-barra"><i style="width:${Math.round(100 * d / 21)}%"></i></div><div class="d21-barra-tx"><span>${d}/21</span><span>${J.total} ${J.total === 1 ? "dia feito" : "dias feitos"}</span></div>
+      ${+R.treinaram_hoje ? `<div class="d21-pill">🔥 ${int(R.treinaram_hoje)} ${+R.treinaram_hoje === 1 ? "mulher já treinou" : "mulheres já treinaram"} hoje</div>` : `<div class="d21-pill">🔥 Seja a primeira da turma a treinar hoje</div>`}</section>
+    ${aviso}
+    ${reg ? `<div class="d21-card d21-feito"><b>✅ MISSÃO DE HOJE CONCLUÍDA</b><p>${reg.tipo === "planob" ? "Plano B feito. Presença garantida 💚" : "Você apareceu por você hoje."}${outras ? ` E mais ${int(outras)} ${outras === 1 ? "mulher" : "mulheres"} também.` : ""}</p>
+        ${amanha ? `<small>Volte amanhã para continuar. Dia ${d + 1} começa em <span data-d21ate="${amanha}" data-fmt="curto"></span>.</small>` : ""}
+        <div class="d21-bts2"><button class="d21-bt d21-bt-2" id="d21-sh">${ic("share", 16)} Compartilhar</button>${reg.tipo === "planob" ? `<button class="d21-bt d21-bt-2" data-d21go="treino">Fazer o treino completo</button>` : ""}</div></div>`
+      : `<button class="d21-bt d21-bt-xl" data-d21go="treino">${ic("play", 18)} COMEÇAR TREINO DE HOJE</button>
+        <div class="d21-modos d21-modos-s">${Object.entries(D21_MODOS).map(([k, [n]]) => `<button class="d21-modo" data-d21m="${k}" aria-pressed="${modo === k}"><b>${n}</b></button>`).join("")}</div>
+        <button class="d21-planob" data-d21go="planob">💚 Hoje só tenho 10 minutos <span>Plano B</span></button>`}
+    ${D.msg ? `<div class="d21-card d21-mica"><span class="d21-av">M</span><div><b>MICAELA • CK LIFE</b><p>${esc(D.msg)}</p></div></div>` : ""}
+    <h2 class="d21-sec">🔥 MISSÃO DO DIA ${d21Pad(d)}</h2>
+    <div class="d21-missao">
+      <div class="d21-m ${reg ? "ok" : ""}"><i>🏋️</i><div><b>TREINO</b><small>${esc(D.titulo || "")} · ${d21Min(T)} min · ${D21_MODOS[modo][0]}</small></div>${reg ? "<em>✓</em>" : `<button data-d21go="treino">Começar</button>`}</div>
+      <div class="d21-m ${ME.d21c && ME.d21c[e.id + ":" + d] ? "ok" : ""}"><i>❤️</i><div><b>MOVIMENTO</b><small>Cardio extra · ${d21Min(Tc)} minutos</small></div>${ME.d21c && ME.d21c[e.id + ":" + d] ? "<em>✓</em>" : `<button data-d21go="cardio">Fazer</button>`}</div>
+      <div class="d21-m ${(x.agua || 0) >= m.agua ? "ok" : ""}"><i>💧</i><div><b>ÁGUA · SUA META DE HOJE</b><small>${L(x.agua || 0)}L / ${L(m.agua)}L</small></div><button id="d21-agua">+1 copo</button></div>
+      ${rec ? `<div class="d21-m"><i>🥗</i><div><b>RECEITA CK DO DIA</b><small>${esc(rec.nome)}</small></div><button id="d21-rec" data-rec="${esc(rec.id)}">Ver receita</button></div>` : ""}
+      ${D.missao ? `<div class="d21-m ${ME.d21m && ME.d21m[e.id + ":" + d] ? "ok" : ""}"><i>🎯</i><div><b>DESAFIO EXTRA</b><small>${esc(D.missao)}</small></div>${ME.d21m && ME.d21m[e.id + ":" + d] ? "<em>✓</em>" : `<button id="d21-mis">Feito</button>`}</div>` : ""}
+      <div class="d21-m"><i>💬</i><div><b>COMUNIDADE</b><small id="d21-ult">${esc((D21.feed && D21.feed[0] && (D21.feed[0].titulo || D21.feed[0].texto)) || "Veja os recados da Micaela")}</small></div><button data-d21tab2="comunidade">Abrir</button></div>
+    </div>
+    ${d21ZapHTML()}`;
+}
+function d21Receita(D, d){
+  const all = [...(typeof BASE_REC !== "undefined" ? BASE_REC : []), ...((DB.receitasExtras || []).map(r => ({ id: r.id, nome: r.nome })))];
+  if(D.receita){ const r = all.find(x => x.id === D.receita); if(r) return r; }
+  const livres = all.filter(r => typeof receitaLivre !== "function" || receitaLivre(r.id)); return livres.length ? livres[(d * 7) % livres.length] : null;
+}
+const d21ZapHTML = () => { const z = d21Ed() && d21Ed().whatsapp; return z ? `<a class="d21-zap" href="${esc(z)}" target="_blank" rel="noopener" id="d21-zap">💬 Entrar também no grupo do WhatsApp</a>` : ""; };
+function d21LigaHoje(){
+  const box = $("d21"); if(!box) return;
+  box.querySelectorAll("[data-d21go]").forEach(b => b.onclick = () => d21Comecar(b.dataset.d21go === "treino" ? null : b.dataset.d21go));
+  box.querySelectorAll("[data-d21tab2]").forEach(b => b.onclick = () => { D21.aba = b.dataset.d21tab2; d21Pinta(); d21CarregaFeed(true); });
+  box.querySelectorAll("[data-d21m]").forEach(b => b.onclick = async () => { const m = b.dataset.d21m; if(m === D21.st.inscrita.modo) return;
+    D21.st.inscrita.modo = m; d21Pinta(); try{ await SB().rpc("d21_modo", { p_edicao: d21Ed().id, p_modo: m }); toast(`Modo ${D21_MODOS[m][0]} 💪`); }catch(e){} });
+  const ag = $("d21-agua"); if(ag) ag.onclick = () => { const x = dia(today()); x.agua = (x.agua || 0) + 1; SOM.water && SOM.water(); vibra(15); save(); d21Pinta(); };
+  const rc = $("d21-rec"); if(rc) rc.onclick = () => abrirReceita(rc.dataset.rec);
+  const ms = $("d21-mis"); if(ms) ms.onclick = () => { ME.d21m = ME.d21m || {}; ME.d21m[d21Ed().id + ":" + d21Dia()] = today(); save(); SOM.check && SOM.check(); vibra(20); d21Pinta(); };
+  const sh = $("d21-sh"); if(sh) sh.onclick = () => d21Compartilhar();
+  const av = $("d21-av2"); if(av) av.onclick = () => ativarNotificacoes();
+  const z = $("d21-zap"); if(z) z.onclick = () => d21Ev("challenge_whatsapp_clicked", {});
+  d21LigaPosts();
+  if(!D21.feed && !D21.feedErro) d21CarregaFeed(false).then(() => { const u = $("d21-ult"); if(u && D21.feed && D21.feed[0]) u.textContent = D21.feed[0].titulo || D21.feed[0].texto || ""; });
+}
+
+/* ---------- final da edição ---------- */
+function d21FinalHTML(){
+  const J = d21Jornada(), M = d21Medalhas().filter(m => m[3]), p = ME.d21pesq && ME.d21pesq[d21Ed().id];
+  return `<section class="d21-hero d21-fim"><div class="d21-ok-em">🏆</div><h1 class="d21-titulo">${J.feitos.has(21) || J.total >= 15 ? "VOCÊ CONSEGUIU!" : "A EDIÇÃO TERMINOU"}</h1><span class="d21-eye">CK 21 DIAS JUNTAS · EDIÇÃO #${d21Pad(d21Ed().numero)}</span>
+      <div class="d21-stats"><div><b>${J.total}/21</b><small>dias realizados</small></div><div><b>${J.completos}</b><small>${J.completos === 1 ? "treino completo" : "treinos completos"}</small></div><div><b>${J.planob}</b><small>${J.planob === 1 ? "Plano B" : "Planos B"}</small></div><div><b>${J.melhor}</b><small>sequência máxima</small></div></div>
+      <div class="d21-meds">${M.map(m => `<span title="${esc(m[2])}">${m[1]}<small>${esc(m[2])}</small></span>`).join("")}</div>
+      <button class="d21-bt" id="d21-sh">${ic("share", 16)} COMPARTILHAR MINHA CONQUISTA</button></section>
+    ${p ? `<div class="d21-card"><b>Obrigada por responder 💚</b><p class="hint">Sua opinião ajuda a próxima edição a ser ainda melhor.</p></div>` : `<div class="d21-card"><h3>Como foi sua experiência?</h3>
+      <div class="d21-nota">${Array.from({ length: 11 }, (_, i) => `<button data-nota="${i}">${i}</button>`).join("")}</div>
+      <label class="d21-lb">O que você mais gostou? <small>(opcional)</small><textarea id="d21-pq1" maxlength="1000" rows="2"></textarea></label>
+      <label class="d21-lb">O que podemos melhorar? <small>(opcional)</small><textarea id="d21-pq2" maxlength="1000" rows="2"></textarea></label>
+      <label class="d21-chk"><input type="checkbox" id="d21-pq3"> Participaria de outra edição</label>
+      <button class="d21-bt d21-bt-2" id="d21-pq">Enviar</button><small class="hint">Sua resposta é só para a equipe. Nada é publicado.</small></div>`}`;
+}
+
+/* ---------- COMUNIDADE (só a equipe publica) ---------- */
+async function d21CarregaFeed(forca, mais){
+  const e = d21Ed(); if(!e || !d21Insc()) return;
+  if((D21.feed && !forca && !mais) || D21.feedCarregando) return;
+  D21.feedCarregando = true;
+  try{ const antes = mais && D21.feed && D21.feed.length ? D21.feed[D21.feed.length - 1].publicar_em : null;
+    const r = await SB().rpc("d21_feed", { p_edicao: e.id, p_antes: antes, p_limite: 15 }); if(r.error) throw r.error;
+    const L = r.data || []; D21.feed = mais ? [...(D21.feed || []), ...L.filter(p => !D21.feed.some(x => x.id === p.id))] : L; D21.feedFim = L.length < 15; D21.feedErro = false;
+    const novos = L.map(p => p.id).filter(id => !D21.vistos.has(id)); novos.forEach(id => D21.vistos.add(id));
+    if(novos.length) SB().rpc("d21_vi", { p_posts: novos }).then(() => {}, () => {}); }
+  catch(err){ D21.feedErro = true; }
+  D21.feedCarregando = false;
+  if(D21.aberto && (D21.aba === "comunidade" || D21.aba === "hoje")) d21Pinta();
+}
+function d21PostHTML(p, mini){
+  const C = p.contagens || {}, tipoN = { aviso: "📢 AVISO", chamada: "🔥 CHAMADA", enquete: "📊 ENQUETE", checkin: "💚 CHECK-IN", conquista: "🏆 CONQUISTA DA TURMA", mensagem: "" }[p.tipo] || "";
+  const votou = (p.meus_votos || []).length > 0, encerrada = p.prazo && Date.parse(p.prazo) < d21Agora(), total = Math.max(1, (p.opcoes || []).reduce((a, o) => a + (+C["v:" + o.id] || 0), 0));
+  const mostra = p.resultado === "sempre" || (p.resultado === "depois" && votou) || (p.resultado === "fim" && encerrada);
+  const vot = (p.tipo === "enquete" || p.tipo === "checkin") ? `<div class="d21-ops" data-post="${p.id}">${(p.opcoes || []).map(o => { const n = +C["v:" + o.id] || 0, pc = Math.round(100 * n / total), meu = (p.meus_votos || []).includes(o.id);
+      return `<button class="d21-op ${meu ? "meu" : ""}" data-op="${esc(o.id)}" ${encerrada || (votou && !p.pode_mudar) ? "disabled" : ""}>${mostra ? `<i style="width:${pc}%"></i>` : ""}<span>${esc(o.t)}</span>${mostra ? `<b>${pc}%</b>` : meu ? "<b>✓</b>" : ""}</button>`; }).join("")}
+      <small>${int(p.votantes || 0)} ${+p.votantes === 1 ? "resposta" : "respostas"}${p.multipla ? " · pode marcar mais de uma" : ""}${encerrada ? " · encerrada" : p.prazo ? " · até " + new Date(p.prazo).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }) : ""}${!mostra && !encerrada ? " · resultado " + (p.resultado === "fim" ? "no fim" : "depois de votar") : ""}</small></div>` : "";
+  const bt = p.botao === "treino" ? `<button class="d21-bt d21-bt-2" data-d21go="treino">Começar treino</button>` : p.botao === "receita" ? `<button class="d21-bt d21-bt-2" data-d21rec="1">Ver receita do dia</button>` : p.botao === "jornada" ? `<button class="d21-bt d21-bt-2" data-d21tab2="jornada">Ver minha jornada</button>` : p.botao === "whatsapp" && d21Ed().whatsapp ? `<a class="d21-bt d21-bt-2" href="${esc(d21Ed().whatsapp)}" target="_blank" rel="noopener">Entrar no grupo</a>` : "";
+  const hora = new Date(p.publicar_em), quando = hora.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" }) + " " + hora.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+  return `<article class="d21-post ${p.fixado ? "fix" : ""} ${mini ? "mini" : ""}" data-id="${p.id}"><header><span class="d21-av">M</span><div><b>MICAELA • CK LIFE</b><small>${p.fixado ? "📌 Fixado · " : ""}${p.dia ? "Dia " + p.dia + " · " : ""}${quando}</small></div>${tipoN ? `<em>${tipoN}</em>` : ""}</header>
+    ${p.titulo ? `<h3>${esc(p.titulo)}</h3>` : ""}${p.texto ? `<p>${esc(p.texto).replace(/\n/g, "<br>")}</p>` : ""}${vot}${bt}
+    <div class="d21-reac" data-post="${p.id}">${D21_REACOES.map(r => `<button data-r="${r}" aria-pressed="${p.minha_reacao === r}">${r}<span>${+C["r:" + r] ? int(C["r:" + r]) : ""}</span></button>`).join("")}</div></article>`;
+}
+function d21ComunidadeHTML(){
+  if(!D21.feed && !D21.feedErro) return `<div class="d21-vazio">Carregando a comunidade…</div>`;
+  const L = D21.feed || [];
+  return `<div class="d21-com-top"><b>💬 Comunidade da turma</b><small>Só a equipe publica aqui. Você reage, vota e faz check-in. ${int((D21.st.resumo || {}).inscritas || 0)} ${+(D21.st.resumo || {}).inscritas === 1 ? "mulher" : "mulheres"} na turma.</small></div>${d21ZapHTML()}
+    ${D21.feedErro && !L.length ? `<div class="d21-vazio">Não conseguimos carregar agora. <button class="link" id="d21-tenta">Tentar de novo</button></div>` : ""}
+    ${!L.length && !D21.feedErro ? `<div class="d21-vazio">A Micaela ainda não publicou nada. Volte daqui a pouco 💚</div>` : ""}
+    ${L.map(p => d21PostHTML(p)).join("")}${L.length && !D21.feedFim ? `<button class="d21-bt d21-bt-2" id="d21-mais">Ver mais</button>` : ""}`;
+}
+function d21MiniFeedHTML(){ const L = (D21.feed || []).slice(0, 2); return L.length ? `<h2 class="d21-sec">📢 AVISOS DA MICAELA</h2>${L.map(p => d21PostHTML(p, true)).join("")}` : ""; }
+function d21LigaFeed(){
+  if(!D21.feed && !D21.feedErro) d21CarregaFeed(false);
+  const t = $("d21-tenta"); if(t) t.onclick = () => { D21.feedErro = false; d21Pinta(); d21CarregaFeed(true); };
+  const m = $("d21-mais"); if(m) m.onclick = () => { m.disabled = true; d21CarregaFeed(false, true); };
+  d21LigaPosts();
+}
+function d21LigaPosts(){
+  const box = $("d21"); if(!box) return;
+  box.querySelectorAll(".d21-reac button").forEach(b => b.onclick = async () => {
+    const id = b.parentElement.dataset.post, p = (D21.feed || []).find(x => x.id === id); if(!p) return;
+    const r = b.dataset.r, antes = p.minha_reacao, C = p.contagens = p.contagens || {};
+    if(antes) C["r:" + antes] = Math.max(0, (+C["r:" + antes] || 0) - 1);
+    p.minha_reacao = antes === r ? null : r; if(p.minha_reacao) C["r:" + r] = (+C["r:" + r] || 0) + 1;
+    vibra(10); d21Pinta();
+    try{ const x = await SB().rpc("d21_reagir", { p_post: id, p_emoji: r }); if(x.error) throw x.error; d21Ev("challenge_reaction", { emoji: r }); }
+    catch(e){ toast("Não deu para reagir agora. Confira a internet."); d21CarregaFeed(true); }
+  });
+  box.querySelectorAll(".d21-op").forEach(b => b.onclick = async () => {
+    const id = b.parentElement.dataset.post, p = (D21.feed || []).find(x => x.id === id); if(!p) return;
+    let V = p.multipla ? ((p.meus_votos || []).includes(b.dataset.op) ? p.meus_votos.filter(x => x !== b.dataset.op) : [...(p.meus_votos || []), b.dataset.op]) : [b.dataset.op];
+    if(!V.length) return;
+    const C = p.contagens = p.contagens || {}, antes = p.meus_votos || [], novo = !antes.length;
+    antes.forEach(o => C["v:" + o] = Math.max(0, (+C["v:" + o] || 0) - 1)); V.forEach(o => C["v:" + o] = (+C["v:" + o] || 0) + 1);
+    p.meus_votos = V; if(novo) p.votantes = (+p.votantes || 0) + 1; SOM.check && SOM.check(); vibra(15); d21Pinta();
+    try{ const x = await SB().rpc("d21_votar", { p_post: id, p_opcoes: V }); if(x.error) throw x.error; d21Ev(p.tipo === "checkin" ? "challenge_checkin" : "challenge_poll_vote", {}); }
+    catch(e){ toast((e && e.message && /já votou|terminou/.test(e.message)) ? "Essa votação não aceita mudança." : "Não deu para votar agora. Confira a internet."); d21CarregaFeed(true); }
+  });
+  box.querySelectorAll(".d21-post [data-d21go]").forEach(b => b.onclick = () => d21Comecar(null));
+  box.querySelectorAll(".d21-post [data-d21tab2]").forEach(b => b.onclick = () => { D21.aba = b.dataset.d21tab2; d21Pinta(); });
+  box.querySelectorAll("[data-d21rec]").forEach(b => b.onclick = () => { const r = d21Receita(d21DiaConteudo(d21Dia()) || {}, d21Dia()); if(r) abrirReceita(r.id); });
+}
+
+/* ---------- JORNADA ---------- */
+function d21JornadaHTML(){
+  const J = d21Jornada(), d = d21Dia(), e = d21Ed(), M = d21Medalhas(), H = (D21.st.historico || []).filter(h => h.id !== e.id);
+  const cel = n => { const r = d21Reg(n); if(r) return [r.tipo === "planob" ? "💚" : "✅", r.tipo === "planob" ? "Plano B" : "Treino completo", "feito"];
+    if(n === d) return ["🔥", "Hoje", "hoje"]; if(n > d) return ["🔒", "Ainda não chegou", "fut"]; if(n < J.diaEntrou) return ["·", "Antes de você entrar", "antes"]; return ["⚪", "Não realizado", "nao"]; };
+  return `<section class="d21-hero d21-hero-s"><span class="d21-eye">MINHA JORNADA</span><div class="d21-gr">DIA ${d21Pad(Math.min(d, 21))}<small>/21</small></div></section>
+    <div class="d21-cal">${Array.from({ length: 21 }, (_, i) => { const [ic2, t, c] = cel(i + 1); return `<div class="d21-dia ${c}" title="Dia ${i + 1}: ${t}"><small>${d21Pad(i + 1)}</small><i>${ic2}</i></div>`; }).join("")}</div>
+    <div class="d21-leg"><span>✅ completo</span><span>💚 Plano B</span><span>⚪ não feito</span><span>🔥 hoje</span><span>🔒 futuro</span></div>
+    <div class="d21-stats"><div><b>${J.completos}</b><small>${J.completos === 1 ? "treino completo" : "treinos completos"}</small></div><div><b>${J.planob}</b><small>Plano B</small></div><div><b>${J.perdidos.length}</b><small>${J.perdidos.length === 1 ? "dia não realizado" : "dias não realizados"}</small></div><div><b>${J.atual}</b><small>sequência atual</small></div><div><b>${J.melhor}</b><small>melhor sequência</small></div><div><b>${Math.round(100 * J.total / 21)}%</b><small>do desafio</small></div></div>
+    <p class="d21-gentil">Não precisa ser perfeito para continuar. 💚</p>
+    <h2 class="d21-sec">🏅 MEDALHAS</h2><div class="d21-meds">${M.map(([k, em, n, ok]) => `<button class="${ok ? "ok" : ""}" data-med="${k}" ${ok ? "" : "disabled"}>${ok ? em : "🔒"}<small>${esc(n)}</small></button>`).join("")}</div>
+    ${J.total ? `<button class="d21-bt d21-bt-2" id="d21-sh">${ic("share", 16)} Compartilhar meu progresso</button>` : ""}
+    <h2 class="d21-sec">⚡ MEU MODO</h2><div class="d21-modos">${Object.entries(D21_MODOS).map(([k, [n, s]]) => `<button class="d21-modo" data-d21m="${k}" aria-pressed="${D21.st.inscrita.modo === k}"><b>${n}</b><small>${s}</small></button>`).join("")}</div>
+    ${H.length ? `<h2 class="d21-sec">📚 MEUS DESAFIOS</h2>${H.map(h => `<div class="d21-card d21-hist"><b>${esc(h.nome)} · Edição #${d21Pad(h.numero)}</b><small>${d21Data(h.inicio)} a ${d21Data(h.fim)} · ${h.feitos}/21 dias${+h.planob ? ` · ${h.planob} Plano B` : ""}</small></div>`).join("")}` : ""}
+    <button class="d21-sair" id="d21-sair">Sair do desafio</button>`;
+}
+function d21LigaJornada(){
+  const box = $("d21"); if(!box) return;
+  box.querySelectorAll("[data-d21m]").forEach(b => b.onclick = async () => { const m = b.dataset.d21m; D21.st.inscrita.modo = m; d21Pinta(); try{ await SB().rpc("d21_modo", { p_edicao: d21Ed().id, p_modo: m }); toast(`Modo ${D21_MODOS[m][0]} 💪`); }catch(e){} });
+  box.querySelectorAll("[data-med]").forEach(b => b.onclick = () => { const m = d21Medalhas().find(x => x[0] === b.dataset.med); if(m) ckCompartilhar({ tipo: "desafio_medalha", emoji: m[1], titulo: m[2].toUpperCase(), sub: "CK 21 DIAS JUNTAS", convite: "Estou fazendo o CK 21 Dias Juntas 💚\nVem comigo no CK Life:", frases: ["Não 21 dias perfeitos. 21 dias juntas.", "Eu continuo. 💚"] }); });
+  const sh = $("d21-sh"); if(sh) sh.onclick = () => d21Compartilhar();
+  const s = $("d21-sair"); if(s) s.onclick = () => {
+    sheet("Sair do desafio?", `<div class="d21-conf"><p>Se você só quer voltar para o CK Life, toque em <b>← CK Life</b> no topo. Isso <b>não</b> tira você do desafio.</p>
+      <p><b>Sair do desafio</b> tira você da turma: para de receber os avisos e a comunidade da edição. Seu histórico fica guardado e você pode voltar enquanto a edição estiver aberta.</p>
+      <button class="btn btn-accent btn-block" id="d21-fica">Continuar no desafio</button><button class="btn btn-line btn-block" id="d21-sai">Sair mesmo assim</button></div>`);
+    $("d21-fica").onclick = fecharSheet;
+    $("d21-sai").onclick = async () => { try{ await SB().rpc("d21_sair", { p_edicao: d21Ed().id }); d21Ev("challenge_left", { dia: d21Dia() }); }catch(e){} fecharSheet(); await d21Carrega(true); d21Fechar(); toast("Você saiu do desafio. Quando quiser, é só voltar 💚"); };
+  };
+}
+document.addEventListener("click", e => {   // pesquisa final (botões ficam na tela "Hoje" após a edição)
+  const n = e.target.closest && e.target.closest("[data-nota]"); if(n){ D21.nota = +n.dataset.nota; document.querySelectorAll("[data-nota]").forEach(b => b.classList.toggle("on", b === n)); return; }
+  const env = e.target.closest && e.target.closest("#d21-pq"); if(env){ if(D21.nota == null) return toast("Escolha uma nota de 0 a 10");
+    SB().rpc("d21_responder_pesquisa", { p_edicao: d21Ed().id, p_nota: D21.nota, p_gostou: ($("d21-pq1").value || "").trim() || null, p_melhorar: ($("d21-pq2").value || "").trim() || null, p_outra: $("d21-pq3").checked })
+      .then(r => { if(r.error) throw r.error; ME.d21pesq = ME.d21pesq || {}; ME.d21pesq[d21Ed().id] = today(); save(); toast("Obrigada! 💚"); d21Pinta(); }).catch(() => toast("Não deu para enviar agora. Tente de novo.")); return; }
+});
+
+/* ---------- compartilhar (cartão do CK Life, menu nativo do celular) ---------- */
+function d21Compartilhar(final){
+  const J = d21Jornada(), d = d21Dia(), base = { sub: "CK 21 DIAS JUNTAS", convite: "Estou fazendo o CK 21 Dias Juntas 💚\nVem comigo no CK Life:" };
+  d21Ev("challenge_share", { dia: d, final: !!final });
+  if(final || d21Ed().fase === "finalizada" || d > 21) return ckCompartilhar({ ...base, tipo: "desafio_ok", emoji: "🏆", grande: "21 DIAS", titulo: "EU COMPLETEI", frases: [`${J.total} de 21 dias. E eu fui até o fim. 💚`, "Não 21 dias perfeitos. 21 dias juntas."] });
+  const reg = d21Reg(d), marco = { 3: ["🔥", "3 dias. O hábito começou."], 7: ["🔥", "Uma semana. Eu continuo."], 14: ["💚", "Falta pouco."], 21: ["🏆", "Eu completei."] }[J.total];
+  if(reg && reg.tipo === "planob") return ckCompartilhar({ ...base, tipo: "desafio_planob", emoji: "💚", titulo: "PLANO B CONCLUÍDO", grande: `${d21Pad(d)}/21`, frases: ["Hoje eu só tinha 10 minutos.\nE fiz os 10.", "Pouco ainda conta."] });
+  if(marco && reg) return ckCompartilhar({ ...base, tipo: "desafio_marco", emoji: null, grande: `${J.total}/21 ${marco[0]}`, frases: [marco[1], "Hoje eu apareci por mim. 💚"] });
+  return ckCompartilhar({ ...base, tipo: "desafio_dia", emoji: "🔥", titulo: reg ? "TREINO CONCLUÍDO" : "EU ESTOU DENTRO", grande: `${d21Pad(d)}/21`, frases: reg ? ["Hoje eu apareci por mim. 💚", "Feito é melhor que perfeito.", "Mais um passo dado. 💚"] : ["21 dias juntas. Não 21 dias perfeitos."] });
+}
+
+/* ---------- fim do treino do desafio: recompensa própria ---------- */
+const iniciaTreinoD21 = iniciaTreino;
+iniciaTreino = function(T){ if(T && T.d21){ try{ fecharSheet(); }catch(e){} } return iniciaTreinoD21.apply(this, arguments); };
+const fimTreinoD21 = fimTreino;
+fimTreino = function(parcial){
+  const T = PL && PL.T, r = fimTreinoD21.apply(this, arguments);
+  if(!T || !T.d21 || parcial) return r;
+  try{ d21FimTela(T); }catch(e){ console.warn(e); }
+  return r;
+};
+async function d21FimTela(T){
+  const z = T.d21, min = ((ME.treinos || []).slice(-1)[0] || {}).min || d21Min(T), antes = new Set(d21Medalhas().filter(m => m[3]).map(m => m[0]));
+  if(z.cardio){ ME.d21c = ME.d21c || {}; ME.d21c[z.ed + ":" + z.dia] = today(); save(); }
+  const tipo = z.planob ? "planob" : "completo";
+  $("play").innerHTML = `<div class="pc d21-fimt"><div class="d21-ok-em">${z.cardio ? "❤️" : z.planob ? "💚" : "🔥"}</div><h2>${z.cardio ? "MOVIMENTO FEITO!" : z.planob ? `PLANO B DO DIA ${d21Pad(z.dia)} FEITO!` : `DIA ${d21Pad(z.dia)} CONCLUÍDO!`}</h2>
+    <p>${z.cardio ? "Cardio extra na conta. Que energia! 💚" : z.planob ? "Hoje você só tinha 10 minutos. E fez os 10. Conta como presença 💚" : "Você apareceu por você hoje. 💚"}</p>
+    <div class="d21-gr">${d21Pad(z.dia)}<small>/21</small></div><div class="d21-pill" id="d21-fim-n">${z.cardio ? "" : "Salvando seu dia…"}</div><div class="d21-meds" id="d21-fim-med"></div>
+    ${z.cardio ? "" : `<button class="d21-bt" id="d21-f-sh">${ic("share", 16)} COMPARTILHAR CONQUISTA</button>`}
+    <button class="d21-bt d21-bt-2" id="d21-f-turma">VER A TURMA</button><button class="d21-bt d21-bt-2" id="d21-f-ok">CONTINUAR</button></div>`;
+  try{ confete($("play")); }catch(e){}
+  const volta = aba => { fimPlay(); d21Abrir(aba); };
+  $("d21-f-turma").onclick = () => volta("comunidade"); $("d21-f-ok").onclick = () => volta("hoje");
+  const fsh = $("d21-f-sh"); if(fsh) fsh.onclick = () => d21Compartilhar();
+  if(z.cardio) return;
+  let res = null;
+  try{ const x = await SB().rpc("d21_registrar", { p_edicao: z.ed, p_tipo: tipo, p_modo: z.modo, p_min: min }); if(x.error) throw x.error; res = x.data; }
+  catch(e){ let L = []; try{ L = JSON.parse(localStorage.getItem(D21_FILA) || "[]"); }catch(x){} L.push({ ed: z.ed, tipo, modo: z.modo, min, hoje: D21.st && D21.st.hoje });
+    try{ localStorage.setItem(D21_FILA, JSON.stringify(L)); }catch(x){} }
+  d21Ev(z.planob ? "challenge_plan_b_used" : "challenge_day_completed", { dia: z.dia, modo: z.modo, tipo });
+  await d21Carrega(true);
+  const n = $("d21-fim-n"); if(n){ const t = res && res.resumo ? +res.resumo.treinaram_hoje || 0 : 0;
+    n.textContent = res ? (t > 1 ? `🔥 ${int(t - 1)} ${t - 1 === 1 ? "mulher também concluiu" : "mulheres também concluíram"} hoje` : "🔥 Você abriu o dia da turma!") : "Sem internet: seu dia fica salvo e enviamos quando conectar."; }
+  const J = d21Jornada(); [[7, "challenge_7_days"], [14, "challenge_14_days"]].forEach(([k, ev]) => { if(J.total === k) d21Ev(ev, {}); });
+  if(z.dia === 21 || J.feitos.has(21)) d21Ev("challenge_completed", { total: J.total });
+  const novas = d21Medalhas().filter(m => m[3] && !antes.has(m[0])), md = $("d21-fim-med");
+  if(md && novas.length){ md.innerHTML = novas.map(m => `<span>${m[1]}<small>${esc(m[2])}</small></span>`).join(""); SOM.coupon && SOM.coupon(); }
+  if(z.dia === 21){ const h = document.querySelector(".d21-fimt h2"); if(h) h.textContent = "🏆 VOCÊ CONSEGUIU!"; const p = document.querySelector(".d21-fimt p"); if(p) p.textContent = `CK 21 Dias Juntas: ${J.total}/21 dias realizados, ${J.completos} treinos completos, ${J.planob} Planos B. Que orgulho!`;
+    if(fsh) fsh.onclick = () => d21Compartilhar(true); }
+}
+
+/* ---------- entrada no CK Life normal (só existe se houver edição publicada) ---------- */
+function d21CardHTML(){
+  const e = d21Ed(); if(!e || e.fase === "rascunho" || e.fase === "arquivada") return "";
+  const insc = d21Insc(), d = d21Dia(), R = D21.st.resumo || {};
+  if(e.fase === "finalizada" || d > 21){ if(!insc) return ""; const J = d21Jornada(), foi = J.feitos.has(21) || J.total >= 15; return `<button class="d21-entrada fim" id="d21-card"><span class="d21-eye">🏆 CK 21 DIAS JUNTAS</span><b>${foi ? "Você concluiu o CK 21 Dias Juntas" : `A edição terminou. Você fez ${J.total} de 21 dias 💚`}</b><span class="d21-entrada-bt">VER MINHA JORNADA</span></button>`; }
+  if(insc){ const reg = d21Reg(d); return `<button class="d21-entrada" id="d21-card"><span class="d21-eye">🔥 CK 21 DIAS JUNTAS</span><b>${e.fase === "andamento" ? `Dia ${d21Pad(d)} de 21 · ${reg ? "missão de hoje concluída ✅" : "seu treino está esperando"}` : "Você está dentro! A turma começa em breve"}</b><span class="d21-entrada-bt">CONTINUAR DESAFIO</span></button>`; }
+  return `<button class="d21-entrada" id="d21-card"><span class="d21-eye">🔥 CK 21 DIAS JUNTAS</span><b>21 dias. Uma turma.<br>Um objetivo: não parar.</b>${+R.inscritas >= 5 ? `<small>${int(R.inscritas)} mulheres já estão dentro</small>` : ""}<span class="d21-entrada-bt">CONHECER DESAFIO</span></button>`;
+}
+function d21PoeCard(){
+  const box = $("t-inicio"); if(!box) return; const old = $("d21-card"); const h = d21CardHTML();
+  if(!h){ if(old) old.remove(); return; }
+  if(old) old.outerHTML = h; else { const capa = box.querySelector(".capa"); if(capa) capa.insertAdjacentHTML("afterend", h); else box.insertAdjacentHTML("afterbegin", h); }
+  const c = $("d21-card"); if(c) c.onclick = () => { if(!d21Insc()) d21Ev("challenge_viewed", {}); d21Abrir(d21Ed().fase === "finalizada" ? "jornada" : "hoje"); };
+}
+const rInicioD21 = rInicio;
+rInicio = function(){
+  const r = rInicioD21.apply(this, arguments);
+  try{ if(D21.st) d21PoeCard(); d21Carrega(false).then(() => { if(TAB === "inicio") d21PoeCard(); d21Retoma(); }); }catch(e){ console.warn(e); }
+  return r;
+};
+/* volta para dentro se ela fechou o app lá dentro, ou se veio de um aviso (?d21=hoje|comunidade) */
+let D21_RET = false;
+function d21Retoma(){
+  if(D21_RET || D21.aberto) return; D21_RET = true;
+  let aba = null; try{ const u = new URL(location.href); aba = u.searchParams.get("d21"); if(aba){ u.searchParams.delete("d21"); history.replaceState(history.state, "", u.pathname + u.search + u.hash); } }catch(e){}
+  let dentro = null; try{ dentro = localStorage.getItem(D21_K); }catch(e){}
+  const e = d21Ed(); if(!e || !d21Insc()) return;
+  if(aba || (dentro === e.id && e.fase !== "finalizada")) d21Abrir(["hoje", "comunidade", "jornada"].includes(aba) ? aba : "hoje");
+}
+document.addEventListener("visibilitychange", () => { if(document.visibilityState === "visible" && D21.aberto && Date.now() - D21.t > 300000) d21Carrega(true).then(d21Pinta); });
 
 /* ===================== PIXEL DA META (medir anúncios) =====================
    Só funciona se a pessoa aceitar os cookies (LGPD). Nunca no painel do administrador.
@@ -14988,6 +15628,287 @@ function ebSemOrigem(pode){
   $("eb-marca").onclick = () => marca([...document.querySelectorAll(".eb-al input:checked")].map(i => i.value), $("eb-sel").value);
 }
 VIEWS.embaixadoras = typeof comVendas === "function" ? comVendas(vEmbaixadoras) : vEmbaixadoras;
+
+/* ===================== PAINEL · DESAFIOS › CK 21 DIAS JUNTAS ›  EDIÇÕES =====================
+   Edições, editor dos 21 dias (rascunho → publicar), comunidade controlada (publicar agora/programar/fixar),
+   duplicar edição e métricas agregadas (nunca dado pessoal). Tudo protegido no banco (admin_pode('desafios')). */
+SECOES.push(["desafios", "Desafios"]); MENU_NOME.desafios = "CK 21 Dias Juntas";
+{ const g = MENU.find(m => m[0] === "Gestão"); if(g && !g[1].some(x => x[2].includes("desafios"))) g[1].push(["Desafios", "desafios", ["desafios"]]); }
+const DA = { lista: null, ed: null, aba: "geral", erro: null, met: null, posts: null, cont: {} };
+const DA_FASE = { rascunho: ["Rascunho", "off"], inscricoes: ["Inscrições abertas", "ok"], aguardando: ["Aguardando início", "ok"], andamento: ["Em andamento", "ok"], finalizada: ["Finalizada", ""], arquivada: ["Arquivada", "off"] };
+const daFase = e => { if(["rascunho", "arquivada"].includes(e.status)) return e.status; const h = today(); if(h > e.fim || e.status === "finalizada") return "finalizada"; if(h >= e.inicio) return "andamento"; return e.status === "aguardando" ? "aguardando" : "inscricoes"; };
+const daDia = e => Math.floor((Date.parse(today() + "T12:00:00Z") - Date.parse(e.inicio + "T12:00:00Z")) / 864e5) + 1;
+const daBr = d => d ? d.split("-").reverse().join("/") : "–";
+const daEx = () => Object.keys(window.EXMETA || {}).map(id => ({ id, nome: F.exById(id).nome || id })).sort((a, b) => a.nome.localeCompare(b.nome));
+const daRec = () => (F.receitas ? F.receitas() : F.BASE_REC || []).map(r => ({ id: r.id, nome: r.nome }));
+const daPode = () => podeEditar("desafios");
+const daSem = msg => `<div class="card"><p class="muted" style="margin:0">${msg}</p></div>`;
+
+async function daCarregaLista(){
+  const r = await SB2().from("d21_edicoes").select("*").order("inicio", { ascending: false });
+  if(r.error) throw r.error; DA.lista = r.data || []; return DA.lista;
+}
+function vDesafios(){
+  const box = $("adm-main");
+  if(!SB2()){ box.innerHTML = `<div class="head"><h1>CK 21 Dias Juntas</h1></div>${daSem("Disponível com o banco na nuvem conectado.")}`; return; }
+  if(DA.ed) return daEdicao();
+  box.innerHTML = `<div class="head"><div><h1>🔥 CK 21 Dias Juntas</h1><p class="muted">Desafios › CK 21 Dias Juntas › Edições</p></div>${daPode() ? `<button class="btn btn-accent" id="da-nova">+ Nova edição</button>` : ""}</div><div id="da-l">${daSem("Carregando…")}</div>`;
+  const n = $("da-nova"); if(n) n.onclick = () => daFormEdicao(null);
+  daCarregaLista().then(L => {
+    const el = $("da-l"); if(!el) return;
+    el.innerHTML = L.length ? `<div class="grid g2">${L.map(e => { const f = daFase(e), [ft, fc] = DA_FASE[f];
+      return `<div class="card da-ed"><div class="da-ed-top"><span class="st ${fc}">${ft}</span><small class="muted">${daBr(e.inicio)} a ${daBr(e.fim)}</small></div>
+        <h3>${esc(e.nome)} · Edição #${String(e.numero).padStart(2, "0")}</h3><p class="muted" style="margin:0">${f === "andamento" ? `Hoje é o Dia ${daDia(e)} de 21` : esc(e.frase || "")}</p>
+        ${e.publicado_em ? "" : `<p class="msg msg-bad" style="margin:0">Os 21 dias ainda não foram publicados para as alunas.</p>`}
+        <div class="acts"><button class="btn btn-accent btn-sm" data-da-ab="${e.id}">Abrir</button>${daPode() ? `<button class="btn btn-sm" data-da-dup="${e.id}">Duplicar edição</button>` : ""}</div></div>`; }).join("")}</div>`
+      : daSem(`Nenhuma edição ainda. Toque em <b>+ Nova edição</b>: os 21 dias já vêm com um plano-base pronto (força + cardio, 3 semanas, com recuperação ativa) para você ajustar. Nada aparece para as alunas até você publicar e abrir as inscrições.`);
+    el.querySelectorAll("[data-da-ab]").forEach(b => b.onclick = () => { DA.ed = DA.lista.find(x => x.id === b.dataset.daAb); DA.aba = "geral"; DA.met = DA.posts = null; rerender(); });
+    el.querySelectorAll("[data-da-dup]").forEach(b => b.onclick = () => daDuplicar(DA.lista.find(x => x.id === b.dataset.daDup)));
+  }).catch(e => { const el = $("da-l"); if(el) el.innerHTML = daSem(/d21_edicoes|schema cache|does not exist/.test(e.message || "") ? "Falta rodar o arquivo <b>desafio21.sql</b> no Supabase (SQL Editor). Depois disso esta área funciona." : "Não deu para carregar: " + esc(e.message || "erro")); });
+}
+VIEWS.desafios = vDesafios;
+
+/* ---------- uma edição ---------- */
+function daEdicao(){
+  const e = DA.ed, f = daFase(e), [ft, fc] = DA_FASE[f], mudou = JSON.stringify(e.dias || []) !== JSON.stringify(e.dias_pub || []);
+  $("adm-main").innerHTML = `<div class="head"><div><button class="link" id="da-volta">‹ Edições</button><h1>${esc(e.nome)} · #${String(e.numero).padStart(2, "0")}</h1>
+      <p class="muted"><span class="st ${fc}">${ft}</span> ${daBr(e.inicio)} a ${daBr(e.fim)}${f === "andamento" ? ` · hoje é o Dia ${daDia(e)}` : ""}${mudou ? ` · <b style="color:#B7791F">há mudanças nos dias não publicadas</b>` : ""}</p></div></div>
+    <div class="seg da-seg">${[["geral", "Visão geral"], ["dias", "Os 21 dias"], ["comunidade", "Comunidade"], ["config", "Configurações"]].map(([k, t]) => `<button data-da-aba="${k}" aria-pressed="${DA.aba === k}">${t}</button>`).join("")}</div>
+    <div id="da-c"></div>`;
+  $("da-volta").onclick = () => { DA.ed = null; rerender(); };
+  document.querySelectorAll("[data-da-aba]").forEach(b => b.onclick = () => { DA.aba = b.dataset.daAba; daEdicao(); });
+  ({ geral: daGeral, dias: daDias, comunidade: daComunidade, config: daConfig })[DA.aba]();
+}
+async function daRecarregaEd(){ const r = await SB2().from("d21_edicoes").select("*").eq("id", DA.ed.id); if(!r.error && r.data && r.data[0]) DA.ed = r.data[0]; }
+async function daSalvaEd(campos){
+  if(!daPode()) throw new Error("Você não tem permissão para editar desafios.");
+  const r = await SB2().from("d21_edicoes").update({ ...campos, atualizado: new Date().toISOString() }).eq("id", DA.ed.id).select(); if(r.error) throw r.error;
+  if(r.data && r.data[0]) DA.ed = r.data[0]; else Object.assign(DA.ed, campos);
+}
+
+/* ---------- visão geral: métricas, funil, treinos e comunidade ---------- */
+function daGeral(){
+  const c = $("da-c"); c.innerHTML = daSem("Carregando números…");
+  SB2().rpc("d21_admin_metricas", { p_edicao: DA.ed.id }).then(r => {
+    if(r.error) throw r.error; const M = r.data || {}, el = $("da-c"); if(!el || DA.aba !== "geral") return;
+    const I = +M.inscritas || 0, F0 = M.funil || {}, pc = (a, b) => b ? Math.round(100 * a / b) + "%" : "–", C = M.comunidade || {}, MD = M.modos || {}, MI = M.modos_inscritas || {};
+    const etapas = [["Inscritas", I], ["Iniciaram", +M.iniciaram || 0], ["Chegaram ao D3", +F0.D3 || 0], ["D7", +F0.D7 || 0], ["D14", +F0.D14 || 0], ["D21", +F0.D21 || 0]];
+    const PD = M.por_dia || [], maxD = Math.max(1, ...PD.map(x => +x.iniciados || 0, 1), ...PD.map(x => +x.concluidos || 0));
+    const pior = PD.filter(x => +x.iniciados > 0).map(x => ({ ...x, ab: (+x.iniciados) - (+x.concluidos) })).filter(x => x.ab > 0).sort((a, b) => b.ab - a.ab)[0];
+    el.innerHTML = `<div class="grid g4">${kpi("Inscritas", int(I), `${int(M.abandonaram || 0)} saíram do desafio`, "alunos", 1)}${kpi("Ativas hoje", int(M.ativas_hoje || 0), M.dia >= 1 && M.dia <= 21 ? `Dia ${M.dia} de 21` : "")}${kpi("Concluíram (D21)", int(M.concluiram || 0), pc(+M.concluiram || 0, I) + " das inscritas")}${kpi("Retornaram", int(M.retornaram || 0), "voltaram depois de 2+ dias sem treinar")}</div>
+      <div class="card"><h3>Funil: onde elas estão parando</h3><div class="da-funil">${etapas.map(([t, n], i) => `<div class="da-fl"><span>${t}</span><div><i style="width:${I ? Math.max(2, Math.round(100 * n / I)) : 0}%"></i></div><b class="num">${int(n)}</b><small>${i ? pc(n, etapas[i - 1][1]) + " da etapa anterior" : ""}</small></div>`).join("")}</div>
+        <p class="hint" style="margin:8px 0 0">D3/D7/D14/D21 = alunas que treinaram em algum dia a partir desse dia da edição.</p></div>
+      <div class="grid g2"><div class="card"><h3>Treinos</h3><dl class="kv"><dt>Treinos iniciados</dt><dd class="num">${int(M.iniciados || 0)}</dd><dt>Treinos completos</dt><dd class="num">${int(M.completos || 0)}</dd><dt>Plano B</dt><dd class="num">${int(M.planob || 0)}</dd>
+        <dt>Normal / Hard / Supreme (concluídos)</dt><dd class="num">${int(MD.normal || 0)} / ${int(MD.hard || 0)} / ${int(MD.supreme || 0)}</dd><dt>Modo escolhido hoje</dt><dd class="num">${int(MI.normal || 0)} / ${int(MI.hard || 0)} / ${int(MI.supreme || 0)}</dd>
+        ${pior ? `<dt>Dia com mais abandono</dt><dd>Dia ${pior.dia} (${int(pior.ab)} começaram e não terminaram)</dd>` : ""}</dl></div>
+        <div class="card"><h3>Comunidade</h3><dl class="kv"><dt>Publicações</dt><dd class="num">${int(C.publicacoes || 0)}</dd><dt>Visualizações</dt><dd class="num">${int(C.vistas || 0)}</dd><dt>Reações</dt><dd class="num">${int(C.reacoes || 0)}</dd><dt>Votos em enquetes</dt><dd class="num">${int(C.votos || 0)}</dd><dt>Check-ins</dt><dd class="num">${int(C.checkins || 0)}</dd><dt>Taxa de interação</dt><dd class="num">${pc(+C.interagiram || 0, I)} das inscritas</dd></dl>
+        ${(C.top || []).length ? `<p class="hint" style="margin:10px 0 4px">Publicações mais fortes</p><ol class="da-top">${C.top.map(t => `<li>${esc(t.titulo || "(sem título)")} <small class="muted">${int(t.interacoes)} interações · ${int(t.vistas)} vistas</small></li>`).join("")}</ol>` : ""}</div></div>
+      <div class="card"><h3>Dia a dia</h3>${PD.length && M.dia >= 1 ? `<div class="tbl"><table><thead><tr><th>Dia</th><th>Iniciaram</th><th>Concluíram</th><th>Plano B</th><th></th></tr></thead><tbody>${PD.map(x => `<tr><td>Dia ${x.dia}</td><td class="num">${int(x.iniciados)}</td><td class="num">${int(x.concluidos)}</td><td class="num">${int(x.planob)}</td><td style="width:40%"><div class="da-bar"><i style="width:${Math.round(100 * (+x.concluidos) / maxD)}%"></i></div></td></tr>`).join("")}</tbody></table></div>` : `<p class="muted" style="margin:0">Aparece quando a edição começar.</p>`}</div>
+      ${M.pesquisa && +M.pesquisa.respostas ? `<div class="card"><h3>Pesquisa final</h3><dl class="kv"><dt>Respostas</dt><dd class="num">${int(M.pesquisa.respostas)}</dd><dt>Nota média (0 a 10)</dt><dd class="num">${M.pesquisa.media}</dd><dt>Participariam de outra</dt><dd class="num">${int(M.pesquisa.outra)}</dd></dl><p class="hint" style="margin:6px 0 0">As respostas são privadas e nunca viram depoimento público.</p></div>` : ""}`;
+  }).catch(e => { const el = $("da-c"); if(el) el.innerHTML = daSem("Não deu para carregar os números: " + esc(e.message || "erro")); });
+}
+
+/* ---------- os 21 dias: rascunho → pré-visualizar → publicar ---------- */
+function daDias(){
+  const e = DA.ed, D = e.dias || [], pode = daPode(), mudou = JSON.stringify(D) !== JSON.stringify(e.dias_pub || []), hoje = daFase(e) === "andamento" ? daDia(e) : 0;
+  $("da-c").innerHTML = `<div class="card"><div class="da-dias-top"><p class="muted" style="margin:0">Mesmo treino-base para todas no mesmo dia. Normal, Hard e Supreme mudam voltas, tempo e descanso (Hard: +20% de tempo e −25% de descanso; Supreme: +40% e −50%). Mudanças aqui <b>não</b> alteram os treinos normais do CK Life.</p>
+      <div class="acts">${pode ? `<button class="btn btn-sm" id="da-prev">Pré-visualizar como aluna</button><button class="btn btn-accent btn-sm" id="da-pub" ${mudou || !e.publicado_em ? "" : "disabled"}>${e.publicado_em ? "Publicar alterações" : "Publicar os 21 dias"}</button>` : ""}</div></div>
+      <p class="hint" style="margin:6px 0 0">${e.publicado_em ? `Publicado em ${new Date(e.publicado_em).toLocaleString("pt-BR")}. ` : "Ainda não publicado: as alunas não veem os treinos. "}${mudou ? "<b>Há alterações salvas como rascunho.</b>" : "Rascunho igual ao publicado."}</p></div>
+    <div class="da-grid">${Array.from({ length: 21 }, (_, i) => { const d = D[i] || {}; return `<button class="da-dia ${hoje === i + 1 ? "hoje" : ""}" data-da-dia="${i}"><small>DIA ${String(i + 1).padStart(2, "0")}${hoje === i + 1 ? " · HOJE" : ""}</small><b>${esc(d.titulo || "(vazio)")}</b><span class="muted">${(d.itens || []).length} exercícios · ${d.rodadas ? `${d.rodadas.normal}/${d.rodadas.hard}/${d.rodadas.supreme} voltas` : ""}</span></button>`; }).join("")}</div>`;
+  document.querySelectorAll("[data-da-dia]").forEach(b => b.onclick = () => daEditorDia(+b.dataset.daDia));
+  const pv = $("da-prev"); if(pv) pv.onclick = () => daPreview(0);
+  const pb = $("da-pub"); if(pb) pb.onclick = async () => {
+    if(!confirm("Publicar os 21 dias? As participantes passam a ver esta versão na hora.")) return;
+    try{ await daSalvaEd({ dias_pub: DA.ed.dias, publicado_em: new Date().toISOString() }); toast("Publicado! As alunas já veem a nova versão 💚"); daEdicao(); }catch(err){ toast(err.message || "Não deu para publicar"); }
+  };
+}
+function daItensHTML(pref, itens){
+  const EX = daEx();
+  return `<div class="da-its" id="${pref}-its">${(itens || []).map((it, k) => `<div class="da-it" data-k="${k}"><select class="input" data-f="id">${EX.map(x => `<option value="${x.id}" ${x.id === it[0] ? "selected" : ""}>${esc(x.nome)}</option>`).join("")}</select>
+      <select class="input" data-f="m"><option value="t" ${it[1] !== "r" ? "selected" : ""}>segundos</option><option value="r" ${it[1] === "r" ? "selected" : ""}>repetições</option></select>
+      <input class="input" type="number" min="3" max="300" data-f="v" value="${+it[2] || 30}" aria-label="Tempo ou repetições"><input class="input" type="number" min="0" max="180" data-f="d" value="${+it[3] || 0}" aria-label="Descanso (s)">
+      <div class="da-it-bt"><button type="button" data-mv="-1" aria-label="Subir">↑</button><button type="button" data-mv="1" aria-label="Descer">↓</button><button type="button" data-rm aria-label="Remover">✕</button></div></div>`).join("")}</div>
+    <button type="button" class="btn btn-sm" data-add="${pref}">+ adicionar exercício</button>`;
+}
+function daLeItens(pref){ return [...document.querySelectorAll(`#${pref}-its .da-it`)].map(r => [r.querySelector('[data-f="id"]').value, r.querySelector('[data-f="m"]').value, Math.max(3, +r.querySelector('[data-f="v"]').value || 30), Math.max(0, +r.querySelector('[data-f="d"]').value || 0)]); }
+function daEditorDia(i){
+  const e = DA.ed, D = JSON.parse(JSON.stringify((e.dias || [])[i] || { titulo: "", itens: [], rodadas: { normal: 2, hard: 3, supreme: 4 }, descRodada: 45, cardio: { min: 8, itens: [] }, planob: { itens: [], rodadas: 2 } }));
+  D.rodadas = D.rodadas || { normal: 2, hard: 3, supreme: 4 }; D.cardio = D.cardio || { min: 8, itens: [] }; D.planob = D.planob || { itens: [], rodadas: 2 };
+  const R = daRec();
+  modal(`Dia ${String(i + 1).padStart(2, "0")} de 21`, `<div class="formgrid">
+    <div class="field full"><label for="dd-t">Título (aparece para todas)</label><input class="input" id="dd-t" maxlength="60" value="${esc(D.titulo || "")}" placeholder="Ex.: Pernas + Cardio"></div>
+    <div class="field full"><label for="dd-m">Mensagem da Micaela no dia</label><textarea class="input" id="dd-m" maxlength="400" rows="2">${esc(D.msg || "")}</textarea></div>
+    <div class="field full"><label>Treino principal</label>${daItensHTML("dd-tr", D.itens)}<small class="muted">Cada linha: exercício · segundos ou repetições · descanso depois (segundos).</small></div>
+    <div class="field"><label for="dd-rn">Voltas Normal</label><input class="input" type="number" min="1" max="8" id="dd-rn" value="${D.rodadas.normal}"></div>
+    <div class="field"><label for="dd-rh">Voltas Hard</label><input class="input" type="number" min="1" max="8" id="dd-rh" value="${D.rodadas.hard}"></div>
+    <div class="field"><label for="dd-rs">Voltas Supreme</label><input class="input" type="number" min="1" max="8" id="dd-rs" value="${D.rodadas.supreme}"></div>
+    <div class="field"><label for="dd-dr">Descanso entre voltas (s)</label><input class="input" type="number" min="0" max="180" id="dd-dr" value="${D.descRodada || 45}"></div>
+    <div class="field full"><label>❤️ Movimento (cardio extra)</label><div style="display:flex;gap:8px;align-items:center"><input class="input" type="number" min="3" max="30" id="dd-cm" value="${D.cardio.min || 8}" style="max-width:90px"><span class="muted">minutos</span></div>${daItensHTML("dd-ca", D.cardio.itens)}</div>
+    <div class="field full"><label>💚 Plano B (10 minutos)</label>${daItensHTML("dd-pb", D.planob.itens)}<div style="display:flex;gap:8px;align-items:center;margin-top:6px"><input class="input" type="number" min="1" max="4" id="dd-pr" value="${D.planob.rodadas || 2}" style="max-width:90px"><span class="muted">voltas</span></div></div>
+    <div class="field full"><label for="dd-rc">🥗 Receita CK do dia</label><select class="input" id="dd-rc"><option value="">Automática (uma receita gratuita diferente por dia)</option>${R.map(r => `<option value="${esc(r.id)}" ${r.id === D.receita ? "selected" : ""}>${esc(r.nome)}</option>`).join("")}</select></div>
+    <div class="field full"><label for="dd-ms">🎯 Desafio extra do dia (missão)</label><input class="input" id="dd-ms" maxlength="80" value="${esc(D.missao || "")}" placeholder="Ex.: Beber 8 copos de água"></div>
+  </div><div id="dd-msg"></div><div class="acts" style="margin-top:12px"><button class="btn" id="dd-prev">Pré-visualizar</button><button class="btn btn-accent" id="dd-ok" ${daPode() ? "" : "disabled"}>Salvar rascunho do dia</button></div>`);
+  const liga = () => {
+    document.querySelectorAll("#mbox [data-add]").forEach(b => b.onclick = () => { const p = b.dataset.add, L = daLeItens(p); L.push(["polichinelo", "t", 40, 20]); $(p + "-its").outerHTML = daItensHTML(p, L).split('<button type="button" class="btn btn-sm" data-add')[0]; liga(); });
+    document.querySelectorAll("#mbox .da-it [data-rm]").forEach(b => b.onclick = () => { b.closest(".da-it").remove(); });
+    document.querySelectorAll("#mbox .da-it [data-mv]").forEach(b => b.onclick = () => { const r = b.closest(".da-it"), mv = +b.dataset.mv; if(mv < 0 && r.previousElementSibling) r.parentNode.insertBefore(r, r.previousElementSibling); if(mv > 0 && r.nextElementSibling) r.parentNode.insertBefore(r.nextElementSibling, r); });
+  };
+  liga();
+  const le = () => ({ ...D, titulo: val("dd-t"), msg: val("dd-m"), itens: daLeItens("dd-tr"), rodadas: { normal: Math.max(1, +val("dd-rn") || 2), hard: Math.max(1, +val("dd-rh") || 3), supreme: Math.max(1, +val("dd-rs") || 4) }, descRodada: Math.max(0, +val("dd-dr") || 0),
+    cardio: { min: Math.max(3, +val("dd-cm") || 8), itens: daLeItens("dd-ca") }, planob: { itens: daLeItens("dd-pb"), rodadas: Math.max(1, +val("dd-pr") || 2) }, receita: val("dd-rc") || null, missao: val("dd-ms") });
+  $("dd-prev").onclick = () => daPreviewDia(le(), i);
+  $("dd-ok").onclick = async () => {
+    const n = le(); if(!n.titulo) return $("dd-msg").innerHTML = `<div class="msg msg-bad">Dê um título ao dia.</div>`; if(!n.itens.length) return $("dd-msg").innerHTML = `<div class="msg msg-bad">Coloque pelo menos um exercício no treino.</div>`;
+    const dias = JSON.parse(JSON.stringify(DA.ed.dias || [])); while(dias.length < 21) dias.push({}); dias[i] = n;
+    try{ await daSalvaEd({ dias }); fechar(); toast("Rascunho salvo. Toque em Publicar para as alunas verem."); daEdicao(); }catch(err){ $("dd-msg").innerHTML = `<div class="msg msg-bad">${esc(err.message || "Não deu para salvar")}</div>`; }
+  };
+}
+/* pré-visualização: como a aluna vê o dia em cada modo */
+function daPreviewDia(D, i){
+  const mins = modo => { const mult = { normal: 1, hard: 1.2, supreme: 1.4 }[modo], md = { normal: 1, hard: .75, supreme: .5 }[modo], rod = (D.rodadas || {})[modo] || 1;
+    const porVolta = (D.itens || []).reduce((a, it) => a + (it[1] === "r" ? it[2] * 3.2 : it[2]) * mult + (it[3] || 0) * md, 0); return Math.max(1, Math.round((porVolta * rod + (D.descRodada || 0) * md * (rod - 1)) / 60)); };
+  const lista = its => (its || []).map(it => `<li>${esc(F.exById(it[0]).nome || it[0])} <small class="muted">${it[1] === "r" ? it[2] + " repetições" : it[2] + "s"}${it[3] ? ` · descanso ${it[3]}s` : ""}</small></li>`).join("");
+  modal(`Como a aluna vê · Dia ${String(i + 1).padStart(2, "0")}`, `<div class="da-prev"><span class="da-prev-eye">DIA ${String(i + 1).padStart(2, "0")} DE 21</span><h2>${esc(D.titulo || "")}</h2>${D.msg ? `<p>“${esc(D.msg)}”</p>` : ""}
+    <div class="grid g3">${["normal", "hard", "supreme"].map(m => `<div class="card"><b>${m[0].toUpperCase() + m.slice(1)}</b><span class="muted">${(D.rodadas || {})[m] || 1} voltas · ~${mins(m)} min</span></div>`).join("")}</div>
+    <h3>🏋️ Treino</h3><ol>${lista(D.itens)}</ol><h3>❤️ Movimento · ${(D.cardio || {}).min || 8} min</h3><ol>${lista((D.cardio || {}).itens)}</ol><h3>💚 Plano B</h3><ol>${lista((D.planob || {}).itens)}</ol>
+    ${D.missao ? `<h3>🎯 Desafio extra</h3><p>${esc(D.missao)}</p>` : ""}</div><div class="acts" style="margin-top:12px"><button class="btn" id="dpv-volta">Voltar</button></div>`);
+  $("dpv-volta").onclick = () => daEditorDia(i);
+}
+function daPreview(i){
+  const D = (DA.ed.dias || [])[i] || {};
+  daPreviewDia(D, i);
+  const a = document.querySelector("#mbox .acts"); if(!a) return;
+  a.innerHTML = `<button class="btn" id="dpv-a" ${i ? "" : "disabled"}>‹ Dia anterior</button><button class="btn" id="dpv-p" ${i < 20 ? "" : "disabled"}>Próximo dia ›</button><button class="btn btn-accent" data-close>Fechar</button>`;
+  $("dpv-a").onclick = () => daPreview(i - 1); $("dpv-p").onclick = () => daPreview(i + 1);
+}
+
+/* ---------- comunidade da edição (só a equipe publica) ---------- */
+const DA_TIPOS = { mensagem: "Mensagem", aviso: "📢 Aviso", chamada: "🔥 Chamada", enquete: "📊 Enquete", checkin: "💚 Check-in", conquista: "🏆 Conquista coletiva" };
+async function daCarregaPosts(){
+  const [p, c] = await Promise.all([SB2().from("d21_posts").select("*").eq("edicao_id", DA.ed.id).order("publicar_em", { ascending: false }).limit(300), SB2().rpc("d21_admin_contagens", { p_edicao: DA.ed.id })]);
+  if(p.error) throw p.error; DA.posts = (p.data || []).filter(x => !x.apagado); DA.cont = (c && c.data) || {};
+}
+function daComunidade(){
+  $("da-c").innerHTML = daSem("Carregando publicações…");
+  daCarregaPosts().then(() => {
+    const el = $("da-c"); if(!el || DA.aba !== "comunidade") return; const agora = Date.now(), pode = daPode();
+    el.innerHTML = `<div class="card"><div class="da-dias-top"><p class="muted" style="margin:0">Só a equipe publica. As participantes reagem (🔥 💚 💪 😍 🥵), votam e fazem check-in. Não enviam texto, foto, vídeo, áudio, link nem GIF.</p>
+        ${pode ? `<div class="acts"><button class="btn btn-accent btn-sm" id="da-np">+ Nova publicação</button></div>` : ""}</div>
+        ${pode ? `<div class="acts" style="margin-top:8px"><span class="muted" style="font-size:13px">Modelos rápidos:</span><button class="btn btn-sm" data-modelo="dia">🔥 Dia N começou</button><button class="btn btn-sm" data-modelo="treinou">Quem já treinou?</button><button class="btn btn-sm" data-modelo="hora">Que horas vai treinar?</button><button class="btn btn-sm" data-modelo="como">Como vocês estão?</button></div>` : ""}</div>
+      ${DA.posts.length ? DA.posts.map(p => { const C = DA.cont[p.id] || {}, prog = Date.parse(p.publicar_em) > agora, reac = Object.entries(C).filter(([k]) => k.startsWith("r:")).map(([k, n]) => `${k.slice(2)} ${int(n)}`).join("  "), vt = (p.opcoes || []).map(o => `${esc(o.t)}: <b>${int(C["v:" + o.id] || 0)}</b>`).join(" · ");
+        return `<div class="card da-post"><div class="da-ed-top"><span class="st ${prog ? "off" : "ok"}">${prog ? "Programada " + new Date(p.publicar_em).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }) : "Publicada " + new Date(p.publicar_em).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}</span><small class="muted">${DA_TIPOS[p.tipo]}${p.fixado ? " · 📌 fixada" : ""}${p.notificar ? (p.notificado ? " · aviso enviado" : " · vai avisar no celular") : ""}</small></div>
+          ${p.titulo ? `<h3 style="margin:4px 0">${esc(p.titulo)}</h3>` : ""}${p.texto ? `<p style="margin:0">${esc(p.texto)}</p>` : ""}${vt ? `<p class="muted" style="margin:6px 0 0">${vt}</p>` : ""}
+          <p class="muted" style="margin:6px 0 0;font-size:13px">👁 ${int(C.vistas || 0)} ${reac ? " · " + reac : ""}</p>
+          ${pode ? `<div class="acts"><button class="btn btn-sm" data-pfix="${p.id}">${p.fixado ? "Desafixar" : "📌 Fixar"}</button><button class="btn btn-sm" data-ped="${p.id}">Editar</button><button class="btn btn-sm" data-pdel="${p.id}">Apagar</button></div>` : ""}</div>`; }).join("") : daSem("Nenhuma publicação ainda.")}`;
+    const np = $("da-np"); if(np) np.onclick = () => daFormPost(null);
+    el.querySelectorAll("[data-modelo]").forEach(b => b.onclick = () => daFormPost(null, b.dataset.modelo));
+    el.querySelectorAll("[data-ped]").forEach(b => b.onclick = () => daFormPost(DA.posts.find(p => p.id === b.dataset.ped)));
+    el.querySelectorAll("[data-pfix]").forEach(b => b.onclick = async () => { const p = DA.posts.find(x => x.id === b.dataset.pfix); const r = await SB2().from("d21_posts").update({ fixado: !p.fixado }).eq("id", p.id); if(r.error) return toast(r.error.message); toast(p.fixado ? "Desafixada" : "Fixada no topo 📌"); daComunidade(); });
+    el.querySelectorAll("[data-pdel]").forEach(b => b.onclick = async () => { if(!confirm("Apagar esta publicação? Ela some para as participantes.")) return; const r = await SB2().from("d21_posts").update({ apagado: true, fixado: false }).eq("id", b.dataset.pdel); if(r.error) return toast(r.error.message); toast("Publicação apagada"); daComunidade(); });
+  }).catch(e => { const el = $("da-c"); if(el) el.innerHTML = daSem("Não deu para carregar: " + esc(e.message || "erro")); });
+}
+function daFormPost(p, modelo){
+  const dia = Math.max(1, Math.min(21, daDia(DA.ed)));
+  const M = { dia: { tipo: "chamada", titulo: `🔥 DIA ${dia} COMEÇOU!`, texto: "Treino do dia liberado. Quem vem comigo?", botao: "treino", fixado: true, notificar: true },
+    treinou: { tipo: "checkin", titulo: "Quem já treinou hoje?", opcoes: [{ id: "ja", t: "Já treinei 🔥" }, { id: "vou", t: "Ainda vou 💪" }, { id: "planob", t: "Hoje vai ser Plano B 💚" }] },
+    hora: { tipo: "enquete", titulo: "QUE HORAS VOCÊ VAI TREINAR?", opcoes: [{ id: "m", t: "Manhã" }, { id: "t", t: "Tarde" }, { id: "n", t: "Noite" }, { id: "ja", t: "Já treinei 🔥" }] },
+    como: { tipo: "checkin", titulo: "COMO VOCÊ ESTÁ HOJE?", opcoes: [{ id: "voando", t: "🔥 Tô voando" }, { id: "firme", t: "💪 Tô firme" }, { id: "puxado", t: "🥵 Tá puxado" }, { id: "naoparo", t: "💚 Mas não vou parar" }] } };
+  const x = p || { tipo: "mensagem", titulo: "", texto: "", opcoes: [], multipla: false, pode_mudar: true, resultado: "sempre", fixado: false, botao: null, dia, notificar: false, ...(modelo ? M[modelo] : {}) };
+  const loc = d => { const z = new Date(d), o = z.getTimezoneOffset(); return new Date(z - o * 6e4).toISOString().slice(0, 16); };
+  modal(p ? "Editar publicação" : "Nova publicação", `<div class="formgrid">
+    <div class="field"><label for="dp-tp">Tipo</label><select class="input" id="dp-tp">${Object.entries(DA_TIPOS).map(([k, t]) => `<option value="${k}" ${x.tipo === k ? "selected" : ""}>${t}</option>`).join("")}</select></div>
+    <div class="field"><label for="dp-dia">Dia do desafio (opcional)</label><input class="input" type="number" min="1" max="21" id="dp-dia" value="${x.dia || ""}"></div>
+    <div class="field full"><label for="dp-ti">Título</label><input class="input" id="dp-ti" maxlength="120" value="${esc(x.titulo || "")}" placeholder="🔥 DIA 8/21!"></div>
+    <div class="field full"><label for="dp-tx">Texto</label><textarea class="input" id="dp-tx" maxlength="2000" rows="3" placeholder="Quem vai treinar comigo hoje?">${esc(x.texto || "")}</textarea></div>
+    <div class="field full" id="dp-opbox"><label for="dp-op">Opções (uma por linha)</label><textarea class="input" id="dp-op" rows="4" placeholder="Manhã\nTarde\nNoite">${esc((x.opcoes || []).map(o => o.t).join("\n"))}</textarea>
+      <div class="acts" style="margin-top:6px"><label class="chk"><input type="checkbox" id="dp-mu" ${x.multipla ? "checked" : ""}> Pode marcar mais de uma</label><label class="chk"><input type="checkbox" id="dp-pm" ${x.pode_mudar !== false ? "checked" : ""}> Pode mudar a resposta</label></div>
+      <div class="formgrid" style="margin-top:6px"><div class="field"><label for="dp-rs">Mostrar resultado</label><select class="input" id="dp-rs"><option value="sempre" ${x.resultado === "sempre" ? "selected" : ""}>Sempre</option><option value="depois" ${x.resultado === "depois" ? "selected" : ""}>Depois que ela votar</option><option value="fim" ${x.resultado === "fim" ? "selected" : ""}>Só quando encerrar</option></select></div>
+      <div class="field"><label for="dp-pz">Encerra em (opcional)</label><input class="input" type="datetime-local" id="dp-pz" value="${x.prazo ? loc(x.prazo) : ""}"></div></div></div>
+    <div class="field"><label for="dp-bt">Botão na publicação</label><select class="input" id="dp-bt"><option value="">Nenhum</option><option value="treino" ${x.botao === "treino" ? "selected" : ""}>Começar treino</option><option value="receita" ${x.botao === "receita" ? "selected" : ""}>Ver receita do dia</option><option value="jornada" ${x.botao === "jornada" ? "selected" : ""}>Ver minha jornada</option><option value="whatsapp" ${x.botao === "whatsapp" ? "selected" : ""}>Grupo do WhatsApp</option></select></div>
+    <div class="field"><label for="dp-qd">Quando publicar</label><select class="input" id="dp-qd"><option value="agora">Publicar agora</option><option value="prog" ${p && Date.parse(p.publicar_em) > Date.now() ? "selected" : ""}>Programar</option></select></div>
+    <div class="field" id="dp-qbox"><label for="dp-em">Data e hora</label><input class="input" type="datetime-local" id="dp-em" value="${loc(p ? p.publicar_em : Date.now() + 36e5)}"></div>
+    <div class="field full"><label class="chk"><input type="checkbox" id="dp-fx" ${x.fixado ? "checked" : ""}> 📌 Fixar no topo</label><label class="chk"><input type="checkbox" id="dp-nt" ${x.notificar ? "checked" : ""} ${p && p.notificado ? "disabled" : ""}> Avisar as participantes no celular${p && p.notificado ? " (já avisado)" : ""}</label></div>
+  </div><div id="dp-msg"></div><div class="acts" style="margin-top:12px"><button class="btn" data-close>Cancelar</button><button class="btn btn-accent" id="dp-ok">${p ? "Salvar" : "Publicar"}</button></div>`);
+  const sync = () => { $("dp-opbox").hidden = !["enquete", "checkin"].includes($("dp-tp").value); $("dp-qbox").hidden = $("dp-qd").value !== "prog"; $("dp-ok").textContent = p ? "Salvar" : $("dp-qd").value === "prog" ? "Programar" : "Publicar agora"; };
+  $("dp-tp").onchange = sync; $("dp-qd").onchange = sync; sync();
+  $("dp-ok").onclick = async () => {
+    const tipo = val("dp-tp"), voto = ["enquete", "checkin"].includes(tipo), linhas = voto ? val("dp-op").split("\n").map(s => s.trim()).filter(Boolean).slice(0, 8) : [];
+    const msg = t => $("dp-msg").innerHTML = `<div class="msg msg-bad">${t}</div>`;
+    if(!val("dp-ti") && !val("dp-tx")) return msg("Escreva um título ou um texto.");
+    if(voto && linhas.length < 2) return msg("Coloque pelo menos 2 opções.");
+    const velhas = (x.opcoes || []), opcoes = linhas.map((t, k) => { const v = velhas.find(o => o.t === t); return { id: v ? v.id : "o" + (k + 1) + Math.random().toString(36).slice(2, 5), t: t.slice(0, 60) }; });
+    const prog = val("dp-qd") === "prog", em = prog ? new Date(val("dp-em")).toISOString() : (p && Date.parse(p.publicar_em) <= Date.now() ? p.publicar_em : new Date().toISOString());
+    const d = { edicao_id: DA.ed.id, tipo, titulo: val("dp-ti") || null, texto: val("dp-tx") || null, opcoes, multipla: voto && $("dp-mu").checked, pode_mudar: !voto || $("dp-pm").checked, resultado: val("dp-rs") || "sempre",
+      prazo: voto && val("dp-pz") ? new Date(val("dp-pz")).toISOString() : null, fixado: $("dp-fx").checked, botao: val("dp-bt") || null, dia: +val("dp-dia") || null, publicar_em: em, notificar: $("dp-nt").checked };
+    const b = $("dp-ok"); b.disabled = true;
+    try{ if(d.fixado){ await SB2().from("d21_posts").update({ fixado: false }).eq("edicao_id", DA.ed.id).eq("fixado", true); }   // um fixado por vez
+      const r = p ? await SB2().from("d21_posts").update(d).eq("id", p.id) : await SB2().from("d21_posts").insert(d); if(r.error) throw r.error;
+      fechar(); toast(prog ? "Programada 💚" : "Publicada para a turma 💚"); daComunidade(); }
+    catch(err){ msg(esc(err.message || "Não deu para salvar")); b.disabled = false; }
+  };
+}
+
+/* ---------- configurações da edição / nova edição ---------- */
+function daConfig(){ $("da-c").innerHTML = ""; daFormEdicao(DA.ed, $("da-c")); }
+function daFormEdicao(e, alvo){
+  const novo = !e, prox = (DA.lista || []).reduce((a, x) => Math.max(a, x.numero || 0), 0) + 1;
+  e = e || { numero: prox, nome: "CK 21 Dias Juntas", frase: "21 dias juntas. Não 21 dias perfeitos.", descricao: "", capa: "", inscricao_ini: today(), inicio: addD(today(), 14), status: "rascunho", whatsapp: "", config: { hora_dia: 7, hora_lembrete: 19, notificar: true } };
+  const cf = e.config || {}, html = `<div class="card"><div class="formgrid">
+    <div class="field"><label for="de-nm">Nome</label><input class="input" id="de-nm" maxlength="80" value="${esc(e.nome)}"></div>
+    <div class="field"><label for="de-nu">Número da edição</label><input class="input" type="number" min="1" id="de-nu" value="${e.numero}"></div>
+    <div class="field full"><label for="de-fr">Frase</label><input class="input" id="de-fr" maxlength="140" value="${esc(e.frase || "")}"></div>
+    <div class="field full"><label for="de-ds">Descrição (aparece na página antes de entrar)</label><textarea class="input" id="de-ds" maxlength="3000" rows="4">${esc(e.descricao || "")}</textarea></div>
+    <div class="field full"><label for="de-cp">Capa (link https da imagem, opcional)</label><input class="input" id="de-cp" value="${esc(e.capa || "")}" placeholder="https://..."></div>
+    <div class="field"><label for="de-ii">Inscrições abrem em</label><input class="input" type="date" id="de-ii" value="${e.inscricao_ini || ""}"></div>
+    <div class="field"><label for="de-in">Início (Dia 1)</label><input class="input" type="date" id="de-in" value="${e.inicio}"><small class="muted" id="de-fim">Término (Dia 21): ${daBr(addD(e.inicio, 20))}</small></div>
+    <div class="field"><label for="de-st">Status</label><select class="input" id="de-st">${["rascunho", "inscricoes", "aguardando", "andamento", "finalizada", "arquivada"].map(s => `<option value="${s}" ${e.status === s ? "selected" : ""}>${DA_FASE[s][0]}</option>`).join("")}</select><small class="muted">Inscrições abertas = aparece no app. O dia vira "Em andamento" e "Finalizada" sozinho pelas datas.</small></div>
+    <div class="field"><label for="de-wa">Grupo do WhatsApp (opcional)</label><input class="input" id="de-wa" value="${esc(e.whatsapp || "")}" placeholder="https://chat.whatsapp.com/..."></div>
+    <div class="field"><label class="chk"><input type="checkbox" id="de-nt" ${cf.notificar !== false ? "checked" : ""}> Avisos automáticos no celular</label><small class="muted">"O Dia N começou" e o lembrete para quem ainda não treinou.</small></div>
+    <div class="field"><label for="de-hd">Hora do aviso "Dia começou"</label><input class="input" type="number" min="5" max="12" id="de-hd" value="${cf.hora_dia ?? 7}"></div>
+    <div class="field"><label for="de-hl">Hora do lembrete</label><input class="input" type="number" min="12" max="21" id="de-hl" value="${cf.hora_lembrete ?? 19}"></div>
+  </div><div id="de-msg"></div><div class="acts" style="margin-top:12px">${novo ? `<button class="btn" data-close>Cancelar</button>` : (e.status === "rascunho" && daPode() ? `<button class="btn" id="de-del">Apagar rascunho</button>` : "")}<button class="btn btn-accent" id="de-ok" ${daPode() ? "" : "disabled"}>${novo ? "Criar edição" : "Salvar"}</button></div>
+  ${novo ? `<p class="hint" style="margin:8px 0 0">A edição nasce com o plano-base dos 21 dias como rascunho. Ajuste em "Os 21 dias" e publique quando estiver pronto.</p>` : ""}</div>`;
+  if(alvo) alvo.innerHTML = html; else modal("Nova edição", html);
+  $("de-in").oninput = () => { const v = val("de-in"); $("de-fim").textContent = "Término (Dia 21): " + (v ? daBr(addD(v, 20)) : "–"); };
+  const del = $("de-del"); if(del) del.onclick = async () => { if(!confirm("Apagar este rascunho? Não dá para desfazer.")) return; const r = await SB2().from("d21_edicoes").delete().eq("id", e.id); if(r.error) return toast(r.error.message); DA.ed = null; toast("Rascunho apagado"); rerender(); };
+  $("de-ok").onclick = async () => {
+    const msg = t => $("de-msg").innerHTML = `<div class="msg msg-bad">${t}</div>`, ini = val("de-in"), wa = val("de-wa"), cp = val("de-cp");
+    if(!val("de-nm")) return msg("Dê um nome à edição."); if(!ini) return msg("Escolha a data de início.");
+    if(wa && !/^https:\/\/(chat\.whatsapp\.com|wa\.me|whatsapp\.com|api\.whatsapp\.com)\//.test(wa)) return msg("O link do WhatsApp precisa começar com https://chat.whatsapp.com/");
+    if(cp && !/^https:\/\//.test(cp)) return msg("A capa precisa ser um link https.");
+    const d = { nome: val("de-nm"), numero: Math.max(1, +val("de-nu") || 1), frase: val("de-fr"), descricao: val("de-ds") || null, capa: cp || null, inscricao_ini: val("de-ii") || null, inicio: ini, fim: addD(ini, 20), status: val("de-st"), whatsapp: wa || null,
+      config: { ...(e.config || {}), notificar: $("de-nt").checked, hora_dia: Math.min(12, Math.max(5, +val("de-hd") || 7)), hora_lembrete: Math.min(21, Math.max(12, +val("de-hl") || 19)) } };
+    if(d.status !== "rascunho" && !(novo ? false : e.publicado_em) && !confirm("Os 21 dias ainda não foram publicados. As alunas vão ver o desafio, mas sem treino até você publicar. Continuar?")) return;
+    try{ if(novo){ const plano = window.CK_D21_PLANO ? window.CK_D21_PLANO() : []; const r = await SB2().from("d21_edicoes").insert({ ...d, dias: plano }).select(); if(r.error) throw r.error; DA.ed = r.data && r.data[0]; fechar(); toast("Edição criada 💚"); DA.aba = "dias"; DA.lista = null; rerender(); }
+      else { await daSalvaEd(d); toast("Salvo 💚"); daEdicao(); } }
+    catch(err){ msg(esc(/check constraint/.test(err.message || "") ? "Confira as datas e os links." : err.message || "Não deu para salvar")); }
+  };
+}
+/* ---------- duplicar edição (copia conteúdo; nunca participantes, votos, reações, progresso ou métricas) ---------- */
+function daDuplicar(e){
+  const prox = (DA.lista || []).reduce((a, x) => Math.max(a, x.numero || 0), 0) + 1;
+  modal(`Duplicar · Edição #${String(e.numero).padStart(2, "0")}`, `<div class="formgrid">
+    <div class="field"><label for="du-nu">Nova edição nº</label><input class="input" type="number" id="du-nu" value="${prox}"></div>
+    <div class="field"><label for="du-in">Início (Dia 1)</label><input class="input" type="date" id="du-in" value="${addD(today() > e.fim ? today() : e.fim, 14)}"></div>
+    <div class="field full"><label class="chk"><input type="checkbox" id="du-d" checked> Copiar os 21 dias (treinos, receitas, missões e mensagens do dia)</label>
+      <label class="chk"><input type="checkbox" id="du-c" checked> Copiar configurações (nome, frase, descrição, capa, avisos, WhatsApp)</label>
+      <label class="chk"><input type="checkbox" id="du-p"> Copiar as publicações da comunidade como programadas (nas mesmas posições de dia)</label></div></div>
+    <p class="hint">Nunca são copiados: participantes, votos, reações, check-ins, progresso e métricas. A nova edição nasce como rascunho.</p>
+    <div id="du-msg"></div><div class="acts"><button class="btn" data-close>Cancelar</button><button class="btn btn-accent" id="du-ok">Duplicar</button></div>`);
+  $("du-ok").onclick = async () => {
+    const ini = val("du-in"); if(!ini) return; const b = $("du-ok"); b.disabled = true;
+    const cfg = $("du-c").checked, d = { numero: Math.max(1, +val("du-nu") || prox), inicio: ini, fim: addD(ini, 20), status: "rascunho", nome: cfg ? e.nome : "CK 21 Dias Juntas", frase: cfg ? e.frase : undefined, descricao: cfg ? e.descricao : null, capa: cfg ? e.capa : null,
+      whatsapp: cfg ? e.whatsapp : null, config: cfg ? e.config : undefined, dias: $("du-d").checked ? e.dias : (window.CK_D21_PLANO ? window.CK_D21_PLANO() : []), inscricao_ini: today() };
+    Object.keys(d).forEach(k => d[k] === undefined && delete d[k]);
+    try{ const r = await SB2().from("d21_edicoes").insert(d).select(); if(r.error) throw r.error; const nova = r.data[0];
+      if($("du-p").checked){ const ps = await SB2().from("d21_posts").select("*").eq("edicao_id", e.id); ps.data = (ps.data || []).filter(x => !x.apagado); const delta = Date.parse(ini + "T12:00:00Z") - Date.parse(e.inicio + "T12:00:00Z");
+        const L = (ps.data || []).map(p => ({ edicao_id: nova.id, tipo: p.tipo, titulo: p.titulo, texto: p.texto, opcoes: p.opcoes, multipla: p.multipla, pode_mudar: p.pode_mudar, resultado: p.resultado, prazo: p.prazo ? new Date(Date.parse(p.prazo) + delta).toISOString() : null,
+          fixado: false, botao: p.botao, dia: p.dia, publicar_em: new Date(Date.parse(p.publicar_em) + delta).toISOString(), notificar: p.notificar }));
+        if(L.length){ const x = await SB2().from("d21_posts").insert(L); if(x.error) throw x.error; } }
+      fechar(); toast("Edição duplicada como rascunho 💚"); DA.ed = nova; DA.aba = "config"; DA.lista = null; rerender(); }
+    catch(err){ $("du-msg").innerHTML = `<div class="msg msg-bad">${esc(err.message || "Não deu para duplicar")}</div>`; b.disabled = false; }
+  };
+}
 
 window.ADMIN = { abrir };
 })();
