@@ -124,7 +124,9 @@ function planilha(cab, linhas, nome){
 let PLU = null, VENDAS = null, PLU_T = 0;
 function catPlano(u){ const s = PLU && PLU[u.id]; if(s){ if(!s.pro) return "gratis"; if(s.trial) return "teste"; return ["kiwify", "apple", "google"].includes(s.provider) ? "pago" : "cortesia"; }
   if(!F.isPremium(u)) return "gratis"; return u.premium.tipo === "vitalicio" ? "cortesia" : u.premium.tipo; }
-const vendaOk = v => ["order_approved", "subscription_renewed"].includes(v.evento) && v.status === "processado";
+/* compras feitas pela equipe (testes) não entram nos números; continuam na lista, marcadas como "teste da equipe" */
+const vendaEquipe = v => { const e = String(v.email || "").toLowerCase(); return (DB().users || []).some(u => (u.admin || u.soAdmin) && ((v.user_id && u.id === v.user_id) || (e && String(u.email || "").toLowerCase() === e))); };
+const vendaOk = v => ["order_approved", "subscription_renewed"].includes(v.evento) && v.status === "processado" && !vendaEquipe(v);
 const vendasMes = (m = today().slice(0, 7)) => (VENDAS || []).filter(v => vendaOk(v) && String(v.quando).slice(0, 7) === m).reduce((s, v) => s + (+v.valor || 0), 0);
 function metricasAlunos(cidade){
   const db = DB(), U = db.users.filter(u => !u.soAdmin && (!cidade || +u.cidade === +cidade));
@@ -137,7 +139,7 @@ function metricasAlunos(cidade){
   return {
     U, total: U.length, novos7: U.filter(u => u.criado >= addD(today(), -6)).length,
     dau: acc(today()).length, wau: uni(ult(7)), mau: uni(ult(30)),
-    pagos: U.filter(u => catPlano(u) === "pago").length,
+    pagos: U.filter(u => catPlano(u) === "pago" && !u.admin).length,
     teste: U.filter(u => catPlano(u) === "teste").length,
     cortesia: U.filter(u => catPlano(u) === "cortesia").length,
     serie: serie(addD(today(), -29), today(), d => ({ alunos: acc(d).length })),

@@ -9246,7 +9246,7 @@ const abrirPerfilEq = abrirPerfil; abrirPerfil = async function(u){
    Quem deixa o CK Life aberto (ou instalado na tela inicial) fica com a versão antiga até recarregar.
    O app confere a versão publicada ao abrir, ao voltar do segundo plano e a cada 5 minutos.
    Se houver versão nova, mostra a faixa "ATUALIZAR": um toque e pronto. Nunca aparece no meio do treino. */
-const CK_VER = "20261102124235";
+const CK_VER = "20261102125730";
 let CK_VER_NOVA = null;
 const ATU_K = "ck_atu";
 const atuTentou = () => { try{ return JSON.parse(localStorage.getItem(ATU_K) || "null"); }catch(e){ return null; } };
@@ -12730,7 +12730,9 @@ function planilha(cab, linhas, nome){
 let PLU = null, VENDAS = null, PLU_T = 0;
 function catPlano(u){ const s = PLU && PLU[u.id]; if(s){ if(!s.pro) return "gratis"; if(s.trial) return "teste"; return ["kiwify", "apple", "google"].includes(s.provider) ? "pago" : "cortesia"; }
   if(!F.isPremium(u)) return "gratis"; return u.premium.tipo === "vitalicio" ? "cortesia" : u.premium.tipo; }
-const vendaOk = v => ["order_approved", "subscription_renewed"].includes(v.evento) && v.status === "processado";
+/* compras feitas pela equipe (testes) não entram nos números; continuam na lista, marcadas como "teste da equipe" */
+const vendaEquipe = v => { const e = String(v.email || "").toLowerCase(); return (DB().users || []).some(u => (u.admin || u.soAdmin) && ((v.user_id && u.id === v.user_id) || (e && String(u.email || "").toLowerCase() === e))); };
+const vendaOk = v => ["order_approved", "subscription_renewed"].includes(v.evento) && v.status === "processado" && !vendaEquipe(v);
 const vendasMes = (m = today().slice(0, 7)) => (VENDAS || []).filter(v => vendaOk(v) && String(v.quando).slice(0, 7) === m).reduce((s, v) => s + (+v.valor || 0), 0);
 function metricasAlunos(cidade){
   const db = DB(), U = db.users.filter(u => !u.soAdmin && (!cidade || +u.cidade === +cidade));
@@ -12743,7 +12745,7 @@ function metricasAlunos(cidade){
   return {
     U, total: U.length, novos7: U.filter(u => u.criado >= addD(today(), -6)).length,
     dau: acc(today()).length, wau: uni(ult(7)), mau: uni(ult(30)),
-    pagos: U.filter(u => catPlano(u) === "pago").length,
+    pagos: U.filter(u => catPlano(u) === "pago" && !u.admin).length,
     teste: U.filter(u => catPlano(u) === "teste").length,
     cortesia: U.filter(u => catPlano(u) === "cortesia").length,
     serie: serie(addD(today(), -29), today(), d => ({ alunos: acc(d).length })),
@@ -14531,11 +14533,11 @@ function blocoVendas(){
   const h = document.querySelector("#adm-main .head"); if(!h || $("fi-vendas")) return;
   if(!VENDAS) return h.insertAdjacentHTML("afterend", `<div class="card" id="fi-vendas"><h3><i class='ckc' aria-hidden='true'></i> Vendas do CK Life Pro</h3><p class="muted" style="margin:6px 0 0">${SB2() ? "Carregando… (se não aparecer, seu acesso não inclui Monetização ou falta rodar o ajuste do banco)" : "Funciona no app oficial, com o banco conectado."}</p></div>`);
   const ok = VENDAS.filter(vendaOk), mes = today().slice(0, 7), tot = ok.reduce((s, v) => s + (+v.valor || 0), 0);
-  const ativos = PLU ? Object.values(PLU).filter(x => x.pro && !x.trial && ["kiwify", "apple", "google"].includes(x.provider)).length : 0;
+  const equipe = new Set((DB().users || []).filter(u => u.admin || u.soAdmin).map(u => u.id)), ativos = PLU ? Object.entries(PLU).filter(([id, x]) => !equipe.has(id) && x.pro && !x.trial && ["kiwify", "apple", "google"].includes(x.provider)).length : 0;
   const EV = { order_approved: "Compra aprovada", subscription_renewed: "Renovação", subscription_canceled: "Cancelamento", subscription_late: "Atrasada", order_refunded: "Reembolso", chargeback: "Chargeback", pix_created: "Pix gerado", billet_created: "Boleto gerado", order_rejected: "Recusada" };
   h.insertAdjacentHTML("afterend", `<div class="card" id="fi-vendas"><div class="sec-title"><h3><i class='ckc' aria-hidden='true'></i> Vendas do CK Life Pro (Kiwify)</h3><button class="btn btn-line btn-sm" id="fv-csv">Copiar planilha</button></div>
     <div class="grid g3" style="margin:10px 0">${kpi("Vendido no mês", money(vendasMes(mes)), `${ok.filter(v => String(v.quando).slice(0, 7) === mes).length} venda(s)`)}${kpi("Assinantes Pro ativos", int(ativos))}${kpi("Total vendido", money(tot), `${ok.length} venda(s) no total`)}</div>
-    <div class="tbl"><table><thead><tr><th>Quando</th><th>Aluna</th><th>Plano</th><th>Valor</th><th>Evento</th><th>Pedido</th></tr></thead><tbody>${VENDAS.filter(v => !["pix_created", "billet_created"].includes(v.evento)).slice(0, 100).map(v => `<tr><td class="num">${new Date(v.quando).toLocaleString("pt-BR")}</td><td><b>${esc(v.nome || "Sem conta ainda")}</b><br><small class="muted">${esc(v.email || "")}</small></td><td>${v.plano === "pro_anual" ? "Anual" : v.plano === "pro_mensal" ? "Mensal" : "-"}</td><td class="num">${v.valor != null ? money(v.valor) : "-"}</td><td><span class="st ${vendaOk(v) ? "ok" : v.status === "erro" ? "bad" : "warn"}">${esc(EV[v.evento] || v.evento)}</span>${v.erro ? `<br><small class="muted">${esc(v.erro)}</small>` : ""}</td><td><small>${esc(v.pedido || "")}</small></td></tr>`).join("") || `<tr><td colspan="6" class="empty">Nenhuma venda ainda.</td></tr>`}</tbody></table></div></div>`);
+    <div class="tbl"><table><thead><tr><th>Quando</th><th>Aluna</th><th>Plano</th><th>Valor</th><th>Evento</th><th>Pedido</th></tr></thead><tbody>${VENDAS.filter(v => !["pix_created", "billet_created"].includes(v.evento)).slice(0, 100).map(v => `<tr><td class="num">${new Date(v.quando).toLocaleString("pt-BR")}</td><td><b>${esc(v.nome || "Sem conta ainda")}</b>${vendaEquipe(v) ? ` <span class="st off">teste da equipe · não conta</span>` : ""}<br><small class="muted">${esc(v.email || "")}</small></td><td>${v.plano === "pro_anual" ? "Anual" : v.plano === "pro_mensal" ? "Mensal" : "-"}</td><td class="num">${v.valor != null ? money(v.valor) : "-"}</td><td><span class="st ${vendaOk(v) ? "ok" : v.status === "erro" ? "bad" : "warn"}">${esc(EV[v.evento] || v.evento)}</span>${v.erro ? `<br><small class="muted">${esc(v.erro)}</small>` : ""}</td><td><small>${esc(v.pedido || "")}</small></td></tr>`).join("") || `<tr><td colspan="6" class="empty">Nenhuma venda ainda.</td></tr>`}</tbody></table></div></div>`);
   $("fv-csv").onclick = () => planilha(["Quando", "Aluna", "E-mail", "Plano", "Valor", "Evento", "Pedido"], VENDAS.map(v => [new Date(v.quando).toLocaleString("pt-BR"), v.nome || "", v.email || "", v.plano || "", v.valor != null ? String(v.valor).replace(".", ",") : "", EV[v.evento] || v.evento, v.pedido || ""]), "Vendas CK Life Pro");
 }
 VIEWS.resumo = comVendas(VIEWS.resumo); VIEWS.alunos = comVendas(VIEWS.alunos); VIEWS.financeiro = comVendas(VIEWS.financeiro);
