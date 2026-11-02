@@ -9241,7 +9241,7 @@ const abrirPerfilEq = abrirPerfil; abrirPerfil = async function(u){
    Quem deixa o CK Life aberto (ou instalado na tela inicial) fica com a versão antiga até recarregar.
    O app confere a versão publicada ao abrir, ao voltar do segundo plano e a cada 5 minutos.
    Se houver versão nova, mostra a faixa "ATUALIZAR": um toque e pronto. Nunca aparece no meio do treino. */
-const CK_VER = "20261102014335";
+const CK_VER = "20261102020039";
 let CK_VER_NOVA = null;
 const ATU_K = "ck_atu";
 const atuTentou = () => { try{ return JSON.parse(localStorage.getItem(ATU_K) || "null"); }catch(e){ return null; } };
@@ -15865,18 +15865,46 @@ const DA_NOITE = [
   { tipo: "mensagem", titulo: "Orgulho de vocês 🔥", texto: "Cada uma que apareceu hoje está construindo algo que ninguém tira. Amanhã a gente continua." },
   { tipo: "enquete", titulo: "BEBEU ÁGUA HOJE?", opcoes: ["Bati a meta 💧", "Quase lá", "Vou caprichar amanhã"] }];
 const DA_MARCOS = { 7: ["🎉 UMA SEMANA JUNTAS!", "7 dias. Uma semana inteira de turma. Quem chegou até aqui merece se orgulhar."], 14: ["🏆 14 DIAS!", "Dois terços do caminho. Falta pouco e a turma está mais forte do que nunca."], 21: ["👑 DIA 21: A GENTE CONSEGUIU!", "21 dias juntas. Não 21 dias perfeitos. Obrigada por cada treino, cada check-in, cada volta."] };
+/* recados de motivação (não são treino): manhã, tarde e fim do dia */
+const DA_MANHA = ["Bom dia, turma! ☀️ Hoje não precisa ser perfeito. Precisa ser seu.", "Quem acordou com preguiça levanta a mão 🙋‍♀️ Normal! O treino de hoje cabe no seu dia.", "Lembrete do dia: você não está fazendo isso sozinha. Tem uma turma inteira com você 💚", "Uma garrafinha de água do lado e bora. Pequenas escolhas, grandes resultados.", "Seu eu de daqui a 21 dias vai agradecer o que você fizer hoje.", "Disciplina é lembrar o que você quer. Bom dia, turma! 🔥", "Não espere a vontade aparecer. Comece, que ela vem junto."];
+const DA_TARDE = ["Ainda dá tempo! ⏰ Se não treinou ainda, separa 20 minutinhos depois do trabalho.", "Já foi? Vai mais tarde? Qualquer hora conta. O importante é aparecer 💪", "Metade do dia já foi. O treino de hoje ainda está esperando por você 🔥", "Tá corrido? Plano B de 10 minutos existe pra isso. Feito é melhor que perfeito.", "Pausa pra água e pra lembrar: você prometeu isso pra você 💚", "Quem treinou de manhã: orgulho! Quem vai de noite: estamos esperando 🙌", "O cansaço vai passar. O orgulho de ter feito fica."];
+const DA_FIMDIA = ["Ainda dá tempo! 🌙 10 minutos antes de dormir e o dia conta.", "Hoje não deu? Tudo bem. Amanhã a turma está aqui de novo, te esperando 💚", "Quem treinou hoje: descanse com orgulho. Quem ainda não: o Plano B cabe agora.", "Fim de dia. Bebe uma água, alonga 5 minutinhos e dorme bem. Amanhã tem mais 💤", "Cada dia que você aparece é um voto na mulher que você quer ser.", "Não compare seu dia com o de ninguém. Compare com o seu de ontem.", "Boa noite, turma. Amanhã a gente continua juntas 💚"];
+/* fase de espera (antes do Dia 1): movimenta quem já entrou */
+const DA_ESPERA = [
+  { h: 9, tipo: "mensagem", titulo: "Bem-vinda à turma! 💚", texto: "Que bom ter você aqui. Nos próximos dias a gente se prepara junto: escolha seu cantinho, sua hora e chame uma amiga. Quando o Dia 1 chegar, ninguém começa sozinha." },
+  { h: 13, tipo: "enquete", titulo: "QUAL SEU MAIOR OBJETIVO NESSES 21 DIAS?", opcoes: ["Criar o hábito de treinar", "Ter mais energia", "Me sentir mais forte", "Cuidar mais de mim"] },
+  { h: 20, tipo: "chamada", titulo: "CHAMA UMA AMIGA 👭", texto: "Quem treina com amiga desiste menos. Manda seu convite pelo botão \"Traga uma amiga\" e ela entra na mesma turma." },
+  { h: 9, tipo: "mensagem", titulo: "Prepara o cantinho 🧘‍♀️", texto: "Um espaço pra deitar no chão, roupa confortável e uma garrafinha de água. Só isso. O resto a gente faz junto." },
+  { h: 13, tipo: "enquete", titulo: "QUE HORAS VOCÊ VAI TREINAR?", opcoes: ["Manhã", "Almoço", "Tarde", "Noite"] },
+  { h: 20, tipo: "checkin", titulo: "COMO VOCÊ ESTÁ PRA COMEÇAR?", opcoes: ["🔥 Ansiosa pra começar", "💪 Pronta", "😅 Com um friozinho na barriga", "💚 Vou com calma"] },
+  { h: 9, tipo: "mensagem", titulo: "Normal, Hard ou Supreme? 🤔", texto: "Escolheu seu modo? Dá pra trocar a qualquer momento. Começar no Normal e subir depois é uma ótima ideia." },
+  { h: 13, tipo: "enquete", titulo: "JÁ TREINOU EM CASA ANTES?", opcoes: ["Nunca, vai ser a primeira vez", "Já, mas parei", "Já treino às vezes"] },
+  { h: 20, tipo: "mensagem", titulo: "Ninguém aqui é perfeita 💚", texto: "21 dias juntas. Não 21 dias perfeitos. Se um dia não der, a turma segue e você segue junto. Sem culpa." }];
 async function daGeraPosts(){
-  const e = DA.ed, D = e.dias_pub && e.dias_pub.length ? e.dias_pub : (e.dias || []), agora = Date.now(), ja = new Set((DA.posts || []).map(p => (p.dia || 0) + "|" + (p.titulo || "")));
+  const e = DA.ed, D = e.dias_pub && e.dias_pub.length ? e.dias_pub : (e.dias || []), agora = Date.now(), hoje = today(), dSP = iso => new Date(Date.parse(iso) - 3 * 36e5).toISOString().slice(0, 10), ja = new Set((DA.posts || []).map(p => dSP(p.publicar_em) + "|" + (p.titulo || "")));
   const L = [], hora = (dt, h, m) => new Date(`${dt}T${String(h).padStart(2, "0")}:${String(m || 0).padStart(2, "0")}:00-03:00`).toISOString();
+  const op = arr => (arr || []).map((t, k) => ({ id: "o" + (k + 1), t }));
+  const add = (dt, n, h, m, p) => { const quando = hora(dt, h, m); if(Date.parse(quando) <= agora || ja.has(dt + "|" + p.titulo)) return; ja.add(dt + "|" + p.titulo); L.push({ edicao_id: e.id, dia: n || null, publicar_em: quando, fixado: false, notificar: false, resultado: "sempre", multipla: false, pode_mudar: true, opcoes: [], botao: null, texto: null, ...p }); };
+  // fase de espera: de hoje até a véspera do Dia 1 (3 recados por dia + contagem)
+  let k = 0;
+  for(let dt = hoje > (e.inscricao_ini || hoje) ? hoje : (e.inscricao_ini || hoje); dt < e.inicio; dt = addD(dt, 1)){
+    const faltam = Math.round((Date.parse(e.inicio + "T12:00:00Z") - Date.parse(dt + "T12:00:00Z")) / 864e5);
+    for(let j = 0; j < 3; j++){ const x = DA_ESPERA[(k * 3 + j) % DA_ESPERA.length]; add(dt, 0, x.h, 0, { tipo: x.tipo, titulo: j === 2 && faltam <= 3 ? (faltam === 1 ? "🔥 É AMANHÃ!" : `⏳ FALTAM ${faltam} DIAS`) : x.titulo, texto: j === 2 && faltam <= 3 ? (faltam === 1 ? "Amanhã começa o Dia 1. Deixa a roupa separada e a garrafinha cheia. A turma vai estar aqui 💚" : `Faltam ${faltam} dias pro Dia 1. Já escolheu seu modo e a hora do seu lembrete?`) : (x.texto || null), opcoes: j === 2 && faltam <= 3 ? [] : op(x.opcoes), tipo: j === 2 && faltam <= 3 ? "chamada" : x.tipo }); }
+    k++;
+  }
+  // os 21 dias: 6 recados por dia (só a abertura e o check-in têm botão de treino; o resto é motivação)
   for(let n = 1; n <= 21; n++){
-    const dt = addD(e.inicio, n - 1), dd = D[n - 1] || {}, add = (h, m, p) => { const quando = hora(dt, h, m); if(Date.parse(quando) <= agora || ja.has(n + "|" + p.titulo)) return; L.push({ edicao_id: e.id, dia: n, publicar_em: quando, fixado: false, notificar: false, resultado: "sempre", multipla: false, pode_mudar: true, opcoes: [], ...p }); };
-    add(7, 0, { tipo: "chamada", titulo: DA_MARCOS[n] ? DA_MARCOS[n][0] : `🔥 DIA ${n}/21 COMEÇOU!`, texto: (DA_MARCOS[n] ? DA_MARCOS[n][1] + "\n\n" : "") + `Hoje: ${dd.titulo || "treino do dia"}. ${dd.msg || "Bora juntas?"}`, botao: "treino" });
-    add(13, 0, { tipo: "checkin", titulo: "QUEM JÁ TREINOU HOJE?", opcoes: [{ id: "ja", t: "Já treinei 🔥" }, { id: "vou", t: "Ainda vou 💪" }, { id: "planob", t: "Hoje vai ser Plano B 💚" }] });
-    const x = DA_NOITE[(n - 1) % DA_NOITE.length];
-    add(19, 30, { tipo: x.tipo, titulo: x.titulo, texto: x.texto || null, opcoes: (x.opcoes || []).map((t, k) => ({ id: "o" + (k + 1), t })), botao: x.tipo === "mensagem" ? "treino" : null });
+    const dt = addD(e.inicio, n - 1), dd = D[n - 1] || {}, r = (n - 1) % 7;
+    add(dt, n, 7, 0, { tipo: "chamada", titulo: DA_MARCOS[n] ? DA_MARCOS[n][0] : `🔥 DIA ${n}/21 COMEÇOU!`, texto: (DA_MARCOS[n] ? DA_MARCOS[n][1] + "\n\n" : "") + `Hoje: ${dd.titulo || "treino do dia"}. ${dd.msg || "Bora juntas?"}`, botao: "treino" });
+    add(dt, n, 10, 0, { tipo: "mensagem", titulo: "Recado da manhã ☀️", texto: DA_MANHA[r] });
+    add(dt, n, 13, 0, { tipo: "checkin", titulo: "JÁ FOI OU VAI MAIS TARDE?", opcoes: op(["Já fui 🔥", "Vou mais tarde 💪", "Vou à noite 🌙", "Hoje é Plano B 💚"]) });
+    add(dt, n, 16, 0, { tipo: "mensagem", titulo: "Ainda dá tempo ⏰", texto: DA_TARDE[r], botao: "treino" });
+    const x = DA_NOITE[r];
+    add(dt, n, 19, 30, { tipo: x.tipo, titulo: x.titulo, texto: x.texto || null, opcoes: op(x.opcoes) });
+    add(dt, n, 21, 30, { tipo: "mensagem", titulo: "Antes de dormir 🌙", texto: DA_FIMDIA[r] });
   }
   if(!L.length) return toast("Não há dias futuros sem publicação para gerar.");
-  if(!confirm(`Programar ${L.length} publicações (até 3 por dia: 7h, 13h e 19h30)? Você pode editar ou apagar qualquer uma depois. Nenhuma avisa no celular (o aviso do dia já é automático).`)) return;
+  if(!confirm(`Programar ${L.length} publicações? Antes do Dia 1: 3 recados por dia para aquecer o grupo. Nos 21 dias: até 6 por dia (7h, 10h, 13h, 16h, 19h30 e 21h30). Você pode editar ou apagar qualquer uma. Nenhuma avisa no celular (o aviso do dia e o lembrete já são automáticos).`)) return;
   try{ for(let i = 0; i < L.length; i += 50){ const r = await SB2().from("d21_posts").insert(L.slice(i, i + 50)); if(r.error) throw r.error; } toast(`${L.length} publicações programadas 💚`); daComunidade(); }
   catch(err){ toast("Não deu para gerar: " + (err.message || "erro")); }
 }
@@ -15966,7 +15994,7 @@ function daComunidade(){
   daCarregaPosts().then(() => {
     const el = $("da-c"); if(!el || DA.aba !== "comunidade") return; const agora = Date.now(), pode = daPode();
     el.innerHTML = `<div class="card"><div class="da-dias-top"><p class="muted" style="margin:0">Só a equipe publica. As participantes reagem (🔥 💚 💪 😍 🥵), votam e fazem check-in. Não enviam texto, foto, vídeo, áudio, link nem GIF.</p>
-        ${pode ? `<div class="acts"><button class="btn btn-sm" id="da-gera">✨ Gerar publicações dos 21 dias</button><button class="btn btn-accent btn-sm" id="da-np">+ Nova publicação</button></div>` : ""}</div>
+        ${pode ? `<div class="acts"><button class="btn btn-sm" id="da-gera">✨ Gerar publicações (espera + 21 dias)</button><button class="btn btn-accent btn-sm" id="da-np">+ Nova publicação</button></div>` : ""}</div>
         ${pode ? `<div class="acts" style="margin-top:8px"><span class="muted" style="font-size:13px">Modelos rápidos:</span><button class="btn btn-sm" data-modelo="dia">🔥 Dia N começou</button><button class="btn btn-sm" data-modelo="treinou">Quem já treinou?</button><button class="btn btn-sm" data-modelo="hora">Que horas vai treinar?</button><button class="btn btn-sm" data-modelo="como">Como vocês estão?</button></div>` : ""}</div>
       ${DA.posts.length ? DA.posts.map(p => { const C = DA.cont[p.id] || {}, prog = Date.parse(p.publicar_em) > agora, reac = Object.entries(C).filter(([k]) => k.startsWith("r:")).map(([k, n]) => `${k.slice(2)} ${int(n)}`).join("  "), vt = (p.opcoes || []).map(o => `${esc(o.t)}: <b>${int(C["v:" + o.id] || 0)}</b>`).join(" · ");
         return `<div class="card da-post"><div class="da-ed-top"><span class="st ${prog ? "off" : "ok"}">${prog ? "Programada " + new Date(p.publicar_em).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }) : "Publicada " + new Date(p.publicar_em).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}</span><small class="muted">${DA_TIPOS[p.tipo]}${p.fixado ? " · 📌 fixada" : ""}${p.notificar ? (p.notificado ? " · aviso enviado" : " · vai avisar no celular") : ""}</small></div>
