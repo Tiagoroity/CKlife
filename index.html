@@ -69,8 +69,8 @@ h1,h2,h3{font-family:var(--disp);letter-spacing:-.025em;line-height:1.02;margin:
 .confia{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:22px;color:var(--muted);font-size:14.5px;font-weight:600}.confia span::before{content:"✓";color:var(--acc);margin-right:7px;font-weight:800}
 /* celular 3D */
 .palco{position:relative;height:min(680px,80vh);perspective:1400px;display:grid;place-items:center}
-.celular{position:relative;width:min(300px,68vw);aspect-ratio:9/19.2;border-radius:46px;transform-style:preserve-3d;transform:rotateY(-18deg) rotateX(8deg) rotateZ(2deg);transition:transform .25s ease-out;will-change:transform}
-.celular .corpo{position:absolute;inset:0;border-radius:46px;background:linear-gradient(145deg,#2a3a33,#0b1410 40%,#1c2a24);box-shadow:0 60px 120px -30px rgba(0,0,0,.8),0 0 0 2px rgba(232,217,174,.35),inset 0 0 0 7px #0a0f0d;transform:translateZ(0)}
+.celular{position:relative;width:min(300px,68vw);aspect-ratio:9/19.2;border-radius:46px;transform-style:preserve-3d;transform:rotateY(-7deg) rotateX(4deg) rotateZ(1deg);transition:transform .25s ease-out;will-change:transform}
+.celular .corpo{position:absolute;inset:0;border-radius:46px;background:linear-gradient(145deg,#2a3a33,#0b1410 40%,#1c2a24);box-shadow:0 50px 70px -40px rgba(0,0,0,.75),0 0 0 2px rgba(232,217,174,.35),inset 0 0 0 7px #0a0f0d;transform:translateZ(0)}
 .celular .tela{position:absolute;inset:9px;border-radius:38px;overflow:hidden;background:#000;transform:translateZ(1px)}
 .celular .tela{background:#0A2A21}
 .celular .tela::before{content:"9:41";position:absolute;top:0;left:0;right:0;height:46px;padding:15px 0 0 26px;font:700 13px/1 var(--body);color:#fff;z-index:2;background:#0A2A21}
@@ -79,7 +79,7 @@ h1,h2,h3{font-family:var(--disp);letter-spacing:-.025em;line-height:1.02;margin:
 .celular .tela img.on{opacity:1}
 .celular .ilha{position:absolute;top:18px;left:50%;width:30%;height:26px;border-radius:20px;background:#000;transform:translateX(-50%) translateZ(2px);z-index:3}
 .celular .reflexo{position:absolute;inset:9px;border-radius:38px;background:linear-gradient(115deg,rgba(255,255,255,.18),transparent 30%,transparent 70%,rgba(255,255,255,.06));transform:translateZ(3px);pointer-events:none;mix-blend-mode:screen}
-.celular .lateral{position:absolute;top:8%;bottom:8%;right:-1px;width:14px;border-radius:0 10px 10px 0;background:linear-gradient(90deg,#1b2622,#3b4b44);transform:rotateY(90deg) translateZ(7px);transform-origin:right}
+.celular .lateral{display:none;position:absolute;top:8%;bottom:8%;right:-1px;width:14px;border-radius:0 10px 10px 0;background:linear-gradient(90deg,#1b2622,#3b4b44);transform:rotateY(90deg) translateZ(7px);transform-origin:right}
 .halo{position:absolute;width:120%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(78,203,134,.35),rgba(201,179,126,.12) 40%,transparent 68%);filter:blur(10px);animation:respira 6s ease-in-out infinite}
 @keyframes respira{50%{transform:scale(1.08);opacity:.8}}
 .flutua{position:absolute;z-index:3;display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:18px;background:rgba(10,40,31,.62);border:1px solid rgba(232,217,174,.28);backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4);box-shadow:0 20px 50px -20px rgba(0,0,0,.7);font-size:14px;line-height:1.3;max-width:240px;animation:boia 7s ease-in-out infinite}
@@ -334,12 +334,12 @@ const io = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting)
 $$(".rv").forEach(el => io.observe(el));
 const calmo = matchMedia("(prefers-reduced-motion: reduce)").matches;
 /* ===== Celular 3D: segue o dedo/mouse e a rolagem; telas trocam sozinhas ===== */
-const cel = $("#celular"), palco = $("#palco"); let alvo = { x: -18, y: 8 }, atual = { x: -18, y: 8 };
-palco.addEventListener("pointermove", e => { const r = palco.getBoundingClientRect(); alvo.x = ((e.clientX - r.left) / r.width - .5) * 40; alvo.y = -((e.clientY - r.top) / r.height - .5) * 24; });
-palco.addEventListener("pointerleave", () => { alvo = { x: -18, y: 8 }; });
+const cel = $("#celular"), palco = $("#palco"); let alvo = { x: -7, y: 4 }, atual = { x: -7, y: 4 };
+palco.addEventListener("pointermove", e => { const r = palco.getBoundingClientRect(); alvo.x = ((e.clientX - r.left) / r.width - .5) * 18; alvo.y = -((e.clientY - r.top) / r.height - .5) * 10; });
+palco.addEventListener("pointerleave", () => { alvo = { x: -7, y: 4 }; });
 (function anima(){ if(!calmo){ const t = performance.now() / 1000, sy = Math.min(1, scrollY / innerHeight);
-  atual.x += (alvo.x + Math.sin(t * .6) * 4 - atual.x) * .06; atual.y += (alvo.y + Math.cos(t * .5) * 2 - atual.y) * .06;
-  cel.style.transform = `rotateY(${atual.x + sy * 25}deg) rotateX(${atual.y - sy * 10}deg) rotateZ(${2 - sy * 2}deg) translateY(${-sy * 40}px)`; } requestAnimationFrame(anima); })();
+  atual.x += (alvo.x + Math.sin(t * .6) * 2 - atual.x) * .06; atual.y += (alvo.y + Math.cos(t * .5) * 1 - atual.y) * .06;
+  cel.style.transform = `rotateY(${atual.x + sy * 7}deg) rotateX(${atual.y - sy * 4}deg) rotateZ(${1 - sy}deg) translateY(${-sy * 30}px)`; } requestAnimationFrame(anima); })();
 const telas = $$("#tela img"); let ti = 0; setInterval(() => { telas[ti].classList.remove("on"); ti = (ti + 1) % telas.length; telas[ti].classList.add("on"); }, 3200);
 /* ===== Cartões com inclinação 3D e brilho ===== */
 $$(".tilt").forEach(c => { c.addEventListener("pointermove", e => { if(e.pointerType === "touch") return; const r = c.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
