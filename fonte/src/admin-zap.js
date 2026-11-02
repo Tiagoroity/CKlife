@@ -49,3 +49,23 @@ function zLiga(){
   });
 }
 { let zT = null; new MutationObserver(() => { clearTimeout(zT); zT = setTimeout(zLiga, 60); }).observe($("adm-main") || document.body, { childList: true, subtree: true }); }
+
+/* ===== Alunas quentes: treinaram 2 vezes ou mais e ainda não pagam o Pro (são as que mais assinam) ===== */
+function zQuentes(){
+  const lim = addD(today(), -14);
+  return DB().users.filter(u => !u.admin && !u.soAdmin && !u.exemplo).map(u => {
+    const T = (u.treinos || []).filter(t => t && t.d), rec = T.filter(t => t.d >= lim).length, s = (typeof PLU !== "undefined" && PLU) ? PLU[u.id] : null;
+    const pagando = s && s.pro && !s.trial && ["kiwify", "apple", "google"].includes(s.provider);
+    return { u, n: T.length, rec, pagando, trial: !!(s && s.trial), ult: T.length ? T.map(t => t.d).sort().pop() : "" };
+  }).filter(x => x.n >= 2 && x.rec >= 1 && !x.pagando).sort((a, b) => b.rec - a.rec || b.n - a.n).slice(0, 12);
+}
+function zQuentesPinta(){
+  const main = $("adm-main"); if(!main || SEC !== "alunos" || $("zq-box")) return;
+  const h = main.querySelector(".head"); if(!h) return;
+  const L = zQuentes();
+  const linha = x => `<div class="zq-row"><span class="zq-n">${x.rec}</span><div class="zq-t"><b>${esc(x.u.nome || x.u.email)}</b><small>${x.n} treinos no total · último ${brD(x.ult)}${x.trial ? " · em teste grátis" : " · gratuito"}</small></div>${zDig(x.u.whats).length >= 10 ? `<button class="btn btn-sm zap-bt" data-zq="${x.u.id}" aria-label="Mandar mensagem no WhatsApp">💬</button>` : ""}</div>`;
+  h.insertAdjacentHTML("afterend", `<div class="card zq-card" id="zq-box"><div class="zq-h"><b>🔥 Alunas quentes</b><small class="muted">Treinaram 2 vezes ou mais (pelo menos 1 nos últimos 14 dias) e ainda não assinam o Pro. São as que mais assinam: chame primeiro.</small></div>
+    ${L.length ? `<div class="zq-lista">${L.map(linha).join("")}</div>` : `<p class="muted" style="margin:6px 0 0">Ainda ninguém nesse grupo. Assim que as alunas fizerem o 2º treino, elas aparecem aqui.</p>`}</div>`);
+  main.querySelectorAll("[data-zq]").forEach(b => b.onclick = () => { const u = DB().users.find(x => x.id === b.dataset.zq); if(u) zAbre(u); });
+}
+{ let zqT = null; new MutationObserver(() => { clearTimeout(zqT); zqT = setTimeout(zQuentesPinta, 80); }).observe($("adm-main") || document.body, { childList: true }); }

@@ -15,6 +15,9 @@ function pxBanner(){ if(pxModoAdm() || document.getElementById("px-ck")) return;
   document.body.appendChild(d);
   document.getElementById("px-sim").onclick = () => { try{ localStorage.setItem(PX_K, "sim"); }catch(e){} d.remove(); pxCarrega(); };
   document.getElementById("px-nao").onclick = () => { try{ localStorage.setItem(PX_K, "nao"); }catch(e){} PX_FILA = []; d.remove(); }; }
+/* veio do site cklife.com.br já com a escolha de cookies (ck=1 aceitou, ck=0 recusou): usa a mesma escolha e não pergunta de novo */
+try{ const u = new URL(location.href), c = u.searchParams.get("ck");
+  if(c === "1" || c === "0"){ if(!localStorage.getItem(PX_K)) localStorage.setItem(PX_K, c === "1" ? "sim" : "nao"); u.searchParams.delete("ck"); history.replaceState(history.state, "", u.pathname + u.search + u.hash); } }catch(e){}
 if(pxOk()) pxCarrega(); else setTimeout(pxBanner, 2500);
 if(NU && NU.cadastrar){ const cad0 = NU.cadastrar; NU.cadastrar = async function(){ const r = await cad0.apply(this, arguments); if(r && !r.erro) pxEvento("CompleteRegistration", { content_name: "Cadastro CK Life", status: true }); return r; }; }
 if(NU && NU.entrar){ const ent0 = NU.entrar; NU.entrar = async function(){ const r = await ent0.apply(this, arguments); if(r && !r.erro) pxEvento("EntrouNoApp", { tipo: "login" }, true); return r; }; }

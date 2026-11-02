@@ -2725,6 +2725,23 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
 .inst-p>span:nth-child(2){flex:1}
 .inst-n{flex:none;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;font-weight:800}
 .inst-p .inst-ic{flex:none;display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--accent-soft);color:var(--accent-strong)}
+
+/* aviso gentil: teste Pro acabando */
+.ta-card{display:grid;gap:8px;padding:16px;border-radius:var(--r,20px);background:linear-gradient(150deg,#0E3D32,#2E7D5A);color:#fff;margin-bottom:12px}
+.ta-card .eyebrow{color:#B9DDB2}
+.ta-card p{margin:0;font-size:15px;line-height:1.45}
+.ta-card p b{color:#fff}
+.ta-card .ta-sub{font-size:13px;opacity:.85}
+.ta-bt{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:4px}
+.ta-bt .btn{background:#F3E6C4;color:#0E3D32;box-shadow:none}
+.ta-bt .link{color:#E6EFE4}
+#v-admin .zq-card{display:grid;gap:10px;margin-bottom:14px;border:1px solid #F1D9A6;background:linear-gradient(180deg,#FFF9EC,#fff)}
+#v-admin .zq-h{display:grid;gap:2px}
+#v-admin .zq-lista{display:grid;gap:6px}
+#v-admin .zq-row{display:flex;align-items:center;gap:12px;padding:8px 10px;border-radius:12px;background:#fff;border:1px solid var(--line)}
+#v-admin .zq-n{flex:none;display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:#FCE7C3;color:#8A5A12;font-weight:800}
+#v-admin .zq-t{flex:1;min-width:0;display:grid}
+#v-admin .zq-t small{color:var(--muted);font-size:12.5px}
 </style>
 
 <!-- Entrar / criar conta -->
@@ -9006,7 +9023,7 @@ const abrirPerfilEq = abrirPerfil; abrirPerfil = async function(u){
    Quem deixa o CK Life aberto (ou instalado na tela inicial) fica com a versão antiga até recarregar.
    O app confere a versão publicada ao abrir, ao voltar do segundo plano e a cada 5 minutos.
    Se houver versão nova, mostra a faixa "ATUALIZAR": um toque e pronto. Nunca aparece no meio do treino. */
-const CK_VER = "20261101205421";
+const CK_VER = "20261101210923";
 let CK_VER_NOVA = null;
 const ATU_K = "ck_atu";
 const atuTentou = () => { try{ return JSON.parse(localStorage.getItem(ATU_K) || "null"); }catch(e){ return null; } };
@@ -10466,6 +10483,45 @@ rPerfil = function(){
 const rInicioInst = rInicio;
 rInicio = function(){ const r = rInicioInst.apply(this, arguments); setTimeout(instAgenda, 800); return r; };
 
+/* ===================== AVISO GENTIL: TESTE PRO ACABANDO =====================
+   Uma vez só, quando faltam 2 ou 3 dias do teste grátis: mostra o que ela já fez no CK Life e o convite para
+   continuar no Pro. Sem pressão: ela pode tocar em "Agora não" e segue no gratuito sem perder nada.
+   Usa os planos e a tela de assinatura que já existem (paywall). Não cria cobrança nova. */
+const TA_K = "ck_teste_aviso";
+function taResumo(){
+  const T = ME.treinos || [], min = T.reduce((a, t) => a + (+t.min || 0), 0), dias = new Set(T.map(t => t.d)).size;
+  const conq = ME.conq ? Object.keys(ME.conq).length : 0;
+  return { treinos: T.length, min, dias, conq };
+}
+function taCard(){
+  const d = typeof ENT !== "undefined" && ENT.d; if(!d || !d.trial || d.dias_restantes == null) return "";
+  const falta = +d.dias_restantes; if(falta < 2 || falta > 3) return "";
+  let visto = null; try{ visto = localStorage.getItem(TA_K); }catch(e){}
+  if(visto || (ME && ME.testeAviso)) return "";
+  const r = taResumo();
+  const feito = r.treinos
+    ? `Nesses dias você fez <b>${r.treinos} ${r.treinos === 1 ? "treino" : "treinos"}</b>${r.min ? ` (${r.min} min)` : ""}${r.conq ? ` e ganhou <b>${r.conq} ${r.conq === 1 ? "conquista" : "conquistas"}</b>` : ""}. Que orgulho! 💚`
+    : "Ainda dá tempo de aproveitar tudo: que tal um treino de 5 minutos hoje?";
+  return `<div class="ta-card" id="ta-card"><span class="eyebrow"><i class='ckc' aria-hidden='true'></i> Seu teste Pro termina em ${falta} dias</span>
+    <p>${feito}</p>
+    <p class="ta-sub">Se quiser continuar com tudo liberado, é só escolher um plano. Se preferir, você segue no gratuito e não perde nada: conta, histórico, amigas e conquistas continuam.</p>
+    <div class="ta-bt"><button class="btn btn-accent btn-sm" id="ta-pro">Ver planos Pro</button><button class="link" id="ta-nao">Agora não</button></div></div>`;
+}
+const taVisto = () => { try{ localStorage.setItem(TA_K, today()); }catch(e){} try{ if(ME && !ME.testeAviso){ ME.testeAviso = today(); save(); } }catch(e){} };
+const rInicioTA = rInicio;
+rInicio = function(){
+  const r = rInicioTA.apply(this, arguments);
+  try{
+    const h = taCard(); if(!h || $("ta-card")) return r;
+    const alvo = document.querySelector("#t-inicio .pl-bloco") || document.querySelector("#t-inicio .xe-dia"); if(!alvo) return r;
+    alvo.insertAdjacentHTML(alvo.classList.contains("pl-bloco") ? "afterend" : "afterbegin", h);
+    $("ta-pro").onclick = () => { taVisto(); try{ registraEvento("teste_aviso_clicou", {}); }catch(e){} paywall("teste_dia5"); };
+    $("ta-nao").onclick = () => { taVisto(); const c = $("ta-card"); if(c) c.remove(); };
+    try{ registraEvento("teste_aviso_visto", {}); }catch(e){}
+  }catch(e){ console.warn(e); }
+  return r;
+};
+
 /* ===================== PIXEL DA META (medir anúncios) =====================
    Só funciona se a pessoa aceitar os cookies (LGPD). Nunca no painel do administrador.
    Eventos: PageView (abriu o app), CompleteRegistration (fez cadastro), EntrouNoApp (fez login / abriu já logada).
@@ -10483,6 +10539,9 @@ function pxBanner(){ if(pxModoAdm() || document.getElementById("px-ck")) return;
   document.body.appendChild(d);
   document.getElementById("px-sim").onclick = () => { try{ localStorage.setItem(PX_K, "sim"); }catch(e){} d.remove(); pxCarrega(); };
   document.getElementById("px-nao").onclick = () => { try{ localStorage.setItem(PX_K, "nao"); }catch(e){} PX_FILA = []; d.remove(); }; }
+/* veio do site cklife.com.br já com a escolha de cookies (ck=1 aceitou, ck=0 recusou): usa a mesma escolha e não pergunta de novo */
+try{ const u = new URL(location.href), c = u.searchParams.get("ck");
+  if(c === "1" || c === "0"){ if(!localStorage.getItem(PX_K)) localStorage.setItem(PX_K, c === "1" ? "sim" : "nao"); u.searchParams.delete("ck"); history.replaceState(history.state, "", u.pathname + u.search + u.hash); } }catch(e){}
 if(pxOk()) pxCarrega(); else setTimeout(pxBanner, 2500);
 if(NU && NU.cadastrar){ const cad0 = NU.cadastrar; NU.cadastrar = async function(){ const r = await cad0.apply(this, arguments); if(r && !r.erro) pxEvento("CompleteRegistration", { content_name: "Cadastro CK Life", status: true }); return r; }; }
 if(NU && NU.entrar){ const ent0 = NU.entrar; NU.entrar = async function(){ const r = await ent0.apply(this, arguments); if(r && !r.erro) pxEvento("EntrouNoApp", { tipo: "login" }, true); return r; }; }
@@ -14588,6 +14647,26 @@ function zLiga(){
   });
 }
 { let zT = null; new MutationObserver(() => { clearTimeout(zT); zT = setTimeout(zLiga, 60); }).observe($("adm-main") || document.body, { childList: true, subtree: true }); }
+
+/* ===== Alunas quentes: treinaram 2 vezes ou mais e ainda não pagam o Pro (são as que mais assinam) ===== */
+function zQuentes(){
+  const lim = addD(today(), -14);
+  return DB().users.filter(u => !u.admin && !u.soAdmin && !u.exemplo).map(u => {
+    const T = (u.treinos || []).filter(t => t && t.d), rec = T.filter(t => t.d >= lim).length, s = (typeof PLU !== "undefined" && PLU) ? PLU[u.id] : null;
+    const pagando = s && s.pro && !s.trial && ["kiwify", "apple", "google"].includes(s.provider);
+    return { u, n: T.length, rec, pagando, trial: !!(s && s.trial), ult: T.length ? T.map(t => t.d).sort().pop() : "" };
+  }).filter(x => x.n >= 2 && x.rec >= 1 && !x.pagando).sort((a, b) => b.rec - a.rec || b.n - a.n).slice(0, 12);
+}
+function zQuentesPinta(){
+  const main = $("adm-main"); if(!main || SEC !== "alunos" || $("zq-box")) return;
+  const h = main.querySelector(".head"); if(!h) return;
+  const L = zQuentes();
+  const linha = x => `<div class="zq-row"><span class="zq-n">${x.rec}</span><div class="zq-t"><b>${esc(x.u.nome || x.u.email)}</b><small>${x.n} treinos no total · último ${brD(x.ult)}${x.trial ? " · em teste grátis" : " · gratuito"}</small></div>${zDig(x.u.whats).length >= 10 ? `<button class="btn btn-sm zap-bt" data-zq="${x.u.id}" aria-label="Mandar mensagem no WhatsApp">💬</button>` : ""}</div>`;
+  h.insertAdjacentHTML("afterend", `<div class="card zq-card" id="zq-box"><div class="zq-h"><b>🔥 Alunas quentes</b><small class="muted">Treinaram 2 vezes ou mais (pelo menos 1 nos últimos 14 dias) e ainda não assinam o Pro. São as que mais assinam: chame primeiro.</small></div>
+    ${L.length ? `<div class="zq-lista">${L.map(linha).join("")}</div>` : `<p class="muted" style="margin:6px 0 0">Ainda ninguém nesse grupo. Assim que as alunas fizerem o 2º treino, elas aparecem aqui.</p>`}</div>`);
+  main.querySelectorAll("[data-zq]").forEach(b => b.onclick = () => { const u = DB().users.find(x => x.id === b.dataset.zq); if(u) zAbre(u); });
+}
+{ let zqT = null; new MutationObserver(() => { clearTimeout(zqT); zqT = setTimeout(zQuentesPinta, 80); }).observe($("adm-main") || document.body, { childList: true }); }
 
 window.ADMIN = { abrir };
 })();
