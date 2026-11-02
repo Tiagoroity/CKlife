@@ -176,7 +176,13 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:20px;justify-content:space-between;
 @media (max-width:560px){body{font-size:16px}.eyebrow{font-size:10.5px;letter-spacing:.1em;padding:7px 12px}.nav .wrap{height:64px}.nav .btn-sm{display:none}.hero{padding-top:100px}.palco{height:540px}.flutua{font-size:13px;padding:10px 12px;max-width:200px}.f1{top:4%}.f2{top:46%}.f3{bottom:4%}
   .card{padding:22px;min-height:0}.card .img{margin:auto -22px -22px}.carrossel{height:520px}.anel{width:200px;height:425px}.wrap{width:calc(100% - 32px)}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
+a,button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.cta.indo{pointer-events:none;opacity:.85}
+.cta.indo::before{content:"";width:16px;height:16px;border-radius:50%;border:2.5px solid currentColor;border-right-color:transparent;display:inline-block;margin-right:8px;vertical-align:-3px;animation:gira .7s linear infinite}
+@keyframes gira{to{transform:rotate(360deg)}}
 </style>
+<link rel="preconnect" href="https://app.cklife.com.br">
+<link rel="prefetch" href="https://app.cklife.com.br/" as="document">
 </head>
 <body>
 <canvas id="luz" aria-hidden="true"></canvas><div class="grao" aria-hidden="true"></div>
@@ -323,7 +329,13 @@ let ck = null; try{ ck = localStorage.getItem(CK); }catch(e){}
 if(ck === "sim") pixel(); else if(ck !== "nao") setTimeout(() => $("#cookies").classList.add("on"), 1800);
 $("#ck-sim").onclick = () => { try{ localStorage.setItem(CK, "sim"); }catch(e){} $("#cookies").classList.remove("on"); pixel(); atualizaLinks(); };
 $("#ck-nao").onclick = () => { try{ localStorage.setItem(CK, "nao"); }catch(e){} $("#cookies").classList.remove("on"); atualizaLinks(); };
-$$(".cta").forEach(a => a.addEventListener("click", () => ev("Lead", { content_name: "Começar grátis", origem: a.dataset.cta })));
+$$(".cta").forEach(a => a.addEventListener("click", e => {
+  ev("Lead", { content_name: "Começar grátis", origem: a.dataset.cta });
+  if(!a.href || a.getAttribute("href") === "#"){ atualizaLinks(); e.preventDefault(); location.href = a.href; }
+  a.dataset.txt = a.dataset.txt || a.textContent; a.textContent = "ABRINDO O APP…"; a.classList.add("indo");   // resposta na hora: não precisa tocar de novo
+  setTimeout(() => { a.classList.remove("indo"); a.textContent = a.dataset.txt; }, 8000);
+}));
+addEventListener("pageshow", () => $$(".cta.indo").forEach(a => { a.classList.remove("indo"); if(a.dataset.txt) a.textContent = a.dataset.txt; }));
 $$(".checkout").forEach(a => a.addEventListener("click", () => ev("InitiateCheckout", { content_name: a.dataset.plano, value: +a.dataset.valor, currency: "BRL" })));
 let viuPlanos = false; new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting && !viuPlanos){ viuPlanos = true; ev("ViewContent", { content_name: "Planos" }); } }), { threshold: .3 }).observe($("#planos"));
 /* ===== Topo, barra fixa e revelar ao rolar ===== */
