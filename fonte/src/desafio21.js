@@ -142,6 +142,7 @@ function d21Pinta(){
   const dentro = d21Insc(), aba = dentro ? D21.aba : "conhecer", sc = box.querySelector(".d21-body"), y = sc && sc.dataset.aba === aba ? sc.scrollTop : 0;
   box.innerHTML = `<header class="d21-top"><button class="d21-volta" id="d21-x">${ic("back", 16)} CK Life</button><span class="d21-marca">🔥 CK 21 DIAS JUNTAS</span>${dentro ? `<button class="d21-mais" id="d21-op" aria-label="Opções do desafio">${ic("gear", 18)}</button>` : `<span class="d21-ed">#${d21Pad(e.numero)}</span>`}</header>
     <main class="d21-body" data-aba="${aba}">${aba === "conhecer" ? d21Conhecer() : aba === "comunidade" ? d21ComunidadeHTML() : aba === "jornada" ? d21JornadaHTML() : d21HojeHTML()}</main>
+    ${aba === "conhecer" ? `<div class="d21-rodape"><button class="d21-bt" id="d21-entrar">QUERO PARTICIPAR</button></div>` : ""}
     ${dentro ? `<nav class="d21-nav">${[["hoje", "flame", "Hoje"], ["comunidade", "people", "Comunidade"], ["jornada", "trophy", "Jornada"]].map(([k, i, t]) => `<button data-d21tab="${k}" aria-current="${aba === k}">${ic(i, 20)}<span>${t}</span></button>`).join("")}</nav>` : ""}`;
   const b2 = box.querySelector(".d21-body"); if(b2 && y) b2.scrollTop = y;
   $("d21-x").onclick = d21Fechar;
@@ -189,8 +190,7 @@ function d21Conhecer(){
       <li><i>💬</i><span><b>Comunidade com a Micaela.</b> Recados, enquetes e check-ins todo dia. Você reage e vota.</span></li>
       <li><i>💧</i><span><b>Água e receita do dia</b>, junto com o que você já usa no CK Life.</span></li></ul></div>
     <div class="d21-card"><h3>Escolha seu modo</h3><div class="d21-modos">${Object.entries(D21_MODOS).map(([k, [n, s]]) => `<button class="d21-modo" data-d21modo="${k}" aria-pressed="${D21.modoEscolha === k}"><b>${n}</b><small>${s}</small>${k === rec ? `<em>recomendado</em>` : ""}</button>`).join("")}</div></div>
-    <div class="d21-card d21-regras"><h3>Combinados da turma</h3><p>21 dias juntas, não 21 dias perfeitos. Sem comparação de corpos. Respeite seus limites: se sentir dor, pare. Não prometemos quilos perdidos: prometemos constância.</p></div>
-    <div class="d21-cta-fixo"><button class="d21-bt" id="d21-entrar">QUERO PARTICIPAR</button></div>`;
+    <div class="d21-card d21-regras"><h3>Combinados da turma</h3><p>21 dias juntas, não 21 dias perfeitos. Sem comparação de corpos. Respeite seus limites: se sentir dor, pare. Não prometemos quilos perdidos: prometemos constância.</p></div>`;
 }
 function d21LigaConhecer(){
   document.querySelectorAll("[data-d21modo]").forEach(b => b.onclick = () => { D21.modoEscolha = b.dataset.d21modo; document.querySelectorAll("[data-d21modo]").forEach(x => x.setAttribute("aria-pressed", x === b)); });
