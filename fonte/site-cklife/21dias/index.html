@@ -48,7 +48,11 @@ h1,h2,h3{font-family:var(--disp);letter-spacing:-.02em;line-height:1.05;margin:0
 .cookies{position:fixed;left:12px;right:12px;bottom:calc(92px + env(safe-area-inset-bottom,0px));z-index:7;max-width:560px;margin:0 auto;padding:16px;border-radius:18px;background:rgba(6,35,28,.97);border:1px solid rgba(232,217,174,.3);font-size:14px;display:none}
 .cookies.on{display:block}.cookies p{margin:0 0 10px}.cookies div{display:flex;gap:8px}.cookies button{flex:1;min-height:42px;border-radius:999px;border:1px solid rgba(255,255,255,.2);background:transparent;color:var(--ink);font-weight:700}.cookies #ck-sim{background:var(--champ);color:#0B2F25;border:0}
 @media (prefers-reduced-motion:reduce){*{animation:none!important}}
+a,button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+#cta.indo{pointer-events:none;opacity:.85}
 </style>
+<link rel="preconnect" href="https://app.cklife.com.br">
+<link rel="prefetch" href="https://app.cklife.com.br/" as="document">
 </head>
 <body>
 <div class="wrap">
@@ -101,6 +105,8 @@ fetch(SUPA + "/rest/v1/rpc/d21_publico", { method: "POST", headers: { apikey: AN
       $("#quando").innerHTML = '<span class="eye">COMEÇAMOS EM</span><div class="rel" style="margin-top:8px"><b>' + p(d) + '</b><small>DIAS</small><b>' + p(h) + '</b><small>HORAS</small><b>' + p(m) + '</b><small>MIN</small></div><p class="frase" style="margin-top:8px;font-style:normal">' + br(e.inicio) + ' a ' + br(e.fim) + '</p>'; };
     pinta(); setInterval(pinta, 20000);
   }).catch(() => {});
+
+;(function(){ var a = document.getElementById("cta"); if(!a) return; a.addEventListener("click", function(){ a.dataset.txt = a.dataset.txt || a.textContent; a.textContent = "ABRINDO O APP…"; a.classList.add("indo"); setTimeout(function(){ a.classList.remove("indo"); a.textContent = a.dataset.txt; }, 8000); }); addEventListener("pageshow", function(){ if(a.dataset.txt){ a.classList.remove("indo"); a.textContent = a.dataset.txt; } }); })();
 </script>
 </body>
 </html>

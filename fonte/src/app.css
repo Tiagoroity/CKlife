@@ -3030,3 +3030,5 @@ body.pp-on .ins-toast,body.pp-on #ck-inst,body.pp-on .coach-toast{display:none!i
 .ent-abre .ent-eb{margin-top:auto;padding-top:34vh}
 .ent-abre .ent-bt{margin-top:8px}
 .ent-abre .ent-bg{object-position:center 8%}
+/* toque único: sem a espera do "toque duplo para zoom" do celular */
+a,button,[role=button],label,input,select,.chip,.opt{touch-action:manipulation}

@@ -76,7 +76,7 @@ async function inscrevePush(silencioso){
   if(!silencioso){ SOM.check(); toast("Pronto! Você vai receber avisos no celular 💚"); } return true;
 }
 async function ativarNotificacoes(){
-  if(ehIOS() && !pwaInstalado()) return sheet("Notificações no iPhone", `<p>No iPhone, os avisos funcionam com o CK Life instalado na tela de início:</p><ol class="hint" style="line-height:1.8"><li>Toque em <b>Compartilhar</b> (quadrado com seta) no Safari.</li><li>Escolha <b>Adicionar à Tela de Início</b>.</li><li>Abra o CK Life pelo ícone e ative os avisos aqui.</li></ol>`);
+  if(ehIOS() && !pwaInstalado()) return sheet("Notificações no iPhone", `<p>No iPhone, os avisos funcionam com o CK Life instalado na tela de início:</p><ol class="hint" style="line-height:1.8"><li>No Safari, toque nos <b>três pontinhos ⋯</b> no canto de baixo, à direita.</li><li>Toque em <b>Compartilhar</b>.</li><li>Escolha <b>Adicionar à Tela de Início</b> e toque em <b>Adicionar</b>.</li><li>Abra o CK Life pelo ícone e ative os avisos aqui.</li></ol>`);
   if(!PUSH_OK()) return toast("Este navegador não recebe notificações. Use Chrome ou o app instalado.");
   if(Notification.permission === "denied") return toast("Os avisos estão bloqueados. Libere nas configurações do navegador.");
   const p = await Notification.requestPermission(); if(p !== "granted") return toast("Tudo bem! Você pode ativar depois.");

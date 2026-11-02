@@ -84,8 +84,8 @@ function instInstrucoes(){
   } else if(ehIOS()){
     tit = "Instale o CK Life no seu iPhone";
     h = `${ehSafariIOS() ? "" : `<p class="pw-sub" style="margin:0">Se não encontrar a opção, abra <b>app.cklife.com.br</b> no <b>Safari</b> e siga os passos.</p>`}
-      <ol class="inst-lista">${passo(1, `Toque no botão <b>Compartilhar</b>`, `<span class="inst-ic">${ic("share", 18, 2)}</span>`)}${passo(2, `Escolha <b>Adicionar à Tela de Início</b>`, `<span class="inst-ic">${ic("plus", 18, 2)}</span>`)}${passo(3, `Toque em <b>Adicionar</b>`)}</ol>
-      <p class="hint" style="margin:0">${ehSafariIOS() ? "O botão Compartilhar fica na barra de baixo do Safari (no iPad, em cima)." : "No Chrome do iPhone, o Compartilhar fica no canto de cima, ao lado do endereço."} Depois, abra o CK Life pelo ícone na tela de início.</p>`;
+      <ol class="inst-lista">${passo(1, `Toque nos <b>três pontinhos ⋯</b> no canto de baixo, à direita`)}${passo(2, `Toque em <b>Compartilhar</b>`, `<span class="inst-ic">${ic("share", 18, 2)}</span>`)}${passo(3, `Escolha <b>Adicionar à Tela de Início</b>`, `<span class="inst-ic">${ic("plus", 18, 2)}</span>`)}${passo(4, `Toque em <b>Adicionar</b>`)}</ol>
+      <p class="hint" style="margin:0">${ehSafariIOS() ? "Se o Compartilhar já aparecer na barra de baixo, pode tocar direto nele." : "No Chrome do iPhone, o Compartilhar fica no canto de cima, ao lado do endereço."} Depois, abra o CK Life pelo ícone na tela de início.</p>`;
   } else {
     tit = "Instale o CK Life no seu celular";
     h = ehSamsung()
