@@ -63,3 +63,50 @@ begin
 end $$;
 revoke all on function public.admin_aviso_nova_aluna(boolean) from public, anon;
 grant execute on function public.admin_aviso_nova_aluna(boolean) to authenticated;
+
+-- =====================================================================
+-- PARTE 2 · Falhas das notificações explicadas no painel
+-- Antes: celular que desinstalou o app ou trocou de aparelho contava como
+-- "falha" (o serviço da Apple/Google responde "esse aparelho não existe mais").
+-- Agora: isso aparece separado como "aparelhos antigos removidos" e o painel
+-- mostra o motivo das falhas de verdade.
+-- =====================================================================
+create table if not exists public.notif_resultados (
+  campanha uuid primary key references public.notif_campanhas(id) on delete cascade,
+  expirados int not null default 0,
+  motivos jsonb not null default '{}'::jsonb,
+  atualizado timestamptz not null default now()
+);
+alter table public.notif_resultados enable row level security;
+drop policy if exists nr_ler on public.notif_resultados;
+create policy nr_ler on public.notif_resultados for select to authenticated using (admin_ve('notificacoes'));
+
+create or replace function public.push_resultado2(p_id uuid, p_token text, p_enviados int, p_falhas int, p_expirados int default 0, p_motivos jsonb default '{}'::jsonb) returns void
+language plpgsql security definer set search_path = public as $$
+declare f push_fila; k text; v jsonb; m jsonb := '{}'::jsonb;
+begin
+  update push_fila set resultado = now() where id = p_id and token = p_token and usado > now() - interval '15 minutes' and resultado is null returning * into f;   -- uma vez só
+  if f.id is null then return; end if;
+  perform set_config('ck.sistema', '1', true);
+  if f.campanha is not null then
+    update notif_campanhas set enviados = enviados + greatest(0, least(p_enviados, 100000)), falhas = falhas + greatest(0, least(p_falhas, 100000)) where id = f.campanha;
+    -- motivos: só códigos curtos e números (nada vindo de fora é guardado como texto livre)
+    if jsonb_typeof(p_motivos) = 'object' then
+      for k, v in select * from jsonb_each(p_motivos) loop
+        if k ~ '^[a-z0-9_]{1,12}$' and jsonb_typeof(v) = 'number' then m := m || jsonb_build_object(k, greatest(0, least(v::int, 100000))); end if;
+      end loop;
+    end if;
+    insert into notif_resultados (campanha, expirados, motivos) values (f.campanha, greatest(0, least(coalesce(p_expirados, 0), 100000)), m)
+    on conflict (campanha) do update set expirados = notif_resultados.expirados + excluded.expirados,
+      motivos = (select coalesce(jsonb_object_agg(key, val), '{}'::jsonb) from (select key, sum(value::int) val from (select * from jsonb_each(notif_resultados.motivos) union all select * from jsonb_each(excluded.motivos)) x group by key) y),
+      atualizado = now();
+  end if;
+  if f.lembrete_envio is not null then
+    update lembretes_envios set status = case when p_enviados > 0 then 'enviado' else 'falhou' end where id = f.lembrete_envio;
+  end if;
+  if f.coach_envio is not null then
+    update coach_envios set push_status = case when p_enviados > 0 then 'enviado' else 'falhou' end where id = f.coach_envio;
+  end if;
+  perform set_config('ck.sistema', '0', true);
+end $$;
+grant execute on function public.push_resultado2(uuid, text, int, int, int, jsonb) to anon, authenticated;

@@ -17,17 +17,24 @@ module.exports = async (req, res) => {
     const r = await rpc("push_pegar", { p_id: b.id, p_token: b.token }); const j = r.ok ? await r.json() : null;
     if (!j || !j.subs) return res.status(200).json({ ok: true, enviados: 0 });
     webpush.setVapidDetails("mailto:assessoriaroity@gmail.com", VAPID_PUBLIC, priv);
-    let n = 0, falhas = 0;
+    let n = 0, falhas = 0, expirados = 0; const motivos = {};
     const lista = j.subs || [];
     // envia em blocos de 50 para não estourar a função em campanhas grandes
     for (let i = 0; i < lista.length; i += 50) {
       await Promise.all(lista.slice(i, i + 50).map(async s => {
         try { await webpush.sendNotification(s, JSON.stringify(j.payload), { TTL: 6 * 3600, urgency: j.payload && j.payload.cid ? "normal" : "high", topic: String((j.payload && j.payload.tag) || "ck").replace(/[^A-Za-z0-9_-]/g, "").slice(0, 32) || undefined }); n++; }
-        catch (e) { falhas++; if (e && (e.statusCode === 404 || e.statusCode === 410)) await rpc("push_expirou", { p_id: b.id, p_token: b.token, p_endpoint: s.endpoint }); else console.log("push erro", e && e.statusCode); }
+        catch (e) {
+          const c = e && e.statusCode;
+          // 404/410 = o celular não tem mais esse app/inscrição: remove e conta como "aparelho antigo", não como falha
+          if (c === 404 || c === 410) { expirados++; await rpc("push_expirou", { p_id: b.id, p_token: b.token, p_endpoint: s.endpoint }); }
+          else { falhas++; const k = c ? "c" + c : "rede"; motivos[k] = (motivos[k] || 0) + 1; console.log("push erro", c, e && e.body ? String(e.body).slice(0, 200) : ""); }
+        }
       }));
     }
     // informa ao banco quantos o serviço de push aceitou (sem inventar "entregues")
-    await rpc("push_resultado", { p_id: b.id, p_token: b.token, p_enviados: n, p_falhas: falhas }).catch(() => {});
+    // banco novo: separa aparelhos antigos e guarda o motivo; banco antigo: mesma conta de antes
+    const r2 = await rpc("push_resultado2", { p_id: b.id, p_token: b.token, p_enviados: n, p_falhas: falhas, p_expirados: expirados, p_motivos: motivos }).catch(() => null);
+    if (!r2 || !r2.ok) await rpc("push_resultado", { p_id: b.id, p_token: b.token, p_enviados: n, p_falhas: falhas + expirados }).catch(() => {});
     return res.status(200).json({ ok: true, enviados: n });
   } catch (e) { console.log("Erro:", e && e.message); return res.status(500).json({ ok: false }); }
 };

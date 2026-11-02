@@ -9249,7 +9249,7 @@ const abrirPerfilEq = abrirPerfil; abrirPerfil = async function(u){
    Quem deixa o CK Life aberto (ou instalado na tela inicial) fica com a versão antiga até recarregar.
    O app confere a versão publicada ao abrir, ao voltar do segundo plano e a cada 5 minutos.
    Se houver versão nova, mostra a faixa "ATUALIZAR": um toque e pronto. Nunca aparece no meio do treino. */
-const CK_VER = "20261102185530";
+const CK_VER = "20261102185910";
 let CK_VER_NOVA = null;
 const ATU_K = "ck_atu";
 const atuTentou = () => { try{ return JSON.parse(localStorage.getItem(ATU_K) || "null"); }catch(e){ return null; } };
@@ -14551,6 +14551,12 @@ VIEWS.monetizacao = vMonetizacao; VIEWS.verificacoes = vVerificacoes; VIEWS.exer
    Tudo é conferido no banco (admin_pode('notificacoes')); números vêm do envio real, nada é estimado. */
 AIC.notificacoes = '<path d="M6 8a6 6 0 1 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10 21h4"/><path d="M19.5 3.5 21 2M21 7h1.5"/>';
 SECOES.push(["notificacoes", "Central de Notificações"]);
+/* explica em português o que aconteceu com quem não recebeu */
+const NT_MOT = { c400: "pedido recusado", c401: "chave do envio", c403: "chave do envio recusada", c413: "aviso grande demais", c429: "muitos envios de uma vez", c500: "serviço da Apple/Google fora", c502: "serviço da Apple/Google fora", c503: "serviço da Apple/Google fora", rede: "sem conexão com o serviço" };
+function ntResTx(n){ const r = n._res; if(!r) return ""; const p = [];
+  if(r.expirados) p.push(`${int(r.expirados)} aparelho${r.expirados > 1 ? "s" : ""} antigo${r.expirados > 1 ? "s" : ""} (app apagado, celular trocado ou aviso desligado) foi${r.expirados > 1 ? "ram" : ""} tirado${r.expirados > 1 ? "s" : ""} da lista. Não é erro.`);
+  const m = Object.entries(r.motivos || {}); if(m.length) p.push("Falhas: " + m.map(([k, v]) => `${int(v)} · ${NT_MOT[k] || k}`).join(", ") + ".");
+  return p.length ? `<small class="muted" style="display:block;margin-top:4px">${esc(p.join(" "))}</small>` : ""; }
 const NT_ST = { rascunho: ["Rascunho", "off"], agendada: ["Agendada", "warn"], enviando: ["Enviando", "warn"], enviada: ["Enviada", "ok"], cancelada: ["Cancelada", "off"], erro: ["Com erro", "bad"] };
 const NT_PUB = [["todas", "Todas as usuárias"], ["pro", "Assinantes Pro (pagantes)"], ["trial", "Em teste grátis do Pro"], ["free", "Plano grátis"], ["ativas", "Ativas nos últimos X dias"], ["inativas", "Sem abrir o app há X dias"], ["sem_treino", "Sem treinar há X dias"], ["novas", "Cadastradas nos últimos X dias"], ["grupo", "Membros de um grupo"], ["cidade", "De uma cidade"], ["especificas", "Pessoas específicas (e-mails)"]];
 const NT_ACAO = [["", "Início do app"], ["/?ir=treinar", "Treinos"], ["/?ir=dieta", "Nutrição"], ["/?ir=juntas", "Comunidade"], ["/?ir=explorar", "Explorar"], ["/?ir=perfil", "Perfil"]];
@@ -14572,6 +14578,8 @@ async function vNotificacoes(){
   try{ [L, R] = await Promise.all([sq(SB2().from("notif_campanhas").select("*").order("criado", { ascending: false }).limit(200)), SB2().rpc("admin_painel_resumo").then(r => r.data).catch(() => null)]); }
   catch(e){ return $("nt-b").innerHTML = semBanco(e).replace("seguranca.sql", "central.sql"); }
   try{ cfg = await (await fetch("/api/push")).json(); }catch(e){}
+  /* resultado detalhado (aparelhos antigos removidos e motivo das falhas); sem o SQL novo, fica como antes */
+  try{ const rr = await SB2().from("notif_resultados").select("*"); if(!rr.error) (rr.data || []).forEach(x => { const n = L.find(c => c.id === x.campanha); if(n) n._res = x; }); }catch(e){}
   NT_CACHE = L; if(SEC !== "notificacoes") return;
   const mes = L.filter(n => n.enviado_em && new Date(n.enviado_em) > new Date(Date.now() - 30 * 864e5));
   $("nt-kpi").innerHTML = kpi("Enviadas em 30 dias", int(mes.length), `${int(mes.reduce((s, n) => s + (n.enviados || 0), 0))} entregas ao serviço de push`, "notificacoes", 1)
@@ -14585,8 +14593,8 @@ async function vNotificacoes(){
   $("nt-b").innerHTML = (alertas.length ? `<div class="msg msg-warn">${alertas.map(esc).join("<br>")}</div>` : "") + (V.length ? `<div class="nt-list">${V.map(n => { const [st, k] = NT_ST[n.status] || [n.status, "off"]; return `<div class="nt-row">
       <div class="nt-main"><div class="nt-top"><span class="st ${k}">${st}</span><small class="muted">${n.status === "agendada" ? "Sai em " + dtH(n.enviar_em) : n.enviado_em ? "Enviada em " + dtH(n.enviado_em) : "Criada em " + dtH(n.criado)}</small></div>
         <b>${esc(n.titulo)}</b><p>${esc(n.mensagem)}</p><small class="muted">${aic("alunos", 13)} ${esc(pubTxt(n.publico))} · ${esc(destinoTxt(n.link))}</small>
-        ${n.erro ? `<small class="nt-err">${esc(n.erro)}</small>` : ""}</div>
-      ${n.alvo != null ? `<div class="nt-nums"><span><b class="num">${int(n.alvo)}</b>público</span><span><b class="num">${int(n.inscritos || 0)}</b>com aviso</span><span><b class="num">${int(n.enviados)}</b>enviadas</span><span><b class="num">${int(n.recebidos)}</b>recebidas</span><span><b class="num">${int(n.cliques)}</b>toques</span>${n.falhas ? `<span class="bad"><b class="num">${int(n.falhas)}</b>falhas</span>` : ""}</div>` : ""}
+        ${n.erro ? `<small class="nt-err">${esc(n.erro)}</small>` : ""}${ntResTx(n)}</div>
+      ${n.alvo != null ? `<div class="nt-nums"><span><b class="num">${int(n.alvo)}</b>público</span><span><b class="num">${int(n.inscritos || 0)}</b>com aviso</span><span><b class="num">${int(n.enviados)}</b>enviadas</span><span><b class="num">${int(n.recebidos)}</b>recebidas</span><span><b class="num">${int(n.cliques)}</b>toques</span>${n.falhas ? `<span class="bad"><b class="num">${int(n.falhas)}</b>falhas</span>` : ""}${n._res && n._res.expirados ? `<span><b class="num">${int(n._res.expirados)}</b>antigos</span>` : ""}</div>` : ""}
       <div class="acts needs-edit">${["rascunho", "agendada"].includes(n.status) ? `<button class="btn btn-accent btn-sm" data-go="${n.id}">Enviar agora</button><button class="btn btn-line btn-sm" data-ed="${n.id}">Editar</button><button class="btn btn-line btn-sm" data-cc="${n.id}">Cancelar</button>` : `<button class="btn btn-line btn-sm" data-dup="${n.id}">Usar como modelo</button>`}</div></div>`; }).join("")}</div>`
     : `<div class="card adm-vazio"><span>${aic("notificacoes", 28)}</span><b>${NTF === "todas" ? "Nenhuma notificação ainda" : "Nada por aqui"}</b><p class="muted">Crie um aviso para todas as alunas ou para um público específico.</p></div>`);
   const ach = id => L.find(n => n.id === id);
