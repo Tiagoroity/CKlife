@@ -95,7 +95,7 @@ function d21Jornada(){
 function d21Medalhas(){
   const J = d21Jornada();
   return [["primeiro", "🏅", "Primeiro passo", J.total >= 1], ["d3", "🔥", "3 dias", J.total >= 3], ["d7", "💪", "7 dias", J.total >= 7], ["planob", "💚", "Plano B", J.planob >= 1],
-    ["voltei", "🔄", "Eu voltei", J.voltou], ["d14", "🏆", "14 dias", J.total >= 14], ["d21", "👑", "21 dias", J.total >= 21], ["fim", "🎉", "Desafio concluído", J.feitos.has(21)]];
+    ["voltei", "🔄", "Eu voltei", J.voltou], ["d14", "🏆", "14 dias", J.total >= 14], ["d21", "👑", "21 dias", J.total >= 21], ["fim", "🎉", "Desafio concluído", J.feitos.has(21)], ["amiga", "👭", "Trouxe uma amiga", (D21.amigas || 0) >= 1]];
 }
 
 /* ---------- treino do dia (mesmo para todas; muda só a execução) ---------- */
@@ -155,11 +155,13 @@ function d21Pinta(){
   const op = $("d21-op"); if(op) op.onclick = () => {
     sheet("Configurações do desafio", `<div class="d21-conf"><p class="hint" style="margin:0">CK 21 Dias Juntas · Edição #${d21Pad(e.numero)}</p>
       <button class="btn btn-line btn-block" id="d21-o-modo">Trocar meu modo (Normal, Hard, Supreme)</button>
+      <div class="d21-conf-h"><b>Hora do meu lembrete</b><small>Só chega se você ainda não tiver treinado no dia.</small>${d21HorasHTML(D21.st.inscrita && D21.st.inscrita.hora)}</div>
       <button class="btn btn-line btn-block" id="d21-o-jor">Ver minha jornada</button>
       <button class="btn btn-line btn-block" id="d21-o-ck">Voltar ao CK Life (continuo no desafio)</button>
       <button class="btn btn-block d21-o-sair" id="d21-o-sair">Sair do desafio</button></div>`);
     $("d21-o-modo").onclick = $("d21-o-jor").onclick = () => { fecharSheet(); D21.aba = "jornada"; d21Pinta(); };
     $("d21-o-ck").onclick = () => { fecharSheet(); d21Fechar(); };
+    d21LigaHoras(async h => { try{ const r = await SB().rpc("d21_hora", { p_edicao: e.id, p_hora: h }); if(r.error) throw r.error; D21.st.inscrita.hora = h; toast(`Lembrete às ${h}h 💚`); d21Ev("challenge_reminder_time", { hora: h }); }catch(err){ toast("Não deu para salvar agora. Tente de novo."); } });
     $("d21-o-sair").onclick = d21SairConfirma;
   };
   box.querySelectorAll("[data-d21tab]").forEach(b => b.onclick = () => { D21.aba = b.dataset.d21tab; d21Pinta(); box.querySelector(".d21-body").scrollTop = 0; if(D21.aba === "comunidade") d21CarregaFeed(true); });
@@ -196,13 +198,18 @@ function d21Conhecer(){
       <li><i>💬</i><span><b>Comunidade com a Micaela.</b> Recados, enquetes e check-ins todo dia. Você reage e vota.</span></li>
       <li><i>💧</i><span><b>Água e receita do dia</b>, junto com o que você já usa no CK Life.</span></li></ul></div>
     <div class="d21-card"><h3>Escolha seu modo</h3><div class="d21-modos">${Object.entries(D21_MODOS).map(([k, [n, s]]) => `<button class="d21-modo" data-d21modo="${k}" aria-pressed="${D21.modoEscolha === k}"><b>${n}</b><small>${s}</small>${k === rec ? `<em>recomendado</em>` : ""}</button>`).join("")}</div></div>
+    <div class="d21-card"><h3>Que horas você quer treinar?</h3><p>Te lembramos nessa hora, só se você ainda não tiver treinado.</p>${d21HorasHTML(D21.horaEscolha)}</div>
     <div class="d21-card d21-regras"><h3>Combinados da turma</h3><p>21 dias juntas, não 21 dias perfeitos. Sem comparação de corpos. Respeite seus limites: se sentir dor, pare. Não prometemos quilos perdidos: prometemos constância.</p></div>`;
 }
+const D21_HORAS = [[8, "🌅 Manhã", "8h"], [12, "☀️ Almoço", "12h"], [16, "🌤️ Tarde", "16h"], [19, "🌙 Noite", "19h"]];
+const d21HorasHTML = h => `<div class="d21-horas">${D21_HORAS.map(([v, n, t]) => `<button class="d21-modo" data-d21hora="${v}" aria-pressed="${+h === v}"><b>${n}</b><small>${t}</small></button>`).join("")}</div>`;
+function d21LigaHoras(salva){ document.querySelectorAll("[data-d21hora]").forEach(b => b.onclick = () => { document.querySelectorAll("[data-d21hora]").forEach(x => x.setAttribute("aria-pressed", x === b)); salva(+b.dataset.d21hora); }); }
 function d21LigaConhecer(){
+  d21LigaHoras(h => D21.horaEscolha = h);
   document.querySelectorAll("[data-d21modo]").forEach(b => b.onclick = () => { D21.modoEscolha = b.dataset.d21modo; document.querySelectorAll("[data-d21modo]").forEach(x => x.setAttribute("aria-pressed", x === b)); });
   const b = $("d21-entrar"); if(b) b.onclick = async () => {
     b.disabled = true; b.classList.add("carregando");
-    try{ const r = await SB().rpc("d21_entrar", { p_edicao: d21Ed().id, p_modo: D21.modoEscolha || "normal" }); if(r.error) throw r.error;
+    try{ const r = await SB().rpc("d21_entrar", { p_edicao: d21Ed().id, p_modo: D21.modoEscolha || "normal", p_hora: D21.horaEscolha || null }); if(r.error) throw r.error;
       d21Ev("challenge_joined", { modo: D21.modoEscolha }); await d21Carrega(true);
       SOM.done ? SOM.done() : SOM.check && SOM.check(); vibra([30, 40, 30]); D21.aba = "hoje"; d21Pinta(); d21BemVinda(); }
     catch(e){ toast(navigator.onLine === false ? "Sem internet agora. Tente de novo quando conectar." : "Não deu para entrar agora. Tente de novo."); b.disabled = false; b.classList.remove("carregando"); }
@@ -256,8 +263,40 @@ function d21HojeHTML(){
       ${D.missao ? `<div class="d21-m ${ME.d21m && ME.d21m[e.id + ":" + d] ? "ok" : ""}"><i>🎯</i><div><b>DESAFIO EXTRA</b><small>${esc(D.missao)}</small></div>${ME.d21m && ME.d21m[e.id + ":" + d] ? "<em>✓</em>" : `<button id="d21-mis">Feito</button>`}</div>` : ""}
       <div class="d21-m"><i>💬</i><div><b>COMUNIDADE</b><small id="d21-ult">${esc((D21.feed && D21.feed[0] && (D21.feed[0].titulo || D21.feed[0].texto)) || "Veja os recados da Micaela")}</small></div><button data-d21tab2="comunidade">Abrir</button></div>
     </div>
+    ${d21AvalCardHTML(d)}
+    <div class="d21-card d21-amiga"><div><b>👭 Traga uma amiga</b><p>${D21.amigas ? `Você já trouxe <b>${int(D21.amigas)} ${D21.amigas === 1 ? "amiga" : "amigas"}</b> para a turma. 💚` : "Quem treina com amiga desiste menos. Mande seu convite: ela entra na mesma turma."}</p></div><button class="d21-bt d21-bt-2" id="d21-amiga">Convidar</button></div>
     ${d21ZapHTML()}`;
 }
+/* ---------- antes e depois (sem balança): energia, sono, disposição e humor. Só ela vê. ---------- */
+const D21_AV = [["energia", "Energia"], ["sono", "Sono"], ["disposicao", "Disposição"], ["humor", "Humor"]];
+const d21Av = () => (ME.d21av && d21Ed() && ME.d21av[d21Ed().id]) || {};
+function d21AvalCardHTML(d){
+  const a = d21Av();
+  if(!a.ini) return `<div class="d21-card d21-aval"><b>📋 Seu ponto de partida</b><p>4 perguntas rápidas sobre energia, sono, disposição e humor. No Dia 21 você compara. Sem balança, sem medidas. Só você vê.</p><button class="d21-bt d21-bt-2" data-d21aval="ini">Responder (1 minuto)</button></div>`;
+  if(!a.fim && d >= 19) return `<div class="d21-card d21-aval"><b>📋 Como você está agora?</b><p>As mesmas 4 perguntas do começo, para você ver o quanto mudou.</p><button class="d21-bt d21-bt-2" data-d21aval="fim">Responder (1 minuto)</button></div>`;
+  return "";
+}
+function d21AvalSheet(k){
+  const v = {};
+  sheet(k === "ini" ? "Seu ponto de partida" : "Como você está agora?", `<div class="d21-conf"><p class="hint" style="margin:0">De 1 (bem baixo) a 5 (ótimo). Fica só com você.</p>
+    ${D21_AV.map(([c, n]) => `<div class="d21-av-q"><b>${n}</b><div class="d21-av-op">${[1, 2, 3, 4, 5].map(x => `<button data-avc="${c}" data-avv="${x}">${x}</button>`).join("")}</div></div>`).join("")}
+    <button class="btn btn-accent btn-block" id="d21-av-ok" disabled>Salvar</button></div>`);
+  document.querySelectorAll("[data-avc]").forEach(b => b.onclick = () => { v[b.dataset.avc] = +b.dataset.avv; document.querySelectorAll(`[data-avc="${b.dataset.avc}"]`).forEach(x => x.classList.toggle("on", x === b)); $("d21-av-ok").disabled = Object.keys(v).length < D21_AV.length; });
+  $("d21-av-ok").onclick = () => { ME.d21av = ME.d21av || {}; const id = d21Ed().id; ME.d21av[id] = { ...(ME.d21av[id] || {}), [k]: { ...v, em: today() } }; save(); fecharSheet(); SOM.check && SOM.check(); toast(k === "ini" ? "Guardado! No Dia 21 você compara 💚" : "Pronto! Veja sua evolução 💚"); d21Ev("challenge_self_check", { momento: k }); d21Pinta(); };
+}
+function d21AvalCompHTML(){
+  const a = d21Av(); if(!a.ini || !a.fim) return "";
+  return `<div class="d21-card"><h3>Como você mudou em 21 dias</h3><div class="d21-av-comp">${D21_AV.map(([c, n]) => { const x = a.ini[c] || 0, y = a.fim[c] || 0; return `<div><span>${n}</span><b>${x} → ${y}</b><em class="${y > x ? "up" : y < x ? "down" : ""}">${y > x ? "▲ melhorou" : y < x ? "▼" : "="}</em></div>`; }).join("")}</div><p class="hint" style="margin:0">Sem balança e sem medidas: só como você se sente.</p></div>`;
+}
+/* ---------- traga uma amiga: link individual (o mesmo rastreio do compartilhar) ---------- */
+function d21LinkAmiga(){ const c = typeof shCodigo === "function" ? shCodigo() : ""; return "https://cklife.com.br/21dias/?utm_source=convite&utm_medium=compartilhar&utm_campaign=desafio21" + (c ? "&utm_content=" + c : ""); }
+async function d21Convidar(){
+  const tx = `Estou fazendo o CK 21 Dias Juntas 💚 21 dias de treino em casa, em turma, com a Micaela. Vem comigo?\n${d21LinkAmiga()}`;
+  d21Ev("challenge_invite_clicked", { onde: "traga_amiga" });
+  try{ if(navigator.share){ await navigator.share({ text: tx }); return; } }catch(e){ if(e && e.name === "AbortError") return; }
+  copyText(tx, "Convite copiado. É só colar no WhatsApp 💚");
+}
+async function d21CarregaAmigas(){ if(D21.amigasT && Date.now() - D21.amigasT < 300000) return; D21.amigasT = Date.now(); try{ const r = await SB().rpc("d21_minhas_amigas"); if(!r.error && typeof r.data === "number" && r.data !== D21.amigas){ D21.amigas = r.data; if(D21.aberto) d21Pinta(); } }catch(e){} }
 function d21Receita(D, d){
   const all = [...(typeof BASE_REC !== "undefined" ? BASE_REC : []), ...((DB.receitasExtras || []).map(r => ({ id: r.id, nome: r.nome })))];
   if(D.receita){ const r = all.find(x => x.id === D.receita); if(r) return r; }
@@ -276,6 +315,11 @@ function d21LigaHoje(){
   const sh = $("d21-sh"); if(sh) sh.onclick = () => d21Compartilhar();
   const av = $("d21-av2"); if(av) av.onclick = () => ativarNotificacoes();
   const z = $("d21-zap"); if(z) z.onclick = () => d21Ev("challenge_whatsapp_clicked", {});
+  box.querySelectorAll("[data-d21aval]").forEach(b => b.onclick = () => d21AvalSheet(b.dataset.d21aval));
+  const am = $("d21-amiga"); if(am) am.onclick = d21Convidar;
+  const ct = $("d21-cert"); if(ct) ct.onclick = d21Certificado;
+  const pr = $("d21-pro"); if(pr) pr.onclick = () => { d21Ev("challenge_pro_clicked", {}); try{ fecharSheet(); }catch(e){} paywall("desafio_concluido"); };
+  if(d21Insc()) d21CarregaAmigas();
   d21LigaPosts();
   if(!D21.feed && !D21.feedErro) d21CarregaFeed(false).then(() => { const u = $("d21-ult"); if(u && D21.feed && D21.feed[0]) u.textContent = D21.feed[0].titulo || D21.feed[0].texto || ""; });
 }
@@ -286,7 +330,10 @@ function d21FinalHTML(){
   return `<section class="d21-hero d21-fim"><div class="d21-ok-em">🏆</div><h1 class="d21-titulo">${J.feitos.has(21) || J.total >= 15 ? "VOCÊ CONSEGUIU!" : "A EDIÇÃO TERMINOU"}</h1><span class="d21-eye">CK 21 DIAS JUNTAS · EDIÇÃO #${d21Pad(d21Ed().numero)}</span>
       <div class="d21-stats"><div><b>${J.total}/21</b><small>dias realizados</small></div><div><b>${J.completos}</b><small>${J.completos === 1 ? "treino completo" : "treinos completos"}</small></div><div><b>${J.planob}</b><small>${J.planob === 1 ? "Plano B" : "Planos B"}</small></div><div><b>${J.melhor}</b><small>sequência máxima</small></div></div>
       <div class="d21-meds">${M.map(m => `<span title="${esc(m[2])}">${m[1]}<small>${esc(m[2])}</small></span>`).join("")}</div>
-      <button class="d21-bt" id="d21-sh">${ic("share", 16)} COMPARTILHAR MINHA CONQUISTA</button></section>
+      <button class="d21-bt" id="d21-sh">${ic("share", 16)} COMPARTILHAR MINHA CONQUISTA</button>
+      <button class="d21-bt d21-bt-2" id="d21-cert">🎓 Meu certificado (com meu nome)</button></section>
+    ${d21AvalCompHTML() || (d21Av().ini && !d21Av().fim ? d21AvalCardHTML(21) : "")}
+    ${typeof souPro === "function" && (!souPro() || (typeof emTrial === "function" && emTrial())) ? `<div class="d21-card d21-pro"><b>👑 Continue evoluindo depois dos 21 dias</b><p>Com o CK Life Pro você tem todos os programas, treinos e receitas para manter o ritmo que você criou na turma.</p><button class="d21-bt" id="d21-pro">Conhecer o CK Life Pro</button></div>` : ""}
     ${p ? `<div class="d21-card"><b>Obrigada por responder 💚</b><p class="hint">Sua opinião ajuda a próxima edição a ser ainda melhor.</p></div>` : `<div class="d21-card"><h3>Como foi sua experiência?</h3>
       <div class="d21-nota">${Array.from({ length: 11 }, (_, i) => `<button data-nota="${i}">${i}</button>`).join("")}</div>
       <label class="d21-lb">O que você mais gostou? <small>(opcional)</small><textarea id="d21-pq1" maxlength="1000" rows="2"></textarea></label>
@@ -402,6 +449,13 @@ document.addEventListener("click", e => {   // pesquisa final (botões ficam na 
       .then(r => { if(r.error) throw r.error; ME.d21pesq = ME.d21pesq || {}; ME.d21pesq[d21Ed().id] = today(); save(); toast("Obrigada! 💚"); d21Pinta(); }).catch(() => toast("Não deu para enviar agora. Tente de novo.")); return; }
 });
 
+/* certificado: o nome só aparece porque ela escolheu este botão */
+function d21Certificado(){
+  const J = d21Jornada(), nome = String((ME && ME.nome) || "").trim().split(/\s+/), n = nome[0] ? nome[0] + (nome.length > 1 ? " " + nome[nome.length - 1] : "") : "Eu", foi = J.feitos.has(21) || J.total >= 15;
+  d21Ev("challenge_share", { tipo: "certificado" });
+  ckCompartilhar({ tipo: "desafio_certificado", emoji: "🎓", titulo: "CERTIFICADO", grande: n.toUpperCase().slice(0, 28), sub: foi ? "COMPLETOU O CK 21 DIAS JUNTAS" : "PARTICIPOU DO CK 21 DIAS JUNTAS",
+    nota: "Seu nome aparece porque você escolheu o certificado. Peso, medidas e outros dados nunca entram no cartão.", convite: "Eu fiz o CK 21 Dias Juntas 💚 Vem na próxima turma comigo:", frases: [`Edição #${d21Pad(d21Ed().numero)} · ${J.total} de 21 dias`, "21 dias juntas. Não 21 dias perfeitos."] });
+}
 /* ---------- compartilhar (cartão do CK Life, menu nativo do celular) ---------- */
 function d21Compartilhar(final){
   const J = d21Jornada(), d = d21Dia(), base = { sub: "CK 21 DIAS JUNTAS", convite: "Estou fazendo o CK 21 Dias Juntas 💚\nVem comigo no CK Life:" };
@@ -431,11 +485,12 @@ async function d21FimTela(T){
     <p>${z.cardio ? "Cardio extra na conta. Que energia! 💚" : z.planob ? "Hoje você só tinha 10 minutos. E fez os 10. Conta como presença 💚" : "Você apareceu por você hoje. 💚"}</p>
     <div class="d21-gr">${d21Pad(z.dia)}<small>/21</small></div><div class="d21-pill" id="d21-fim-n">${z.cardio ? "" : "Salvando seu dia…"}</div><div class="d21-meds" id="d21-fim-med"></div>
     ${z.cardio ? "" : `<button class="d21-bt" id="d21-f-sh">${ic("share", 16)} COMPARTILHAR CONQUISTA</button>`}
-    <button class="d21-bt d21-bt-2" id="d21-f-turma">VER A TURMA</button><button class="d21-bt d21-bt-2" id="d21-f-ok">CONTINUAR</button></div>`;
+    ${z.dia === 21 && typeof souPro === "function" && (!souPro() || emTrial()) ? `<button class="d21-bt d21-bt-2" id="d21-f-pro">👑 Continuar evoluindo com o Pro</button>` : ""}<button class="d21-bt d21-bt-2" id="d21-f-turma">VER A TURMA</button><button class="d21-bt d21-bt-2" id="d21-f-ok">CONTINUAR</button></div>`;
   try{ confete($("play")); }catch(e){}
   const volta = aba => { fimPlay(); d21Abrir(aba); };
   $("d21-f-turma").onclick = () => volta("comunidade"); $("d21-f-ok").onclick = () => volta("hoje");
   const fsh = $("d21-f-sh"); if(fsh) fsh.onclick = () => d21Compartilhar();
+  const fpr = $("d21-f-pro"); if(fpr) fpr.onclick = () => { d21Ev("challenge_pro_clicked", { onde: "dia21" }); fimPlay(); paywall("desafio_concluido"); };
   if(z.cardio) return;
   let res = null;
   try{ const x = await SB().rpc("d21_registrar", { p_edicao: z.ed, p_tipo: tipo, p_modo: z.modo, p_min: min }); if(x.error) throw x.error; res = x.data; }
@@ -499,11 +554,15 @@ rInicio = function(){
 };
 /* volta para dentro se ela fechou o app lá dentro, ou se veio de um aviso (?d21=hoje|comunidade) */
 let D21_RET = false;
+try{ const u0 = new URL(location.href); if(u0.searchParams.get("d21") === "conhecer" || /desafio21/.test(u0.searchParams.get("utm_campaign") || "")) localStorage.setItem("ck_d21_quer", "1"); }catch(e){}
 function d21Retoma(){
   if(D21_RET || D21.aberto) return; D21_RET = true;
   let aba = null; try{ const u = new URL(location.href); aba = u.searchParams.get("d21"); if(aba){ u.searchParams.delete("d21"); history.replaceState(history.state, "", u.pathname + u.search + u.hash); } }catch(e){}
   let dentro = null; try{ dentro = localStorage.getItem(D21_K); }catch(e){}
-  const e = d21Ed(); if(!e || !d21Insc()) return;
+  const e = d21Ed(); if(!e) return;
+  let quer = null; try{ quer = localStorage.getItem("ck_d21_quer"); }catch(x){}
+  if(!d21Insc()){ if((quer || aba === "conhecer") && ["inscricoes", "aguardando", "andamento"].includes(e.fase)){ try{ localStorage.removeItem("ck_d21_quer"); }catch(x){} d21Ev("challenge_viewed", { onde: "convite" }); d21Abrir("hoje"); } return; }
+  try{ localStorage.removeItem("ck_d21_quer"); }catch(x){}
   if(aba || (dentro === e.id && e.fase !== "finalizada")) d21Abrir(["hoje", "comunidade", "jornada"].includes(aba) ? aba : "hoje");
 }
 document.addEventListener("visibilitychange", () => { if(document.visibilityState === "visible" && D21.aberto && Date.now() - D21.t > 300000) d21Carrega(true).then(d21Pinta); });

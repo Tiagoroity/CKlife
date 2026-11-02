@@ -73,8 +73,48 @@ function daGeral(){
         <div class="card"><h3>Comunidade</h3><dl class="kv"><dt>Publicações</dt><dd class="num">${int(C.publicacoes || 0)}</dd><dt>Visualizações</dt><dd class="num">${int(C.vistas || 0)}</dd><dt>Reações</dt><dd class="num">${int(C.reacoes || 0)}</dd><dt>Votos em enquetes</dt><dd class="num">${int(C.votos || 0)}</dd><dt>Check-ins</dt><dd class="num">${int(C.checkins || 0)}</dd><dt>Taxa de interação</dt><dd class="num">${pc(+C.interagiram || 0, I)} das inscritas</dd></dl>
         ${(C.top || []).length ? `<p class="hint" style="margin:10px 0 4px">Publicações mais fortes</p><ol class="da-top">${C.top.map(t => `<li>${esc(t.titulo || "(sem título)")} <small class="muted">${int(t.interacoes)} interações · ${int(t.vistas)} vistas</small></li>`).join("")}</ol>` : ""}</div></div>
       <div class="card"><h3>Dia a dia</h3>${PD.length && M.dia >= 1 ? `<div class="tbl"><table><thead><tr><th>Dia</th><th>Iniciaram</th><th>Concluíram</th><th>Plano B</th><th></th></tr></thead><tbody>${PD.map(x => `<tr><td>Dia ${x.dia}</td><td class="num">${int(x.iniciados)}</td><td class="num">${int(x.concluidos)}</td><td class="num">${int(x.planob)}</td><td style="width:40%"><div class="da-bar"><i style="width:${Math.round(100 * (+x.concluidos) / maxD)}%"></i></div></td></tr>`).join("")}</tbody></table></div>` : `<p class="muted" style="margin:0">Aparece quando a edição começar.</p>`}</div>
+      <div class="card" id="da-sum"><h3>💬 Quem sumiu (2 dias ou mais sem treinar)</h3><p class="muted" style="margin:0">Carregando…</p></div>
       ${M.pesquisa && +M.pesquisa.respostas ? `<div class="card"><h3>Pesquisa final</h3><dl class="kv"><dt>Respostas</dt><dd class="num">${int(M.pesquisa.respostas)}</dd><dt>Nota média (0 a 10)</dt><dd class="num">${M.pesquisa.media}</dd><dt>Participariam de outra</dt><dd class="num">${int(M.pesquisa.outra)}</dd></dl><p class="hint" style="margin:6px 0 0">As respostas são privadas e nunca viram depoimento público.</p></div>` : ""}`;
+    daSumidas(M.dia);
   }).catch(e => { const el = $("da-c"); if(el) el.innerHTML = daSem("Não deu para carregar os números: " + esc(e.message || "erro")); });
+}
+/* quem parou: a Micaela chama no WhatsApp com a mensagem pronta (contato pessoal recupera quem ia desistir) */
+function daSumidas(dia){
+  SB2().rpc("d21_admin_sumidas", { p_edicao: DA.ed.id }).then(r => {
+    const el = $("da-sum"); if(!el) return; if(r.error) throw r.error; const L = r.data || [], us = DB().users, dig = x => String(x || "").replace(/\D/g, "");
+    const msg = u => `Oi, ${String(u.nome || "").split(" ")[0] || "tudo bem"}! 💚 Aqui é a Micaela do CK Life. A turma do CK 21 Dias Juntas está no Dia ${Math.min(21, dia)} e sentiu sua falta. Você não precisa recuperar nada: hoje dá pra fazer até o Plano B de 10 minutos. Bora voltar com a gente?`;
+    el.innerHTML = `<h3>💬 Quem sumiu (2 dias ou mais sem treinar)</h3>${L.length ? `<p class="hint" style="margin:0 0 8px">${L.length} ${L.length === 1 ? "participante" : "participantes"}. Toque em 💬 para abrir o WhatsApp com a mensagem pronta.</p>
+      <div class="tbl"><table><thead><tr><th>Aluna</th><th>Dias sem treinar</th><th>Dias feitos</th><th></th></tr></thead><tbody>${L.map(x => { const u = us.find(y => y.id === x.user_id) || {};
+        return `<tr><td><b>${esc(u.nome || u.email || "Aluna")}</b><br><small class="muted">${x.ultimo ? "último treino no Dia " + x.ultimo : "ainda não treinou"} · ${esc(x.modo)}</small></td><td class="num"><b>${int(x.dias_sem)}</b></td><td class="num">${int(x.feitos)}/21</td>
+          <td>${dig(u.whats).length >= 10 ? `<button class="btn btn-sm zap-bt" data-dsz="${x.user_id}" aria-label="Chamar no WhatsApp">💬</button>` : `<small class="muted">sem WhatsApp</small>`}</td></tr>`; }).join("")}</tbody></table></div>`
+      : `<p class="muted" style="margin:0">${dia >= 2 ? "Ninguém parou. A turma está firme 💚" : "Aparece a partir do Dia 3."}</p>`}`;
+    el.querySelectorAll("[data-dsz]").forEach(b => b.onclick = () => { const u = us.find(y => y.id === b.dataset.dsz); const url = u && F.lkWhats(u.whats, msg(u)); if(url) window.open(url, "_blank", "noopener"); });
+  }).catch(() => { const el = $("da-sum"); if(el) el.querySelector("p").textContent = "Não deu para carregar agora."; });
+}
+/* ---------- pacote de publicações: 3 por dia, programadas (a Micaela só revisa) ---------- */
+const DA_NOITE = [
+  { tipo: "checkin", titulo: "COMO VOCÊ ESTÁ HOJE?", opcoes: ["🔥 Tô voando", "💪 Tô firme", "🥵 Tá puxado", "💚 Mas não vou parar"] },
+  { tipo: "enquete", titulo: "QUE HORAS VOCÊ TREINOU HOJE?", opcoes: ["Manhã", "Tarde", "Noite", "Ainda vou 💪"] },
+  { tipo: "mensagem", titulo: "Recado da Micaela 💚", texto: "Se hoje foi corrido, lembra: Plano B de 10 minutos conta. Não precisa ser perfeito, precisa ser seu." },
+  { tipo: "enquete", titulo: "O QUE MAIS TE AJUDA A NÃO PARAR?", opcoes: ["A turma 👭", "Ver meu calendário", "Os recados", "Me sentir melhor"] },
+  { tipo: "checkin", titulo: "COMO ESTÁ SUA ENERGIA HOJE?", opcoes: ["⚡ Lá em cima", "🙂 Boa", "😴 Baixinha"] },
+  { tipo: "mensagem", titulo: "Orgulho de vocês 🔥", texto: "Cada uma que apareceu hoje está construindo algo que ninguém tira. Amanhã a gente continua." },
+  { tipo: "enquete", titulo: "BEBEU ÁGUA HOJE?", opcoes: ["Bati a meta 💧", "Quase lá", "Vou caprichar amanhã"] }];
+const DA_MARCOS = { 7: ["🎉 UMA SEMANA JUNTAS!", "7 dias. Uma semana inteira de turma. Quem chegou até aqui merece se orgulhar."], 14: ["🏆 14 DIAS!", "Dois terços do caminho. Falta pouco e a turma está mais forte do que nunca."], 21: ["👑 DIA 21: A GENTE CONSEGUIU!", "21 dias juntas. Não 21 dias perfeitos. Obrigada por cada treino, cada check-in, cada volta."] };
+async function daGeraPosts(){
+  const e = DA.ed, D = e.dias_pub && e.dias_pub.length ? e.dias_pub : (e.dias || []), agora = Date.now(), ja = new Set((DA.posts || []).map(p => (p.dia || 0) + "|" + (p.titulo || "")));
+  const L = [], hora = (dt, h, m) => new Date(`${dt}T${String(h).padStart(2, "0")}:${String(m || 0).padStart(2, "0")}:00-03:00`).toISOString();
+  for(let n = 1; n <= 21; n++){
+    const dt = addD(e.inicio, n - 1), dd = D[n - 1] || {}, add = (h, m, p) => { const quando = hora(dt, h, m); if(Date.parse(quando) <= agora || ja.has(n + "|" + p.titulo)) return; L.push({ edicao_id: e.id, dia: n, publicar_em: quando, fixado: false, notificar: false, resultado: "sempre", multipla: false, pode_mudar: true, opcoes: [], ...p }); };
+    add(7, 0, { tipo: "chamada", titulo: DA_MARCOS[n] ? DA_MARCOS[n][0] : `🔥 DIA ${n}/21 COMEÇOU!`, texto: (DA_MARCOS[n] ? DA_MARCOS[n][1] + "\n\n" : "") + `Hoje: ${dd.titulo || "treino do dia"}. ${dd.msg || "Bora juntas?"}`, botao: "treino" });
+    add(13, 0, { tipo: "checkin", titulo: "QUEM JÁ TREINOU HOJE?", opcoes: [{ id: "ja", t: "Já treinei 🔥" }, { id: "vou", t: "Ainda vou 💪" }, { id: "planob", t: "Hoje vai ser Plano B 💚" }] });
+    const x = DA_NOITE[(n - 1) % DA_NOITE.length];
+    add(19, 30, { tipo: x.tipo, titulo: x.titulo, texto: x.texto || null, opcoes: (x.opcoes || []).map((t, k) => ({ id: "o" + (k + 1), t })), botao: x.tipo === "mensagem" ? "treino" : null });
+  }
+  if(!L.length) return toast("Não há dias futuros sem publicação para gerar.");
+  if(!confirm(`Programar ${L.length} publicações (até 3 por dia: 7h, 13h e 19h30)? Você pode editar ou apagar qualquer uma depois. Nenhuma avisa no celular (o aviso do dia já é automático).`)) return;
+  try{ for(let i = 0; i < L.length; i += 50){ const r = await SB2().from("d21_posts").insert(L.slice(i, i + 50)); if(r.error) throw r.error; } toast(`${L.length} publicações programadas 💚`); daComunidade(); }
+  catch(err){ toast("Não deu para gerar: " + (err.message || "erro")); }
 }
 
 /* ---------- os 21 dias: rascunho → pré-visualizar → publicar ---------- */
@@ -162,7 +202,7 @@ function daComunidade(){
   daCarregaPosts().then(() => {
     const el = $("da-c"); if(!el || DA.aba !== "comunidade") return; const agora = Date.now(), pode = daPode();
     el.innerHTML = `<div class="card"><div class="da-dias-top"><p class="muted" style="margin:0">Só a equipe publica. As participantes reagem (🔥 💚 💪 😍 🥵), votam e fazem check-in. Não enviam texto, foto, vídeo, áudio, link nem GIF.</p>
-        ${pode ? `<div class="acts"><button class="btn btn-accent btn-sm" id="da-np">+ Nova publicação</button></div>` : ""}</div>
+        ${pode ? `<div class="acts"><button class="btn btn-sm" id="da-gera">✨ Gerar publicações dos 21 dias</button><button class="btn btn-accent btn-sm" id="da-np">+ Nova publicação</button></div>` : ""}</div>
         ${pode ? `<div class="acts" style="margin-top:8px"><span class="muted" style="font-size:13px">Modelos rápidos:</span><button class="btn btn-sm" data-modelo="dia">🔥 Dia N começou</button><button class="btn btn-sm" data-modelo="treinou">Quem já treinou?</button><button class="btn btn-sm" data-modelo="hora">Que horas vai treinar?</button><button class="btn btn-sm" data-modelo="como">Como vocês estão?</button></div>` : ""}</div>
       ${DA.posts.length ? DA.posts.map(p => { const C = DA.cont[p.id] || {}, prog = Date.parse(p.publicar_em) > agora, reac = Object.entries(C).filter(([k]) => k.startsWith("r:")).map(([k, n]) => `${k.slice(2)} ${int(n)}`).join("  "), vt = (p.opcoes || []).map(o => `${esc(o.t)}: <b>${int(C["v:" + o.id] || 0)}</b>`).join(" · ");
         return `<div class="card da-post"><div class="da-ed-top"><span class="st ${prog ? "off" : "ok"}">${prog ? "Programada " + new Date(p.publicar_em).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }) : "Publicada " + new Date(p.publicar_em).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}</span><small class="muted">${DA_TIPOS[p.tipo]}${p.fixado ? " · 📌 fixada" : ""}${p.notificar ? (p.notificado ? " · aviso enviado" : " · vai avisar no celular") : ""}</small></div>
@@ -170,6 +210,7 @@ function daComunidade(){
           <p class="muted" style="margin:6px 0 0;font-size:13px">👁 ${int(C.vistas || 0)} ${reac ? " · " + reac : ""}</p>
           ${pode ? `<div class="acts"><button class="btn btn-sm" data-pfix="${p.id}">${p.fixado ? "Desafixar" : "📌 Fixar"}</button><button class="btn btn-sm" data-ped="${p.id}">Editar</button><button class="btn btn-sm" data-pdel="${p.id}">Apagar</button></div>` : ""}</div>`; }).join("") : daSem("Nenhuma publicação ainda.")}`;
     const np = $("da-np"); if(np) np.onclick = () => daFormPost(null);
+    const gp = $("da-gera"); if(gp) gp.onclick = daGeraPosts;
     el.querySelectorAll("[data-modelo]").forEach(b => b.onclick = () => daFormPost(null, b.dataset.modelo));
     el.querySelectorAll("[data-ped]").forEach(b => b.onclick = () => daFormPost(DA.posts.find(p => p.id === b.dataset.ped)));
     el.querySelectorAll("[data-pfix]").forEach(b => b.onclick = async () => { const p = DA.posts.find(x => x.id === b.dataset.pfix); const r = await SB2().from("d21_posts").update({ fixado: !p.fixado }).eq("id", p.id); if(r.error) return toast(r.error.message); toast(p.fixado ? "Desafixada" : "Fixada no topo 📌"); daComunidade(); });

@@ -77,7 +77,7 @@ async function ckCompartilhar(o){
     <button class="btn btn-accent btn-block btn-lg" id="sh-go" disabled>${ic("share", 18)} Compartilhar</button>
     <div class="sh-alt"><button class="btn btn-line btn-sm" id="sh-salvar">${ic("image", 15)} Salvar imagem</button><button class="btn btn-line btn-sm" id="sh-conv">${ic("people", 15)} Convidar amiga</button></div>
     ${o.comunidade && typeof SO !== "undefined" && SO.on() ? `<button class="link" id="sh-com" style="align-self:center">Prefere postar nos Stories da comunidade?</button>` : ""}
-    <p class="hint sh-hint">Abre as opções do seu celular: Instagram, WhatsApp, Facebook e outros. O convite com link vai junto (e fica copiado para colar onde quiser). No cartão não aparece peso, medidas nem nenhum dado pessoal.</p></div>`, () => $("sheet").classList.remove("sh-top"));
+    <p class="hint sh-hint">Abre as opções do seu celular: Instagram, WhatsApp, Facebook e outros. O convite com link vai junto (e fica copiado para colar onde quiser). ${o.nota || "No cartão não aparece peso, medidas nem nenhum dado pessoal."}</p></div>`, () => $("sheet").classList.remove("sh-top"));
   $("sheet").classList.add("sh-top");   // fica por cima da tela de fim de treino
   const pinta = async () => {
     const meu = gerando = {}; const b = $("sh-go"); if(b) b.disabled = true;
