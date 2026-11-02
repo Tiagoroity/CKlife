@@ -9,6 +9,7 @@ const tocaNotif = () => { if(somNotifOn() && SOM.notif) SOM.notif(); };
 const avisoNt = aviso; aviso = function(){ tocaNotif(); vibra && vibra([60, 40, 60]); return avisoNt.apply(this, arguments); };
 /* aviso que chegou pelo celular com o app aberto: mostra dentro do app (o do sistema vem sem som) */
 if("serviceWorker" in navigator) navigator.serviceWorker.addEventListener("message", e => { const d = e.data || {};
+  if(d.tipo === "push-ao-vivo" && d.p && /^\/admin/.test(d.p.url || "") && !/^\/admin/.test(location.pathname)) return; /* aviso do painel nunca aparece no app da aluna */
   if(d.tipo === "push-ao-vivo" && d.p) aviso(`<span class="pav nt-ic">${ic("bell", 16)}</span><span><b>${esc(d.p.title || "CK Life")}</b> ${esc(d.p.body || "")}</span>`, d.p.url && d.p.url !== "/" ? () => { try{ const u = new URL(d.p.url, location.origin); if(u.origin === location.origin) location.href = u.pathname + u.search; else window.open(u.href, "_blank", "noopener"); }catch(x){} } : null); });
 
 /* ---------- Lembrete de treino (servidor) ---------- */

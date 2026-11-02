@@ -4,7 +4,9 @@
 const AV_VAPID = "BJ7wud6TE-eeF889qLG9sRvdppjzQvNJgifeuMN8MrTEkvSYjKbSrLvPyyxPgRJLXywLSwypDdj9RaoTQm60bCc";
 let AV_EST = null;
 let AV_AQUI = false;   // este aparelho já recebe avisos?
-async function avAqui(){ try{ if(!avPodePush() || Notification.permission !== "granted") return (AV_AQUI = false); const reg = await navigator.serviceWorker.ready, sub = await reg.pushManager.getSubscription(); AV_AQUI = !!sub; }catch(e){ AV_AQUI = false; } return AV_AQUI; }
+async function avAqui(){ try{ if(!avPodePush() || Notification.permission !== "granted") return (AV_AQUI = false); const reg = await navigator.serviceWorker.ready, sub = await reg.pushManager.getSubscription(); AV_AQUI = !!sub; if(sub) avMarca(sub); }catch(e){ AV_AQUI = false; } return AV_AQUI; }
+/* aparelho ativado aqui no painel fica marcado como "admin": só ele recebe o aviso de aluna nova */
+function avMarca(sub){ try{ const j = sub.toJSON(), sb = avSB(); if(sb && F.nuvem.uid) return sb.from("push_inscricoes").upsert({ endpoint: j.endpoint, user_id: F.nuvem.uid, p256dh: j.keys.p256dh, auth: j.keys.auth, app: "admin" }).then(() => {}, () => {}); }catch(e){} }
 const avSB = () => F.nuvem && F.nuvem.ativo && F.nuvem.sb;
 const avB64 = s => { const p = "=".repeat((4 - s.length % 4) % 4), b = atob((s + p).replace(/-/g, "+").replace(/_/g, "/")); return Uint8Array.from([...b].map(c => c.charCodeAt(0))); };
 const avIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent);
@@ -14,7 +16,10 @@ async function avStatus(ligar){ const sb = avSB(); if(!sb) return null; const r 
 async function avInscreve(){
   const reg = await navigator.serviceWorker.ready; let sub = await reg.pushManager.getSubscription();
   if(!sub) sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: avB64(AV_VAPID) });
-  const j = sub.toJSON(), r = await avSB().from("push_inscricoes").upsert({ endpoint: j.endpoint, user_id: F.nuvem.uid, p256dh: j.keys.p256dh, auth: j.keys.auth }); if(r.error) throw r.error;
+  const j = sub.toJSON(), row = { endpoint: j.endpoint, user_id: F.nuvem.uid, p256dh: j.keys.p256dh, auth: j.keys.auth };
+  let r = await avSB().from("push_inscricoes").upsert(Object.assign({ app: "admin" }, row));
+  if(r.error) r = await avSB().from("push_inscricoes").upsert(row); /* banco ainda sem a coluna "app" */
+  if(r.error) throw r.error;
 }
 async function avLigar(){
   try{
