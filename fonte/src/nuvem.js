@@ -123,6 +123,7 @@ N.salvar = DB => { N._db = DB; clearTimeout(tm); tm = setTimeout(() => grava(DB)
 const agora = () => { if(tm){ clearTimeout(tm); tm = null; if(N._db) grava(N._db); } };
 window.addEventListener("pagehide", agora);
 document.addEventListener("visibilitychange", () => { if(document.visibilityState === "hidden") agora(); });
+let ACC_DIA = null;   // acesso de hoje já enviado nesta sessão
 async function grava(DB){
   N._db = DB; tm = null;
   if(!SNAP || !N.uid) return;
@@ -172,11 +173,14 @@ async function grava(DB){
     if(DB.eventos.length > s.ev){ const novos = DB.eventos.slice(s.ev).filter(e => e.u === N.uid).map(e => ({ t: e.t, c: e.c, u: e.u, d: e.d })); if(novos.length) ops.push(q(sb.from("eventos").insert(novos))); s.ev = DB.eventos.length; }
     /* acessos por dia */
     const acc = []; Object.entries(DB.acessos || {}).forEach(([d, L]) => L.forEach(id => { const k = d + "|" + id; if(!s.acc.has(k)){ s.acc.add(k); if(id === N.uid) acc.push({ dia: d, user_id: id }); } }));
+    /* garante 1 registro de acesso por dia (no cadastro/login o dia podia ser marcado antes da conta carregar e se perder) */
+    const hj = hoje(); if(ACC_DIA !== hj){ ACC_DIA = hj; DB.acessos = DB.acessos || {}; DB.acessos[hj] = DB.acessos[hj] || []; if(!DB.acessos[hj].includes(N.uid)) DB.acessos[hj].push(N.uid); s.acc.add(hj + "|" + N.uid); if(!acc.some(a => a.dia === hj)) acc.push({ dia: hj, user_id: N.uid }); }
     if(acc.length) ops.push(q(sb.from("acessos").upsert(acc, { ignoreDuplicates: true })));
     await Promise.all(ops);
     FALHAS = 0;
   }catch(e){
     console.warn("Erro ao salvar (vai tentar de novo)", e);
+    ACC_DIA = null;
     Object.assign(s, antes, { ev: s.ev });
     FALHAS++;
     // celular em segundo plano ou tela bloqueada corta o envio: tenta de novo em silêncio.

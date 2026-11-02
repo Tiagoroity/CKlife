@@ -3602,6 +3602,7 @@ N.salvar = DB => { N._db = DB; clearTimeout(tm); tm = setTimeout(() => grava(DB)
 const agora = () => { if(tm){ clearTimeout(tm); tm = null; if(N._db) grava(N._db); } };
 window.addEventListener("pagehide", agora);
 document.addEventListener("visibilitychange", () => { if(document.visibilityState === "hidden") agora(); });
+let ACC_DIA = null;   // acesso de hoje já enviado nesta sessão
 async function grava(DB){
   N._db = DB; tm = null;
   if(!SNAP || !N.uid) return;
@@ -3651,11 +3652,14 @@ async function grava(DB){
     if(DB.eventos.length > s.ev){ const novos = DB.eventos.slice(s.ev).filter(e => e.u === N.uid).map(e => ({ t: e.t, c: e.c, u: e.u, d: e.d })); if(novos.length) ops.push(q(sb.from("eventos").insert(novos))); s.ev = DB.eventos.length; }
     /* acessos por dia */
     const acc = []; Object.entries(DB.acessos || {}).forEach(([d, L]) => L.forEach(id => { const k = d + "|" + id; if(!s.acc.has(k)){ s.acc.add(k); if(id === N.uid) acc.push({ dia: d, user_id: id }); } }));
+    /* garante 1 registro de acesso por dia (no cadastro/login o dia podia ser marcado antes da conta carregar e se perder) */
+    const hj = hoje(); if(ACC_DIA !== hj){ ACC_DIA = hj; DB.acessos = DB.acessos || {}; DB.acessos[hj] = DB.acessos[hj] || []; if(!DB.acessos[hj].includes(N.uid)) DB.acessos[hj].push(N.uid); s.acc.add(hj + "|" + N.uid); if(!acc.some(a => a.dia === hj)) acc.push({ dia: hj, user_id: N.uid }); }
     if(acc.length) ops.push(q(sb.from("acessos").upsert(acc, { ignoreDuplicates: true })));
     await Promise.all(ops);
     FALHAS = 0;
   }catch(e){
     console.warn("Erro ao salvar (vai tentar de novo)", e);
+    ACC_DIA = null;
     Object.assign(s, antes, { ev: s.ev });
     FALHAS++;
     // celular em segundo plano ou tela bloqueada corta o envio: tenta de novo em silêncio.
@@ -9242,7 +9246,7 @@ const abrirPerfilEq = abrirPerfil; abrirPerfil = async function(u){
    Quem deixa o CK Life aberto (ou instalado na tela inicial) fica com a versão antiga até recarregar.
    O app confere a versão publicada ao abrir, ao voltar do segundo plano e a cada 5 minutos.
    Se houver versão nova, mostra a faixa "ATUALIZAR": um toque e pronto. Nunca aparece no meio do treino. */
-const CK_VER = "20261102121507";
+const CK_VER = "20261102124235";
 let CK_VER_NOVA = null;
 const ATU_K = "ck_atu";
 const atuTentou = () => { try{ return JSON.parse(localStorage.getItem(ATU_K) || "null"); }catch(e){ return null; } };
@@ -12731,10 +12735,11 @@ const vendasMes = (m = today().slice(0, 7)) => (VENDAS || []).filter(v => vendaO
 function metricasAlunos(cidade){
   const db = DB(), U = db.users.filter(u => !u.soAdmin && (!cidade || +u.cidade === +cidade));
   const ids = new Set(U.map(u => u.id));
-  const acc = d => (db.acessos[d] || []).filter(id => ids.has(id));
+  const sinal = {}; U.forEach(u => { const ds = new Set([u.ultimo, u.acApp, u.acWeb, u.criado, ...((u.treinos || []).map(t => t && t.d))].filter(Boolean)); ds.forEach(d => (sinal[d] = sinal[d] || []).push(u.id)); });
+  const acc = d => [...new Set([...(db.acessos[d] || []).filter(id => ids.has(id)), ...(sinal[d] || [])])];
   const uni = days => { const s = new Set(); days.forEach(d => acc(d).forEach(x => s.add(x))); return s.size; };
   const ult = n => Array.from({ length: n }, (_, i) => addD(today(), -i));
-  const ret = n => { const base = U.filter(u => u.criado <= addD(today(), -n)); if(!base.length) return null; const ok = base.filter(u => Object.keys(db.acessos).some(d => d >= addD(u.criado, n) && (db.acessos[d] || []).includes(u.id))).length; return ok / base.length; };
+  const ret = n => { const base = U.filter(u => u.criado <= addD(today(), -n)); if(!base.length) return null; const dias = [...new Set([...Object.keys(db.acessos), ...Object.keys(sinal)])], ok = base.filter(u => dias.some(d => d >= addD(u.criado, n) && acc(d).includes(u.id))).length; return ok / base.length; };
   return {
     U, total: U.length, novos7: U.filter(u => u.criado >= addD(today(), -6)).length,
     dau: acc(today()).length, wau: uni(ult(7)), mau: uni(ult(30)),

@@ -129,10 +129,11 @@ const vendasMes = (m = today().slice(0, 7)) => (VENDAS || []).filter(v => vendaO
 function metricasAlunos(cidade){
   const db = DB(), U = db.users.filter(u => !u.soAdmin && (!cidade || +u.cidade === +cidade));
   const ids = new Set(U.map(u => u.id));
-  const acc = d => (db.acessos[d] || []).filter(id => ids.has(id));
+  const sinal = {}; U.forEach(u => { const ds = new Set([u.ultimo, u.acApp, u.acWeb, u.criado, ...((u.treinos || []).map(t => t && t.d))].filter(Boolean)); ds.forEach(d => (sinal[d] = sinal[d] || []).push(u.id)); });
+  const acc = d => [...new Set([...(db.acessos[d] || []).filter(id => ids.has(id)), ...(sinal[d] || [])])];
   const uni = days => { const s = new Set(); days.forEach(d => acc(d).forEach(x => s.add(x))); return s.size; };
   const ult = n => Array.from({ length: n }, (_, i) => addD(today(), -i));
-  const ret = n => { const base = U.filter(u => u.criado <= addD(today(), -n)); if(!base.length) return null; const ok = base.filter(u => Object.keys(db.acessos).some(d => d >= addD(u.criado, n) && (db.acessos[d] || []).includes(u.id))).length; return ok / base.length; };
+  const ret = n => { const base = U.filter(u => u.criado <= addD(today(), -n)); if(!base.length) return null; const dias = [...new Set([...Object.keys(db.acessos), ...Object.keys(sinal)])], ok = base.filter(u => dias.some(d => d >= addD(u.criado, n) && acc(d).includes(u.id))).length; return ok / base.length; };
   return {
     U, total: U.length, novos7: U.filter(u => u.criado >= addD(today(), -6)).length,
     dau: acc(today()).length, wau: uni(ult(7)), mau: uni(ult(30)),
