@@ -1,6 +1,7 @@
 /* ===================== PIXEL DA META (medir anúncios) =====================
    Só funciona se a pessoa aceitar os cookies (LGPD). Nunca no painel do administrador.
-   Eventos: PageView (abriu o app), CompleteRegistration (fez cadastro), EntrouNoApp (fez login / abriu já logada).
+   Eventos: PageView (abriu o app), CompleteRegistration (fez cadastro), EntrouNoApp (fez login / abriu já logada),
+   SubmitApplication + EntrouNoDesafio (tocou em Quero participar no CK 21 Dias Juntas).
    Nenhum dado de saúde, ciclo, peso ou e-mail é enviado. */
 const PX_ID = "1874194974017339", PX_K = "ck_cookies";
 const pxModoAdm = () => /#admin|\/admin/.test(location.href);

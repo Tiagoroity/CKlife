@@ -210,7 +210,10 @@ function d21LigaConhecer(){
   const b = $("d21-entrar"); if(b) b.onclick = async () => {
     b.disabled = true; b.classList.add("carregando");
     try{ const r = await SB().rpc("d21_entrar", { p_edicao: d21Ed().id, p_modo: D21.modoEscolha || "normal", p_hora: D21.horaEscolha || null }); if(r.error) throw r.error;
-      d21Ev("challenge_joined", { modo: D21.modoEscolha }); await d21Carrega(true);
+      d21Ev("challenge_joined", { modo: D21.modoEscolha });
+      /* pixel da Meta (só com o aceite de cookies): "Enviar inscrição" + evento próprio, para o anúncio do desafio otimizar por quem entrou de verdade */
+      try{ if(typeof pxEvento === "function"){ const ed0 = d21Ed(); pxEvento("SubmitApplication", { content_name: "CK 21 Dias Juntas", edicao: ed0 && ed0.numero }); pxEvento("EntrouNoDesafio", { desafio: "ck21", edicao: ed0 && ed0.numero }, true); } }catch(x){}
+      await d21Carrega(true);
       SOM.done ? SOM.done() : SOM.check && SOM.check(); vibra([30, 40, 30]); D21.aba = "hoje"; d21Pinta(); d21BemVinda(); }
     catch(e){ toast(navigator.onLine === false ? "Sem internet agora. Tente de novo quando conectar." : "Não deu para entrar agora. Tente de novo."); b.disabled = false; b.classList.remove("carregando"); }
   };

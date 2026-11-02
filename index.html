@@ -9241,7 +9241,7 @@ const abrirPerfilEq = abrirPerfil; abrirPerfil = async function(u){
    Quem deixa o CK Life aberto (ou instalado na tela inicial) fica com a versão antiga até recarregar.
    O app confere a versão publicada ao abrir, ao voltar do segundo plano e a cada 5 minutos.
    Se houver versão nova, mostra a faixa "ATUALIZAR": um toque e pronto. Nunca aparece no meio do treino. */
-const CK_VER = "20261102012817";
+const CK_VER = "20261102014335";
 let CK_VER_NOVA = null;
 const ATU_K = "ck_atu";
 const atuTentou = () => { try{ return JSON.parse(localStorage.getItem(ATU_K) || "null"); }catch(e){ return null; } };
@@ -11141,7 +11141,10 @@ function d21LigaConhecer(){
   const b = $("d21-entrar"); if(b) b.onclick = async () => {
     b.disabled = true; b.classList.add("carregando");
     try{ const r = await SB().rpc("d21_entrar", { p_edicao: d21Ed().id, p_modo: D21.modoEscolha || "normal", p_hora: D21.horaEscolha || null }); if(r.error) throw r.error;
-      d21Ev("challenge_joined", { modo: D21.modoEscolha }); await d21Carrega(true);
+      d21Ev("challenge_joined", { modo: D21.modoEscolha });
+      /* pixel da Meta (só com o aceite de cookies): "Enviar inscrição" + evento próprio, para o anúncio do desafio otimizar por quem entrou de verdade */
+      try{ if(typeof pxEvento === "function"){ const ed0 = d21Ed(); pxEvento("SubmitApplication", { content_name: "CK 21 Dias Juntas", edicao: ed0 && ed0.numero }); pxEvento("EntrouNoDesafio", { desafio: "ck21", edicao: ed0 && ed0.numero }, true); } }catch(x){}
+      await d21Carrega(true);
       SOM.done ? SOM.done() : SOM.check && SOM.check(); vibra([30, 40, 30]); D21.aba = "hoje"; d21Pinta(); d21BemVinda(); }
     catch(e){ toast(navigator.onLine === false ? "Sem internet agora. Tente de novo quando conectar." : "Não deu para entrar agora. Tente de novo."); b.disabled = false; b.classList.remove("carregando"); }
   };
@@ -11500,7 +11503,8 @@ document.addEventListener("visibilitychange", () => { if(document.visibilityStat
 
 /* ===================== PIXEL DA META (medir anúncios) =====================
    Só funciona se a pessoa aceitar os cookies (LGPD). Nunca no painel do administrador.
-   Eventos: PageView (abriu o app), CompleteRegistration (fez cadastro), EntrouNoApp (fez login / abriu já logada).
+   Eventos: PageView (abriu o app), CompleteRegistration (fez cadastro), EntrouNoApp (fez login / abriu já logada),
+   SubmitApplication + EntrouNoDesafio (tocou em Quero participar no CK 21 Dias Juntas).
    Nenhum dado de saúde, ciclo, peso ou e-mail é enviado. */
 const PX_ID = "1874194974017339", PX_K = "ck_cookies";
 const pxModoAdm = () => /#admin|\/admin/.test(location.href);
