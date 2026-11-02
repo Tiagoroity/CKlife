@@ -2710,3 +2710,14 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
 #v-admin .eb-al{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--line);border-radius:12px;background:#fff;cursor:pointer}
 #v-admin .eb-al input{width:18px;height:18px;accent-color:var(--accent)}
 #v-admin .eb-al span{display:grid}#v-admin .eb-al small{color:var(--muted);font-size:12px}
+/* compartilhar conquista */
+.sh-wrap{display:flex;flex-direction:column;gap:12px}
+.sh-prev{align-self:center;width:min(62vw,240px);aspect-ratio:9/16;border-radius:18px;overflow:hidden;background:linear-gradient(160deg,#0B2A22,#1F5C46 55%,#6E9E6D);display:grid;place-items:center;box-shadow:0 10px 30px rgba(0,0,0,.18)}
+.sh-prev[data-f="quadrado"]{aspect-ratio:1/1;width:min(72vw,280px)}
+.sh-prev img{width:100%;height:100%;object-fit:cover;display:block}
+.sh-load{color:#E6EFE4;font-size:13px;font-weight:600}
+.sh-ops{display:flex;flex-direction:column;align-items:center;gap:6px}
+.sh-seg{width:100%;max-width:280px}
+.sh-alt{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sh-hint{text-align:center;margin:0;font-size:12.5px}
+#sheet.sh-top{z-index:45}

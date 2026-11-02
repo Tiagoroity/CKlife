@@ -17,6 +17,7 @@ function ebOrigem(u){
   const man = !u.origem && ebManual().find(x => x.id === u.id);
   const o = u.origem || (man && man.o) || {};
   if(o.e){ const e = ebLista().find(x => x.id === o.e); return { k: "emb:" + o.e, nome: e ? e.nome : o.e, tipo: "Embaixadora" + (man ? " (marcada à mão)" : "") }; }
+  if(o.src === "convite") return { k: "convite", nome: "Convite de aluna (compartilhou conquista)", tipo: "Indicação" };
   if(o.src === "direto") return { k: "direto_ind", nome: "Direto / indicação", tipo: "Marcada à mão" };
   if(o.src){ const ad = /meta|facebook|instagram|^fb$|^ig$/i.test(o.src); return { k: ad ? "meta" : "src:" + o.src, nome: ad ? "Anúncio Meta" : o.src, tipo: (ad ? "Anúncio" : "Campanha") + (man ? " (inclui marcadas à mão)" : "") }; }
   return { k: "direto", nome: "Direto / sem origem", tipo: "Direto" };
@@ -29,6 +30,19 @@ function ebNumeros(){
   return { M, total: alunas.length };
 }
 const ebPct = (a, b) => b ? Math.round(100 * a / b) + "%" : "–";
+/* compartilhamentos de conquista feitos pelas alunas (últimos 30 dias) e quem chegou pelo convite */
+const EB_SH = { workout_share_clicked: "Treino", challenge_share_clicked: "Desafio", achievement_share_clicked: "Conquista" };
+function ebCompart(){
+  const ini = addD(today(), -29), E = (DB().eventos || []).filter(e => String(e.c).startsWith("sh:") && e.d >= ini), us = DB().users;
+  const ab = E.filter(e => EB_SH[String(e.c).split(":")[1]]), env = E.filter(e => String(e.c).split(":")[1] === "share_menu_opened"), conv = E.filter(e => /invite_clicked/.test(String(e.c).split(":")[1]));
+  const porTipo = {}; ab.forEach(e => { const k = EB_SH[String(e.c).split(":")[1]]; porTipo[k] = (porTipo[k] || 0) + 1; });
+  const chegaram = us.filter(u => !u.admin && !u.soAdmin && u.origem && u.origem.src === "convite"), quem = {};
+  chegaram.forEach(u => { const c = u.origem.anuncio || "?"; quem[c] = (quem[c] || 0) + 1; });
+  const top = Object.entries(quem).sort((a, b) => b[1] - a[1]).slice(0, 10).map(([c, n]) => { const d = us.find(u => u.convite === c); return `<tr><td>${d ? esc(d.nome || "Aluna") : `<span class="muted">código ${esc(c)}</span>`}</td><td class="num"><b>${int(n)}</b></td></tr>`; }).join("");
+  return `<div class="card"><h3>Compartilhamentos das alunas</h3><p class="hint" style="margin:0 0 10px">Últimos 30 dias. Quando a aluna conclui algo, ela pode mandar o cartão da conquista para fora do app (Instagram, WhatsApp...). O convite leva um link com código dela; quem se cadastra por ele aparece aqui. Cliques no link não dá para contar sem a pessoa entrar no app.</p>
+    <div class="grid g4">${kpi("Abriram o cartão", int(ab.length), esc(Object.entries(porTipo).map(([k, n]) => `${k}: ${n}`).join(" · ") || "–"))}${kpi("Tocaram em Compartilhar", int(env.length), `${int(new Set(env.map(e => e.u)).size)} alunas`)}${kpi("Convites enviados", int(conv.length))}${kpi("Novas alunas por convite", int(chegaram.length), "desde o início", "", true)}</div>
+    ${top ? `<div class="tbl" style="margin-top:10px"><table><thead><tr><th>Quem mais trouxe amigas</th><th>Cadastros</th></tr></thead><tbody>${top}</tbody></table></div>` : ""}</div>`;
+}
 function vEmbaixadoras(){
   const L = ebLista(), { M, total } = ebNumeros(), pode = podeEditar("embaixadoras");
   const linhaEmb = e => { const m = M["emb:" + e.id] || { cad: 0, sem: 0, treinou: 0, pro: 0 };
@@ -41,6 +55,7 @@ function vEmbaixadoras(){
       ${L.length ? `<div class="tbl"><table><thead><tr><th>Embaixadora e link</th><th>Cadastros</th><th>Já treinaram</th><th>Assinaram o Pro</th><th></th></tr></thead><tbody>${L.slice().sort((a, b) => ((M["emb:" + b.id] || {}).cad || 0) - ((M["emb:" + a.id] || {}).cad || 0)).map(linhaEmb).join("")}</tbody></table></div>`
         : `<p class="muted" style="margin:6px 0 0">Nenhuma embaixadora ainda. Toque em <b>+ Nova embaixadora</b>: o link dela é criado na hora.</p>`}
     </div>
+    ${ebCompart()}
     <div class="card"><h3>De onde vêm as alunas</h3><p class="hint" style="margin:0 0 10px">Todas as ${int(total)} alunas cadastradas. A origem passou a ser registrada a partir de 01/11/2026; quem entrou antes aparece em "Direto / sem origem".</p>
       <div class="tbl"><table><thead><tr><th>Origem</th><th>Cadastros</th><th>Já treinaram</th><th>Assinaram o Pro</th></tr></thead><tbody>${orig.map(m => `<tr><td><b>${esc(m.nome)}</b><br><small class="muted">${esc(m.tipo)}</small></td><td class="num">${int(m.cad)}</td><td class="num">${int(m.treinou)} <small class="muted">(${ebPct(m.treinou, m.cad)})</small></td><td class="num">${int(m.pro)}</td></tr>`).join("") || `<tr><td colspan="4" class="empty">Sem alunas ainda.</td></tr>`}</tbody></table></div></div>`;
   ebSemOrigem(pode);
