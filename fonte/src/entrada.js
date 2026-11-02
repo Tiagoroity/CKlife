@@ -7,13 +7,9 @@
 const COACH_IMG = "img/modelo.jpg";
 const FRASES_ID = ["Não buscamos perfeição. Buscamos constância.", "Você não precisa começar de novo. Precisa continuar.", "Um dia de cada vez. Uma escolha de cada vez.", "Mulheres que aparecem por elas mesmas.", "Pouco ainda conta.", "Voltar também é progresso.", "Seu ritmo. Sua evolução. Sua vida."];
 const ENT_INTRO = [
-  { t: "Você não entrou aqui só para treinar.", p: ["Você entrou para construir uma rotina que consiga manter."], bt: "QUERO COMEÇAR" },
-  { t: "Dessa vez você não precisa fazer tudo sozinha.", p: ["O CK Life vai estar com você nos treinos, na alimentação, na evolução e principalmente nos dias em que a motivação desaparecer."], bt: "Continuar" },
-  { t: "Não precisamos de perfeição.", p: ["Precisamos que você continue voltando."], bt: "Continuar" },
-  { t: "Existem outras mulheres começando, tentando, errando, evoluindo e recomeçando todos os dias.", p: ["A partir de agora você também faz parte disso."], bt: "Continuar", menor: true },
-  { t: "ESSE PROJETO PODE DAR CERTO.", p: ["Porque você não vai depender apenas da motivação.", "Nós vamos te acompanhar.", "Nós vamos te lembrar.", "Nós vamos celebrar.", "Nós vamos te ajudar a continuar."], bt: "ESTOU PRONTA" }
+  { t: "Não precisamos de perfeição.", p: ["Precisamos que você continue voltando. E dessa vez, você não vai sozinha. 💚"], bt: "QUERO COMEÇAR" }
 ];
-const ENT_POS_NOVA = ["compromisso", "acordo", "forte", "legiao", "coach", "avisos"], ENT_POS_VET = ["novo", "compromisso", "acordo", "coach", "avisos"];
+const ENT_POS_NOVA = ["compromisso"], ENT_POS_VET = ["novo", "compromisso", "acordo", "coach", "avisos"];
 const entLista = () => OB && OB.veterana ? ENT_POS_VET : ENT_POS_NOVA;
 const ENT_DESISTIR = [["tempo", "Falta de tempo", "clock"], ["preguica", "Preguiça", "moon"], ["motivacao", "Falta de motivação", "bolt"], ["nao_sei", "Não saber o que fazer", "target"], ["animada", "Começo animada e depois paro", "flame"], ["imprevisivel", "Rotina imprevisível", "calendar"], ["cansaco", "Cansaço", "leaf"], ["outro", "Outro motivo", "star"]];
 const ENT_MOTIVO = [["disposicao", "Ter mais disposição", "bolt"], ["saude", "Cuidar da saúde", "heart"], ["autoestima", "Me sentir bem comigo", "star"], ["rotina", "Criar uma rotina", "calendar"], ["voltar", "Voltar a treinar", "repeat"], ["objetivo", "Um objetivo específico", "target"]];
@@ -25,10 +21,7 @@ const ENT_HORARIO = [["manha", "Manhã", "Antes da correria começar", "sun", "0
   if(iT >= 0) OBQ[iT].o = [[10, "5 a 15 minutos", "Rápido e possível", "clock"], [20, "15 a 30 minutos", "O equilíbrio ideal", "clock"], [30, "30 a 45 minutos", "Treino completo", "clock"], [45, "45 minutos ou mais", "Sem pressa", "clock"]];
   const iD = OBQ.findIndex(q => q.k === "dias");
   if(iD >= 0) OBQ.splice(iD, 1, { k: "diasSem", custom: 1 },
-    { k: "horario", t: "Qual horário normalmente você consegue treinar?", s: "Vamos te lembrar perto do seu horário.", o: ENT_HORARIO.map(h => [h[0], h[1], h[2], h[3]]) },
-    { k: "desistir", t: "O que mais costuma fazer você desistir?", s: "Sem julgamento. É só pra gente te ajudar do jeito certo.", o: ENT_DESISTIR.map(d => [d[0], d[1], "", d[2]]) },
-    { k: "motivo", t: "O que fez você chegar até aqui?", s: "Vamos lembrar disso nos dias difíceis (só você vê).", o: ENT_MOTIVO.map(m => [m[0], m[1], "", m[2]]) },
-    { k: "futuro", custom: 1 });
+    { k: "motivo", t: "O que fez você chegar até aqui?", s: "A Coach vai te lembrar disso nos dias difíceis.", o: ENT_MOTIVO.map(m => [m[0], m[1], "", m[2]]) });
   OBFOTO.diasSem = "img/ex-agacho.jpg"; OBFOTO.horario = "img/ex-polichinelo.jpg"; OBFOTO.desistir = "img/ex-afundocasa.jpg"; OBFOTO.motivo = "img/modelo.jpg"; OBFOTO.futuro = "img/ex-pranchalat.jpg";
 })();
 
@@ -47,7 +40,7 @@ onboarding = function(){
   if(OB.intro < ENT_INTRO.length){
     const s = ENT_INTRO[OB.intro];
     box.innerHTML = entTela(OB.intro === 4 ? "ent-forte" : "", `<h1 class="ent-t ${s.menor ? "menor" : ""}">${s.t}</h1>${entLinhas(s.p)}
-      <div class="ent-bt"><button class="btn ent-cta" id="ent-ok">${s.bt}</button>${OB.intro === 0 ? `<button class="link ent-pula" id="ent-pula">Pular introdução</button>` : `<button class="link ent-pula" id="ent-volta">Voltar</button>`}</div>`, OB.intro, ENT_INTRO.length);
+      <div class="ent-bt"><button class="btn ent-cta" id="ent-ok">${s.bt}</button>${ENT_INTRO.length < 2 ? "" : OB.intro === 0 ? `<button class="link ent-pula" id="ent-pula">Pular introdução</button>` : `<button class="link ent-pula" id="ent-volta">Voltar</button>`}</div>`, OB.intro, ENT_INTRO.length > 1 ? ENT_INTRO.length : 0);
     $("ent-ok").onclick = () => { SOM.tap && SOM.tap(); OB.intro++; onboarding(); window.scrollTo(0, 0); };
     const p = $("ent-pula"); if(p) p.onclick = () => { OB.intro = ENT_INTRO.length; onboarding(); };
     const v = $("ent-volta"); if(v) v.onclick = () => { OB.intro--; onboarding(); };
@@ -58,11 +51,13 @@ onboarding = function(){
   if(q && q.k === "diasSem"){
     OB.diasSem = OB.diasSem || ["MO", "WE", "FR"];
     const n = vis.length - 1, dots = `<div class="steps-dots">${vis.slice(0, n).map((_, i) => `<i class="${i <= OB.i ? "on" : ""}"></i>`).join("")}</div>`;
-    box.innerHTML = obHero("diasSem", `<button class="iconbtn sm" id="ob-back" aria-label="Voltar">${ic("back", 18)}</button>`, dots, "Em quais dias você quer treinar?", "Comece com o que dá para manter. Dá para mudar depois.") + `
+    box.innerHTML = obHero("diasSem", `<button class="iconbtn sm" id="ob-back" aria-label="Voltar">${ic("back", 18)}</button>`, dots, "Quando você consegue treinar?", "Comece com o que dá para manter. Dá para mudar depois.") + `
       <div class="ent-dias">${DSEM.map(([k, nm]) => `<button class="chip" data-d="${k}" aria-pressed="${OB.diasSem.includes(k)}">${nm}</button>`).join("")}</div>
       <p class="hint" style="text-align:center">${OB.diasSem.length} ${OB.diasSem.length === 1 ? "dia" : "dias"} por semana${OB.diasSem.length >= 3 ? " · ótimo começo" : ""}</p>
+      <p class="ent-hor-t">Melhor horário</p><div class="ent-hor" role="radiogroup" aria-label="Horário">${ENT_HORARIO.map(h => `<button class="chip" role="radio" data-h="${h[0]}" aria-pressed="${OB.horario === h[0]}" aria-checked="${OB.horario === h[0]}">${ic(h[3], 15, 2.2)} ${h[1]}</button>`).join("")}</div>
       <button class="btn btn-accent btn-block btn-lg" id="ob-next" ${OB.diasSem.length ? "" : "disabled"}>Continuar</button>`;
     box.querySelectorAll("[data-d]").forEach(b => b.onclick = () => { const d = b.dataset.d; OB.diasSem = OB.diasSem.includes(d) ? OB.diasSem.filter(x => x !== d) : DSEM.map(x => x[0]).filter(k => k === d || OB.diasSem.includes(k)); SOM.tap && SOM.tap(); onboarding(); });
+    box.querySelectorAll("[data-h]").forEach(b => b.onclick = () => { OB.horario = b.dataset.h; SOM.tap && SOM.tap(); onboarding(); });
     $("ob-back").onclick = () => { OB.i--; onboarding(); };
     $("ob-next").onclick = () => { OB.dias = Math.max(2, Math.min(6, OB.diasSem.length)); OB.i++; SOM.check && SOM.check(); onboarding(); window.scrollTo(0, 0); };
     return;
@@ -92,9 +87,10 @@ function entPos(){
     $("ent-ok").onclick = prox;
     $("ent-nao").onclick = () => { ME.entrada = { pulou: today() }; save(); OB = null; abrirApp(); };
   } else if(k === "compromisso"){
-    box.innerHTML = entTela("ent-comp", `<span class="ent-eb">Antes de começar</span><h1 class="ent-t">UM COMPROMISSO COM VOCÊ.</h1>
-      ${entLinhas(["Não estamos pedindo que você nunca falhe.", "Não estamos pedindo que você nunca falte.", "Estamos pedindo apenas uma coisa:", "Quando a rotina apertar, quando bater preguiça ou quando você perder alguns dias…"])}
-      <p class="ent-volte">VOLTE.</p><p class="ent-perg">Você promete não abandonar você mesma só porque um dia não saiu perfeito?</p>
+    box.innerHTML = entTela("ent-coach ent-comp", `<div class="coach-av grande"><img src="${COACH_IMG}" alt="" onerror="this.remove()"><i>${ic("star", 12, 3)}</i></div>
+      <span class="ent-eb">Um compromisso com você</span><h1 class="ent-t">${nome}, quando a rotina apertar…</h1>
+      <p class="ent-volte">VOLTE.</p>
+      ${entLinhas(["Não precisa ser perfeito. Eu sou a Coach CK Life e vou te lembrar disso. 💚"])}
       <div class="ent-bt"><button class="btn ent-cta" id="ent-ok">EU VOLTO POR MIM 💚</button></div>`);
     $("ent-ok").onclick = () => { OB.compromisso = today(); vibra([30, 40, 60]); SOM.chime && SOM.chime(); prox(); };
   } else if(k === "acordo"){

@@ -58,8 +58,8 @@ function ppInstalar(){
     cta = `<button class="btn ent-cta" id="pp-copia">${ic("share", 18)} COPIAR LINK DO APP</button>`;
   } else if(ios){
     guia = `<div class="pp-guia"><div class="pp-guia-h"><span class="pp-chip">iPhone</span>${safari ? "Faça aqui no Safari" : "Abra <b>app.cklife.com.br</b> no Safari e faça:"}</div>
-      <ol class="pp-passos">${ppPasso(1, `Toque em <b>Compartilhar</b><small>na barra do Safari, ou em ⋯ e depois Compartilhar</small>`, ppTile(ppSvg.share))}${ppPasso(2, `Toque em <b>Adicionar à Tela de Início</b><small>se não aparecer, role a lista para baixo</small>`, ppTile(ppSvg.mais))}${ppPasso(3, `Toque em <b>Adicionar</b>`, `<span class="pp-pill">Adicionar</span>`)}</ol>
-      <p class="pp-chave">${ic("check", 16, 2.4)}<span>Depois, abra o CK Life <b>pelo ícone</b> e entre com <b>${ppEmail()}</b> e sua senha. Lá você ativa seus avisos.</span></p></div>`;
+      <ol class="pp-passos">${ppPasso(1, `Toque em <b>Compartilhar</b><small>ou em ⋯ e depois Compartilhar</small>`, ppTile(ppSvg.share))}${ppPasso(2, `Toque em <b>Adicionar à Tela de Início</b><small>role a lista se precisar</small>`, ppTile(ppSvg.mais))}${ppPasso(3, `Toque em <b>Adicionar</b>`, `<span class="pp-pill">Adicionar</span>`)}</ol>
+      <p class="pp-chave">${ic("check", 16, 2.4)}<span>Depois, abra pelo <b>ícone</b> e entre com <b>${ppEmail()}</b>.</span></p></div>`;
     cta = `<button class="btn ent-cta" id="pp-feito">JÁ ADICIONEI ${ic("check", 18, 2.6)}</button>`;
   } else if(nativo){
     guia = `<p class="pp-mini">Uma janelinha do celular vai pedir para confirmar. É só tocar em <b>Instalar</b>.</p>`;
@@ -74,8 +74,7 @@ function ppInstalar(){
     <div class="pp-hero"><img src="img/passos-celular.webp" alt="" onerror="this.parentNode.remove()"></div>
     <span class="ent-eb">Passo 1 de 3 · 30 segundos</span>
     <h1 class="ent-t pp-t">Seu compromisso merece um lugar na sua tela</h1>
-    <p class="pp-sub">${entNome()}, você acabou de prometer que vai voltar por você. Com o CK Life na tela do celular, essa promessa fica <b>a um toque de distância</b>, todos os dias, inclusive nos corridos.</p>
-    <ul class="pp-ben"><li>${ic("bell", 16, 2.2)}O lembrete chega na hora que você escolher</li><li>${ic("bolt", 16, 2.2)}Abre em 1 toque, sem procurar link</li><li>${ic("heart", 16, 2.2)}Seu progresso sempre com você</li></ul>
+    <p class="pp-sub">Assim seu treino fica <b>a um toque</b> e o lembrete chega na hora certa.</p>
     ${guia}<div class="pp-bt">${cta}<button class="pp-pula" id="pp-nao">pular por enquanto</button></div>`, "pp-inst");
   const prox = () => { ppSalva({ etapa: "avisos" }); ppRoda(); };
   $("pp-nao").onclick = () => { try{ instGrava({ nao: today() }); }catch(e){} prox(); };
@@ -91,7 +90,7 @@ function ppAbraIcone(){
   ppSalva({ inst: today(), etapa: "avisos" });
   ppTela(`${ppDots(1)}<div class="pp-ok">${ic("check", 34, 2.6)}</div>
     <span class="ent-eb">Quase lá</span><h1 class="ent-t pp-t">Agora abra o CK Life pelo ícone 💚</h1>
-    <p class="pp-sub">Feche o Safari e toque no ícone do CK Life na tela do seu iPhone. Entre com <b>${ppEmail()}</b> e sua senha: você continua exatamente daqui.</p>
+    <p class="pp-sub">Toque no ícone na sua tela e entre com <b>${ppEmail()}</b>. Você continua daqui.</p>
     <div class="pp-icone"><img src="img/icone-192.png" alt="" width="64" height="64" onerror="this.remove()"><b>CK Life</b></div>
     <div class="pp-bt"><button class="link ent-pula" id="pp-aqui">Continuar aqui no navegador</button></div>`, "pp-abra");
   $("pp-aqui").onclick = () => { ppSalva({ etapa: "treino" }); ppRoda(); };
@@ -104,9 +103,8 @@ function ppAvisos(){
     <div class="pp-notif" aria-hidden="true"><img src="img/icone-192.png" alt="" width="38" height="38" onerror="this.remove()"><div><span><b>CK Life</b><small>agora</small></span><strong>Hora do seu primeiro treino 💚</strong><p>São só 5 minutos. A gente está junto.</p></div></div>
     <div class="pp-notif pp-notif2" aria-hidden="true"><img src="img/icone-192.png" alt="" width="38" height="38" onerror="this.remove()"><div><span><b>CK Life</b><small>${esc(hh)}</small></span><strong>Recado da Coach</strong><p>Pouco ainda conta. Bora?</p></div></div>
     <span class="ent-eb">Passo 2 de 3</span>
-    <h1 class="ent-t pp-t">Deixa o CK Life fazer a parte dele</h1>
-    <p class="pp-sub">No nosso acordo, a gente te lembra, comemora com você e te busca quando a rotina apertar. <b>Para cumprir isso, só falta um toque:</b> ativar seus avisos.</p>
-    <p class="pp-mini">Sem spam. Você escolhe o que recebe e muda quando quiser.</p>
+    <h1 class="ent-t pp-t">Deixa a gente te lembrar</h1>
+    <p class="pp-sub">Do seu treino, das suas conquistas e quando a rotina apertar. Sem spam.</p>
     <div class="pp-bt"><button class="btn ent-cta" id="pp-ativa">${ic("bell", 18, 2.4)} ATIVAR MEUS AVISOS</button><button class="pp-pula" id="pp-nao">pular por enquanto</button></div><p class="pp-msg" id="pp-msg" role="status"></p>`, "pp-av");
   const prox = () => { ppSalva({ etapa: "treino" }); ppRoda(); };
   $("pp-nao").onclick = prox;
@@ -129,7 +127,7 @@ function ppTreino(){
   ppTela(`${ppDots(3)}
     <span class="ent-eb">Passo 3 de 3</span>
     <h1 class="ent-t pp-t">Quando vai ser seu primeiro treino?</h1>
-    <p class="pp-sub">Marcar dia e hora é o que transforma vontade em compromisso. Escolha um momento que caiba de verdade no seu dia.</p>
+    <p class="pp-sub">Escolha um momento que caiba de verdade no seu dia.</p>
     <div class="pp-tr"><div class="pp-tr-ic">${ic("play", 22, 2.4)}</div><div><b>${esc(q.nome)}</b><div class="pp-tags"><span>5 min</span><span>Em pé</span><span>Sem equipamento</span><span>Sala ou quarto</span></div></div></div>
     <button class="btn ent-cta" id="pp-agora">${ic("play", 18, 2.4)} AGORA, ESTOU PRONTA</button>
     <div class="pp-ou"><span>ou escolha o seu momento</span></div>
@@ -243,4 +241,4 @@ if(/^https?:/.test(location.protocol) && !/localhost|127\.0\.0\.1/.test(location
   setInterval(errEnvia, 15000);
 }
 /* só no teste local */
-if(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) window.__PP = { roda: ppRoda, me: () => ME, salva: ppSalva, livre: ppLivre };
+if(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) window.__PP = { roda: ppRoda, me: () => ME, salva: ppSalva, livre: ppLivre, ent: k => { OB = { i: 0, itens: [], intro: 9, pos: ENT_POS_NOVA.indexOf(k) }; show("v-onb"); entPos(); }, dias: () => { OB = { i: OBQ.findIndex(q => q.k === "diasSem"), itens: [], intro: 9 }; show("v-onb"); onboarding(); } };

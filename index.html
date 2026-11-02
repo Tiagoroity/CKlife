@@ -3052,6 +3052,13 @@ body.pp-on .ins-toast,body.pp-on #ck-inst,body.pp-on .coach-toast{display:none!i
 .pp-pula{align-self:center;background:none;border:0;color:rgba(185,207,194,.62);font-size:12.5px;font-weight:600;padding:8px 14px;min-height:34px;letter-spacing:.01em}
 .pp-pula:active{color:#CFE0D4}
 .pp-t{text-wrap:balance}
+.ent-hor{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}.ent-hor .chip{min-height:46px;font-weight:700;justify-content:center;display:flex;align-items:center;gap:6px}
+.ent-comp .ent-volte{margin:0}
+/* instalar: o botão vem depois do passo a passo (sem ficar fixo embaixo) */
+.pp-inst .pp-bt{position:static;margin:4px 0 0;padding:0;background:none}
+.pp-inst .pp-hero{height:clamp(150px,22vh,200px)}
+.ent-hor-t{margin:6px 0 0;font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted,#65736C);text-align:center}
+.ent-comp.ent-coach .ent-volte,.ent-comp.ent-coach .ent-l{text-align:center}.ent-comp.ent-coach .ent-volte{font-size:clamp(44px,13vw,60px)}
 </style>
 
 <!-- Entrar / criar conta -->
@@ -9343,7 +9350,7 @@ const abrirPerfilEq = abrirPerfil; abrirPerfil = async function(u){
    Quem deixa o CK Life aberto (ou instalado na tela inicial) fica com a versão antiga até recarregar.
    O app confere a versão publicada ao abrir, ao voltar do segundo plano e a cada 5 minutos.
    Se houver versão nova, mostra a faixa "ATUALIZAR": um toque e pronto. Nunca aparece no meio do treino. */
-const CK_VER = "20261102194052";
+const CK_VER = "20261102195653";
 let CK_VER_NOVA = null;
 const ATU_K = "ck_atu";
 const atuTentou = () => { try{ return JSON.parse(localStorage.getItem(ATU_K) || "null"); }catch(e){ return null; } };
@@ -9392,13 +9399,9 @@ try{ const u = new URL(location.href); if(u.searchParams.get("v") && u.searchPar
 const COACH_IMG = "img/modelo.jpg";
 const FRASES_ID = ["Não buscamos perfeição. Buscamos constância.", "Você não precisa começar de novo. Precisa continuar.", "Um dia de cada vez. Uma escolha de cada vez.", "Mulheres que aparecem por elas mesmas.", "Pouco ainda conta.", "Voltar também é progresso.", "Seu ritmo. Sua evolução. Sua vida."];
 const ENT_INTRO = [
-  { t: "Você não entrou aqui só para treinar.", p: ["Você entrou para construir uma rotina que consiga manter."], bt: "QUERO COMEÇAR" },
-  { t: "Dessa vez você não precisa fazer tudo sozinha.", p: ["O CK Life vai estar com você nos treinos, na alimentação, na evolução e principalmente nos dias em que a motivação desaparecer."], bt: "Continuar" },
-  { t: "Não precisamos de perfeição.", p: ["Precisamos que você continue voltando."], bt: "Continuar" },
-  { t: "Existem outras mulheres começando, tentando, errando, evoluindo e recomeçando todos os dias.", p: ["A partir de agora você também faz parte disso."], bt: "Continuar", menor: true },
-  { t: "ESSE PROJETO PODE DAR CERTO.", p: ["Porque você não vai depender apenas da motivação.", "Nós vamos te acompanhar.", "Nós vamos te lembrar.", "Nós vamos celebrar.", "Nós vamos te ajudar a continuar."], bt: "ESTOU PRONTA" }
+  { t: "Não precisamos de perfeição.", p: ["Precisamos que você continue voltando. E dessa vez, você não vai sozinha. 💚"], bt: "QUERO COMEÇAR" }
 ];
-const ENT_POS_NOVA = ["compromisso", "acordo", "forte", "legiao", "coach", "avisos"], ENT_POS_VET = ["novo", "compromisso", "acordo", "coach", "avisos"];
+const ENT_POS_NOVA = ["compromisso"], ENT_POS_VET = ["novo", "compromisso", "acordo", "coach", "avisos"];
 const entLista = () => OB && OB.veterana ? ENT_POS_VET : ENT_POS_NOVA;
 const ENT_DESISTIR = [["tempo", "Falta de tempo", "clock"], ["preguica", "Preguiça", "moon"], ["motivacao", "Falta de motivação", "bolt"], ["nao_sei", "Não saber o que fazer", "target"], ["animada", "Começo animada e depois paro", "flame"], ["imprevisivel", "Rotina imprevisível", "calendar"], ["cansaco", "Cansaço", "leaf"], ["outro", "Outro motivo", "star"]];
 const ENT_MOTIVO = [["disposicao", "Ter mais disposição", "bolt"], ["saude", "Cuidar da saúde", "heart"], ["autoestima", "Me sentir bem comigo", "star"], ["rotina", "Criar uma rotina", "calendar"], ["voltar", "Voltar a treinar", "repeat"], ["objetivo", "Um objetivo específico", "target"]];
@@ -9410,10 +9413,7 @@ const ENT_HORARIO = [["manha", "Manhã", "Antes da correria começar", "sun", "0
   if(iT >= 0) OBQ[iT].o = [[10, "5 a 15 minutos", "Rápido e possível", "clock"], [20, "15 a 30 minutos", "O equilíbrio ideal", "clock"], [30, "30 a 45 minutos", "Treino completo", "clock"], [45, "45 minutos ou mais", "Sem pressa", "clock"]];
   const iD = OBQ.findIndex(q => q.k === "dias");
   if(iD >= 0) OBQ.splice(iD, 1, { k: "diasSem", custom: 1 },
-    { k: "horario", t: "Qual horário normalmente você consegue treinar?", s: "Vamos te lembrar perto do seu horário.", o: ENT_HORARIO.map(h => [h[0], h[1], h[2], h[3]]) },
-    { k: "desistir", t: "O que mais costuma fazer você desistir?", s: "Sem julgamento. É só pra gente te ajudar do jeito certo.", o: ENT_DESISTIR.map(d => [d[0], d[1], "", d[2]]) },
-    { k: "motivo", t: "O que fez você chegar até aqui?", s: "Vamos lembrar disso nos dias difíceis (só você vê).", o: ENT_MOTIVO.map(m => [m[0], m[1], "", m[2]]) },
-    { k: "futuro", custom: 1 });
+    { k: "motivo", t: "O que fez você chegar até aqui?", s: "A Coach vai te lembrar disso nos dias difíceis.", o: ENT_MOTIVO.map(m => [m[0], m[1], "", m[2]]) });
   OBFOTO.diasSem = "img/ex-agacho.jpg"; OBFOTO.horario = "img/ex-polichinelo.jpg"; OBFOTO.desistir = "img/ex-afundocasa.jpg"; OBFOTO.motivo = "img/modelo.jpg"; OBFOTO.futuro = "img/ex-pranchalat.jpg";
 })();
 
@@ -9432,7 +9432,7 @@ onboarding = function(){
   if(OB.intro < ENT_INTRO.length){
     const s = ENT_INTRO[OB.intro];
     box.innerHTML = entTela(OB.intro === 4 ? "ent-forte" : "", `<h1 class="ent-t ${s.menor ? "menor" : ""}">${s.t}</h1>${entLinhas(s.p)}
-      <div class="ent-bt"><button class="btn ent-cta" id="ent-ok">${s.bt}</button>${OB.intro === 0 ? `<button class="link ent-pula" id="ent-pula">Pular introdução</button>` : `<button class="link ent-pula" id="ent-volta">Voltar</button>`}</div>`, OB.intro, ENT_INTRO.length);
+      <div class="ent-bt"><button class="btn ent-cta" id="ent-ok">${s.bt}</button>${ENT_INTRO.length < 2 ? "" : OB.intro === 0 ? `<button class="link ent-pula" id="ent-pula">Pular introdução</button>` : `<button class="link ent-pula" id="ent-volta">Voltar</button>`}</div>`, OB.intro, ENT_INTRO.length > 1 ? ENT_INTRO.length : 0);
     $("ent-ok").onclick = () => { SOM.tap && SOM.tap(); OB.intro++; onboarding(); window.scrollTo(0, 0); };
     const p = $("ent-pula"); if(p) p.onclick = () => { OB.intro = ENT_INTRO.length; onboarding(); };
     const v = $("ent-volta"); if(v) v.onclick = () => { OB.intro--; onboarding(); };
@@ -9443,11 +9443,13 @@ onboarding = function(){
   if(q && q.k === "diasSem"){
     OB.diasSem = OB.diasSem || ["MO", "WE", "FR"];
     const n = vis.length - 1, dots = `<div class="steps-dots">${vis.slice(0, n).map((_, i) => `<i class="${i <= OB.i ? "on" : ""}"></i>`).join("")}</div>`;
-    box.innerHTML = obHero("diasSem", `<button class="iconbtn sm" id="ob-back" aria-label="Voltar">${ic("back", 18)}</button>`, dots, "Em quais dias você quer treinar?", "Comece com o que dá para manter. Dá para mudar depois.") + `
+    box.innerHTML = obHero("diasSem", `<button class="iconbtn sm" id="ob-back" aria-label="Voltar">${ic("back", 18)}</button>`, dots, "Quando você consegue treinar?", "Comece com o que dá para manter. Dá para mudar depois.") + `
       <div class="ent-dias">${DSEM.map(([k, nm]) => `<button class="chip" data-d="${k}" aria-pressed="${OB.diasSem.includes(k)}">${nm}</button>`).join("")}</div>
       <p class="hint" style="text-align:center">${OB.diasSem.length} ${OB.diasSem.length === 1 ? "dia" : "dias"} por semana${OB.diasSem.length >= 3 ? " · ótimo começo" : ""}</p>
+      <p class="ent-hor-t">Melhor horário</p><div class="ent-hor" role="radiogroup" aria-label="Horário">${ENT_HORARIO.map(h => `<button class="chip" role="radio" data-h="${h[0]}" aria-pressed="${OB.horario === h[0]}" aria-checked="${OB.horario === h[0]}">${ic(h[3], 15, 2.2)} ${h[1]}</button>`).join("")}</div>
       <button class="btn btn-accent btn-block btn-lg" id="ob-next" ${OB.diasSem.length ? "" : "disabled"}>Continuar</button>`;
     box.querySelectorAll("[data-d]").forEach(b => b.onclick = () => { const d = b.dataset.d; OB.diasSem = OB.diasSem.includes(d) ? OB.diasSem.filter(x => x !== d) : DSEM.map(x => x[0]).filter(k => k === d || OB.diasSem.includes(k)); SOM.tap && SOM.tap(); onboarding(); });
+    box.querySelectorAll("[data-h]").forEach(b => b.onclick = () => { OB.horario = b.dataset.h; SOM.tap && SOM.tap(); onboarding(); });
     $("ob-back").onclick = () => { OB.i--; onboarding(); };
     $("ob-next").onclick = () => { OB.dias = Math.max(2, Math.min(6, OB.diasSem.length)); OB.i++; SOM.check && SOM.check(); onboarding(); window.scrollTo(0, 0); };
     return;
@@ -9477,9 +9479,10 @@ function entPos(){
     $("ent-ok").onclick = prox;
     $("ent-nao").onclick = () => { ME.entrada = { pulou: today() }; save(); OB = null; abrirApp(); };
   } else if(k === "compromisso"){
-    box.innerHTML = entTela("ent-comp", `<span class="ent-eb">Antes de começar</span><h1 class="ent-t">UM COMPROMISSO COM VOCÊ.</h1>
-      ${entLinhas(["Não estamos pedindo que você nunca falhe.", "Não estamos pedindo que você nunca falte.", "Estamos pedindo apenas uma coisa:", "Quando a rotina apertar, quando bater preguiça ou quando você perder alguns dias…"])}
-      <p class="ent-volte">VOLTE.</p><p class="ent-perg">Você promete não abandonar você mesma só porque um dia não saiu perfeito?</p>
+    box.innerHTML = entTela("ent-coach ent-comp", `<div class="coach-av grande"><img src="${COACH_IMG}" alt="" onerror="this.remove()"><i>${ic("star", 12, 3)}</i></div>
+      <span class="ent-eb">Um compromisso com você</span><h1 class="ent-t">${nome}, quando a rotina apertar…</h1>
+      <p class="ent-volte">VOLTE.</p>
+      ${entLinhas(["Não precisa ser perfeito. Eu sou a Coach CK Life e vou te lembrar disso. 💚"])}
       <div class="ent-bt"><button class="btn ent-cta" id="ent-ok">EU VOLTO POR MIM 💚</button></div>`);
     $("ent-ok").onclick = () => { OB.compromisso = today(); vibra([30, 40, 60]); SOM.chime && SOM.chime(); prox(); };
   } else if(k === "acordo"){
@@ -11667,8 +11670,8 @@ function ppInstalar(){
     cta = `<button class="btn ent-cta" id="pp-copia">${ic("share", 18)} COPIAR LINK DO APP</button>`;
   } else if(ios){
     guia = `<div class="pp-guia"><div class="pp-guia-h"><span class="pp-chip">iPhone</span>${safari ? "Faça aqui no Safari" : "Abra <b>app.cklife.com.br</b> no Safari e faça:"}</div>
-      <ol class="pp-passos">${ppPasso(1, `Toque em <b>Compartilhar</b><small>na barra do Safari, ou em ⋯ e depois Compartilhar</small>`, ppTile(ppSvg.share))}${ppPasso(2, `Toque em <b>Adicionar à Tela de Início</b><small>se não aparecer, role a lista para baixo</small>`, ppTile(ppSvg.mais))}${ppPasso(3, `Toque em <b>Adicionar</b>`, `<span class="pp-pill">Adicionar</span>`)}</ol>
-      <p class="pp-chave">${ic("check", 16, 2.4)}<span>Depois, abra o CK Life <b>pelo ícone</b> e entre com <b>${ppEmail()}</b> e sua senha. Lá você ativa seus avisos.</span></p></div>`;
+      <ol class="pp-passos">${ppPasso(1, `Toque em <b>Compartilhar</b><small>ou em ⋯ e depois Compartilhar</small>`, ppTile(ppSvg.share))}${ppPasso(2, `Toque em <b>Adicionar à Tela de Início</b><small>role a lista se precisar</small>`, ppTile(ppSvg.mais))}${ppPasso(3, `Toque em <b>Adicionar</b>`, `<span class="pp-pill">Adicionar</span>`)}</ol>
+      <p class="pp-chave">${ic("check", 16, 2.4)}<span>Depois, abra pelo <b>ícone</b> e entre com <b>${ppEmail()}</b>.</span></p></div>`;
     cta = `<button class="btn ent-cta" id="pp-feito">JÁ ADICIONEI ${ic("check", 18, 2.6)}</button>`;
   } else if(nativo){
     guia = `<p class="pp-mini">Uma janelinha do celular vai pedir para confirmar. É só tocar em <b>Instalar</b>.</p>`;
@@ -11683,8 +11686,7 @@ function ppInstalar(){
     <div class="pp-hero"><img src="img/passos-celular.webp" alt="" onerror="this.parentNode.remove()"></div>
     <span class="ent-eb">Passo 1 de 3 · 30 segundos</span>
     <h1 class="ent-t pp-t">Seu compromisso merece um lugar na sua tela</h1>
-    <p class="pp-sub">${entNome()}, você acabou de prometer que vai voltar por você. Com o CK Life na tela do celular, essa promessa fica <b>a um toque de distância</b>, todos os dias, inclusive nos corridos.</p>
-    <ul class="pp-ben"><li>${ic("bell", 16, 2.2)}O lembrete chega na hora que você escolher</li><li>${ic("bolt", 16, 2.2)}Abre em 1 toque, sem procurar link</li><li>${ic("heart", 16, 2.2)}Seu progresso sempre com você</li></ul>
+    <p class="pp-sub">Assim seu treino fica <b>a um toque</b> e o lembrete chega na hora certa.</p>
     ${guia}<div class="pp-bt">${cta}<button class="pp-pula" id="pp-nao">pular por enquanto</button></div>`, "pp-inst");
   const prox = () => { ppSalva({ etapa: "avisos" }); ppRoda(); };
   $("pp-nao").onclick = () => { try{ instGrava({ nao: today() }); }catch(e){} prox(); };
@@ -11700,7 +11702,7 @@ function ppAbraIcone(){
   ppSalva({ inst: today(), etapa: "avisos" });
   ppTela(`${ppDots(1)}<div class="pp-ok">${ic("check", 34, 2.6)}</div>
     <span class="ent-eb">Quase lá</span><h1 class="ent-t pp-t">Agora abra o CK Life pelo ícone 💚</h1>
-    <p class="pp-sub">Feche o Safari e toque no ícone do CK Life na tela do seu iPhone. Entre com <b>${ppEmail()}</b> e sua senha: você continua exatamente daqui.</p>
+    <p class="pp-sub">Toque no ícone na sua tela e entre com <b>${ppEmail()}</b>. Você continua daqui.</p>
     <div class="pp-icone"><img src="img/icone-192.png" alt="" width="64" height="64" onerror="this.remove()"><b>CK Life</b></div>
     <div class="pp-bt"><button class="link ent-pula" id="pp-aqui">Continuar aqui no navegador</button></div>`, "pp-abra");
   $("pp-aqui").onclick = () => { ppSalva({ etapa: "treino" }); ppRoda(); };
@@ -11713,9 +11715,8 @@ function ppAvisos(){
     <div class="pp-notif" aria-hidden="true"><img src="img/icone-192.png" alt="" width="38" height="38" onerror="this.remove()"><div><span><b>CK Life</b><small>agora</small></span><strong>Hora do seu primeiro treino 💚</strong><p>São só 5 minutos. A gente está junto.</p></div></div>
     <div class="pp-notif pp-notif2" aria-hidden="true"><img src="img/icone-192.png" alt="" width="38" height="38" onerror="this.remove()"><div><span><b>CK Life</b><small>${esc(hh)}</small></span><strong>Recado da Coach</strong><p>Pouco ainda conta. Bora?</p></div></div>
     <span class="ent-eb">Passo 2 de 3</span>
-    <h1 class="ent-t pp-t">Deixa o CK Life fazer a parte dele</h1>
-    <p class="pp-sub">No nosso acordo, a gente te lembra, comemora com você e te busca quando a rotina apertar. <b>Para cumprir isso, só falta um toque:</b> ativar seus avisos.</p>
-    <p class="pp-mini">Sem spam. Você escolhe o que recebe e muda quando quiser.</p>
+    <h1 class="ent-t pp-t">Deixa a gente te lembrar</h1>
+    <p class="pp-sub">Do seu treino, das suas conquistas e quando a rotina apertar. Sem spam.</p>
     <div class="pp-bt"><button class="btn ent-cta" id="pp-ativa">${ic("bell", 18, 2.4)} ATIVAR MEUS AVISOS</button><button class="pp-pula" id="pp-nao">pular por enquanto</button></div><p class="pp-msg" id="pp-msg" role="status"></p>`, "pp-av");
   const prox = () => { ppSalva({ etapa: "treino" }); ppRoda(); };
   $("pp-nao").onclick = prox;
@@ -11738,7 +11739,7 @@ function ppTreino(){
   ppTela(`${ppDots(3)}
     <span class="ent-eb">Passo 3 de 3</span>
     <h1 class="ent-t pp-t">Quando vai ser seu primeiro treino?</h1>
-    <p class="pp-sub">Marcar dia e hora é o que transforma vontade em compromisso. Escolha um momento que caiba de verdade no seu dia.</p>
+    <p class="pp-sub">Escolha um momento que caiba de verdade no seu dia.</p>
     <div class="pp-tr"><div class="pp-tr-ic">${ic("play", 22, 2.4)}</div><div><b>${esc(q.nome)}</b><div class="pp-tags"><span>5 min</span><span>Em pé</span><span>Sem equipamento</span><span>Sala ou quarto</span></div></div></div>
     <button class="btn ent-cta" id="pp-agora">${ic("play", 18, 2.4)} AGORA, ESTOU PRONTA</button>
     <div class="pp-ou"><span>ou escolha o seu momento</span></div>
@@ -11852,7 +11853,7 @@ if(/^https?:/.test(location.protocol) && !/localhost|127\.0\.0\.1/.test(location
   setInterval(errEnvia, 15000);
 }
 /* só no teste local */
-if(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) window.__PP = { roda: ppRoda, me: () => ME, salva: ppSalva, livre: ppLivre };
+if(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) window.__PP = { roda: ppRoda, me: () => ME, salva: ppSalva, livre: ppLivre, ent: k => { OB = { i: 0, itens: [], intro: 9, pos: ENT_POS_NOVA.indexOf(k) }; show("v-onb"); entPos(); }, dias: () => { OB = { i: OBQ.findIndex(q => q.k === "diasSem"), itens: [], intro: 9 }; show("v-onb"); onboarding(); } };
 
 /* ===================== PIXEL DA META (medir anúncios) =====================
    Só funciona se a pessoa aceitar os cookies (LGPD). Nunca no painel do administrador.

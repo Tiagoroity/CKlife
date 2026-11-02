@@ -3013,3 +3013,10 @@ body.pp-on .ins-toast,body.pp-on #ck-inst,body.pp-on .coach-toast{display:none!i
 .pp-pula{align-self:center;background:none;border:0;color:rgba(185,207,194,.62);font-size:12.5px;font-weight:600;padding:8px 14px;min-height:34px;letter-spacing:.01em}
 .pp-pula:active{color:#CFE0D4}
 .pp-t{text-wrap:balance}
+.ent-hor{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}.ent-hor .chip{min-height:46px;font-weight:700;justify-content:center;display:flex;align-items:center;gap:6px}
+.ent-comp .ent-volte{margin:0}
+/* instalar: o botão vem depois do passo a passo (sem ficar fixo embaixo) */
+.pp-inst .pp-bt{position:static;margin:4px 0 0;padding:0;background:none}
+.pp-inst .pp-hero{height:clamp(150px,22vh,200px)}
+.ent-hor-t{margin:6px 0 0;font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted,#65736C);text-align:center}
+.ent-comp.ent-coach .ent-volte,.ent-comp.ent-coach .ent-l{text-align:center}.ent-comp.ent-coach .ent-volte{font-size:clamp(44px,13vw,60px)}
