@@ -134,11 +134,15 @@ function d21Abrir(aba){
   d21Carrega(true).then(() => { if(D21.aberto) d21Pinta(); });
 }
 function d21Fechar(){
-  const box = $("d21"); if(box){ box.hidden = true; box.innerHTML = ""; }
+  const box = $("d21"); if(box) box.remove();   // sai do DOM de verdade (no iPhone, camada escondida às vezes deixa a tela sem pintar)
+  clearInterval(D21_TIMER);
   if(D21.aberto) d21Ev("challenge_exited_to_ck", { dia: d21Dia() });
   D21.aberto = false; document.body.classList.remove("d21-on"); try{ localStorage.removeItem(D21_K); }catch(e){}
   if(TAB === "inicio") rInicio(); else try{ d21PoeCard(); }catch(e){}
+  d21Repinta();
 }
+/* força o navegador a redesenhar a tela de baixo (evita a tela "em branco" no iPhone depois de fechar uma camada cheia) */
+function d21Repinta(){ try{ void document.body.offsetHeight; requestAnimationFrame(() => { const y = window.scrollY; window.scrollTo(0, y + 1); window.scrollTo(0, y); }); }catch(e){} }
 function d21Pinta(){
   const box = $("d21"); if(!box || !D21.aberto) return; const e = d21Ed(); if(!e) return d21Fechar();
   const dentro = d21Insc(), aba = dentro ? D21.aba : "conhecer", sc = box.querySelector(".d21-body"), y = sc && sc.dataset.aba === aba ? sc.scrollTop : 0;

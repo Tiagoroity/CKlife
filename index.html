@@ -2767,7 +2767,7 @@ body.d21-on{overflow:hidden}
 .d21-volta{border:0;background:rgba(255,255,255,.08);color:var(--dt);border-radius:999px;padding:8px 12px 8px 8px;font:700 13px/1 Figtree,system-ui,sans-serif;display:flex;align-items:center;gap:4px}
 .d21-marca{flex:1;text-align:center;font:800 13px/1 'Bricolage Grotesque',system-ui,sans-serif;letter-spacing:.06em;color:var(--f3)}
 .d21-ed{font:700 12px/1 Figtree,system-ui,sans-serif;color:var(--dm);min-width:44px;text-align:right}
-.d21-body{flex:1;overflow-y:auto;padding:16px 16px 110px;display:flex;flex-direction:column;gap:14px;max-width:560px;width:100%;margin:0 auto;-webkit-overflow-scrolling:touch}
+.d21-body{flex:1;overflow-y:auto;padding:16px 16px 110px;display:flex;flex-direction:column;gap:14px;max-width:560px;width:100%;margin:0 auto}
 .d21-nav{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:center;gap:4px;padding:8px 12px calc(8px + env(safe-area-inset-bottom,0px));background:rgba(10,23,18,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--dl)}
 .d21-nav button{flex:1;max-width:160px;border:0;background:none;color:var(--dm);display:flex;flex-direction:column;align-items:center;gap:3px;font:700 12px/1 Figtree,system-ui,sans-serif;padding:6px;border-radius:14px}
 .d21-nav button[aria-current="true"]{color:var(--f1);background:rgba(255,122,61,.12)}
@@ -9223,7 +9223,7 @@ const abrirPerfilEq = abrirPerfil; abrirPerfil = async function(u){
    Quem deixa o CK Life aberto (ou instalado na tela inicial) fica com a versão antiga até recarregar.
    O app confere a versão publicada ao abrir, ao voltar do segundo plano e a cada 5 minutos.
    Se houver versão nova, mostra a faixa "ATUALIZAR": um toque e pronto. Nunca aparece no meio do treino. */
-const CK_VER = "20261102005826";
+const CK_VER = "20261102010456";
 let CK_VER_NOVA = null;
 const ATU_K = "ck_atu";
 const atuTentou = () => { try{ return JSON.parse(localStorage.getItem(ATU_K) || "null"); }catch(e){ return null; } };
@@ -11047,11 +11047,15 @@ function d21Abrir(aba){
   d21Carrega(true).then(() => { if(D21.aberto) d21Pinta(); });
 }
 function d21Fechar(){
-  const box = $("d21"); if(box){ box.hidden = true; box.innerHTML = ""; }
+  const box = $("d21"); if(box) box.remove();   // sai do DOM de verdade (no iPhone, camada escondida às vezes deixa a tela sem pintar)
+  clearInterval(D21_TIMER);
   if(D21.aberto) d21Ev("challenge_exited_to_ck", { dia: d21Dia() });
   D21.aberto = false; document.body.classList.remove("d21-on"); try{ localStorage.removeItem(D21_K); }catch(e){}
   if(TAB === "inicio") rInicio(); else try{ d21PoeCard(); }catch(e){}
+  d21Repinta();
 }
+/* força o navegador a redesenhar a tela de baixo (evita a tela "em branco" no iPhone depois de fechar uma camada cheia) */
+function d21Repinta(){ try{ void document.body.offsetHeight; requestAnimationFrame(() => { const y = window.scrollY; window.scrollTo(0, y + 1); window.scrollTo(0, y); }); }catch(e){} }
 function d21Pinta(){
   const box = $("d21"); if(!box || !D21.aberto) return; const e = d21Ed(); if(!e) return d21Fechar();
   const dentro = d21Insc(), aba = dentro ? D21.aba : "conhecer", sc = box.querySelector(".d21-body"), y = sc && sc.dataset.aba === aba ? sc.scrollTop : 0;
