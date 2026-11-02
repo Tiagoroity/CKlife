@@ -43,6 +43,7 @@ function zLiga(){
   main.querySelectorAll("tbody tr").forEach(tr => {
     if(tr.querySelector("[data-zap]")) return;
     const ed = tr.querySelector("[data-ed]"); if(!ed) return; const u = DB().users.find(x => x.id === ed.dataset.ed); if(!u) return;
+    const nm = tr.children[0]; if(nm && !nm.querySelector(".al-orig") && window.ckOrigemAluna){ const o = window.ckOrigemAluna(u); if(o && !/^Direto/.test(o)) nm.insertAdjacentHTML("beforeend", `<br><small class="al-orig">via ${esc(o)}</small>`); }
     const td = tr.children[1]; if(!td || zDig(u.whats).length < 10) return;
     td.insertAdjacentHTML("beforeend", ` <button class="btn btn-sm zap-bt" data-zap="${u.id}" title="Mandar mensagem no WhatsApp" aria-label="Mandar mensagem no WhatsApp para ${esc(u.nome || "")}">💬</button>`);
     td.querySelector("[data-zap]").onclick = ev => { ev.stopPropagation(); zAbre(u); };

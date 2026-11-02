@@ -283,11 +283,11 @@ $("f-cad").addEventListener("submit", async e => {
   if(NU.ativo){
     lmsg("Criando sua conta…", true);
     const r = await NU.cadastrar(email, $("c-senha").value); if(r.erro) return lmsg(r.erro);
-    const pend = { nome: v("c-nome"), whats: v("c-whats"), nasc: v("c-nasc"), cidade: cidInfo.id, cidadeInfo: cidInfo };
+    const pend = { nome: v("c-nome"), whats: v("c-whats"), nasc: v("c-nasc"), cidade: cidInfo.id, cidadeInfo: cidInfo, origem: typeof origemAtual === "function" ? origemAtual() : undefined };
     if(r.confirmar){ try{ localStorage.setItem(KEY + "_pend_" + email, JSON.stringify(pend)); }catch(e){} modoAuth(false); $("l-email").value = email; return lmsg("Enviamos um link para o seu e-mail. Toque nele para confirmar a conta e depois entre aqui com sua senha.", true); }
     await NU.carregar(DB, { id: r.id, email }, false); novoId = r.id;
   }
-  const u = { id: novoId, nome: v("c-nome"), email, senha: NU.ativo ? undefined : await hash($("c-senha").value), whats: v("c-whats"), nasc: v("c-nasc"), genero: "feminino", cidade: cidInfo.id, cidadeInfo: cidInfo, criado: today(),
+  const u = { id: novoId, nome: v("c-nome"), email, senha: NU.ativo ? undefined : await hash($("c-senha").value), whats: v("c-whats"), nasc: v("c-nasc"), genero: "feminino", cidade: cidInfo.id, cidadeInfo: cidInfo, origem: typeof origemAtual === "function" ? origemAtual() : undefined, criado: today(),
     admin: primeiro, perms: primeiro ? { total: true } : null, bloqueado: false, premium: { tipo: "teste", ate: addD(today(), 7) }, perfil: null, diario: {}, pesos: [], treinos: [], favs: [], voz: true };
   DB.users.push(u); save(); if(!NU.ativo) setSess(u.id); SOM.chime();
   entrar();
@@ -437,7 +437,7 @@ function entrar(){
   const modoAdm = modoAdmin();
   if(NU.ativo && NU.uid && !ME && !modoAdm){
     let pend = {}; try{ pend = JSON.parse(localStorage.getItem(KEY + "_pend_" + NU.email) || "{}"); }catch(e){}
-    ME = { id: NU.uid, email: NU.email, nome: pend.nome || String(NU.email || "").split("@")[0], whats: pend.whats || "", nasc: pend.nasc || null, cidade: pend.cidade || 1, cidadeInfo: pend.cidadeInfo || undefined, genero: "feminino", criado: today(), bloqueado: false, premium: { tipo: "teste", ate: addD(today(), 7) }, perfil: null, diario: {}, pesos: [], treinos: [], favs: [], voz: true };
+    ME = { id: NU.uid, email: NU.email, nome: pend.nome || String(NU.email || "").split("@")[0], whats: pend.whats || "", nasc: pend.nasc || null, cidade: pend.cidade || 1, cidadeInfo: pend.cidadeInfo || undefined, origem: pend.origem || (typeof origemAtual === "function" ? origemAtual() : undefined), genero: "feminino", criado: today(), bloqueado: false, premium: { tipo: "teste", ate: addD(today(), 7) }, perfil: null, diario: {}, pesos: [], treinos: [], favs: [], voz: true };
     DB.users.push(ME); save();
   }
   if(!ME){ modoAdm ? showAdminLogin() : showLogin(); return; }

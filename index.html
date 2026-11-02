@@ -2742,6 +2742,8 @@ main.adm .seg-sub,main.adm .chips.scroll{flex-wrap:wrap;overflow:visible;margin-
 #v-admin .zq-n{flex:none;display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:#FCE7C3;color:#8A5A12;font-weight:800}
 #v-admin .zq-t{flex:1;min-width:0;display:grid}
 #v-admin .zq-t small{color:var(--muted);font-size:12.5px}
+#v-admin .al-orig{display:inline-block;margin-top:2px;font-size:11.5px;font-weight:700;color:#8A5A12;background:#FCE7C3;border-radius:6px;padding:1px 6px}
+#v-admin .eb-link{word-break:break-all}
 </style>
 
 <!-- Entrar / criar conta -->
@@ -3274,7 +3276,7 @@ N.sb = sb;
 const pad = n => String(n).padStart(2, "0");
 const hoje = () => { const d = new Date(); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; };
 const menosDias = n => { const d = new Date(); d.setDate(d.getDate() - n); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; };
-const LISTAS = ["cidades","segmentos","anunciantes","campanhas","parceiros","profissionais","avisos","receitasExtras","exercExtras","pagamentos","cupons","empresas","servicos","produtos","banners","categorias","exercAjustes"];
+const LISTAS = ["cidades","segmentos","anunciantes","campanhas","parceiros","profissionais","avisos","receitasExtras","exercExtras","pagamentos","cupons","empresas","servicos","produtos","banners","categorias","exercAjustes","embaixadoras"];
 const UNICOS = ["config","freq","receitasOcultas","receitasPlano","modulos"];
 const COLS_USER = ["id","email","nome","whats","nasc","cidade","criado","ultimo","bloqueado","premium"];
 const FORA = new Set(["senha","admin","perms","adminDesde","exemplo","genero", ...COLS_USER]);
@@ -3282,7 +3284,7 @@ const J = x => JSON.stringify(x === undefined ? null : x);
 async function q(p){ const r = await p; if(r.error) throw r.error; return r.data; }
 
 N.vazio = () => ({ versao: 1, nuvem: true, criado: hoje(), config: { nomeApp: "CK Life", checkout: C.KIWIFY_URL || "", suporte: C.SUPORTE || "", treinosParaCupom: 8, premiumPreco: 19.9 }, freq: { cliques: 25, minutos: 4, intervalo: 3, maxDia: 6 },
-  users: [], eventos: [], acessos: {}, cidades: [], segmentos: [], anunciantes: [], campanhas: [], pagamentos: [], profissionais: [], parceiros: [], cupons: [], avisos: [], receitasExtras: [], receitasOcultas: [], exercExtras: [], empresas: [], servicos: [], produtos: [], banners: [], categorias: [], exercAjustes: [], receitasPlano: {}, modulos: {} });
+  users: [], eventos: [], acessos: {}, cidades: [], segmentos: [], anunciantes: [], campanhas: [], pagamentos: [], profissionais: [], parceiros: [], cupons: [], avisos: [], receitasExtras: [], receitasOcultas: [], exercExtras: [], empresas: [], servicos: [], produtos: [], banners: [], categorias: [], exercAjustes: [], embaixadoras: [], receitasPlano: {}, modulos: {} });
 
 /* linha da tabela <-> pessoa no app */
 function paraUser(r, adm){
@@ -4334,11 +4336,11 @@ $("f-cad").addEventListener("submit", async e => {
   if(NU.ativo){
     lmsg("Criando sua conta…", true);
     const r = await NU.cadastrar(email, $("c-senha").value); if(r.erro) return lmsg(r.erro);
-    const pend = { nome: v("c-nome"), whats: v("c-whats"), nasc: v("c-nasc"), cidade: cidInfo.id, cidadeInfo: cidInfo };
+    const pend = { nome: v("c-nome"), whats: v("c-whats"), nasc: v("c-nasc"), cidade: cidInfo.id, cidadeInfo: cidInfo, origem: typeof origemAtual === "function" ? origemAtual() : undefined };
     if(r.confirmar){ try{ localStorage.setItem(KEY + "_pend_" + email, JSON.stringify(pend)); }catch(e){} modoAuth(false); $("l-email").value = email; return lmsg("Enviamos um link para o seu e-mail. Toque nele para confirmar a conta e depois entre aqui com sua senha.", true); }
     await NU.carregar(DB, { id: r.id, email }, false); novoId = r.id;
   }
-  const u = { id: novoId, nome: v("c-nome"), email, senha: NU.ativo ? undefined : await hash($("c-senha").value), whats: v("c-whats"), nasc: v("c-nasc"), genero: "feminino", cidade: cidInfo.id, cidadeInfo: cidInfo, criado: today(),
+  const u = { id: novoId, nome: v("c-nome"), email, senha: NU.ativo ? undefined : await hash($("c-senha").value), whats: v("c-whats"), nasc: v("c-nasc"), genero: "feminino", cidade: cidInfo.id, cidadeInfo: cidInfo, origem: typeof origemAtual === "function" ? origemAtual() : undefined, criado: today(),
     admin: primeiro, perms: primeiro ? { total: true } : null, bloqueado: false, premium: { tipo: "teste", ate: addD(today(), 7) }, perfil: null, diario: {}, pesos: [], treinos: [], favs: [], voz: true };
   DB.users.push(u); save(); if(!NU.ativo) setSess(u.id); SOM.chime();
   entrar();
@@ -4488,7 +4490,7 @@ function entrar(){
   const modoAdm = modoAdmin();
   if(NU.ativo && NU.uid && !ME && !modoAdm){
     let pend = {}; try{ pend = JSON.parse(localStorage.getItem(KEY + "_pend_" + NU.email) || "{}"); }catch(e){}
-    ME = { id: NU.uid, email: NU.email, nome: pend.nome || String(NU.email || "").split("@")[0], whats: pend.whats || "", nasc: pend.nasc || null, cidade: pend.cidade || 1, cidadeInfo: pend.cidadeInfo || undefined, genero: "feminino", criado: today(), bloqueado: false, premium: { tipo: "teste", ate: addD(today(), 7) }, perfil: null, diario: {}, pesos: [], treinos: [], favs: [], voz: true };
+    ME = { id: NU.uid, email: NU.email, nome: pend.nome || String(NU.email || "").split("@")[0], whats: pend.whats || "", nasc: pend.nasc || null, cidade: pend.cidade || 1, cidadeInfo: pend.cidadeInfo || undefined, origem: pend.origem || (typeof origemAtual === "function" ? origemAtual() : undefined), genero: "feminino", criado: today(), bloqueado: false, premium: { tipo: "teste", ate: addD(today(), 7) }, perfil: null, diario: {}, pesos: [], treinos: [], favs: [], voz: true };
     DB.users.push(ME); save();
   }
   if(!ME){ modoAdm ? showAdminLogin() : showLogin(); return; }
@@ -9023,7 +9025,7 @@ const abrirPerfilEq = abrirPerfil; abrirPerfil = async function(u){
    Quem deixa o CK Life aberto (ou instalado na tela inicial) fica com a versão antiga até recarregar.
    O app confere a versão publicada ao abrir, ao voltar do segundo plano e a cada 5 minutos.
    Se houver versão nova, mostra a faixa "ATUALIZAR": um toque e pronto. Nunca aparece no meio do treino. */
-const CK_VER = "20261101210923";
+const CK_VER = "20261101211811";
 let CK_VER_NOVA = null;
 const ATU_K = "ck_atu";
 const atuTentou = () => { try{ return JSON.parse(localStorage.getItem(ATU_K) || "null"); }catch(e){ return null; } };
@@ -10521,6 +10523,33 @@ rInicio = function(){
   }catch(e){ console.warn(e); }
   return r;
 };
+
+/* ===================== DE ONDE A ALUNA VEIO (embaixadoras e anúncios) =====================
+   Regra do ÚLTIMO CLIQUE: vale o último link com origem que ela abriu antes de se cadastrar (até 30 dias).
+   - ?e=codigo  → embaixadora (ex.: cklife.com.br/?e=micaela)
+   - utm_source → anúncio ou outra campanha (ex.: utm_source=meta)
+   Abrir o app sem nada no link não apaga a origem anterior. Depois do cadastro, a origem fica gravada na aluna
+   e não muda mais. Só guarda o código do link e a data (nenhum dado pessoal). */
+const ORIG_K = "ck_orig", ORIG_DIAS = 30;
+(function capturaOrigem(){
+  try{
+    const u = new URL(location.href), e = (u.searchParams.get("e") || "").toLowerCase().replace(/[^a-z0-9_-]/g, "").slice(0, 40);
+    const src = (u.searchParams.get("utm_source") || "").slice(0, 40);
+    if(!e && !src) return;
+    const o = { em: typeof today === "function" ? today() : new Date().toISOString().slice(0, 10) };
+    if(e) o.e = e; else { o.src = src; const c = u.searchParams.get("utm_campaign"), ct = u.searchParams.get("utm_content"); if(c) o.campanha = c.slice(0, 60); if(ct) o.anuncio = ct.slice(0, 60); }
+    localStorage.setItem(ORIG_K, JSON.stringify(o));
+    if(e){ u.searchParams.delete("e"); history.replaceState(history.state, "", u.pathname + u.search + u.hash); }
+  }catch(err){}
+})();
+/* origem válida no momento do cadastro (ou nada) */
+function origemAtual(){
+  try{
+    const o = JSON.parse(localStorage.getItem(ORIG_K) || "null"); if(!o || !o.em) return undefined;
+    const dias = (Date.now() - new Date(o.em + "T12:00:00").getTime()) / 864e5; if(dias > ORIG_DIAS) return undefined;
+    return o;
+  }catch(e){ return undefined; }
+}
 
 /* ===================== PIXEL DA META (medir anúncios) =====================
    Só funciona se a pessoa aceitar os cookies (LGPD). Nunca no painel do administrador.
@@ -14641,6 +14670,7 @@ function zLiga(){
   main.querySelectorAll("tbody tr").forEach(tr => {
     if(tr.querySelector("[data-zap]")) return;
     const ed = tr.querySelector("[data-ed]"); if(!ed) return; const u = DB().users.find(x => x.id === ed.dataset.ed); if(!u) return;
+    const nm = tr.children[0]; if(nm && !nm.querySelector(".al-orig") && window.ckOrigemAluna){ const o = window.ckOrigemAluna(u); if(o && !/^Direto/.test(o)) nm.insertAdjacentHTML("beforeend", `<br><small class="al-orig">via ${esc(o)}</small>`); }
     const td = tr.children[1]; if(!td || zDig(u.whats).length < 10) return;
     td.insertAdjacentHTML("beforeend", ` <button class="btn btn-sm zap-bt" data-zap="${u.id}" title="Mandar mensagem no WhatsApp" aria-label="Mandar mensagem no WhatsApp para ${esc(u.nome || "")}">💬</button>`);
     td.querySelector("[data-zap]").onclick = ev => { ev.stopPropagation(); zAbre(u); };
@@ -14667,6 +14697,81 @@ function zQuentesPinta(){
   main.querySelectorAll("[data-zq]").forEach(b => b.onclick = () => { const u = DB().users.find(x => x.id === b.dataset.zq); if(u) zAbre(u); });
 }
 { let zqT = null; new MutationObserver(() => { clearTimeout(zqT); zqT = setTimeout(zQuentesPinta, 80); }).observe($("adm-main") || document.body, { childList: true }); }
+
+/* ===================== Painel · EMBAIXADORAS =====================
+   Cada embaixadora ganha um link (cklife.com.br/?e=codigo). Quem se cadastra pelo link conta para ela
+   (regra do último clique, até 30 dias). Aqui: criar, copiar o link, mandar no WhatsApp e ver os números
+   (cadastros, quantas treinaram, quantas assinaram o Pro). A embaixadora nunca vê dados das alunas. */
+AIC.embaixadoras = '<path d="M12 2l3 6 6.5.9-4.7 4.6 1.1 6.5L12 17l-5.9 3 1.1-6.5L2.5 8.9 9 8z"/>';
+SECOES.push(["embaixadoras", "Embaixadoras"]); MENU_NOME.embaixadoras = "Embaixadoras e origem";
+{ const g = MENU.find(m => m[0] === "Marketing"); if(g && !g[1].some(x => x[2].includes("embaixadoras"))) g[1].push(["Embaixadoras", "embaixadoras", ["embaixadoras"]]); }
+{ const mmEb = montaMenu; montaMenu = function(){ try{ if(PERM && !PERM.total && PERM.embaixadoras == null && PERM.alunos) PERM.embaixadoras = PERM.alunos === "editar" ? "ver" : PERM.alunos; }catch(e){} return mmEb.apply(this, arguments); }; }
+const EB_SITE = "https://cklife.com.br/";
+const ebLink = c => EB_SITE + "?e=" + encodeURIComponent(c);
+const ebSlug = s => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "").slice(0, 30);
+const ebLista = () => (DB().embaixadoras = DB().embaixadoras || []);
+const ebPagando = u => { const s = (typeof PLU !== "undefined" && PLU) ? PLU[u.id] : null; return !!(s && s.pro && !s.trial && ["kiwify", "apple", "google"].includes(s.provider)); };
+/* de onde a aluna veio */
+function ebOrigem(u){
+  const o = u.origem || {};
+  if(o.e){ const e = ebLista().find(x => x.id === o.e); return { k: "emb:" + o.e, nome: e ? e.nome : o.e, tipo: "Embaixadora" }; }
+  if(o.src){ const ad = /meta|facebook|instagram|^fb$|^ig$/i.test(o.src); return { k: ad ? "meta" : "src:" + o.src, nome: ad ? "Anúncio Meta" : o.src, tipo: ad ? "Anúncio" : "Campanha" }; }
+  return { k: "direto", nome: "Direto / sem origem", tipo: "Direto" };
+}
+window.ckOrigemAluna = u => ebOrigem(u).nome;
+function ebNumeros(){
+  const alunas = DB().users.filter(u => !u.admin && !u.soAdmin && !u.exemplo), sete = addD(today(), -6), M = {};
+  alunas.forEach(u => { const o = ebOrigem(u), m = M[o.k] = M[o.k] || { nome: o.nome, tipo: o.tipo, cad: 0, sem: 0, treinou: 0, pro: 0 };
+    m.cad++; if((u.criado || "") >= sete) m.sem++; if((u.treinos || []).length) m.treinou++; if(ebPagando(u)) m.pro++; });
+  return { M, total: alunas.length };
+}
+const ebPct = (a, b) => b ? Math.round(100 * a / b) + "%" : "–";
+function vEmbaixadoras(){
+  const L = ebLista(), { M, total } = ebNumeros(), pode = podeEditar("embaixadoras");
+  const linhaEmb = e => { const m = M["emb:" + e.id] || { cad: 0, sem: 0, treinou: 0, pro: 0 };
+    return `<tr><td><b>${esc(e.nome)}</b>${e.ativa === false ? ` <span class="st off">pausada</span>` : ""}<br><small class="muted eb-link">${esc(ebLink(e.id))}</small></td>
+      <td class="num"><b>${int(m.cad)}</b>${m.sem ? `<br><small class="muted">+${int(m.sem)} em 7 dias</small>` : ""}</td><td class="num">${int(m.treinou)} <small class="muted">(${ebPct(m.treinou, m.cad)})</small></td><td class="num">${int(m.pro)}</td>
+      <td><div class="acts"><button class="btn btn-accent btn-sm" data-eb-cp="${esc(e.id)}">Copiar link</button>${String(e.whats || "").replace(/\D/g, "").length >= 10 ? `<button class="btn btn-sm zap-bt" data-eb-zap="${esc(e.id)}" title="Mandar o link para ela no WhatsApp">💬</button>` : ""}${pode ? `<button class="btn btn-line btn-sm" data-eb-ed="${esc(e.id)}">Editar</button>` : ""}</div></td></tr>`; };
+  const orig = Object.values(M).sort((a, b) => b.cad - a.cad);
+  $("adm-main").innerHTML = `<div class="head"><div><h1>Embaixadoras</h1><p class="muted">Cada embaixadora tem um link próprio. Quem se cadastra pelo link conta para ela (vale o último link que a aluna clicou antes de se cadastrar, até 30 dias). Ela nunca vê dados das alunas.</p></div>${pode ? `<button class="btn btn-accent" id="eb-n">+ Nova embaixadora</button>` : ""}</div>
+    <div class="card"><h3>Embaixadoras <span class="muted num" style="font-size:16px">(${L.length})</span></h3>
+      ${L.length ? `<div class="tbl"><table><thead><tr><th>Embaixadora e link</th><th>Cadastros</th><th>Já treinaram</th><th>Assinaram o Pro</th><th></th></tr></thead><tbody>${L.slice().sort((a, b) => ((M["emb:" + b.id] || {}).cad || 0) - ((M["emb:" + a.id] || {}).cad || 0)).map(linhaEmb).join("")}</tbody></table></div>`
+        : `<p class="muted" style="margin:6px 0 0">Nenhuma embaixadora ainda. Toque em <b>+ Nova embaixadora</b>: o link dela é criado na hora.</p>`}
+    </div>
+    <div class="card"><h3>De onde vêm as alunas</h3><p class="hint" style="margin:0 0 10px">Todas as ${int(total)} alunas cadastradas. A origem passou a ser registrada a partir de 01/11/2026; quem entrou antes aparece em "Direto / sem origem".</p>
+      <div class="tbl"><table><thead><tr><th>Origem</th><th>Cadastros</th><th>Já treinaram</th><th>Assinaram o Pro</th></tr></thead><tbody>${orig.map(m => `<tr><td><b>${esc(m.nome)}</b><br><small class="muted">${esc(m.tipo)}</small></td><td class="num">${int(m.cad)}</td><td class="num">${int(m.treinou)} <small class="muted">(${ebPct(m.treinou, m.cad)})</small></td><td class="num">${int(m.pro)}</td></tr>`).join("") || `<tr><td colspan="4" class="empty">Sem alunas ainda.</td></tr>`}</tbody></table></div></div>`;
+  const n = $("eb-n"); if(n) n.onclick = () => ebForm(null);
+  document.querySelectorAll("[data-eb-cp]").forEach(b => b.onclick = () => F.copyText(ebLink(b.dataset.ebCp), "Link copiado. É só mandar para ela 💚"));
+  document.querySelectorAll("[data-eb-ed]").forEach(b => b.onclick = () => ebForm(ebLista().find(x => x.id === b.dataset.ebEd)));
+  document.querySelectorAll("[data-eb-zap]").forEach(b => b.onclick = () => { const e = ebLista().find(x => x.id === b.dataset.ebZap); if(!e) return;
+    const msg = `Oi, ${String(e.nome).split(" ")[0]}! 💚 Esse é o seu link de embaixadora do CK Life:\n${ebLink(e.id)}\n\nToda mulher que se cadastrar por ele conta para você. Pode colocar na bio, nos stories e mandar para as amigas!`;
+    const url = F.lkWhats(e.whats, msg); if(url) window.open(url, "_blank", "noopener"); });
+}
+function ebForm(e){
+  const novo = !e; e = e || { nome: "", whats: "", insta: "", ativa: true };
+  modal(novo ? "Nova embaixadora" : "Editar embaixadora", `<div class="formgrid">
+    <div class="field full"><label for="eb-nm">Nome</label><input class="input" id="eb-nm" value="${esc(e.nome)}" placeholder="Ex.: Micaela Souza"></div>
+    <div class="field full"><label for="eb-cd">Código do link</label><input class="input" id="eb-cd" value="${esc(e.id || "")}" ${novo ? "" : "disabled"} placeholder="micaela" maxlength="30">
+      <small class="muted" id="eb-pv">${novo ? "Só letras e números. O link fica: " + esc(EB_SITE) + "?e=…" : "O código não muda depois de criado, para o link dela continuar valendo."}</small></div>
+    <div class="field"><label for="eb-wa">WhatsApp (opcional)</label><input class="input" id="eb-wa" value="${esc(e.whats || "")}" placeholder="(65) 99999-9999"></div>
+    <div class="field"><label for="eb-ig">Instagram (opcional)</label><input class="input" id="eb-ig" value="${esc(e.insta || "")}" placeholder="@usuario"></div>
+    <label class="field full" style="flex-direction:row;align-items:center;gap:10px;font-weight:700"><input type="checkbox" id="eb-at" ${e.ativa !== false ? "checked" : ""} style="width:20px;height:20px;accent-color:var(--accent)"> Ativa</label>
+  </div><div id="eb-msg"></div><div class="toolbar" style="justify-content:flex-end"><button class="btn btn-accent" id="eb-ok">${novo ? "Criar e gerar link" : "Salvar"}</button></div>`);
+  const nm = $("eb-nm"), cd = $("eb-cd"), pv = $("eb-pv");
+  if(novo){ let mexeu = false; cd.oninput = () => { mexeu = true; cd.value = ebSlug(cd.value); pv.textContent = "O link fica: " + ebLink(cd.value || "…"); };
+    nm.oninput = () => { if(!mexeu){ cd.value = ebSlug(nm.value.split(" ")[0]); pv.textContent = "O link fica: " + ebLink(cd.value || "…"); } }; }
+  $("eb-ok").onclick = () => {
+    const nome = val("eb-nm"), id = novo ? ebSlug(val("eb-cd")) : e.id, msg = t => $("eb-msg").innerHTML = `<div class="msg msg-bad">${t}</div>`;
+    if(!nome) return msg("Digite o nome.");
+    if(!id || id.length < 2) return msg("Digite um código com pelo menos 2 letras ou números.");
+    if(novo && ebLista().some(x => x.id === id)) return msg("Esse código já é de outra embaixadora. Escolha outro (ex.: " + id + "2).");
+    const d = { id, nome, whats: val("eb-wa"), insta: val("eb-ig").replace(/^@/, ""), ativa: !!$("eb-at").checked, criada: e.criada || today() };
+    if(novo) ebLista().push(d); else Object.assign(e, d);
+    save(); fechar(); rerender();
+    if(novo) F.copyText(ebLink(id), "Embaixadora criada e link copiado 💚");
+  };
+}
+VIEWS.embaixadoras = typeof comVendas === "function" ? comVendas(vEmbaixadoras) : vEmbaixadoras;
 
 window.ADMIN = { abrir };
 })();
