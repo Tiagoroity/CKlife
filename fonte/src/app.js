@@ -25,7 +25,7 @@ async function hash(s){
   try{ const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode("cklife:" + s)); return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, "0")).join(""); }
   catch(e){ let h = 5381; for(const ch of "cklife:" + s) h = ((h << 5) + h + ch.charCodeAt(0)) | 0; return "f" + (h >>> 0).toString(16); }
 }
-const vibra = ms => { try{ navigator.vibrate && navigator.vibrate(ms); }catch(e){} };
+const vibra = ms => { try{ const ua = navigator.userActivation; if(ua && !ua.hasBeenActive) return; navigator.vibrate && navigator.vibrate(ms); }catch(e){} };   /* só vibra depois que a pessoa já tocou na tela (antes disso o celular bloqueia e gera erro) */
 let WL = null;
 async function telaAcesa(on){ try{ if(on && navigator.wakeLock && !WL){ WL = await navigator.wakeLock.request("screen"); WL.addEventListener("release", () => WL = null); } else if(!on && WL){ await WL.release(); WL = null; } }catch(e){ WL = null; } }
 
