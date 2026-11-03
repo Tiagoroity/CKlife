@@ -20,6 +20,10 @@ function vMonetizacao(){
 const MB = () => $("mo-b");
 async function moGeral(){
   const r = await sq(SB2().rpc("admin_monetizacao_resumo")); if(!r) return MB().innerHTML = `<div class="card">Seu acesso não inclui Monetização.</div>`;
+  /* contas de teste (nome com "teste") saem destes números também */
+  try{ if(!PLU) await (async () => { const a = await SB2().rpc("admin_planos_usuarias"); if(!a.error && a.data) PLU = a.data; })();
+    DB().users.filter(u => ehTeste(u) && !u.admin && !u.soAdmin).forEach(u => { const c = catPlano(u); if(c === "gratis" && r.free > 0) r.free--; else if(c === "teste" && r.trial > 0) r.trial--; else if((c === "pago" || c === "cortesia") && r.pro > 0) r.pro--; });
+  }catch(e){}
   const conv = r.trials_30d ? Math.round(100 * r.trial_convertidos / Math.max(1, r.trials_30d + r.trial_convertidos)) : 0;
   MB().innerHTML = `<div class="grid g4">${kpi("Free", int(r.free), "", "alunos", 1)}${kpi("Em teste", int(r.trial), `${int(r.trial_termina_hoje)} terminam hoje · ${int(r.trial_termina_48h)} em 48h`)}${kpi("Pro", int(r.pro), `${int(r.mensais)} mensais · ${int(r.anuais)} anuais`)}${kpi("Teste → Pro", conv + "%", `${int(r.trial_convertidos)} converteram`)}</div>
     <div class="grid g4">${kpi("Receita bruta (30 dias)", brlA(r.receita_bruta_30d), "valor cobrado pela Kiwify, antes de taxas (não é lucro)", "financeiro")}${kpi("Cancelamentos (30d)", int(r.cancelamentos_30d))}${kpi("Pagamento pendente", int(r.past_due))}${kpi("Reembolsos · chargebacks", `${int(r.reembolsos_30d)} · ${int(r.chargebacks_30d)}`)}</div>

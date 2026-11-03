@@ -9428,7 +9428,7 @@ const abrirPerfilEq = abrirPerfil; abrirPerfil = async function(u){
    Quem deixa o CK Life aberto (ou instalado na tela inicial) fica com a versão antiga até recarregar.
    O app confere a versão publicada ao abrir, ao voltar do segundo plano e a cada 5 minutos.
    Se houver versão nova, mostra a faixa "ATUALIZAR": um toque e pronto. Nunca aparece no meio do treino. */
-const CK_VER = "20261102214853";
+const CK_VER = "20261102221835";
 let CK_VER_NOVA = null;
 const ATU_K = "ck_atu";
 const atuTentou = () => { try{ return JSON.parse(localStorage.getItem(ATU_K) || "null"); }catch(e){ return null; } };
@@ -14836,6 +14836,10 @@ function vMonetizacao(){
 const MB = () => $("mo-b");
 async function moGeral(){
   const r = await sq(SB2().rpc("admin_monetizacao_resumo")); if(!r) return MB().innerHTML = `<div class="card">Seu acesso não inclui Monetização.</div>`;
+  /* contas de teste (nome com "teste") saem destes números também */
+  try{ if(!PLU) await (async () => { const a = await SB2().rpc("admin_planos_usuarias"); if(!a.error && a.data) PLU = a.data; })();
+    DB().users.filter(u => ehTeste(u) && !u.admin && !u.soAdmin).forEach(u => { const c = catPlano(u); if(c === "gratis" && r.free > 0) r.free--; else if(c === "teste" && r.trial > 0) r.trial--; else if((c === "pago" || c === "cortesia") && r.pro > 0) r.pro--; });
+  }catch(e){}
   const conv = r.trials_30d ? Math.round(100 * r.trial_convertidos / Math.max(1, r.trials_30d + r.trial_convertidos)) : 0;
   MB().innerHTML = `<div class="grid g4">${kpi("Free", int(r.free), "", "alunos", 1)}${kpi("Em teste", int(r.trial), `${int(r.trial_termina_hoje)} terminam hoje · ${int(r.trial_termina_48h)} em 48h`)}${kpi("Pro", int(r.pro), `${int(r.mensais)} mensais · ${int(r.anuais)} anuais`)}${kpi("Teste → Pro", conv + "%", `${int(r.trial_convertidos)} converteram`)}</div>
     <div class="grid g4">${kpi("Receita bruta (30 dias)", brlA(r.receita_bruta_30d), "valor cobrado pela Kiwify, antes de taxas (não é lucro)", "financeiro")}${kpi("Cancelamentos (30d)", int(r.cancelamentos_30d))}${kpi("Pagamento pendente", int(r.past_due))}${kpi("Reembolsos · chargebacks", `${int(r.reembolsos_30d)} · ${int(r.chargebacks_30d)}`)}</div>
@@ -15434,7 +15438,7 @@ function vDashboard(){
     </div>
     <div class="grid g2 dash-g">
       <div class="card"><div class="sec-title"><h3>Alunas ativas por dia</h3><small class="muted">últimos 30 dias</small></div>${barChart(al.serie, "alunos", "alunas")}</div>
-      <div class="card"><div class="sec-title"><h3>Atividade recente</h3></div><div class="dash-rec" id="dash-rec">${D ? (D.recentes || []).slice(0, 8).map(r => `<button class="dash-ri" data-ir="${SECR[r.tipo] || "resumo"}"><span class="ai">${aic(ICR[r.tipo] || "resumo", 16)}</span><span><b>${esc(r.texto)}</b><small>${relT(r.quando)}</small></span></button>`).join("") || `<p class="muted" style="margin:0">Sem atividade recente.</p>` : `<div class="skel" style="height:14px;width:80%"></div><div class="skel" style="height:14px;width:60%;margin-top:12px"></div><div class="skel" style="height:14px;width:70%;margin-top:12px"></div>`}</div></div>
+      <div class="card"><div class="sec-title"><h3>Atividade recente</h3></div><div class="dash-rec" id="dash-rec">${D ? (D.recentes || []).filter(r => !(r.tipo === "cadastro" && /teste/i.test(String(r.texto || "")))).slice(0, 8).map(r => `<button class="dash-ri" data-ir="${SECR[r.tipo] || "resumo"}"><span class="ai">${aic(ICR[r.tipo] || "resumo", 16)}</span><span><b>${esc(r.texto)}</b><small>${relT(r.quando)}</small></span></button>`).join("") || `<p class="muted" style="margin:0">Sem atividade recente.</p>` : `<div class="skel" style="height:14px;width:80%"></div><div class="skel" style="height:14px;width:60%;margin-top:12px"></div><div class="skel" style="height:14px;width:70%;margin-top:12px"></div>`}</div></div>
     </div>`;
   $("adm-main").querySelectorAll("[data-ir]").forEach(b => b.onclick = () => ir(podeVer(b.dataset.ir) ? b.dataset.ir : "resumo"));
   const n = $("dq-not"); if(n) n.onclick = () => { ir("notificacoes"); setTimeout(() => formNotif(), 50); };
