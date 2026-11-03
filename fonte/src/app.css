@@ -3047,3 +3047,25 @@ a,button,[role=button],label,input,select,.chip,.opt{touch-action:manipulation}
 .tar-ok{margin-left:6px;min-width:40px}
 /* painel no celular: números lado a lado, compactos */
 @media (max-width:600px){#adm-main .grid.g3,#adm-main .grid.g4{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}#adm-main .kpi{padding:10px 12px}#adm-main .kpi b{font-size:22px}#adm-main .kpi span{font-size:12px}#adm-main .kpi small{font-size:11px}}
+/* painel: ficha da aluna */
+.ficha{display:flex;flex-direction:column;gap:12px;margin:0 0 16px;padding:14px;border-radius:16px;background:linear-gradient(180deg,#F4FAF5,#fff);border:1px solid #D8E8DC}
+.ficha-top{display:flex;gap:12px;align-items:center}.ficha-top b{display:block;font-size:17px}.ficha-top small{display:block;color:var(--muted,#65736C);font-size:12.5px;word-break:break-all}
+.ficha-av{flex:0 0 auto;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font:800 20px/1 var(--display,system-ui);background:#14503E;color:#fff}
+.ficha-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.ficha-g{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.ficha-g div{background:#fff;border:1px solid #E6ECE3;border-radius:12px;padding:9px 11px}.ficha-g span{display:block;font-size:11.5px;font-weight:700;color:var(--muted,#65736C);text-transform:uppercase;letter-spacing:.04em}.ficha-g b{display:block;font-size:14px;margin-top:2px}
+.ficha-lbl{display:block;font-size:11.5px;font-weight:800;color:var(--muted,#65736C);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.ficha-tl div{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px dashed #E1E8DF;font-size:14px}.ficha-tl div:last-child{border-bottom:0}
+.ficha-tl i{font-style:normal;width:22px;text-align:center}.ficha-tl span{flex:1;min-width:0}.ficha-tl small{color:var(--muted,#65736C);font-size:12px}
+@media (min-width:760px){.ficha-g{grid-template-columns:repeat(3,minmax(0,1fr))}}
+/* painel: visão do negócio e retenção */
+.ng-card{margin-bottom:14px}
+.ng-h{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}.ng-h small{display:block;margin-top:2px}
+.ng-per{display:flex;gap:6px}.ng-per .chip{min-height:36px}
+.ng-funil{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.ng-l{display:flex;align-items:baseline;gap:8px;font-size:14px}.ng-l span{flex:1;min-width:0;font-weight:600}.ng-l b{font-size:18px}.ng-l b small{font-size:12px;color:var(--muted,#65736C);font-weight:700}
+.ng-l em{font-style:normal;font-size:12px;font-weight:800;min-width:54px;text-align:right}.ng-up{color:#2E7D5A}.ng-dn{color:#B4412F}
+.ng-bar{height:10px;border-radius:999px;background:#EEF3EC;overflow:hidden;margin-top:4px}.ng-bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#2E7D5A,#5FB37E)}
+.ng-ret{width:100%}.ng-ret th,.ng-ret td{text-align:center}.ng-ret td:first-child,.ng-ret th:first-child{text-align:left}
+.ng-c{border-radius:8px;font-weight:800}
+.ng-ret th,.ng-ret td{padding:8px 6px;font-size:13px;white-space:nowrap}
