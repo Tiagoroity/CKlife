@@ -3135,6 +3135,7 @@ a,button,[role=button],label,input,select,.chip,.opt{touch-action:manipulation}
 .ab-v{margin-top:auto;font-size:12.5px;font-weight:800;color:#2E7D5A}
 .ab-lista .hbar{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"n v" "t t";gap:4px 10px;padding:7px 0}
 .ab-lista .hbar > span:first-child{grid-area:n;white-space:normal}.ab-lista .hbar .t{grid-area:t;height:10px}.ab-lista .hbar .v{grid-area:v;white-space:nowrap}
+@media (min-width:701px){.ab-blocos{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.ab-b{min-height:118px;padding:16px;transition:transform .15s,box-shadow .15s}.ab-b:hover{transform:translateY(-2px);box-shadow:0 10px 24px -14px rgba(20,80,62,.45)}}
 </style>
 
 <!-- Entrar / criar conta -->
@@ -9427,7 +9428,7 @@ const abrirPerfilEq = abrirPerfil; abrirPerfil = async function(u){
    Quem deixa o CK Life aberto (ou instalado na tela inicial) fica com a versão antiga até recarregar.
    O app confere a versão publicada ao abrir, ao voltar do segundo plano e a cada 5 minutos.
    Se houver versão nova, mostra a faixa "ATUALIZAR": um toque e pronto. Nunca aparece no meio do treino. */
-const CK_VER = "20261102214204";
+const CK_VER = "20261102214440";
 let CK_VER_NOVA = null;
 const ATU_K = "ck_atu";
 const atuTentou = () => { try{ return JSON.parse(localStorage.getItem(ATU_K) || "null"); }catch(e){ return null; } };
@@ -16854,7 +16855,6 @@ function ngPinta(){
 
 /* ---------- Lista de alunas no celular: as 4 listas (cidade, idade, gênero, estado) viram um cartão com abas ---------- */
 function abCelular(){
-  if(!matchMedia("(max-width:700px)").matches) return;
   const main = $("adm-main"); if(!main || SEC !== "alunos" || $("ab-card")) return;
   const NOMES = ["Por cidade", "Por faixa de idade", "Por gênero", "Por estado"], CURTO = ["Cidade", "Idade", "Gênero", "Estado"];
   const cards = NOMES.map(n => [...main.querySelectorAll(".card")].find(c => { const h = c.querySelector(":scope > h3"); return h && h.textContent.trim() === n; }));

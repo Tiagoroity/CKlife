@@ -3096,3 +3096,4 @@ a,button,[role=button],label,input,select,.chip,.opt{touch-action:manipulation}
 .ab-v{margin-top:auto;font-size:12.5px;font-weight:800;color:#2E7D5A}
 .ab-lista .hbar{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"n v" "t t";gap:4px 10px;padding:7px 0}
 .ab-lista .hbar > span:first-child{grid-area:n;white-space:normal}.ab-lista .hbar .t{grid-area:t;height:10px}.ab-lista .hbar .v{grid-area:v;white-space:nowrap}
+@media (min-width:701px){.ab-blocos{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.ab-b{min-height:118px;padding:16px;transition:transform .15s,box-shadow .15s}.ab-b:hover{transform:translateY(-2px);box-shadow:0 10px 24px -14px rgba(20,80,62,.45)}}

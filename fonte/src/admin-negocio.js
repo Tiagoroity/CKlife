@@ -109,7 +109,6 @@ function ngPinta(){
 
 /* ---------- Lista de alunas no celular: as 4 listas (cidade, idade, gênero, estado) viram um cartão com abas ---------- */
 function abCelular(){
-  if(!matchMedia("(max-width:700px)").matches) return;
   const main = $("adm-main"); if(!main || SEC !== "alunos" || $("ab-card")) return;
   const NOMES = ["Por cidade", "Por faixa de idade", "Por gênero", "Por estado"], CURTO = ["Cidade", "Idade", "Gênero", "Estado"];
   const cards = NOMES.map(n => [...main.querySelectorAll(".card")].find(c => { const h = c.querySelector(":scope > h3"); return h && h.textContent.trim() === n; }));
