@@ -3032,3 +3032,6 @@ body.pp-on .ins-toast,body.pp-on #ck-inst,body.pp-on .coach-toast{display:none!i
 .ent-abre .ent-bg{object-position:center 8%}
 /* toque único: sem a espera do "toque duplo para zoom" do celular */
 a,button,[role=button],label,input,select,.chip,.opt{touch-action:manipulation}
+.za-filtro{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px;background:#EEF3EC;padding:4px;border-radius:14px}
+.za-filtro .chip{min-height:42px;border:0;border-radius:11px;background:none;font-weight:800;justify-content:center;display:flex;align-items:center}
+.za-filtro .chip[aria-pressed="true"]{background:#fff;color:#14503E;box-shadow:0 4px 12px -6px rgba(0,0,0,.25)}

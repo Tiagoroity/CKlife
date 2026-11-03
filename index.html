@@ -3071,6 +3071,9 @@ body.pp-on .ins-toast,body.pp-on #ck-inst,body.pp-on .coach-toast{display:none!i
 .ent-abre .ent-bg{object-position:center 8%}
 /* toque único: sem a espera do "toque duplo para zoom" do celular */
 a,button,[role=button],label,input,select,.chip,.opt{touch-action:manipulation}
+.za-filtro{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px;background:#EEF3EC;padding:4px;border-radius:14px}
+.za-filtro .chip{min-height:42px;border:0;border-radius:11px;background:none;font-weight:800;justify-content:center;display:flex;align-items:center}
+.za-filtro .chip[aria-pressed="true"]{background:#fff;color:#14503E;box-shadow:0 4px 12px -6px rgba(0,0,0,.25)}
 </style>
 
 <!-- Entrar / criar conta -->
@@ -9363,7 +9366,7 @@ const abrirPerfilEq = abrirPerfil; abrirPerfil = async function(u){
    Quem deixa o CK Life aberto (ou instalado na tela inicial) fica com a versão antiga até recarregar.
    O app confere a versão publicada ao abrir, ao voltar do segundo plano e a cada 5 minutos.
    Se houver versão nova, mostra a faixa "ATUALIZAR": um toque e pronto. Nunca aparece no meio do treino. */
-const CK_VER = "20261102211052";
+const CK_VER = "20261102211339";
 let CK_VER_NOVA = null;
 const ATU_K = "ck_atu";
 const atuTentou = () => { try{ return JSON.parse(localStorage.getItem(ATU_K) || "null"); }catch(e){ return null; } };
@@ -16120,19 +16123,29 @@ function zQuentesPinta(){
 
 /* ===== App na tela do celular: quantas instalaram e quem falta (com a mensagem "Como instalar o app") ===== */
 const zApp = u => !!(u.pwaInstalado || u.acApp);
-let ZA_ORD = "recentes", ZA_ABERTO = false;   // lista "quem ainda não instalou": mais recentes primeiro
+let ZA_ORD = "recentes", ZA_ABERTO = false, ZA_TIPO = "falta";   // lista: quem não instalou / quem instalou, mais recentes primeiro
 function zAppPinta(){
   const main = $("adm-main"); if(!main || SEC !== "alunos" || $("za-box")) return;
   const h = main.querySelector(".head"); if(!h) return;
-  const A = DB().users.filter(u => !u.admin && !u.soAdmin && !u.exemplo && !ehTeste(u)), ins = A.filter(zApp), falta = ordenaAlunas(A.filter(u => !zApp(u)), ZA_ORD);
+  const A = DB().users.filter(u => !u.admin && !u.soAdmin && !u.exemplo && !ehTeste(u)), ins = ordenaAlunas(A.filter(zApp), ZA_ORD), falta = ordenaAlunas(A.filter(u => !zApp(u)), ZA_ORD);
   const web = falta.filter(u => u.acWeb), pc = A.length ? Math.round(100 * ins.length / A.length) : 0;
-  const linha = u => `<div class="zq-row"><span class="zq-n">🌐</span><div class="zq-t"><b>${esc(u.nome || u.email)}</b><small>chegou ${esc(quandoChegou(u))}${u.acWeb ? " · abriu pelo navegador em " + brD(u.acWeb) : ""}</small></div>${zDig(u.whats).length >= 10 ? `<button class="btn btn-sm zap-bt" data-za="${u.id}" aria-label="Mandar como instalar o app">💬</button>` : ""}</div>`;
+  const linhaF = u => `<div class="zq-row"><span class="zq-n">🌐</span><div class="zq-t"><b>${esc(u.nome || u.email)}</b><small>chegou ${esc(quandoChegou(u))}${u.acWeb ? " · abriu pelo navegador em " + brD(u.acWeb) : ""}</small></div>${zDig(u.whats).length >= 10 ? `<button class="btn btn-sm zap-bt" data-za="${u.id}" aria-label="Mandar como instalar o app">💬</button>` : ""}</div>`;
+  const linhaI = u => `<div class="zq-row"><span class="zq-n">📲</span><div class="zq-t"><b>${esc(u.nome || u.email)}</b><small>chegou ${esc(quandoChegou(u))}${u.pwaInstalado ? " · instalou em " + brD(u.pwaInstalado) : ""}${u.acApp ? " · abriu pelo app em " + brD(u.acApp) : ""}</small></div></div>`;
+  const L = ZA_TIPO === "ins" ? ins : falta, linha = ZA_TIPO === "ins" ? linhaI : linhaF;
+  const bt = (v, t, n) => `<button class="chip" role="radio" data-zt="${v}" aria-pressed="${ZA_TIPO === v}" aria-checked="${ZA_TIPO === v}">${t} (${int(n)})</button>`;
   const zq = $("zq-box"), alvo = zq || h;
   alvo.insertAdjacentHTML("afterend", `<div class="card zq-card" id="za-box"><div class="zq-h"><b>📲 App na tela do celular</b><small class="muted">Conta quem abriu o CK Life pelo app instalado (registro a partir de 01/11/2026; quem não abriu desde então ainda não aparece).</small></div>
     <div class="grid g3" style="margin:10px 0">${kpi("Instalaram", int(ins.length), pc + "% das alunas", "", 1)}${kpi("Usam pelo navegador", int(web.length), "abriram sem instalar")}${kpi("Sem registro ainda", int(falta.length - web.length), "não abriram desde 01/11")}</div>
-    ${falta.length ? `<details id="za-det" ${ZA_ABERTO ? "open" : ""}><summary><b>Ver quem ainda não instalou (${falta.length})</b> · toque em 💬 para mandar o passo a passo</summary><div class="chips za-ord" style="margin-top:10px" role="radiogroup" aria-label="Ordem">${[["recentes", "Mais recentes"], ["antigas", "Mais antigas"], ["nome", "A–Z"]].map(([v, t]) => `<button class="chip" role="radio" data-zo="${v}" aria-pressed="${ZA_ORD === v}" aria-checked="${ZA_ORD === v}">${t}</button>`).join("")}</div><div class="zq-lista" style="margin-top:8px">${falta.slice(0, 150).map(linha).join("")}</div>${falta.length > 150 ? `<p class="muted">Mostrando 150. Use a ordem acima para ver as outras.</p>` : ""}</details>` : `<p class="muted" style="margin:0">Todas já instalaram 🎉</p>`}</div>`);
+    <details id="za-det" ${ZA_ABERTO ? "open" : ""}><summary><b>Ver a lista</b> · quem instalou e quem ainda não</summary>
+      <div class="za-filtro" role="radiogroup" aria-label="Quais alunas">${bt("falta", "Não instalaram", falta.length)}${bt("ins", "Instalaram", ins.length)}</div>
+      <div class="chips za-ord" style="margin-top:8px" role="radiogroup" aria-label="Ordem">${[["recentes", "Mais recentes"], ["antigas", "Mais antigas"], ["nome", "A–Z"]].map(([v, t]) => `<button class="chip" role="radio" data-zo="${v}" aria-pressed="${ZA_ORD === v}" aria-checked="${ZA_ORD === v}">${t}</button>`).join("")}</div>
+      ${ZA_TIPO === "falta" && L.length ? `<p class="muted" style="margin:8px 0 0;font-size:13px">Toque em 💬 para mandar o passo a passo de instalar.</p>` : ""}
+      <div class="zq-lista" style="margin-top:8px">${L.length ? L.slice(0, 150).map(linha).join("") : `<p class="muted" style="margin:0">${ZA_TIPO === "ins" ? "Ninguém instalou ainda." : "Todas já instalaram 🎉"}</p>`}</div>${L.length > 150 ? `<p class="muted">Mostrando 150. Use a ordem acima para ver as outras.</p>` : ""}
+    </details></div>`);
   const det = $("za-det"); if(det) det.ontoggle = () => { ZA_ABERTO = det.open; };
-  main.querySelectorAll("[data-zo]").forEach(b => b.onclick = () => { ZA_ORD = b.dataset.zo; ZA_ABERTO = true; const bx = $("za-box"); if(bx) bx.remove(); zAppPinta(); });
+  const repinta = () => { ZA_ABERTO = true; const bx = $("za-box"); if(bx) bx.remove(); zAppPinta(); };
+  main.querySelectorAll("[data-zo]").forEach(b => b.onclick = () => { ZA_ORD = b.dataset.zo; repinta(); });
+  main.querySelectorAll("[data-zt]").forEach(b => b.onclick = () => { ZA_TIPO = b.dataset.zt; repinta(); });
   main.querySelectorAll("[data-za]").forEach(b => b.onclick = () => { const u = DB().users.find(x => x.id === b.dataset.za); const url = u && zLink(u, "m9"); if(url) window.open(url, "_blank", "noopener"); });
 }
 { let zaT = null; new MutationObserver(() => { clearTimeout(zaT); zaT = setTimeout(zAppPinta, 120); }).observe($("adm-main") || document.body, { childList: true }); }
