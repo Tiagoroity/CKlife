@@ -123,3 +123,11 @@ function abCelular(){
   main.querySelectorAll("[data-ab]").forEach(b => b.onclick = () => { const k = +b.dataset.ab; modal("Alunas por " + CURTO[k].toLowerCase(), `<div class="ab-lista">${(conteudo[k] || []).join("") || `<div class="empty">Sem dados</div>`}</div><button class="btn btn-line btn-block" data-close style="margin-top:14px">Voltar</button>`); });
 }
 { const v0 = VIEWS.alunos; if(v0) VIEWS.alunos = function(){ const r = v0.apply(this, arguments); setTimeout(abCelular, 30); return r; }; }
+
+/* garante as partes novas sempre que a tela é desenhada (inclusive a primeira, que acontece antes destes arquivos carregarem) */
+{ let gT = null; const garante = () => { try{
+    if(SEC === "alunos" && !$("ab-card")) abCelular();
+    if(SEC === "resumo"){ if(!$("tar-box")) tarPinta(); if(!$("ng-neg")) ngPinta(); if(!erMostra.feito){ erMostra.feito = 1; erMostra(); } }
+  }catch(e){ console.warn(e); } };
+  const alvo = $("adm-main"); if(alvo) new MutationObserver(() => { clearTimeout(gT); gT = setTimeout(garante, 40); }).observe(alvo, { childList: true });
+  setTimeout(garante, 0); setTimeout(garante, 600); }
