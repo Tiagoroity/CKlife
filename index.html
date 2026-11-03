@@ -3108,6 +3108,17 @@ a,button,[role=button],label,input,select,.chip,.opt{touch-action:manipulation}
 .ng-ret{width:100%}.ng-ret th,.ng-ret td{text-align:center}.ng-ret td:first-child,.ng-ret th:first-child{text-align:left}
 .ng-c{border-radius:8px;font-weight:800}
 .ng-ret th,.ng-ret td{padding:8px 6px;font-size:13px;white-space:nowrap}
+.ng-sts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0}
+.ng-st{background:#F4FAF5;border:1px solid #D8E8DC;border-radius:12px;padding:10px 12px}.ng-st span{display:block;font-size:12px;font-weight:700;color:var(--muted,#65736C)}.ng-st b{display:block;font:800 24px/1.1 var(--display,system-ui);color:#14503E;margin-top:2px}.ng-st small{display:block;font-size:11px;color:var(--muted,#65736C)}
+.ng-c small{display:block;font-size:10.5px;font-weight:600;opacity:.85}
+.ng-d14{margin-top:16px;padding-top:14px;border-top:1px solid #E6ECE3}
+.ng-d14-h{display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:13px}.ng-d14-h b{flex:1;font-size:14px}.ng-d14-h span{display:flex;align-items:center;gap:6px;color:var(--muted,#65736C);font-weight:700}
+.ng-d14-h i{width:10px;height:10px;border-radius:3px;display:inline-block}.ng-k1{background:#2E7D5A}.ng-k2{background:#C9B37E}
+.ng-cols{display:grid;grid-template-columns:repeat(14,minmax(0,1fr));gap:4px;height:120px;margin-top:10px;align-items:end}
+.ng-col{display:flex;flex-direction:column;align-items:center;height:100%}.ng-col small{font-size:9.5px;color:var(--muted,#65736C);height:14px;margin-top:4px;white-space:nowrap}
+.ng-cb{flex:1;width:100%;display:flex;align-items:flex-end;justify-content:center;gap:2px;background:#F6F9F5;border-radius:6px;padding:0 2px}
+.ng-cb i{width:45%;border-radius:4px 4px 0 0;min-height:0}.ng-c1{background:#2E7D5A}.ng-c2{background:#C9B37E}
+@media (max-width:600px){.ng-sts{grid-template-columns:repeat(2,minmax(0,1fr))}.ng-st b{font-size:20px}}
 </style>
 
 <!-- Entrar / criar conta -->
@@ -9400,7 +9411,7 @@ const abrirPerfilEq = abrirPerfil; abrirPerfil = async function(u){
    Quem deixa o CK Life aberto (ou instalado na tela inicial) fica com a versão antiga até recarregar.
    O app confere a versão publicada ao abrir, ao voltar do segundo plano e a cada 5 minutos.
    Se houver versão nova, mostra a faixa "ATUALIZAR": um toque e pronto. Nunca aparece no meio do treino. */
-const CK_VER = "20261102212542";
+const CK_VER = "20261102213211";
 let CK_VER_NOVA = null;
 const ATU_K = "ck_atu";
 const atuTentou = () => { try{ return JSON.parse(localStorage.getItem(ATU_K) || "null"); }catch(e){ return null; } };
@@ -16078,7 +16089,7 @@ function avPinta(){
   const on = $("av-on"), off = $("av-off"); if(on) on.onclick = avLigar; if(off) off.onclick = avDesligar;
 }
 async function avMostra(){ if(!avSB()) return; avPinta(); try{ await Promise.all([avStatus(), avAqui()]); }catch(e){ AV_EST = null; } if(!AV_EST){ const b = $("av-nova"); if(b) b.remove(); return; } avPinta(); }
-["resumo", "alunos"].forEach(k => { const v0 = VIEWS[k]; if(!v0) return; VIEWS[k] = function(){ const r = v0.apply(this, arguments); setTimeout(avMostra, 0); setTimeout(() => { if(!$("av-nova") && AV_EST) avPinta(); }, 1200); return r; }; });
+["config"].forEach(k => { const v0 = VIEWS[k]; if(!v0) return; VIEWS[k] = function(){ const r = v0.apply(this, arguments); setTimeout(avMostra, 0); setTimeout(() => { if(!$("av-nova") && AV_EST) avPinta(); }, 1200); return r; }; });
 
 /* ===================== Painel · WhatsApp com mensagem pronta =====================
    Na lista de alunas, ao lado do WhatsApp: abre a conversa com a aluna e a mensagem certa para a fase dela,
@@ -16651,16 +16662,23 @@ function daDuplicar(e){
    Mostra os erros que aconteceram no celular das alunas, agrupados, sem nome nem e-mail.
    Sem o primeiros-passos.sql, o cartão simplesmente não aparece. */
 let ER_L = null;
+const ER_K = "ck_erros_vistos";
+const erVistos = () => { try{ return JSON.parse(localStorage.getItem(ER_K) || "{}") || {}; }catch(e){ return {}; } };
+const erVisto = x => { const v = erVistos()[x.msg]; return !!v && String(v) >= String(x.ultimo); };   // volta a aparecer se acontecer de novo
+const erMarca = L => { try{ const v = erVistos(); L.forEach(x => v[x.msg] = x.ultimo); localStorage.setItem(ER_K, JSON.stringify(v)); }catch(e){} };
 const erSB = () => F.nuvem && F.nuvem.ativo && F.nuvem.sb;
 const erQuando = s => { try{ const d = new Date(s), m = Math.round((Date.now() - d) / 6e4); return m < 60 ? `há ${Math.max(1, m)} min` : m < 1440 ? `há ${Math.round(m / 60)} h` : d.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" }); }catch(e){ return ""; } };
 function erPinta(){
   const main = $("adm-main"); if(!main || ER_L == null) return;
   const h = main.querySelector(".head"); if(!h) return;
   let box = $("er-app"); if(!box){ (main.querySelector("#av-nova") || h).insertAdjacentHTML("afterend", `<div class="card" id="er-app" style="margin-bottom:14px"></div>`); box = $("er-app"); }
-  const L = ER_L, tot = L.reduce((s, x) => s + (+x.vezes || 0), 0);
+  const L = ER_L.filter(x => !erVisto(x)), tot = L.reduce((s, x) => s + (+x.vezes || 0), 0);
+  if(!L.length){ const b = $("er-app"); if(b) b.remove(); return; }
   box.innerHTML = `<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><span style="font-size:22px" aria-hidden="true">🛠️</span><div style="flex:1;min-width:200px"><b>Erros no app das alunas</b><br><small class="muted">${L.length ? `${int(tot)} erro${tot > 1 ? "s" : ""} em ${L.length} tipo${L.length > 1 ? "s" : ""} nos últimos 7 dias. Sem nome nem e-mail.` : "Nenhum erro nos últimos 7 dias 💚"}</small></div></div>
-    ${L.length ? `<div class="er-lista">${L.slice(0, 8).map(x => `<div class="er-row"><code>${esc(x.msg)}</code><small class="muted">${int(x.vezes)}× · ${int(x.alunas)} aluna${+x.alunas > 1 ? "s" : ""} · ${[+x.iphone ? `iPhone ${int(x.iphone)}` : "", +x.android ? `Android ${int(x.android)}` : "", +x.outros ? `outros ${int(x.outros)}` : ""].filter(Boolean).join(" · ")}${x.onde ? ` · tela: ${esc(x.onde)}` : ""} · ${esc(erQuando(x.ultimo))}</small></div>`).join("")}</div>
-      <p class="hint" style="margin:8px 0 0">Mande um print desta lista para o suporte técnico corrigir.</p>` : ""}`;
+    ${L.length ? `<div class="er-lista">${L.slice(0, 8).map((x, i) => `<div class="er-row"><div style="display:flex;gap:8px;align-items:flex-start"><code style="flex:1">${esc(x.msg)}</code><button class="btn btn-line btn-sm" data-erok="${i}">OK, já vi</button></div><small class="muted">${int(x.vezes)}× · ${int(x.alunas)} aluna${+x.alunas > 1 ? "s" : ""} · ${[+x.iphone ? `iPhone ${int(x.iphone)}` : "", +x.android ? `Android ${int(x.android)}` : "", +x.outros ? `outros ${int(x.outros)}` : ""].filter(Boolean).join(" · ")}${x.onde ? ` · tela: ${esc(x.onde)}` : ""} · ${esc(erQuando(x.ultimo))}</small></div>`).join("")}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap"><p class="hint" style="margin:0">Mandou para análise? Toque em "OK, já vi" e ele some. Se acontecer de novo, volta a aparecer.</p><button class="btn btn-accent btn-sm" id="er-tudo">OK em todos</button></div>` : ""}`;
+  box.querySelectorAll("[data-erok]").forEach(b => b.onclick = () => { erMarca([L[+b.dataset.erok]]); erPinta(); });
+  const td = $("er-tudo"); if(td) td.onclick = () => { erMarca(L); erPinta(); };
 }
 async function erMostra(){ const sb = erSB(); if(!sb) return; try{ const r = await sb.rpc("admin_erros", { p_dias: 7 }); if(r.error) throw r.error; ER_L = r.data || []; }catch(e){ ER_L = null; const b = $("er-app"); if(b) b.remove(); return; } erPinta(); }
 { const v0 = VIEWS.resumo; if(v0) VIEWS.resumo = function(){ const r = v0.apply(this, arguments); setTimeout(erMostra, 50); setTimeout(() => { if(!$("er-app") && ER_L) erPinta(); }, 1400); return r; }; }
@@ -16774,9 +16792,18 @@ function ngNegocio(){
   return `<div class="card ng-card" id="ng-neg"><div class="ng-h"><div><b>📈 Visão do negócio</b><small class="muted">Quem chegou nos últimos ${NG_P} dias e até onde foi. Comparado com os ${NG_P} dias anteriores.</small></div>
     <div class="ng-per" role="radiogroup" aria-label="Período">${[7, 30, 90].map(p => `<button class="chip" role="radio" data-ngp="${p}" aria-pressed="${NG_P === p}" aria-checked="${NG_P === p}">${p} dias</button>`).join("")}</div></div>
     <div class="ng-funil">${passos.map(([t, v, ant, base]) => `<div class="ng-p"><div class="ng-l"><span>${t}</span><b class="num">${int(v)}${base ? ` <small>${ngPct(v, base)}%</small>` : ""}</b>${delta(v, ant)}</div><div class="ng-bar"><i style="width:${Math.max(v ? 3 : 0, 100 * v / max)}%"></i></div></div>`).join("")}</div>
+    ${ngDias14()}
     <p class="hint" style="margin:10px 0 0">A porcentagem é sobre quem se cadastrou no período. Contas da equipe e de teste não entram.</p></div>`;
 }
 
+/* cadastros e treinos por dia, últimos 14 dias */
+function ngDias14(){
+  const U = ngReais(), D = Array.from({ length: 14 }, (_, i) => addD(today(), i - 13));
+  const cad = D.map(d => U.filter(u => String(u.criado || "").slice(0, 10) === d).length), tre = D.map(d => U.reduce((s, u) => s + (u.treinos || []).filter(t => t && t.d === d).length, 0));
+  const mx = Math.max(1, ...cad, ...tre), soma = a => a.reduce((x, y) => x + y, 0);
+  return `<div class="ng-d14"><div class="ng-d14-h"><b>Últimos 14 dias</b><span><i class="ng-k1"></i>Cadastros ${int(soma(cad))}</span><span><i class="ng-k2"></i>Treinos ${int(soma(tre))}</span></div>
+    <div class="ng-cols">${D.map((d, i) => `<div class="ng-col" title="${ngBr(d)}: ${cad[i]} cadastro(s), ${tre[i]} treino(s)"><div class="ng-cb"><i class="ng-c1" style="height:${100 * cad[i] / mx}%"></i><i class="ng-c2" style="height:${100 * tre[i] / mx}%"></i></div><small>${i % 2 ? "" : ngBr(d)}</small></div>`).join("")}</div></div>`;
+}
 /* ---------- F) Retenção por semana de entrada ---------- */
 function ngRetencao(){
   const dias = ngDiasAtivos(), U = ngReais().filter(u => u.criado), seg = d => { const x = new Date(d + "T12:00:00"); const k = (x.getDay() + 6) % 7; x.setDate(x.getDate() - k); return x.toISOString().slice(0, 10); };
@@ -16786,14 +16813,18 @@ function ngRetencao(){
     const cel = [1, 2, 3, 4].map(k => {
       const ini = addD(s, 7 * k), fim = addD(ini, 6); if(ini > today()) return null;
       const ok = C.filter(u => { const D = dias[u.id]; if(!D) return false; for(const d of D) if(d >= ini && d <= fim) return true; return false; }).length;
-      return C.length ? ngPct(ok, C.length) : null;
+      return C.length ? { p: ngPct(ok, C.length), ok, n: C.length } : null;
     });
     return { s, n: C.length, cel };
   }).filter(l => l.n);
-  const cor = p => p == null ? "" : `background:rgba(46,125,90,${(.08 + .82 * p / 100).toFixed(2)});color:${p >= 45 ? "#fff" : "#14503E"}`;
+  const cor = c => c == null ? "" : `background:rgba(46,125,90,${(.08 + .82 * c.p / 100).toFixed(2)});color:${c.p >= 45 ? "#fff" : "#14503E"}`;
+  const media = k => { let ok = 0, n = 0; linhas.forEach(l => { const c = l.cel[k]; if(c){ ok += c.ok; n += c.n; } }); return n ? ngPct(ok, n) : null; };
+  const m1 = media(0), m4 = media(3), tot = linhas.reduce((s, l) => s + l.n, 0);
+  const st = (t, v, d) => `<div class="ng-st"><span>${t}</span><b class="num">${v == null ? "—" : v + "%"}</b><small>${d}</small></div>`;
   return `<div class="card ng-card" id="ng-ret"><div class="ng-h"><div><b>🔁 Retenção por semana de entrada</b><small class="muted">De quem entrou em cada semana, quantas % voltaram na 1ª, 2ª, 3ª e 4ª semana seguinte.</small></div></div>
-    ${linhas.length ? `<div class="tbl"><table class="ng-ret"><thead><tr><th>Entrada</th><th>Alunas</th><th>Sem 1</th><th>Sem 2</th><th>Sem 3</th><th>Sem 4</th></tr></thead><tbody>
-      ${linhas.slice().reverse().map(l => `<tr><td>${ngBr(l.s)}</td><td class="num">${int(l.n)}</td>${l.cel.map(p => `<td class="num ng-c" style="${cor(p)}">${p == null ? "·" : p + "%"}</td>`).join("")}</tr>`).join("")}
+    ${linhas.length ? `<div class="ng-sts">${st("Voltam na 1ª semana", m1, "média das turmas")}${st("Continuam na 4ª semana", m4, m4 == null ? "ainda sem turma com 4 semanas" : "média das turmas")}<div class="ng-st"><span>Alunas analisadas</span><b class="num">${int(tot)}</b><small>últimas 8 semanas</small></div></div>
+    <div class="tbl"><table class="ng-ret"><thead><tr><th>Entrada</th><th>Alunas</th><th>Sem 1</th><th>Sem 2</th><th>Sem 3</th><th>Sem 4</th></tr></thead><tbody>
+      ${linhas.slice().reverse().map(l => `<tr><td>${ngBr(l.s)}</td><td class="num">${int(l.n)}</td>${l.cel.map(c => `<td class="num ng-c" style="${cor(c)}">${c == null ? "·" : `${c.p}%<small>${c.ok} de ${c.n}</small>`}</td>`).join("")}</tr>`).join("")}
     </tbody></table></div><p class="hint" style="margin:8px 0 0">"Entrada" = semana em que entraram. "·" = semana que ainda não chegou. Conta como volta qualquer acesso ou treino naquela semana.</p>` : `<p class="muted" style="margin:0">Ainda não há alunas suficientes para mostrar.</p>`}</div>`;
 }
 function ngPinta(){

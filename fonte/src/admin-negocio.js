@@ -63,9 +63,18 @@ function ngNegocio(){
   return `<div class="card ng-card" id="ng-neg"><div class="ng-h"><div><b>📈 Visão do negócio</b><small class="muted">Quem chegou nos últimos ${NG_P} dias e até onde foi. Comparado com os ${NG_P} dias anteriores.</small></div>
     <div class="ng-per" role="radiogroup" aria-label="Período">${[7, 30, 90].map(p => `<button class="chip" role="radio" data-ngp="${p}" aria-pressed="${NG_P === p}" aria-checked="${NG_P === p}">${p} dias</button>`).join("")}</div></div>
     <div class="ng-funil">${passos.map(([t, v, ant, base]) => `<div class="ng-p"><div class="ng-l"><span>${t}</span><b class="num">${int(v)}${base ? ` <small>${ngPct(v, base)}%</small>` : ""}</b>${delta(v, ant)}</div><div class="ng-bar"><i style="width:${Math.max(v ? 3 : 0, 100 * v / max)}%"></i></div></div>`).join("")}</div>
+    ${ngDias14()}
     <p class="hint" style="margin:10px 0 0">A porcentagem é sobre quem se cadastrou no período. Contas da equipe e de teste não entram.</p></div>`;
 }
 
+/* cadastros e treinos por dia, últimos 14 dias */
+function ngDias14(){
+  const U = ngReais(), D = Array.from({ length: 14 }, (_, i) => addD(today(), i - 13));
+  const cad = D.map(d => U.filter(u => String(u.criado || "").slice(0, 10) === d).length), tre = D.map(d => U.reduce((s, u) => s + (u.treinos || []).filter(t => t && t.d === d).length, 0));
+  const mx = Math.max(1, ...cad, ...tre), soma = a => a.reduce((x, y) => x + y, 0);
+  return `<div class="ng-d14"><div class="ng-d14-h"><b>Últimos 14 dias</b><span><i class="ng-k1"></i>Cadastros ${int(soma(cad))}</span><span><i class="ng-k2"></i>Treinos ${int(soma(tre))}</span></div>
+    <div class="ng-cols">${D.map((d, i) => `<div class="ng-col" title="${ngBr(d)}: ${cad[i]} cadastro(s), ${tre[i]} treino(s)"><div class="ng-cb"><i class="ng-c1" style="height:${100 * cad[i] / mx}%"></i><i class="ng-c2" style="height:${100 * tre[i] / mx}%"></i></div><small>${i % 2 ? "" : ngBr(d)}</small></div>`).join("")}</div></div>`;
+}
 /* ---------- F) Retenção por semana de entrada ---------- */
 function ngRetencao(){
   const dias = ngDiasAtivos(), U = ngReais().filter(u => u.criado), seg = d => { const x = new Date(d + "T12:00:00"); const k = (x.getDay() + 6) % 7; x.setDate(x.getDate() - k); return x.toISOString().slice(0, 10); };
@@ -75,14 +84,18 @@ function ngRetencao(){
     const cel = [1, 2, 3, 4].map(k => {
       const ini = addD(s, 7 * k), fim = addD(ini, 6); if(ini > today()) return null;
       const ok = C.filter(u => { const D = dias[u.id]; if(!D) return false; for(const d of D) if(d >= ini && d <= fim) return true; return false; }).length;
-      return C.length ? ngPct(ok, C.length) : null;
+      return C.length ? { p: ngPct(ok, C.length), ok, n: C.length } : null;
     });
     return { s, n: C.length, cel };
   }).filter(l => l.n);
-  const cor = p => p == null ? "" : `background:rgba(46,125,90,${(.08 + .82 * p / 100).toFixed(2)});color:${p >= 45 ? "#fff" : "#14503E"}`;
+  const cor = c => c == null ? "" : `background:rgba(46,125,90,${(.08 + .82 * c.p / 100).toFixed(2)});color:${c.p >= 45 ? "#fff" : "#14503E"}`;
+  const media = k => { let ok = 0, n = 0; linhas.forEach(l => { const c = l.cel[k]; if(c){ ok += c.ok; n += c.n; } }); return n ? ngPct(ok, n) : null; };
+  const m1 = media(0), m4 = media(3), tot = linhas.reduce((s, l) => s + l.n, 0);
+  const st = (t, v, d) => `<div class="ng-st"><span>${t}</span><b class="num">${v == null ? "—" : v + "%"}</b><small>${d}</small></div>`;
   return `<div class="card ng-card" id="ng-ret"><div class="ng-h"><div><b>🔁 Retenção por semana de entrada</b><small class="muted">De quem entrou em cada semana, quantas % voltaram na 1ª, 2ª, 3ª e 4ª semana seguinte.</small></div></div>
-    ${linhas.length ? `<div class="tbl"><table class="ng-ret"><thead><tr><th>Entrada</th><th>Alunas</th><th>Sem 1</th><th>Sem 2</th><th>Sem 3</th><th>Sem 4</th></tr></thead><tbody>
-      ${linhas.slice().reverse().map(l => `<tr><td>${ngBr(l.s)}</td><td class="num">${int(l.n)}</td>${l.cel.map(p => `<td class="num ng-c" style="${cor(p)}">${p == null ? "·" : p + "%"}</td>`).join("")}</tr>`).join("")}
+    ${linhas.length ? `<div class="ng-sts">${st("Voltam na 1ª semana", m1, "média das turmas")}${st("Continuam na 4ª semana", m4, m4 == null ? "ainda sem turma com 4 semanas" : "média das turmas")}<div class="ng-st"><span>Alunas analisadas</span><b class="num">${int(tot)}</b><small>últimas 8 semanas</small></div></div>
+    <div class="tbl"><table class="ng-ret"><thead><tr><th>Entrada</th><th>Alunas</th><th>Sem 1</th><th>Sem 2</th><th>Sem 3</th><th>Sem 4</th></tr></thead><tbody>
+      ${linhas.slice().reverse().map(l => `<tr><td>${ngBr(l.s)}</td><td class="num">${int(l.n)}</td>${l.cel.map(c => `<td class="num ng-c" style="${cor(c)}">${c == null ? "·" : `${c.p}%<small>${c.ok} de ${c.n}</small>`}</td>`).join("")}</tr>`).join("")}
     </tbody></table></div><p class="hint" style="margin:8px 0 0">"Entrada" = semana em que entraram. "·" = semana que ainda não chegou. Conta como volta qualquer acesso ou treino naquela semana.</p>` : `<p class="muted" style="margin:0">Ainda não há alunas suficientes para mostrar.</p>`}</div>`;
 }
 function ngPinta(){

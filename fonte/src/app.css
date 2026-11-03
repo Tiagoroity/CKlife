@@ -3069,3 +3069,14 @@ a,button,[role=button],label,input,select,.chip,.opt{touch-action:manipulation}
 .ng-ret{width:100%}.ng-ret th,.ng-ret td{text-align:center}.ng-ret td:first-child,.ng-ret th:first-child{text-align:left}
 .ng-c{border-radius:8px;font-weight:800}
 .ng-ret th,.ng-ret td{padding:8px 6px;font-size:13px;white-space:nowrap}
+.ng-sts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0}
+.ng-st{background:#F4FAF5;border:1px solid #D8E8DC;border-radius:12px;padding:10px 12px}.ng-st span{display:block;font-size:12px;font-weight:700;color:var(--muted,#65736C)}.ng-st b{display:block;font:800 24px/1.1 var(--display,system-ui);color:#14503E;margin-top:2px}.ng-st small{display:block;font-size:11px;color:var(--muted,#65736C)}
+.ng-c small{display:block;font-size:10.5px;font-weight:600;opacity:.85}
+.ng-d14{margin-top:16px;padding-top:14px;border-top:1px solid #E6ECE3}
+.ng-d14-h{display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:13px}.ng-d14-h b{flex:1;font-size:14px}.ng-d14-h span{display:flex;align-items:center;gap:6px;color:var(--muted,#65736C);font-weight:700}
+.ng-d14-h i{width:10px;height:10px;border-radius:3px;display:inline-block}.ng-k1{background:#2E7D5A}.ng-k2{background:#C9B37E}
+.ng-cols{display:grid;grid-template-columns:repeat(14,minmax(0,1fr));gap:4px;height:120px;margin-top:10px;align-items:end}
+.ng-col{display:flex;flex-direction:column;align-items:center;height:100%}.ng-col small{font-size:9.5px;color:var(--muted,#65736C);height:14px;margin-top:4px;white-space:nowrap}
+.ng-cb{flex:1;width:100%;display:flex;align-items:flex-end;justify-content:center;gap:2px;background:#F6F9F5;border-radius:6px;padding:0 2px}
+.ng-cb i{width:45%;border-radius:4px 4px 0 0;min-height:0}.ng-c1{background:#2E7D5A}.ng-c2{background:#C9B37E}
+@media (max-width:600px){.ng-sts{grid-template-columns:repeat(2,minmax(0,1fr))}.ng-st b{font-size:20px}}

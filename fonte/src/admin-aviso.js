@@ -46,4 +46,4 @@ function avPinta(){
   const on = $("av-on"), off = $("av-off"); if(on) on.onclick = avLigar; if(off) off.onclick = avDesligar;
 }
 async function avMostra(){ if(!avSB()) return; avPinta(); try{ await Promise.all([avStatus(), avAqui()]); }catch(e){ AV_EST = null; } if(!AV_EST){ const b = $("av-nova"); if(b) b.remove(); return; } avPinta(); }
-["resumo", "alunos"].forEach(k => { const v0 = VIEWS[k]; if(!v0) return; VIEWS[k] = function(){ const r = v0.apply(this, arguments); setTimeout(avMostra, 0); setTimeout(() => { if(!$("av-nova") && AV_EST) avPinta(); }, 1200); return r; }; });
+["config"].forEach(k => { const v0 = VIEWS[k]; if(!v0) return; VIEWS[k] = function(){ const r = v0.apply(this, arguments); setTimeout(avMostra, 0); setTimeout(() => { if(!$("av-nova") && AV_EST) avPinta(); }, 1200); return r; }; });
