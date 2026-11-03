@@ -108,7 +108,6 @@ function ngPinta(){
 { const v0 = VIEWS.resumo; if(v0) VIEWS.resumo = function(){ const r = v0.apply(this, arguments); setTimeout(ngPinta, 120); return r; }; }
 
 /* ---------- Lista de alunas no celular: as 4 listas (cidade, idade, gênero, estado) viram um cartão com abas ---------- */
-let AB_ABA = 0;
 function abCelular(){
   if(!matchMedia("(max-width:700px)").matches) return;
   const main = $("adm-main"); if(!main || SEC !== "alunos" || $("ab-card")) return;
@@ -116,17 +115,12 @@ function abCelular(){
   const cards = NOMES.map(n => [...main.querySelectorAll(".card")].find(c => { const h = c.querySelector(":scope > h3"); return h && h.textContent.trim() === n; }));
   if(cards.some(c => !c)) return;
   const conteudo = cards.map(c => [...c.querySelectorAll(".hbar, .empty")].map(e => e.outerHTML));
+  const topo = cards.map(c => { const H = [...c.querySelectorAll(".hbar")].map(h => { const sp = h.querySelectorAll("span"); return [sp[0] ? sp[0].textContent.trim() : "", parseInt(String(sp[1] ? sp[1].textContent : "0").replace(/\D/g, "") || "0", 10), sp[1] ? sp[1].textContent.trim().split(" ")[0] : ""]; }).filter(x => x[1] > 0).sort((a, b) => b[1] - a[1]); return H.length ? `Mais: ${H[0][0]} · ${H[0][2]}` : "Sem dados"; });
+  const ICO = ["📍", "🎂", "👤", "🗺️"];
   const grade = cards[0].closest(".grid");
-  const html = `<div class="card" id="ab-card"><h3>Quem são as alunas</h3><div class="ab-tabs" role="tablist">${CURTO.map((t, i) => `<button role="tab" data-ab="${i}" aria-selected="${AB_ABA === i}">${t}</button>`).join("")}</div><div id="ab-c"></div></div>`;
+  const html = `<div class="card" id="ab-card"><h3>Quem são as alunas</h3><div class="ab-blocos">${CURTO.map((t, i) => `<button class="ab-b" data-ab="${i}"><span class="ab-i">${ICO[i]}</span><b>Por ${t.toLowerCase()}</b><small>${esc(topo[i])}</small><span class="ab-v">Ver lista ›</span></button>`).join("")}</div></div>`;
   (grade || cards[0]).insertAdjacentHTML("beforebegin", html);
   if(grade) grade.style.display = "none"; cards.forEach(c => { c.style.display = "none"; });
-  const pinta = (todas) => {
-    const L = conteudo[AB_ABA] || [], c = $("ab-c");
-    c.innerHTML = (todas ? L : L.slice(0, 6)).join("") + (L.length > 6 && !todas ? `<button class="btn btn-line btn-sm btn-block" id="ab-mais" style="margin-top:10px">Ver todas (${L.length})</button>` : "");
-    main.querySelectorAll("[data-ab]").forEach(b => b.setAttribute("aria-selected", +b.dataset.ab === AB_ABA));
-    const m = $("ab-mais"); if(m) m.onclick = () => pinta(true);
-  };
-  main.querySelectorAll("[data-ab]").forEach(b => b.onclick = () => { AB_ABA = +b.dataset.ab; pinta(false); });
-  pinta(false);
+  main.querySelectorAll("[data-ab]").forEach(b => b.onclick = () => { const k = +b.dataset.ab; modal("Alunas por " + CURTO[k].toLowerCase(), `<div class="ab-lista">${(conteudo[k] || []).join("") || `<div class="empty">Sem dados</div>`}</div><button class="btn btn-line btn-block" data-close style="margin-top:14px">Voltar</button>`); });
 }
 { const v0 = VIEWS.alunos; if(v0) VIEWS.alunos = function(){ const r = v0.apply(this, arguments); setTimeout(abCelular, 30); return r; }; }
