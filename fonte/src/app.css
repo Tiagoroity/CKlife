@@ -3097,3 +3097,22 @@ a,button,[role=button],label,input,select,.chip,.opt{touch-action:manipulation}
 .ab-lista .hbar{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"n v" "t t";gap:4px 10px;padding:7px 0}
 .ab-lista .hbar > span:first-child{grid-area:n;white-space:normal}.ab-lista .hbar .t{grid-area:t;height:10px}.ab-lista .hbar .v{grid-area:v;white-space:nowrap}
 @media (min-width:701px){.ab-blocos{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.ab-b{min-height:118px;padding:16px;transition:transform .15s,box-shadow .15s}.ab-b:hover{transform:translateY(-2px);box-shadow:0 10px 24px -14px rgba(20,80,62,.45)}}
+/* anúncio em tela cheia */
+.ad.adt{position:fixed;inset:0;z-index:150;background:rgba(4,16,12,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;padding:calc(14px + env(safe-area-inset-top,0px)) 16px calc(14px + env(safe-area-inset-bottom,0px));animation:entFade .25s both}
+.ad.adt[hidden]{display:none}
+body.adt-on{overflow:hidden}
+.adt-in{width:100%;max-width:420px;max-height:100%;display:flex;flex-direction:column;gap:12px;color:#fff;animation:entUp .35s both}
+.adt-top{display:flex;align-items:center;gap:10px}
+.adt-logo{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-weight:800;background:linear-gradient(135deg,#F2E6C4,#C9B37E);color:#0B2F25}
+.adt-who{flex:1;min-width:0}.adt-who b{display:block;font-size:15px}.adt-who small{font-size:12px;color:#A9C2B4;letter-spacing:.06em;text-transform:uppercase;font-weight:700}
+.adt-x{position:relative;width:40px;height:40px;border-radius:50%;border:0;background:rgba(255,255,255,.1);color:#fff;font-weight:800;font-size:15px;display:grid;place-items:center}
+.adt-x svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+.adt-r0{fill:none;stroke:rgba(255,255,255,.18);stroke-width:3}.adt-r1{fill:none;stroke:#F2E6C4;stroke-width:3;stroke-dasharray:100.5;stroke-dashoffset:100.5;animation:adtRing 5s linear forwards}
+@keyframes adtRing{to{stroke-dashoffset:0}}
+.adt-x.ok{background:#F5F8EF;color:#0B2F25}.adt-x.ok svg{display:none}
+.adt-midia{border-radius:22px;overflow:hidden;background:#0B2F25;box-shadow:0 30px 60px -30px rgba(0,0,0,.8)}
+.adt-m{display:block;width:100%;aspect-ratio:1/1;object-fit:cover;max-height:56vh}
+.adt-txt{display:grid;place-items:center;padding:24px;text-align:center;background:linear-gradient(135deg,#14503E,#0B3328)}.adt-txt b{font:800 26px/1.15 var(--display,system-ui)}
+.adt-tx h2{margin:0;font-size:21px;color:#fff}.adt-tx p{margin:4px 0 0;color:#D5E4DA;font-size:15px;line-height:1.4}
+.adt-cta{min-height:54px;border-radius:16px;font-weight:800;font-size:16px;background:linear-gradient(135deg,#F2E6C4,#C9B37E);color:#0B2F25;display:flex;align-items:center;justify-content:center;border:0}
+.adt-pro{background:none;border:0;color:#A9C2B4;font-size:13px;font-weight:700;text-decoration:underline;text-underline-offset:3px;align-self:center;min-height:36px}

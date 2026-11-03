@@ -44,3 +44,57 @@ function ligaAdVideo(card){
 new MutationObserver(() => document.querySelectorAll(".adx-video:not([data-v])").forEach(c => { c.dataset.v = 1; ligaAdVideo(c); })).observe(document.body, { childList: true, subtree: true });
 /* saiu da aba/tela: nenhum vídeo continua tocando */
 document.addEventListener("visibilitychange", () => { if(document.hidden) document.querySelectorAll(".adx video").forEach(v => v.pause()); });
+
+/* ===================== ANÚNCIO EM TELA CHEIA (premium) =====================
+   Só para quem é gratuita e já passou dos dias sem anúncio (ENT.d.anuncios, decidido no servidor).
+   Abre a cada X toques ou Y minutos (o painel controla em Campanhas › frequência), nunca no treino, no chat,
+   com outra janela aberta ou durante a entrada. O botão de fechar aparece depois de 5 segundos. */
+const adLivre = () => !document.querySelector("#play:not([hidden]), #cook:not([hidden]), #pp, .ent, .ent-bv, .coach-1o, #ck-inst, #d21, .modal:not([hidden])")
+  && $("sheet").hidden && !$("v-app").hidden && !(typeof TAB !== "undefined" && TAB === "juntas" && document.querySelector(".so-chat, .chat-box, #chat"));
+mostrarAnuncio = function(c){
+  const an = DB.anunciantes.find(a => a.id === c.anunc); if(!an) return;
+  DB.eventos.push({ t: "imp", c: c.id, u: ME.id, d: today() }); save();
+  const fmt = c.formato === "video" && c.midia ? "video" : c.formato === "imagem" && c.midia ? "imagem" : "texto";
+  const midia = fmt === "imagem" ? `<img class="adt-m" src="${esc(c.midia)}" alt="${esc(c.titulo || an.nome)}">`
+    : fmt === "video" ? `<video class="adt-m" src="${esc(c.midia)}" ${c.capa ? `poster="${esc(c.capa)}"` : ""} autoplay muted playsinline loop></video>` : `<div class="adt-m adt-txt"><b>${esc(c.titulo || an.nome)}</b></div>`;
+  const box = $("ad");
+  box.className = "ad adt"; box.innerHTML = `<div class="adt-in" role="dialog" aria-modal="true" aria-label="Anúncio">
+    <div class="adt-top"><span class="adt-logo">${esc((an.nome || "?").trim()[0] || "?")}</span><span class="adt-who"><b>${esc(an.nome || "Anunciante")}</b><small>Patrocinado</small></span>
+      <button class="adt-x" id="ad-x" aria-label="Fechar anúncio" disabled><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="16" class="adt-r0"/><circle cx="18" cy="18" r="16" class="adt-r1"/></svg><span id="ad-n">5</span></button></div>
+    <div class="adt-midia">${midia}</div>
+    ${c.titulo || c.texto ? `<div class="adt-tx">${c.titulo && fmt !== "texto" ? `<h2>${esc(c.titulo)}</h2>` : ""}${c.texto ? `<p>${esc(c.texto)}</p>` : ""}</div>` : ""}
+    <a class="btn adt-cta" id="ad-go" href="${esc(linkCamp(c))}" target="_blank" rel="noopener sponsored">${esc(c.botao || "Saiba mais")}</a>
+    <button class="adt-pro" id="ad-pro">Assine o Pro e treine sem anúncios</button></div>`;
+  box.hidden = false; document.body.classList.add("adt-on");
+  const fecha = () => { box.hidden = true; box.innerHTML = ""; document.body.classList.remove("adt-on"); };
+  let n = 5; const x = $("ad-x"), num = $("ad-n");
+  const t = setInterval(() => { n--; if(num) num.textContent = n > 0 ? n : "✕"; if(n <= 0){ clearInterval(t); if(x){ x.disabled = false; x.classList.add("ok"); } } }, 1000);
+  x.onclick = () => { if(!x.disabled){ clearInterval(t); fecha(); } };
+  $("ad-go").onclick = () => { DB.eventos.push({ t: "clk", c: c.id, u: ME.id, d: today() }); save(); clearInterval(t); setTimeout(fecha, 300); };
+  $("ad-pro").onclick = () => { clearInterval(t); fecha(); try{ paywall("anuncio"); }catch(e){} };
+};
+let adIni = false;   // na primeira vez: o primeiro anúncio pode vir assim que ela atingir os toques (não espera minutos depois de abrir o app)
+/* conta os toques no app e confere a frequência */
+document.addEventListener("click", e => {
+  try{
+    if(!ENT.d || !ENT.d.anuncios || !ME || !ME.perfil) return;
+    if(!e.target.closest || !e.target.closest("#v-app button, #v-app a, #v-app [role=button], #v-app .chip, #nav button")) return;
+    if(e.target.closest("#ad")) return;
+    if(!adIni){ adIni = true; AD.ultimo = 0; }
+    AD.cliques++;
+    setTimeout(() => { if(adLivre()) tentarAnuncio(); }, 700);
+  }catch(er){}
+}, true);
+setInterval(() => { try{ if(ENT.d && ENT.d.anuncios && ME && ME.perfil && document.visibilityState === "visible" && adLivre()) tentarAnuncio(); }catch(e){} }, 60000);
+
+/* ===================== PROTEÇÃO CONTRA TOQUES REPETIDOS =====================
+   Tocar 10 vezes rápido no mesmo botão abria telas repetidas e causava erros.
+   O mesmo botão só aceita um toque a cada 0,4 s (no treino fica livre, para contar repetições). */
+{ const ULT = new WeakMap();
+  document.addEventListener("click", e => {
+    const b = e.target.closest && e.target.closest("button, a.btn, [role=button], .chip, .opt");
+    if(!b || b.closest("#play") || b.hasAttribute("data-rapido")) return;
+    const agora = Date.now(), u = ULT.get(b) || 0;
+    if(agora - u < 400){ e.preventDefault(); e.stopImmediatePropagation(); return; }
+    ULT.set(b, agora);
+  }, true); }

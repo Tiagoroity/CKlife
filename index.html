@@ -3136,6 +3136,25 @@ a,button,[role=button],label,input,select,.chip,.opt{touch-action:manipulation}
 .ab-lista .hbar{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"n v" "t t";gap:4px 10px;padding:7px 0}
 .ab-lista .hbar > span:first-child{grid-area:n;white-space:normal}.ab-lista .hbar .t{grid-area:t;height:10px}.ab-lista .hbar .v{grid-area:v;white-space:nowrap}
 @media (min-width:701px){.ab-blocos{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.ab-b{min-height:118px;padding:16px;transition:transform .15s,box-shadow .15s}.ab-b:hover{transform:translateY(-2px);box-shadow:0 10px 24px -14px rgba(20,80,62,.45)}}
+/* anúncio em tela cheia */
+.ad.adt{position:fixed;inset:0;z-index:150;background:rgba(4,16,12,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;padding:calc(14px + env(safe-area-inset-top,0px)) 16px calc(14px + env(safe-area-inset-bottom,0px));animation:entFade .25s both}
+.ad.adt[hidden]{display:none}
+body.adt-on{overflow:hidden}
+.adt-in{width:100%;max-width:420px;max-height:100%;display:flex;flex-direction:column;gap:12px;color:#fff;animation:entUp .35s both}
+.adt-top{display:flex;align-items:center;gap:10px}
+.adt-logo{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-weight:800;background:linear-gradient(135deg,#F2E6C4,#C9B37E);color:#0B2F25}
+.adt-who{flex:1;min-width:0}.adt-who b{display:block;font-size:15px}.adt-who small{font-size:12px;color:#A9C2B4;letter-spacing:.06em;text-transform:uppercase;font-weight:700}
+.adt-x{position:relative;width:40px;height:40px;border-radius:50%;border:0;background:rgba(255,255,255,.1);color:#fff;font-weight:800;font-size:15px;display:grid;place-items:center}
+.adt-x svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+.adt-r0{fill:none;stroke:rgba(255,255,255,.18);stroke-width:3}.adt-r1{fill:none;stroke:#F2E6C4;stroke-width:3;stroke-dasharray:100.5;stroke-dashoffset:100.5;animation:adtRing 5s linear forwards}
+@keyframes adtRing{to{stroke-dashoffset:0}}
+.adt-x.ok{background:#F5F8EF;color:#0B2F25}.adt-x.ok svg{display:none}
+.adt-midia{border-radius:22px;overflow:hidden;background:#0B2F25;box-shadow:0 30px 60px -30px rgba(0,0,0,.8)}
+.adt-m{display:block;width:100%;aspect-ratio:1/1;object-fit:cover;max-height:56vh}
+.adt-txt{display:grid;place-items:center;padding:24px;text-align:center;background:linear-gradient(135deg,#14503E,#0B3328)}.adt-txt b{font:800 26px/1.15 var(--display,system-ui)}
+.adt-tx h2{margin:0;font-size:21px;color:#fff}.adt-tx p{margin:4px 0 0;color:#D5E4DA;font-size:15px;line-height:1.4}
+.adt-cta{min-height:54px;border-radius:16px;font-weight:800;font-size:16px;background:linear-gradient(135deg,#F2E6C4,#C9B37E);color:#0B2F25;display:flex;align-items:center;justify-content:center;border:0}
+.adt-pro{background:none;border:0;color:#A9C2B4;font-size:13px;font-weight:700;text-decoration:underline;text-underline-offset:3px;align-self:center;min-height:36px}
 </style>
 
 <!-- Entrar / criar conta -->
@@ -8124,6 +8143,60 @@ new MutationObserver(() => document.querySelectorAll(".adx-video:not([data-v])")
 /* saiu da aba/tela: nenhum vídeo continua tocando */
 document.addEventListener("visibilitychange", () => { if(document.hidden) document.querySelectorAll(".adx video").forEach(v => v.pause()); });
 
+/* ===================== ANÚNCIO EM TELA CHEIA (premium) =====================
+   Só para quem é gratuita e já passou dos dias sem anúncio (ENT.d.anuncios, decidido no servidor).
+   Abre a cada X toques ou Y minutos (o painel controla em Campanhas › frequência), nunca no treino, no chat,
+   com outra janela aberta ou durante a entrada. O botão de fechar aparece depois de 5 segundos. */
+const adLivre = () => !document.querySelector("#play:not([hidden]), #cook:not([hidden]), #pp, .ent, .ent-bv, .coach-1o, #ck-inst, #d21, .modal:not([hidden])")
+  && $("sheet").hidden && !$("v-app").hidden && !(typeof TAB !== "undefined" && TAB === "juntas" && document.querySelector(".so-chat, .chat-box, #chat"));
+mostrarAnuncio = function(c){
+  const an = DB.anunciantes.find(a => a.id === c.anunc); if(!an) return;
+  DB.eventos.push({ t: "imp", c: c.id, u: ME.id, d: today() }); save();
+  const fmt = c.formato === "video" && c.midia ? "video" : c.formato === "imagem" && c.midia ? "imagem" : "texto";
+  const midia = fmt === "imagem" ? `<img class="adt-m" src="${esc(c.midia)}" alt="${esc(c.titulo || an.nome)}">`
+    : fmt === "video" ? `<video class="adt-m" src="${esc(c.midia)}" ${c.capa ? `poster="${esc(c.capa)}"` : ""} autoplay muted playsinline loop></video>` : `<div class="adt-m adt-txt"><b>${esc(c.titulo || an.nome)}</b></div>`;
+  const box = $("ad");
+  box.className = "ad adt"; box.innerHTML = `<div class="adt-in" role="dialog" aria-modal="true" aria-label="Anúncio">
+    <div class="adt-top"><span class="adt-logo">${esc((an.nome || "?").trim()[0] || "?")}</span><span class="adt-who"><b>${esc(an.nome || "Anunciante")}</b><small>Patrocinado</small></span>
+      <button class="adt-x" id="ad-x" aria-label="Fechar anúncio" disabled><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="16" class="adt-r0"/><circle cx="18" cy="18" r="16" class="adt-r1"/></svg><span id="ad-n">5</span></button></div>
+    <div class="adt-midia">${midia}</div>
+    ${c.titulo || c.texto ? `<div class="adt-tx">${c.titulo && fmt !== "texto" ? `<h2>${esc(c.titulo)}</h2>` : ""}${c.texto ? `<p>${esc(c.texto)}</p>` : ""}</div>` : ""}
+    <a class="btn adt-cta" id="ad-go" href="${esc(linkCamp(c))}" target="_blank" rel="noopener sponsored">${esc(c.botao || "Saiba mais")}</a>
+    <button class="adt-pro" id="ad-pro">Assine o Pro e treine sem anúncios</button></div>`;
+  box.hidden = false; document.body.classList.add("adt-on");
+  const fecha = () => { box.hidden = true; box.innerHTML = ""; document.body.classList.remove("adt-on"); };
+  let n = 5; const x = $("ad-x"), num = $("ad-n");
+  const t = setInterval(() => { n--; if(num) num.textContent = n > 0 ? n : "✕"; if(n <= 0){ clearInterval(t); if(x){ x.disabled = false; x.classList.add("ok"); } } }, 1000);
+  x.onclick = () => { if(!x.disabled){ clearInterval(t); fecha(); } };
+  $("ad-go").onclick = () => { DB.eventos.push({ t: "clk", c: c.id, u: ME.id, d: today() }); save(); clearInterval(t); setTimeout(fecha, 300); };
+  $("ad-pro").onclick = () => { clearInterval(t); fecha(); try{ paywall("anuncio"); }catch(e){} };
+};
+let adIni = false;   // na primeira vez: o primeiro anúncio pode vir assim que ela atingir os toques (não espera minutos depois de abrir o app)
+/* conta os toques no app e confere a frequência */
+document.addEventListener("click", e => {
+  try{
+    if(!ENT.d || !ENT.d.anuncios || !ME || !ME.perfil) return;
+    if(!e.target.closest || !e.target.closest("#v-app button, #v-app a, #v-app [role=button], #v-app .chip, #nav button")) return;
+    if(e.target.closest("#ad")) return;
+    if(!adIni){ adIni = true; AD.ultimo = 0; }
+    AD.cliques++;
+    setTimeout(() => { if(adLivre()) tentarAnuncio(); }, 700);
+  }catch(er){}
+}, true);
+setInterval(() => { try{ if(ENT.d && ENT.d.anuncios && ME && ME.perfil && document.visibilityState === "visible" && adLivre()) tentarAnuncio(); }catch(e){} }, 60000);
+
+/* ===================== PROTEÇÃO CONTRA TOQUES REPETIDOS =====================
+   Tocar 10 vezes rápido no mesmo botão abria telas repetidas e causava erros.
+   O mesmo botão só aceita um toque a cada 0,4 s (no treino fica livre, para contar repetições). */
+{ const ULT = new WeakMap();
+  document.addEventListener("click", e => {
+    const b = e.target.closest && e.target.closest("button, a.btn, [role=button], .chip, .opt");
+    if(!b || b.closest("#play") || b.hasAttribute("data-rapido")) return;
+    const agora = Date.now(), u = ULT.get(b) || 0;
+    if(agora - u < 400){ e.preventDefault(); e.stopImmediatePropagation(); return; }
+    ULT.set(b, agora);
+  }, true); }
+
 /* ===================== MÓDULOS DO APP (o painel liga/desliga) =====================
    Desligado: some do app da aluna (Explorar, cupons, agendamentos). Ligado de novo: aparece com selo "Novo" por 14 dias
    e um card de novidade no Início (uma vez por módulo). Configuração em DB.modulos (coleção "modulos", lida por todas). */
@@ -9431,7 +9504,7 @@ const abrirPerfilEq = abrirPerfil; abrirPerfil = async function(u){
    Quem deixa o CK Life aberto (ou instalado na tela inicial) fica com a versão antiga até recarregar.
    O app confere a versão publicada ao abrir, ao voltar do segundo plano e a cada 5 minutos.
    Se houver versão nova, mostra a faixa "ATUALIZAR": um toque e pronto. Nunca aparece no meio do treino. */
-const CK_VER = "20261102224540";
+const CK_VER = "20261102225310";
 let CK_VER_NOVA = null;
 const ATU_K = "ck_atu";
 const atuTentou = () => { try{ return JSON.parse(localStorage.getItem(ATU_K) || "null"); }catch(e){ return null; } };
@@ -12010,7 +12083,7 @@ if(/^https?:/.test(location.protocol) && !/localhost|127\.0\.0\.1/.test(location
   setInterval(errEnvia, 15000);
 }
 /* só no teste local */
-if(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) window.__PP = { prep: ppPreparo, roda: ppRoda, me: () => ME, salva: ppSalva, livre: ppLivre, ent: k => { OB = { i: 0, itens: [], intro: 9, pos: ENT_POS_NOVA.indexOf(k) }; show("v-onb"); entPos(); }, dias: () => { OB = { i: OBQ.findIndex(q => q.k === "diasSem"), itens: [], intro: 9 }; show("v-onb"); onboarding(); } };
+if(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) window.__PP = { ad: () => { DB.anunciantes = DB.anunciantes || []; DB.anunciantes.push({ id: "anT", nome: "Studio Fit Teste", ativo: true }); mostrarAnuncio({ id: "cT", anunc: "anT", formato: "imagem", midia: "img/passos-celular.webp", titulo: "Aula experimental grátis", texto: "Pilates e funcional perto de você. Agende pelo WhatsApp.", botao: "Falar no WhatsApp", destino: "site", site: "cklife.com.br" }); }, prep: ppPreparo, roda: ppRoda, me: () => ME, salva: ppSalva, livre: ppLivre, ent: k => { OB = { i: 0, itens: [], intro: 9, pos: ENT_POS_NOVA.indexOf(k) }; show("v-onb"); entPos(); }, dias: () => { OB = { i: OBQ.findIndex(q => q.k === "diasSem"), itens: [], intro: 9 }; show("v-onb"); onboarding(); } };
 
 /* ===================== PIXEL DA META (medir anúncios) =====================
    Só funciona se a pessoa aceitar os cookies (LGPD). Nunca no painel do administrador.
