@@ -3119,6 +3119,16 @@ a,button,[role=button],label,input,select,.chip,.opt{touch-action:manipulation}
 .ng-cb{flex:1;width:100%;display:flex;align-items:flex-end;justify-content:center;gap:2px;background:#F6F9F5;border-radius:6px;padding:0 2px}
 .ng-cb i{width:45%;border-radius:4px 4px 0 0;min-height:0}.ng-c1{background:#2E7D5A}.ng-c2{background:#C9B37E}
 @media (max-width:600px){.ng-sts{grid-template-columns:repeat(2,minmax(0,1fr))}.ng-st b{font-size:20px}}
+/* painel no celular: listas de barras sem letra sobreposta (nome e número em cima, barra embaixo) */
+@media (max-width:700px){
+  #adm-main .hbar{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"n v" "t t";gap:4px 10px;padding:7px 0}
+  #adm-main .hbar > span:first-child{grid-area:n;white-space:normal;overflow:visible;line-height:1.25}
+  #adm-main .hbar .t{grid-area:t;height:10px}
+  #adm-main .hbar .v{grid-area:v;white-space:nowrap}
+}
+.ab-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;background:#EEF3EC;padding:4px;border-radius:14px;margin:10px 0 8px}
+.ab-tabs button{min-height:40px;border:0;border-radius:11px;background:none;font-weight:800;font-size:13px;color:#4E5E56}
+.ab-tabs button[aria-selected="true"]{background:#fff;color:#14503E;box-shadow:0 4px 12px -6px rgba(0,0,0,.25)}
 </style>
 
 <!-- Entrar / criar conta -->
@@ -9411,7 +9421,7 @@ const abrirPerfilEq = abrirPerfil; abrirPerfil = async function(u){
    Quem deixa o CK Life aberto (ou instalado na tela inicial) fica com a versão antiga até recarregar.
    O app confere a versão publicada ao abrir, ao voltar do segundo plano e a cada 5 minutos.
    Se houver versão nova, mostra a faixa "ATUALIZAR": um toque e pronto. Nunca aparece no meio do treino. */
-const CK_VER = "20261102213211";
+const CK_VER = "20261102213740";
 let CK_VER_NOVA = null;
 const ATU_K = "ck_atu";
 const atuTentou = () => { try{ return JSON.parse(localStorage.getItem(ATU_K) || "null"); }catch(e){ return null; } };
@@ -16835,6 +16845,30 @@ function ngPinta(){
   main.querySelectorAll("[data-ngp]").forEach(b => b.onclick = () => { NG_P = +b.dataset.ngp; ngPinta(); });
 }
 { const v0 = VIEWS.resumo; if(v0) VIEWS.resumo = function(){ const r = v0.apply(this, arguments); setTimeout(ngPinta, 120); return r; }; }
+
+/* ---------- Lista de alunas no celular: as 4 listas (cidade, idade, gênero, estado) viram um cartão com abas ---------- */
+let AB_ABA = 0;
+function abCelular(){
+  if(!matchMedia("(max-width:700px)").matches) return;
+  const main = $("adm-main"); if(!main || SEC !== "alunos" || $("ab-card")) return;
+  const NOMES = ["Por cidade", "Por faixa de idade", "Por gênero", "Por estado"], CURTO = ["Cidade", "Idade", "Gênero", "Estado"];
+  const cards = NOMES.map(n => [...main.querySelectorAll(".card")].find(c => { const h = c.querySelector(":scope > h3"); return h && h.textContent.trim() === n; }));
+  if(cards.some(c => !c)) return;
+  const conteudo = cards.map(c => [...c.querySelectorAll(".hbar, .empty")].map(e => e.outerHTML));
+  const grade = cards[0].closest(".grid");
+  const html = `<div class="card" id="ab-card"><h3>Quem são as alunas</h3><div class="ab-tabs" role="tablist">${CURTO.map((t, i) => `<button role="tab" data-ab="${i}" aria-selected="${AB_ABA === i}">${t}</button>`).join("")}</div><div id="ab-c"></div></div>`;
+  (grade || cards[0]).insertAdjacentHTML("beforebegin", html);
+  if(grade) grade.style.display = "none"; cards.forEach(c => { c.style.display = "none"; });
+  const pinta = (todas) => {
+    const L = conteudo[AB_ABA] || [], c = $("ab-c");
+    c.innerHTML = (todas ? L : L.slice(0, 6)).join("") + (L.length > 6 && !todas ? `<button class="btn btn-line btn-sm btn-block" id="ab-mais" style="margin-top:10px">Ver todas (${L.length})</button>` : "");
+    main.querySelectorAll("[data-ab]").forEach(b => b.setAttribute("aria-selected", +b.dataset.ab === AB_ABA));
+    const m = $("ab-mais"); if(m) m.onclick = () => pinta(true);
+  };
+  main.querySelectorAll("[data-ab]").forEach(b => b.onclick = () => { AB_ABA = +b.dataset.ab; pinta(false); });
+  pinta(false);
+}
+{ const v0 = VIEWS.alunos; if(v0) VIEWS.alunos = function(){ const r = v0.apply(this, arguments); setTimeout(abCelular, 30); return r; }; }
 
 window.ADMIN = { abrir };
 })();

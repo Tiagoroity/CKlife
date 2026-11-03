@@ -106,3 +106,27 @@ function ngPinta(){
   main.querySelectorAll("[data-ngp]").forEach(b => b.onclick = () => { NG_P = +b.dataset.ngp; ngPinta(); });
 }
 { const v0 = VIEWS.resumo; if(v0) VIEWS.resumo = function(){ const r = v0.apply(this, arguments); setTimeout(ngPinta, 120); return r; }; }
+
+/* ---------- Lista de alunas no celular: as 4 listas (cidade, idade, gênero, estado) viram um cartão com abas ---------- */
+let AB_ABA = 0;
+function abCelular(){
+  if(!matchMedia("(max-width:700px)").matches) return;
+  const main = $("adm-main"); if(!main || SEC !== "alunos" || $("ab-card")) return;
+  const NOMES = ["Por cidade", "Por faixa de idade", "Por gênero", "Por estado"], CURTO = ["Cidade", "Idade", "Gênero", "Estado"];
+  const cards = NOMES.map(n => [...main.querySelectorAll(".card")].find(c => { const h = c.querySelector(":scope > h3"); return h && h.textContent.trim() === n; }));
+  if(cards.some(c => !c)) return;
+  const conteudo = cards.map(c => [...c.querySelectorAll(".hbar, .empty")].map(e => e.outerHTML));
+  const grade = cards[0].closest(".grid");
+  const html = `<div class="card" id="ab-card"><h3>Quem são as alunas</h3><div class="ab-tabs" role="tablist">${CURTO.map((t, i) => `<button role="tab" data-ab="${i}" aria-selected="${AB_ABA === i}">${t}</button>`).join("")}</div><div id="ab-c"></div></div>`;
+  (grade || cards[0]).insertAdjacentHTML("beforebegin", html);
+  if(grade) grade.style.display = "none"; cards.forEach(c => { c.style.display = "none"; });
+  const pinta = (todas) => {
+    const L = conteudo[AB_ABA] || [], c = $("ab-c");
+    c.innerHTML = (todas ? L : L.slice(0, 6)).join("") + (L.length > 6 && !todas ? `<button class="btn btn-line btn-sm btn-block" id="ab-mais" style="margin-top:10px">Ver todas (${L.length})</button>` : "");
+    main.querySelectorAll("[data-ab]").forEach(b => b.setAttribute("aria-selected", +b.dataset.ab === AB_ABA));
+    const m = $("ab-mais"); if(m) m.onclick = () => pinta(true);
+  };
+  main.querySelectorAll("[data-ab]").forEach(b => b.onclick = () => { AB_ABA = +b.dataset.ab; pinta(false); });
+  pinta(false);
+}
+{ const v0 = VIEWS.alunos; if(v0) VIEWS.alunos = function(){ const r = v0.apply(this, arguments); setTimeout(abCelular, 30); return r; }; }

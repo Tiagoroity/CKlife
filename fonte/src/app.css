@@ -3080,3 +3080,13 @@ a,button,[role=button],label,input,select,.chip,.opt{touch-action:manipulation}
 .ng-cb{flex:1;width:100%;display:flex;align-items:flex-end;justify-content:center;gap:2px;background:#F6F9F5;border-radius:6px;padding:0 2px}
 .ng-cb i{width:45%;border-radius:4px 4px 0 0;min-height:0}.ng-c1{background:#2E7D5A}.ng-c2{background:#C9B37E}
 @media (max-width:600px){.ng-sts{grid-template-columns:repeat(2,minmax(0,1fr))}.ng-st b{font-size:20px}}
+/* painel no celular: listas de barras sem letra sobreposta (nome e número em cima, barra embaixo) */
+@media (max-width:700px){
+  #adm-main .hbar{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"n v" "t t";gap:4px 10px;padding:7px 0}
+  #adm-main .hbar > span:first-child{grid-area:n;white-space:normal;overflow:visible;line-height:1.25}
+  #adm-main .hbar .t{grid-area:t;height:10px}
+  #adm-main .hbar .v{grid-area:v;white-space:nowrap}
+}
+.ab-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;background:#EEF3EC;padding:4px;border-radius:14px;margin:10px 0 8px}
+.ab-tabs button{min-height:40px;border:0;border-radius:11px;background:none;font-weight:800;font-size:13px;color:#4E5E56}
+.ab-tabs button[aria-selected="true"]{background:#fff;color:#14503E;box-shadow:0 4px 12px -6px rgba(0,0,0,.25)}
