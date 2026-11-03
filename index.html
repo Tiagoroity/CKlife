@@ -9431,7 +9431,7 @@ const abrirPerfilEq = abrirPerfil; abrirPerfil = async function(u){
    Quem deixa o CK Life aberto (ou instalado na tela inicial) fica com a versão antiga até recarregar.
    O app confere a versão publicada ao abrir, ao voltar do segundo plano e a cada 5 minutos.
    Se houver versão nova, mostra a faixa "ATUALIZAR": um toque e pronto. Nunca aparece no meio do treino. */
-const CK_VER = "20261102223900";
+const CK_VER = "20261102224540";
 let CK_VER_NOVA = null;
 const ATU_K = "ck_atu";
 const atuTentou = () => { try{ return JSON.parse(localStorage.getItem(ATU_K) || "null"); }catch(e){ return null; } };
@@ -14934,9 +14934,16 @@ async function moWebhooks(){
 async function moConfig(){
   const L = await sq(SB2().from("app_config").select("*").order("chave"));
   const ff = DB().config.filtrosFree || ["original", "natural", "glow", "vivo"];
-  MB().innerHTML = `<div class="tbl"><table><thead><tr><th>Configuração</th><th>Valor</th><th></th></tr></thead><tbody>${L.map(c => `<tr><td><b>${esc(c.chave)}</b><br><small class="muted">${{ monetizacao: "Teste, anúncios, ofertas", treino_voz: "Explicação por voz dos exercícios", video: "Limites de vídeo" }[c.chave] || ""}</small></td><td><code style="white-space:pre-wrap;font-size:12px">${esc(JSON.stringify(c.valor, null, 1))}</code></td><td><button class="btn btn-line btn-sm needs-edit" data-ac="${esc(c.chave)}">Editar</button></td></tr>`).join("")}</tbody></table></div>
+  const mon = (L.find(x => x.chave === "monetizacao") || {}).valor || {}, adDias = mon.ads_free_days ?? 30;
+  MB().innerHTML = `<div class="card ad-cfg"><h3>📣 Anúncios para alunas gratuitas</h3>
+    <p class="muted" style="font-size:13px;margin:0 0 10px">Quem está no teste grátis ou no Pro <b>nunca</b> vê anúncio. Para quem é gratuita, escolha depois de quantos dias do cadastro os anúncios começam (0 = na hora).</p>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><input class="input" id="ad-dias" type="number" min="0" max="365" value="${esc(String(adDias))}" style="max-width:110px"><span class="muted">dias depois do cadastro</span><button class="btn btn-accent btn-sm" id="ad-dias-ok">Salvar</button></div>
+    <p class="hint" style="margin:10px 0 0">Frequência: no máximo 1 anúncio por tela, nos lugares escolhidos em cada anúncio (Início, Feed ou Explorar), revezando entre os anúncios ativos. Nunca no treino, no chat ou em telas de segurança. A aluna vê a mudança ao abrir o app de novo.</p></div>
+    <div class="tbl"><table><thead><tr><th>Configuração</th><th>Valor</th><th></th></tr></thead><tbody>${L.map(c => `<tr><td><b>${esc(c.chave)}</b><br><small class="muted">${{ monetizacao: "Teste, anúncios, ofertas", treino_voz: "Explicação por voz dos exercícios", video: "Limites de vídeo" }[c.chave] || ""}</small></td><td><code style="white-space:pre-wrap;font-size:12px">${esc(JSON.stringify(c.valor, null, 1))}</code></td><td><button class="btn btn-line btn-sm needs-edit" data-ac="${esc(c.chave)}">Editar</button></td></tr>`).join("")}</tbody></table></div>
     <div class="card"><h3>Programas grátis</h3><p class="muted" style="font-size:13px">Os demais programas ficam no Pro. Quem estava num programa Pro e voltou ao Free usa o programa grátis do seu objetivo; o progresso fica guardado.</p><div class="chips">${F.PLANOS.map(p => `<label class="chip"><input type="checkbox" data-pg="${p.id}" ${(DB().config.programasFree || ["comecando","hiit","gluteos","mobilidade"]).includes(p.id) ? "checked" : ""}> ${esc(p.nome)}</label>`).join("")}</div></div>
     <div class="card"><h3>Filtros grátis</h3><p class="muted" style="font-size:13px">Os outros filtros e a maquiagem ficam no Pro.</p><div class="chips">${["original","natural","glow","rosado","dourado","suave","vivo","pb"].map(k => `<label class="chip"><input type="checkbox" data-ff="${k}" ${ff.includes(k) ? "checked" : ""}> ${k}</label>`).join("")}</div></div>`;
+  const adOk = $("ad-dias-ok"); if(adOk) adOk.onclick = async () => { const n = Math.max(0, Math.min(365, parseInt(val("ad-dias"), 10) || 0)); const row = L.find(x => x.chave === "monetizacao"); if(!row) return toast("Configuração de monetização não encontrada");
+    try{ await sq(SB2().from("app_config").update({ valor: Object.assign({}, row.valor, { ads_free_days: n }), atualizado: new Date().toISOString() }).eq("chave", "monetizacao")); toast(n ? `Salvo: anúncios a partir de ${n} dia(s) do cadastro` : "Salvo: anúncios logo depois do teste grátis"); moConfig(); }catch(e){ toast("Sem permissão"); } };
   MB().querySelectorAll("[data-pg]").forEach(c => c.onchange = () => { const s = new Set(DB().config.programasFree || ["comecando","hiit","gluteos","mobilidade"]); c.checked ? s.add(c.dataset.pg) : s.delete(c.dataset.pg); DB().config.programasFree = [...s]; save(); toast("Salvo"); });
   MB().querySelectorAll("[data-ff]").forEach(c => c.onchange = () => { const s = new Set(DB().config.filtrosFree || ff); c.checked ? s.add(c.dataset.ff) : s.delete(c.dataset.ff); DB().config.filtrosFree = [...s]; save(); toast("Salvo"); });
   MB().querySelectorAll("[data-ac]").forEach(b => b.onclick = () => { const c = L.find(x => x.chave === b.dataset.ac);
