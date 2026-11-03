@@ -3074,6 +3074,18 @@ a,button,[role=button],label,input,select,.chip,.opt{touch-action:manipulation}
 .za-filtro{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px;background:#EEF3EC;padding:4px;border-radius:14px}
 .za-filtro .chip{min-height:42px;border:0;border-radius:11px;background:none;font-weight:800;justify-content:center;display:flex;align-items:center}
 .za-filtro .chip[aria-pressed="true"]{background:#fff;color:#14503E;box-shadow:0 4px 12px -6px rgba(0,0,0,.25)}
+/* painel: tarefas de hoje */
+.tar-card{margin-bottom:14px;border:1px solid #CFE3D3;background:linear-gradient(180deg,#F4FAF5,#fff)}
+.tar-h small{display:block;margin-top:2px}
+.tar-g{margin-top:10px;border:1px solid var(--line,#E6ECE3);border-radius:14px;background:#fff;overflow:hidden}
+.tar-g summary{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;list-style:none}
+.tar-g summary::-webkit-details-marker{display:none}
+.tar-e{font-size:20px}.tar-tt{flex:1;min-width:0}.tar-tt b{display:block;font-size:15px}.tar-tt small{display:block;color:var(--muted,#65736C);font-size:12.5px}
+.tar-n{min-width:30px;height:30px;border-radius:999px;display:grid;place-items:center;font-weight:800;background:#14503E;color:#fff;padding:0 8px}
+.tar-g .zq-lista{padding:0 12px 12px}
+.tar-ok{margin-left:6px;min-width:40px}
+/* painel no celular: números lado a lado, compactos */
+@media (max-width:600px){#adm-main .grid.g3,#adm-main .grid.g4{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}#adm-main .kpi{padding:10px 12px}#adm-main .kpi b{font-size:22px}#adm-main .kpi span{font-size:12px}#adm-main .kpi small{font-size:11px}}
 </style>
 
 <!-- Entrar / criar conta -->
@@ -9366,7 +9378,7 @@ const abrirPerfilEq = abrirPerfil; abrirPerfil = async function(u){
    Quem deixa o CK Life aberto (ou instalado na tela inicial) fica com a versão antiga até recarregar.
    O app confere a versão publicada ao abrir, ao voltar do segundo plano e a cada 5 minutos.
    Se houver versão nova, mostra a faixa "ATUALIZAR": um toque e pronto. Nunca aparece no meio do treino. */
-const CK_VER = "20261102211339";
+const CK_VER = "20261102212159";
 let CK_VER_NOVA = null;
 const ATU_K = "ck_atu";
 const atuTentou = () => { try{ return JSON.parse(localStorage.getItem(ATU_K) || "null"); }catch(e){ return null; } };
@@ -16630,6 +16642,50 @@ function erPinta(){
 }
 async function erMostra(){ const sb = erSB(); if(!sb) return; try{ const r = await sb.rpc("admin_erros", { p_dias: 7 }); if(r.error) throw r.error; ER_L = r.data || []; }catch(e){ ER_L = null; const b = $("er-app"); if(b) b.remove(); return; } erPinta(); }
 { const v0 = VIEWS.resumo; if(v0) VIEWS.resumo = function(){ const r = v0.apply(this, arguments); setTimeout(erMostra, 50); setTimeout(() => { if(!$("er-app") && ER_L) erPinta(); }, 1400); return r; }; }
+
+/* ===================== Painel · Tarefas de hoje =====================
+   Uma lista só, no topo do Dashboard, com quem chamar hoje no WhatsApp (mensagem pronta).
+   Cada aluna aparece em um grupo só (o mais importante). Tocou no 💬 ou em ✓, ela sai da lista de hoje.
+   Não muda nada no resto do painel. */
+const TAR_K = "ck_tarefas_feitas";
+const tarFeitas = () => { try{ const o = JSON.parse(localStorage.getItem(TAR_K) || "{}"); return new Set(o[today()] || []); }catch(e){ return new Set(); } };
+const tarMarca = id => { try{ const s = tarFeitas(); s.add(id); localStorage.setItem(TAR_K, JSON.stringify({ [today()]: [...s] })); }catch(e){} };
+const TAR_GRUPOS = [
+  ["novas", "🌱", "Chegaram e ainda não treinaram", "Mande a boas-vindas e o treino de 5 min."],
+  ["teste", "⏳", "Teste grátis acabando", "Hora de lembrar do Pro, com carinho."],
+  ["app", "📲", "Não instalaram o app", "Mande o passo a passo de instalar."],
+  ["sumiu", "💚", "Sumiram há alguns dias", "Convite leve para voltar, sem cobrança."]
+];
+function tarLista(){
+  const feitas = tarFeitas(), G = { novas: [], teste: [], app: [], sumiu: [] };
+  DB().users.filter(u => !u.admin && !u.soAdmin && !u.exemplo && !ehTeste(u) && !feitas.has(u.id) && zDig(u.whats).length >= 10).forEach(u => {
+    const T = (u.treinos || []).filter(t => t && t.d), n = T.length, cad = zDias(u.criado), f = zFase(u);
+    const ult = n ? T.map(t => t.d).sort().pop() : null;
+    if(n === 0 && cad >= 0 && cad <= 7) G.novas.push([u, cad <= 1 ? "m1" : "m2"]);
+    else if(f === "m4") G.teste.push([u, "m4"]);
+    else if(!zApp(u) && cad <= 14) G.app.push([u, "m9"]);
+    else if(n > 0 && zDias(ult) >= 3 && zDias(ult) <= 14) G.sumiu.push([u, "m7"]);
+  });
+  Object.keys(G).forEach(k => { G[k] = ordenaAlunas(G[k].map(x => x[0]), "recentes").map(u => G[k].find(x => x[0] === u)); });
+  return G;
+}
+let TAR_ABERTO = {};
+function tarPinta(){
+  const main = $("adm-main"); if(!main || SEC !== "resumo") return;
+  const h = main.querySelector(".head"); if(!h) return;
+  const old = $("tar-box"); if(old) old.remove();
+  const G = tarLista(), tot = Object.values(G).reduce((s, L) => s + L.length, 0);
+  const linha = ([u, k]) => `<div class="zq-row"><div class="zq-t"><b>${esc(u.nome || u.email)}</b><small>chegou ${esc(quandoChegou(u))}${(u.treinos || []).length ? ` · ${int((u.treinos || []).length)} treino${(u.treinos || []).length > 1 ? "s" : ""}` : ""}</small></div>
+    <button class="btn btn-sm zap-bt" data-tz="${u.id}" data-tk="${k}" aria-label="Mandar mensagem no WhatsApp">💬</button><button class="btn btn-sm btn-line tar-ok" data-tf="${u.id}" aria-label="Marcar como feito">✓</button></div>`;
+  h.insertAdjacentHTML("afterend", `<div class="card tar-card" id="tar-box"><div class="tar-h"><div><b>✅ Tarefas de hoje</b><small class="muted">${tot ? `${int(tot)} aluna${tot > 1 ? "s" : ""} para chamar hoje · a mensagem já vai pronta` : "Tudo em dia por hoje 💚"}</small></div></div>
+    ${TAR_GRUPOS.filter(([k]) => G[k].length).map(([k, e, t, d]) => `<details class="tar-g" data-g="${k}" ${TAR_ABERTO[k] ? "open" : ""}><summary><span class="tar-e">${e}</span><span class="tar-tt"><b>${t}</b><small>${d}</small></span><span class="tar-n">${int(G[k].length)}</span></summary>
+      <div class="zq-lista">${G[k].slice(0, 40).map(linha).join("")}</div>${G[k].length > 40 ? `<p class="muted" style="margin:6px 0 0">Mostrando as 40 mais recentes.</p>` : ""}</details>`).join("")}</div>`);
+  const box = $("tar-box");
+  box.querySelectorAll(".tar-g").forEach(d => d.ontoggle = () => { TAR_ABERTO[d.dataset.g] = d.open; });
+  box.querySelectorAll("[data-tz]").forEach(b => b.onclick = () => { const u = DB().users.find(x => x.id === b.dataset.tz); const url = u && zLink(u, b.dataset.tk); if(url) window.open(url, "_blank", "noopener"); tarMarca(b.dataset.tz); setTimeout(tarPinta, 400); });
+  box.querySelectorAll("[data-tf]").forEach(b => b.onclick = () => { tarMarca(b.dataset.tf); tarPinta(); });
+}
+{ const v0 = VIEWS.resumo; if(v0) VIEWS.resumo = function(){ const r = v0.apply(this, arguments); setTimeout(tarPinta, 60); return r; }; }
 
 window.ADMIN = { abrir };
 })();

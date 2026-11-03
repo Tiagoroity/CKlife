@@ -3035,3 +3035,15 @@ a,button,[role=button],label,input,select,.chip,.opt{touch-action:manipulation}
 .za-filtro{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px;background:#EEF3EC;padding:4px;border-radius:14px}
 .za-filtro .chip{min-height:42px;border:0;border-radius:11px;background:none;font-weight:800;justify-content:center;display:flex;align-items:center}
 .za-filtro .chip[aria-pressed="true"]{background:#fff;color:#14503E;box-shadow:0 4px 12px -6px rgba(0,0,0,.25)}
+/* painel: tarefas de hoje */
+.tar-card{margin-bottom:14px;border:1px solid #CFE3D3;background:linear-gradient(180deg,#F4FAF5,#fff)}
+.tar-h small{display:block;margin-top:2px}
+.tar-g{margin-top:10px;border:1px solid var(--line,#E6ECE3);border-radius:14px;background:#fff;overflow:hidden}
+.tar-g summary{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;list-style:none}
+.tar-g summary::-webkit-details-marker{display:none}
+.tar-e{font-size:20px}.tar-tt{flex:1;min-width:0}.tar-tt b{display:block;font-size:15px}.tar-tt small{display:block;color:var(--muted,#65736C);font-size:12.5px}
+.tar-n{min-width:30px;height:30px;border-radius:999px;display:grid;place-items:center;font-weight:800;background:#14503E;color:#fff;padding:0 8px}
+.tar-g .zq-lista{padding:0 12px 12px}
+.tar-ok{margin-left:6px;min-width:40px}
+/* painel no celular: números lado a lado, compactos */
+@media (max-width:600px){#adm-main .grid.g3,#adm-main .grid.g4{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}#adm-main .kpi{padding:10px 12px}#adm-main .kpi b{font-size:22px}#adm-main .kpi span{font-size:12px}#adm-main .kpi small{font-size:11px}}
