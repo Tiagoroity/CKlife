@@ -75,16 +75,19 @@ function zQuentesPinta(){
 
 /* ===== App na tela do celular: quantas instalaram e quem falta (com a mensagem "Como instalar o app") ===== */
 const zApp = u => !!(u.pwaInstalado || u.acApp);
+let ZA_ORD = "recentes", ZA_ABERTO = false;   // lista "quem ainda não instalou": mais recentes primeiro
 function zAppPinta(){
   const main = $("adm-main"); if(!main || SEC !== "alunos" || $("za-box")) return;
   const h = main.querySelector(".head"); if(!h) return;
-  const A = DB().users.filter(u => !u.admin && !u.soAdmin && !u.exemplo && !ehTeste(u)), ins = A.filter(zApp), falta = A.filter(u => !zApp(u)).sort((a, b) => String(b.acWeb || b.criado || "").localeCompare(String(a.acWeb || a.criado || "")));
+  const A = DB().users.filter(u => !u.admin && !u.soAdmin && !u.exemplo && !ehTeste(u)), ins = A.filter(zApp), falta = ordenaAlunas(A.filter(u => !zApp(u)), ZA_ORD);
   const web = falta.filter(u => u.acWeb), pc = A.length ? Math.round(100 * ins.length / A.length) : 0;
-  const linha = u => `<div class="zq-row"><span class="zq-n">🌐</span><div class="zq-t"><b>${esc(u.nome || u.email)}</b><small>${u.acWeb ? "abriu pelo navegador em " + brD(u.acWeb) : "cadastro em " + brD(u.criado || "")}</small></div>${zDig(u.whats).length >= 10 ? `<button class="btn btn-sm zap-bt" data-za="${u.id}" aria-label="Mandar como instalar o app">💬</button>` : ""}</div>`;
+  const linha = u => `<div class="zq-row"><span class="zq-n">🌐</span><div class="zq-t"><b>${esc(u.nome || u.email)}</b><small>chegou ${esc(quandoChegou(u))}${u.acWeb ? " · abriu pelo navegador em " + brD(u.acWeb) : ""}</small></div>${zDig(u.whats).length >= 10 ? `<button class="btn btn-sm zap-bt" data-za="${u.id}" aria-label="Mandar como instalar o app">💬</button>` : ""}</div>`;
   const zq = $("zq-box"), alvo = zq || h;
   alvo.insertAdjacentHTML("afterend", `<div class="card zq-card" id="za-box"><div class="zq-h"><b>📲 App na tela do celular</b><small class="muted">Conta quem abriu o CK Life pelo app instalado (registro a partir de 01/11/2026; quem não abriu desde então ainda não aparece).</small></div>
     <div class="grid g3" style="margin:10px 0">${kpi("Instalaram", int(ins.length), pc + "% das alunas", "", 1)}${kpi("Usam pelo navegador", int(web.length), "abriram sem instalar")}${kpi("Sem registro ainda", int(falta.length - web.length), "não abriram desde 01/11")}</div>
-    ${falta.length ? `<details><summary><b>Ver quem ainda não instalou (${falta.length})</b> · toque em 💬 para mandar o passo a passo</summary><div class="zq-lista" style="margin-top:8px">${falta.slice(0, 60).map(linha).join("")}</div>${falta.length > 60 ? `<p class="muted">Mostrando as 60 mais recentes.</p>` : ""}</details>` : `<p class="muted" style="margin:0">Todas já instalaram 🎉</p>`}</div>`);
+    ${falta.length ? `<details id="za-det" ${ZA_ABERTO ? "open" : ""}><summary><b>Ver quem ainda não instalou (${falta.length})</b> · toque em 💬 para mandar o passo a passo</summary><div class="chips za-ord" style="margin-top:10px" role="radiogroup" aria-label="Ordem">${[["recentes", "Mais recentes"], ["antigas", "Mais antigas"], ["nome", "A–Z"]].map(([v, t]) => `<button class="chip" role="radio" data-zo="${v}" aria-pressed="${ZA_ORD === v}" aria-checked="${ZA_ORD === v}">${t}</button>`).join("")}</div><div class="zq-lista" style="margin-top:8px">${falta.slice(0, 150).map(linha).join("")}</div>${falta.length > 150 ? `<p class="muted">Mostrando 150. Use a ordem acima para ver as outras.</p>` : ""}</details>` : `<p class="muted" style="margin:0">Todas já instalaram 🎉</p>`}</div>`);
+  const det = $("za-det"); if(det) det.ontoggle = () => { ZA_ABERTO = det.open; };
+  main.querySelectorAll("[data-zo]").forEach(b => b.onclick = () => { ZA_ORD = b.dataset.zo; ZA_ABERTO = true; const bx = $("za-box"); if(bx) bx.remove(); zAppPinta(); });
   main.querySelectorAll("[data-za]").forEach(b => b.onclick = () => { const u = DB().users.find(x => x.id === b.dataset.za); const url = u && zLink(u, "m9"); if(url) window.open(url, "_blank", "noopener"); });
 }
 { let zaT = null; new MutationObserver(() => { clearTimeout(zaT); zaT = setTimeout(zAppPinta, 120); }).observe($("adm-main") || document.body, { childList: true }); }

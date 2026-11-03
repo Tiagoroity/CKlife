@@ -3606,7 +3606,7 @@ const menosDias = n => { const d = new Date(); d.setDate(d.getDate() - n); retur
 const LISTAS = ["cidades","segmentos","anunciantes","campanhas","parceiros","profissionais","avisos","receitasExtras","exercExtras","pagamentos","cupons","empresas","servicos","produtos","banners","categorias","exercAjustes","embaixadoras","origemManual"];
 const UNICOS = ["config","freq","receitasOcultas","receitasPlano","modulos"];
 const COLS_USER = ["id","email","nome","whats","nasc","cidade","criado","ultimo","bloqueado","premium"];
-const FORA = new Set(["senha","admin","perms","adminDesde","exemplo","genero", ...COLS_USER]);
+const FORA = new Set(["senha","admin","perms","adminDesde","exemplo","genero","criadoEm", ...COLS_USER]);
 const J = x => JSON.stringify(x === undefined ? null : x);
 async function q(p){ const r = await p; if(r.error) throw r.error; return r.data; }
 
@@ -3617,6 +3617,7 @@ N.vazio = () => ({ versao: 1, nuvem: true, criado: hoje(), config: { nomeApp: "C
 function paraUser(r, adm){
   const u = { ...(r.dados || {}), genero: "feminino" };
   COLS_USER.forEach(k => { if(r[k] !== undefined) u[k] = r[k]; });
+  if(r.criado_em) u.criadoEm = r.criado_em;   // hora exata do cadastro (só para ordenar no painel)
   if(adm){ u.admin = true; u.perms = adm.perms || { total: true }; u.adminDesde = adm.desde; }
   return u;
 }
@@ -9362,7 +9363,7 @@ const abrirPerfilEq = abrirPerfil; abrirPerfil = async function(u){
    Quem deixa o CK Life aberto (ou instalado na tela inicial) fica com a versão antiga até recarregar.
    O app confere a versão publicada ao abrir, ao voltar do segundo plano e a cada 5 minutos.
    Se houver versão nova, mostra a faixa "ATUALIZAR": um toque e pronto. Nunca aparece no meio do treino. */
-const CK_VER = "20261102204923";
+const CK_VER = "20261102211052";
 let CK_VER_NOVA = null;
 const ATU_K = "ck_atu";
 const atuTentou = () => { try{ return JSON.parse(localStorage.getItem(ATU_K) || "null"); }catch(e){ return null; } };
@@ -13480,7 +13481,12 @@ async function gerarPDF(o){
 }
 
 /* ---------- Alunos ---------- */
-let AF = { q: "", cidade: "", plano: "" };
+let AF = { q: "", cidade: "", plano: "", ordem: "recentes" };
+/* ordem de chegada: mais recentes primeiro (padrão), mais antigas primeiro ou nome A–Z */
+const chegada = u => String(u.criadoEm || u.criado || "");
+const ordenaAlunas = (L, o) => L.slice().sort((a, b) => o === "nome" ? String(a.nome || a.email || "").localeCompare(String(b.nome || b.email || ""), "pt-BR", { sensitivity: "base" })
+  : o === "antigas" ? chegada(a).localeCompare(chegada(b)) : chegada(b).localeCompare(chegada(a)));
+const quandoChegou = u => { const c = u.criadoEm ? new Date(u.criadoEm) : null; return c && !isNaN(c) ? c.toLocaleDateString("pt-BR") + " · " + c.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }) : (u.criado ? brD(u.criado) : ""); };
 const statusPrem = u => { const s = PLU && PLU[u.id]; if(s && s.pro){ const ate = s.fim ? " até " + brD(String(s.fim).slice(0, 10)).slice(0, 5) : "";
     if(s.trial) return ["Teste grátis" + ate, "warn"]; return [(["kiwify", "apple", "google"].includes(s.provider) ? "Pro " + (s.plano === "pro_anual" ? "anual" : "mensal") : "Cortesia") + ate, "ok"]; }
   if(s && !s.pro) return ["Gratuito", "off"];
@@ -13491,7 +13497,7 @@ function vAlunos(){
   let L = AF.q && /teste/i.test(AF.q) ? (al.Ulista || al.U) : al.U;   // contas de teste só aparecem se você buscar "teste"
   if(AF.q){ const q = AF.q.toLowerCase(); L = L.filter(u => (u.nome + " " + u.email + " " + (u.whats || "")).toLowerCase().includes(q)); }
   if(AF.plano) L = L.filter(u => catPlano(u) === AF.plano);
-  L = L.slice().sort((a, b) => (b.criado || "").localeCompare(a.criado || ""));
+  L = ordenaAlunas(L, AF.ordem);
   $("adm-main").innerHTML = `
     <div class="head"><div><h1>Alunas</h1><p class="muted">Quem usa o app, de onde é e com que frequência volta.</p></div><div class="toolbar"><button class="btn btn-accent btn-sm needs-edit" id="al-prem">Dar Premium cortesia</button><button class="btn btn-line btn-sm" id="al-csv">Copiar planilha</button></div></div>
     <div class="toolbar"><select class="input" id="al-c">${optCid(AF.cidade, true)}</select></div>
@@ -13504,12 +13510,13 @@ function vAlunos(){
     </div>
     <div class="card"><h3>Por estado</h3>${hbars(contaPor(al.U, ufNomeU))}</div>
     <div class="card"><h3>Lista de alunas <span class="muted num" style="font-size:16px">(${L.length})</span></h3>
-      <div class="toolbar" style="margin-bottom:10px"><input class="input" id="al-q" placeholder="Buscar por nome, e-mail ou WhatsApp" value="${esc(AF.q)}"><select class="input" id="al-p"><option value="">Todos os planos</option><option value="pago" ${AF.plano === "pago" ? "selected" : ""}>Pro pago</option><option value="teste" ${AF.plano === "teste" ? "selected" : ""}>Teste grátis</option><option value="cortesia" ${AF.plano === "cortesia" ? "selected" : ""}>Cortesia</option><option value="gratis" ${AF.plano === "gratis" ? "selected" : ""}>Gratuito</option></select></div>
+      <div class="toolbar" style="margin-bottom:10px"><input class="input" id="al-q" placeholder="Buscar por nome, e-mail ou WhatsApp" value="${esc(AF.q)}"><select class="input" id="al-o" aria-label="Ordem">${[["recentes", "Mais recentes primeiro"], ["antigas", "Mais antigas primeiro"], ["nome", "Nome A–Z"]].map(([v, t]) => `<option value="${v}" ${AF.ordem === v ? "selected" : ""}>${t}</option>`).join("")}</select><select class="input" id="al-p"><option value="">Todos os planos</option><option value="pago" ${AF.plano === "pago" ? "selected" : ""}>Pro pago</option><option value="teste" ${AF.plano === "teste" ? "selected" : ""}>Teste grátis</option><option value="cortesia" ${AF.plano === "cortesia" ? "selected" : ""}>Cortesia</option><option value="gratis" ${AF.plano === "gratis" ? "selected" : ""}>Gratuito</option></select></div>
       <div class="tbl"><table><thead><tr><th>Nome</th><th>WhatsApp</th><th>E-mail</th><th>Cidade</th><th>Idade</th><th>Gênero</th><th>Cadastro</th><th>Plano</th><th>Treinos</th><th>Anúncios</th><th></th></tr></thead><tbody>
-        ${L.slice(0, 300).map(u => { const [s, k] = statusPrem(u); return `<tr><td><b>${esc(u.nome)}</b>${ex(u)}${ehTeste(u) ? ` <span class="st off">teste · não conta</span>` : ""}${u.admin ? ` <span class="st ok">admin</span>` : ""}${u.bloqueado ? ` <span class="st bad">pausado</span>` : ""}</td><td>${esc(u.whats || "")}</td><td>${esc(u.email)}</td><td>${esc(cidNomeU(u))}</td><td class="num">${F.idade(u.nasc) ?? "-"}</td><td>${GEN[u.genero] || "-"}</td><td class="num">${brD(u.criado)}</td><td><span class="st ${k}">${s}</span></td><td class="num">${(u.treinos || []).length}</td><td class="num">${int(imps[u.id] || 0)}</td><td><button class="btn btn-line btn-sm needs-edit" data-ed="${u.id}">Editar</button></td></tr>`; }).join("") || `<tr><td colspan="11" class="empty">Nenhuma aluna encontrada.</td></tr>`}
+        ${L.slice(0, 300).map(u => { const [s, k] = statusPrem(u); return `<tr><td><b>${esc(u.nome)}</b>${ex(u)}${ehTeste(u) ? ` <span class="st off">teste · não conta</span>` : ""}${u.admin ? ` <span class="st ok">admin</span>` : ""}${u.bloqueado ? ` <span class="st bad">pausado</span>` : ""}</td><td>${esc(u.whats || "")}</td><td>${esc(u.email)}</td><td>${esc(cidNomeU(u))}</td><td class="num">${F.idade(u.nasc) ?? "-"}</td><td>${GEN[u.genero] || "-"}</td><td class="num">${esc(quandoChegou(u))}</td><td><span class="st ${k}">${s}</span></td><td class="num">${(u.treinos || []).length}</td><td class="num">${int(imps[u.id] || 0)}</td><td><button class="btn btn-line btn-sm needs-edit" data-ed="${u.id}">Editar</button></td></tr>`; }).join("") || `<tr><td colspan="11" class="empty">Nenhuma aluna encontrada.</td></tr>`}
       </tbody></table></div></div>`;
   $("al-c").onchange = e => { AF.cidade = e.target.value; rerender(); };
   $("al-p").onchange = e => { AF.plano = e.target.value; rerender(); };
+  $("al-o").onchange = e => { AF.ordem = e.target.value; rerender(); };
   let tq; $("al-q").oninput = e => { clearTimeout(tq); tq = setTimeout(() => { AF.q = e.target.value; rerender(); const i = $("al-q"); i.focus(); i.setSelectionRange(i.value.length, i.value.length); }, 300); };
   const pb = $("al-prem"); if(pb) pb.onclick = () => formPremium();
   $("al-csv").onclick = () => planilha(["Nome","WhatsApp","E-mail","Cidade","Idade","Gênero","Cadastro","Plano","Treinos","Anúncios vistos"], L.map(u => [u.nome, u.whats, u.email, cidNomeU(u), F.idade(u.nasc) ?? "", GEN[u.genero] || "", brD(u.criado), statusPrem(u)[0], (u.treinos || []).length, imps[u.id] || 0]), "Alunos");
@@ -16113,16 +16120,19 @@ function zQuentesPinta(){
 
 /* ===== App na tela do celular: quantas instalaram e quem falta (com a mensagem "Como instalar o app") ===== */
 const zApp = u => !!(u.pwaInstalado || u.acApp);
+let ZA_ORD = "recentes", ZA_ABERTO = false;   // lista "quem ainda não instalou": mais recentes primeiro
 function zAppPinta(){
   const main = $("adm-main"); if(!main || SEC !== "alunos" || $("za-box")) return;
   const h = main.querySelector(".head"); if(!h) return;
-  const A = DB().users.filter(u => !u.admin && !u.soAdmin && !u.exemplo && !ehTeste(u)), ins = A.filter(zApp), falta = A.filter(u => !zApp(u)).sort((a, b) => String(b.acWeb || b.criado || "").localeCompare(String(a.acWeb || a.criado || "")));
+  const A = DB().users.filter(u => !u.admin && !u.soAdmin && !u.exemplo && !ehTeste(u)), ins = A.filter(zApp), falta = ordenaAlunas(A.filter(u => !zApp(u)), ZA_ORD);
   const web = falta.filter(u => u.acWeb), pc = A.length ? Math.round(100 * ins.length / A.length) : 0;
-  const linha = u => `<div class="zq-row"><span class="zq-n">🌐</span><div class="zq-t"><b>${esc(u.nome || u.email)}</b><small>${u.acWeb ? "abriu pelo navegador em " + brD(u.acWeb) : "cadastro em " + brD(u.criado || "")}</small></div>${zDig(u.whats).length >= 10 ? `<button class="btn btn-sm zap-bt" data-za="${u.id}" aria-label="Mandar como instalar o app">💬</button>` : ""}</div>`;
+  const linha = u => `<div class="zq-row"><span class="zq-n">🌐</span><div class="zq-t"><b>${esc(u.nome || u.email)}</b><small>chegou ${esc(quandoChegou(u))}${u.acWeb ? " · abriu pelo navegador em " + brD(u.acWeb) : ""}</small></div>${zDig(u.whats).length >= 10 ? `<button class="btn btn-sm zap-bt" data-za="${u.id}" aria-label="Mandar como instalar o app">💬</button>` : ""}</div>`;
   const zq = $("zq-box"), alvo = zq || h;
   alvo.insertAdjacentHTML("afterend", `<div class="card zq-card" id="za-box"><div class="zq-h"><b>📲 App na tela do celular</b><small class="muted">Conta quem abriu o CK Life pelo app instalado (registro a partir de 01/11/2026; quem não abriu desde então ainda não aparece).</small></div>
     <div class="grid g3" style="margin:10px 0">${kpi("Instalaram", int(ins.length), pc + "% das alunas", "", 1)}${kpi("Usam pelo navegador", int(web.length), "abriram sem instalar")}${kpi("Sem registro ainda", int(falta.length - web.length), "não abriram desde 01/11")}</div>
-    ${falta.length ? `<details><summary><b>Ver quem ainda não instalou (${falta.length})</b> · toque em 💬 para mandar o passo a passo</summary><div class="zq-lista" style="margin-top:8px">${falta.slice(0, 60).map(linha).join("")}</div>${falta.length > 60 ? `<p class="muted">Mostrando as 60 mais recentes.</p>` : ""}</details>` : `<p class="muted" style="margin:0">Todas já instalaram 🎉</p>`}</div>`);
+    ${falta.length ? `<details id="za-det" ${ZA_ABERTO ? "open" : ""}><summary><b>Ver quem ainda não instalou (${falta.length})</b> · toque em 💬 para mandar o passo a passo</summary><div class="chips za-ord" style="margin-top:10px" role="radiogroup" aria-label="Ordem">${[["recentes", "Mais recentes"], ["antigas", "Mais antigas"], ["nome", "A–Z"]].map(([v, t]) => `<button class="chip" role="radio" data-zo="${v}" aria-pressed="${ZA_ORD === v}" aria-checked="${ZA_ORD === v}">${t}</button>`).join("")}</div><div class="zq-lista" style="margin-top:8px">${falta.slice(0, 150).map(linha).join("")}</div>${falta.length > 150 ? `<p class="muted">Mostrando 150. Use a ordem acima para ver as outras.</p>` : ""}</details>` : `<p class="muted" style="margin:0">Todas já instalaram 🎉</p>`}</div>`);
+  const det = $("za-det"); if(det) det.ontoggle = () => { ZA_ABERTO = det.open; };
+  main.querySelectorAll("[data-zo]").forEach(b => b.onclick = () => { ZA_ORD = b.dataset.zo; ZA_ABERTO = true; const bx = $("za-box"); if(bx) bx.remove(); zAppPinta(); });
   main.querySelectorAll("[data-za]").forEach(b => b.onclick = () => { const u = DB().users.find(x => x.id === b.dataset.za); const url = u && zLink(u, "m9"); if(url) window.open(url, "_blank", "noopener"); });
 }
 { let zaT = null; new MutationObserver(() => { clearTimeout(zaT); zaT = setTimeout(zAppPinta, 120); }).observe($("adm-main") || document.body, { childList: true }); }

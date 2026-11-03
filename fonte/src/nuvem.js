@@ -14,7 +14,7 @@ const menosDias = n => { const d = new Date(); d.setDate(d.getDate() - n); retur
 const LISTAS = ["cidades","segmentos","anunciantes","campanhas","parceiros","profissionais","avisos","receitasExtras","exercExtras","pagamentos","cupons","empresas","servicos","produtos","banners","categorias","exercAjustes","embaixadoras","origemManual"];
 const UNICOS = ["config","freq","receitasOcultas","receitasPlano","modulos"];
 const COLS_USER = ["id","email","nome","whats","nasc","cidade","criado","ultimo","bloqueado","premium"];
-const FORA = new Set(["senha","admin","perms","adminDesde","exemplo","genero", ...COLS_USER]);
+const FORA = new Set(["senha","admin","perms","adminDesde","exemplo","genero","criadoEm", ...COLS_USER]);
 const J = x => JSON.stringify(x === undefined ? null : x);
 async function q(p){ const r = await p; if(r.error) throw r.error; return r.data; }
 
@@ -25,6 +25,7 @@ N.vazio = () => ({ versao: 1, nuvem: true, criado: hoje(), config: { nomeApp: "C
 function paraUser(r, adm){
   const u = { ...(r.dados || {}), genero: "feminino" };
   COLS_USER.forEach(k => { if(r[k] !== undefined) u[k] = r[k]; });
+  if(r.criado_em) u.criadoEm = r.criado_em;   // hora exata do cadastro (só para ordenar no painel)
   if(adm){ u.admin = true; u.perms = adm.perms || { total: true }; u.adminDesde = adm.desde; }
   return u;
 }

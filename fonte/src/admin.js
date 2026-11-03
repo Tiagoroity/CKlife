@@ -441,7 +441,12 @@ async function gerarPDF(o){
 }
 
 /* ---------- Alunos ---------- */
-let AF = { q: "", cidade: "", plano: "" };
+let AF = { q: "", cidade: "", plano: "", ordem: "recentes" };
+/* ordem de chegada: mais recentes primeiro (padrão), mais antigas primeiro ou nome A–Z */
+const chegada = u => String(u.criadoEm || u.criado || "");
+const ordenaAlunas = (L, o) => L.slice().sort((a, b) => o === "nome" ? String(a.nome || a.email || "").localeCompare(String(b.nome || b.email || ""), "pt-BR", { sensitivity: "base" })
+  : o === "antigas" ? chegada(a).localeCompare(chegada(b)) : chegada(b).localeCompare(chegada(a)));
+const quandoChegou = u => { const c = u.criadoEm ? new Date(u.criadoEm) : null; return c && !isNaN(c) ? c.toLocaleDateString("pt-BR") + " · " + c.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }) : (u.criado ? brD(u.criado) : ""); };
 const statusPrem = u => { const s = PLU && PLU[u.id]; if(s && s.pro){ const ate = s.fim ? " até " + brD(String(s.fim).slice(0, 10)).slice(0, 5) : "";
     if(s.trial) return ["Teste grátis" + ate, "warn"]; return [(["kiwify", "apple", "google"].includes(s.provider) ? "Pro " + (s.plano === "pro_anual" ? "anual" : "mensal") : "Cortesia") + ate, "ok"]; }
   if(s && !s.pro) return ["Gratuito", "off"];
@@ -452,7 +457,7 @@ function vAlunos(){
   let L = AF.q && /teste/i.test(AF.q) ? (al.Ulista || al.U) : al.U;   // contas de teste só aparecem se você buscar "teste"
   if(AF.q){ const q = AF.q.toLowerCase(); L = L.filter(u => (u.nome + " " + u.email + " " + (u.whats || "")).toLowerCase().includes(q)); }
   if(AF.plano) L = L.filter(u => catPlano(u) === AF.plano);
-  L = L.slice().sort((a, b) => (b.criado || "").localeCompare(a.criado || ""));
+  L = ordenaAlunas(L, AF.ordem);
   $("adm-main").innerHTML = `
     <div class="head"><div><h1>Alunas</h1><p class="muted">Quem usa o app, de onde é e com que frequência volta.</p></div><div class="toolbar"><button class="btn btn-accent btn-sm needs-edit" id="al-prem">Dar Premium cortesia</button><button class="btn btn-line btn-sm" id="al-csv">Copiar planilha</button></div></div>
     <div class="toolbar"><select class="input" id="al-c">${optCid(AF.cidade, true)}</select></div>
@@ -465,12 +470,13 @@ function vAlunos(){
     </div>
     <div class="card"><h3>Por estado</h3>${hbars(contaPor(al.U, ufNomeU))}</div>
     <div class="card"><h3>Lista de alunas <span class="muted num" style="font-size:16px">(${L.length})</span></h3>
-      <div class="toolbar" style="margin-bottom:10px"><input class="input" id="al-q" placeholder="Buscar por nome, e-mail ou WhatsApp" value="${esc(AF.q)}"><select class="input" id="al-p"><option value="">Todos os planos</option><option value="pago" ${AF.plano === "pago" ? "selected" : ""}>Pro pago</option><option value="teste" ${AF.plano === "teste" ? "selected" : ""}>Teste grátis</option><option value="cortesia" ${AF.plano === "cortesia" ? "selected" : ""}>Cortesia</option><option value="gratis" ${AF.plano === "gratis" ? "selected" : ""}>Gratuito</option></select></div>
+      <div class="toolbar" style="margin-bottom:10px"><input class="input" id="al-q" placeholder="Buscar por nome, e-mail ou WhatsApp" value="${esc(AF.q)}"><select class="input" id="al-o" aria-label="Ordem">${[["recentes", "Mais recentes primeiro"], ["antigas", "Mais antigas primeiro"], ["nome", "Nome A–Z"]].map(([v, t]) => `<option value="${v}" ${AF.ordem === v ? "selected" : ""}>${t}</option>`).join("")}</select><select class="input" id="al-p"><option value="">Todos os planos</option><option value="pago" ${AF.plano === "pago" ? "selected" : ""}>Pro pago</option><option value="teste" ${AF.plano === "teste" ? "selected" : ""}>Teste grátis</option><option value="cortesia" ${AF.plano === "cortesia" ? "selected" : ""}>Cortesia</option><option value="gratis" ${AF.plano === "gratis" ? "selected" : ""}>Gratuito</option></select></div>
       <div class="tbl"><table><thead><tr><th>Nome</th><th>WhatsApp</th><th>E-mail</th><th>Cidade</th><th>Idade</th><th>Gênero</th><th>Cadastro</th><th>Plano</th><th>Treinos</th><th>Anúncios</th><th></th></tr></thead><tbody>
-        ${L.slice(0, 300).map(u => { const [s, k] = statusPrem(u); return `<tr><td><b>${esc(u.nome)}</b>${ex(u)}${ehTeste(u) ? ` <span class="st off">teste · não conta</span>` : ""}${u.admin ? ` <span class="st ok">admin</span>` : ""}${u.bloqueado ? ` <span class="st bad">pausado</span>` : ""}</td><td>${esc(u.whats || "")}</td><td>${esc(u.email)}</td><td>${esc(cidNomeU(u))}</td><td class="num">${F.idade(u.nasc) ?? "-"}</td><td>${GEN[u.genero] || "-"}</td><td class="num">${brD(u.criado)}</td><td><span class="st ${k}">${s}</span></td><td class="num">${(u.treinos || []).length}</td><td class="num">${int(imps[u.id] || 0)}</td><td><button class="btn btn-line btn-sm needs-edit" data-ed="${u.id}">Editar</button></td></tr>`; }).join("") || `<tr><td colspan="11" class="empty">Nenhuma aluna encontrada.</td></tr>`}
+        ${L.slice(0, 300).map(u => { const [s, k] = statusPrem(u); return `<tr><td><b>${esc(u.nome)}</b>${ex(u)}${ehTeste(u) ? ` <span class="st off">teste · não conta</span>` : ""}${u.admin ? ` <span class="st ok">admin</span>` : ""}${u.bloqueado ? ` <span class="st bad">pausado</span>` : ""}</td><td>${esc(u.whats || "")}</td><td>${esc(u.email)}</td><td>${esc(cidNomeU(u))}</td><td class="num">${F.idade(u.nasc) ?? "-"}</td><td>${GEN[u.genero] || "-"}</td><td class="num">${esc(quandoChegou(u))}</td><td><span class="st ${k}">${s}</span></td><td class="num">${(u.treinos || []).length}</td><td class="num">${int(imps[u.id] || 0)}</td><td><button class="btn btn-line btn-sm needs-edit" data-ed="${u.id}">Editar</button></td></tr>`; }).join("") || `<tr><td colspan="11" class="empty">Nenhuma aluna encontrada.</td></tr>`}
       </tbody></table></div></div>`;
   $("al-c").onchange = e => { AF.cidade = e.target.value; rerender(); };
   $("al-p").onchange = e => { AF.plano = e.target.value; rerender(); };
+  $("al-o").onchange = e => { AF.ordem = e.target.value; rerender(); };
   let tq; $("al-q").oninput = e => { clearTimeout(tq); tq = setTimeout(() => { AF.q = e.target.value; rerender(); const i = $("al-q"); i.focus(); i.setSelectionRange(i.value.length, i.value.length); }, 300); };
   const pb = $("al-prem"); if(pb) pb.onclick = () => formPremium();
   $("al-csv").onclick = () => planilha(["Nome","WhatsApp","E-mail","Cidade","Idade","Gênero","Cadastro","Plano","Treinos","Anúncios vistos"], L.map(u => [u.nome, u.whats, u.email, cidNomeU(u), F.idade(u.nasc) ?? "", GEN[u.genero] || "", brD(u.criado), statusPrem(u)[0], (u.treinos || []).length, imps[u.id] || 0]), "Alunos");
