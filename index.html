@@ -4873,6 +4873,9 @@ function streak(){
   let d = today(); if(!set.has(d)) d = addD(d, -1); let n = 0; while(set.has(d)){ n++; d = addD(d, -1); } return n;
 }
 // Premium da aluna logada vem do servidor (entitlement CK_LIFE_PRO); o campo antigo vale para o painel e como reserva
+/* tipo e validade do Pro sem quebrar: usa o que veio do servidor quando o celular não tem (Pro grátis do painel, teste grátis) */
+const pmTipo = () => { const d = window.__ENT && window.__ENT.d; if(ME && ME.premium && ME.premium.tipo) return ME.premium.tipo; return d && d.trial ? "teste" : d && !d.fim ? "vitalicio" : "pro"; };
+const pmAte = () => { const d = window.__ENT && window.__ENT.d; return (ME && ME.premium && ME.premium.ate) || (d && d.fim ? String(d.fim).slice(0, 10) : ""); };
 const isPremium = u => (u && typeof ME !== "undefined" && ME && u.id === ME.id && window.__ENT && window.__ENT.d) ? !!window.__ENT.d.pro : !!(u && u.premium && (u.premium.tipo === "vitalicio" || u.premium.ate >= today()));
 function migra(u){
   if(u.perfil){ u.perfil.local = u.perfil.local || "casa"; u.perfil.itens = u.perfil.itens || ["cadeira"]; u.perfil.dias = u.perfil.dias || 3; u.perfil.tempo = u.perfil.tempo || 20;
@@ -9428,7 +9431,7 @@ const abrirPerfilEq = abrirPerfil; abrirPerfil = async function(u){
    Quem deixa o CK Life aberto (ou instalado na tela inicial) fica com a versão antiga até recarregar.
    O app confere a versão publicada ao abrir, ao voltar do segundo plano e a cada 5 minutos.
    Se houver versão nova, mostra a faixa "ATUALIZAR": um toque e pronto. Nunca aparece no meio do treino. */
-const CK_VER = "20261102221835";
+const CK_VER = "20261102223339";
 let CK_VER_NOVA = null;
 const ATU_K = "ck_atu";
 const atuTentou = () => { try{ return JSON.parse(localStorage.getItem(ATU_K) || "null"); }catch(e){ return null; } };
@@ -12932,10 +12935,10 @@ function rPerfil(){
     <div class="pstats"><div><b class="num">${int((ME.treinos || []).length)}</b><span>treinos</span></div><div><b class="num">${int((ME.treinos || []).reduce((a, t) => a + (t.min || 0), 0))}</b><span>minutos</span></div><div><b class="num">${streak()}</b><span>${streak() === 1 ? "dia seguido" : "dias seguidos"}</span></div></div>
     ${nv.prox ? `<div class="card nivel-card"><div class="sec-title"><h3 style="font-size:16px">Próximo nível: ${nv.prox[1]}</h3><span class="muted num" style="font-size:13px">faltam ${nv.falta} ${nv.falta === 1 ? "treino" : "treinos"}</span></div><div class="prog" style="margin-top:10px"><i style="width:${nv.pct}%"></i></div><p class="hint" style="margin:8px 0 0">Membro desde ${brD(ME.criado || today())}</p></div>` : `<div class="card nivel-card"><h3 style="font-size:16px">Você chegou ao nível máximo 🏆</h3><p class="hint" style="margin:6px 0 0">Membro desde ${brD(ME.criado || today())}</p></div>`}
     ${perfilXP()}
-    <div class="today" style="--pc:${prem ? "#3DDC6E" : "#FFB23F"};min-height:0;grid-template-columns:1fr"><div><span class="eyebrow">${prem ? (ME.premium.tipo === "teste" ? "Premium · teste grátis" : "Premium") : "Plano gratuito"}</span>
-      <h2 style="font-size:24px">${prem ? (ME.premium.tipo === "vitalicio" ? "Premium vitalício" : `Premium até ${brD(ME.premium.ate)}`) : "Treine sem anúncios"}</h2>
+    <div class="today" style="--pc:${prem ? "#3DDC6E" : "#FFB23F"};min-height:0;grid-template-columns:1fr"><div><span class="eyebrow">${prem ? (pmTipo() === "teste" ? "Premium · teste grátis" : "Premium") : "Plano gratuito"}</span>
+      <h2 style="font-size:24px">${prem ? (pmTipo() === "vitalicio" || !pmAte() ? "Premium" : `Premium até ${brD(pmAte())}`) : "Treine sem anúncios"}</h2>
       <p>${prem ? "Sem anúncios e com tudo liberado." : "Assine o Premium e treine sem interrupções."}</p>
-      ${!prem || ME.premium.tipo === "teste" ? (DB.config.checkout ? `<a class="btn btn-accent" style="margin-top:14px" href="${esc(DB.config.checkout)}" target="_blank" rel="noopener">Assinar por R$ ${String(DB.config.premiumPreco || 19.9).replace(".", ",")}/mês</a>` : "") : ""}</div></div>
+      ${!prem || pmTipo() === "teste" ? (DB.config.checkout ? `<a class="btn btn-accent" style="margin-top:14px" href="${esc(DB.config.checkout)}" target="_blank" rel="noopener">Assinar por R$ ${String(DB.config.premiumPreco || 19.9).replace(".", ",")}/mês</a>` : "") : ""}</div></div>
     ${cardInstalar()}
     <div class="card" style="padding:6px 16px">
       ${setRow("p-dados", "perfil", "Meus dados", `${esc(mascaraTel(ME.whats || "")) || "Nome, WhatsApp e cidade"}`)}
