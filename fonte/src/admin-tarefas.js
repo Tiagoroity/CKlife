@@ -3,10 +3,22 @@
    Cada aluna aparece em um grupo só (o mais importante). Tocou no 💬 ou em ✓, ela sai da lista de hoje.
    Não muda nada no resto do painel. */
 const TAR_K = "ck_tarefas_feitas";
-const tarFeitas = () => { try{ const o = JSON.parse(localStorage.getItem(TAR_K) || "{}"); return new Set(o[today()] || []); }catch(e){ return new Set(); } };
-const tarMarca = id => { try{ const s = tarFeitas(); s.add(id); localStorage.setItem(TAR_K, JSON.stringify({ [today()]: [...s] })); }catch(e){} };
+/* o "feito" fica no servidor: todos os admins (celular e computador) veem a mesma lista. Sem o SQL, cai no aparelho como antes. */
+let TAR_DB = null, TAR_DB_DIA = "", TAR_T = 0;
+const tarLocal = () => { try{ const o = JSON.parse(localStorage.getItem(TAR_K) || "{}"); return new Set(o[today()] || []); }catch(e){ return new Set(); } };
+const tarFeitas = () => { const s = tarLocal(); if(TAR_DB && TAR_DB_DIA === today()) TAR_DB.forEach(x => s.add(x)); return s; };
+async function tarCarrega(forca){
+  const sb = SB2(); if(!sb) return;
+  if(!forca && TAR_DB && TAR_DB_DIA === today() && Date.now() - TAR_T < 30000) return;
+  try{ const r = await sb.from("tarefas_feitas").select("user_id").eq("dia", today()); if(!r.error){ TAR_DB = new Set((r.data || []).map(x => x.user_id)); TAR_DB_DIA = today(); TAR_T = Date.now(); } }catch(e){}
+}
+const tarMarca = (id, grupo) => {
+  try{ const s = tarLocal(); s.add(id); localStorage.setItem(TAR_K, JSON.stringify({ [today()]: [...s] })); }catch(e){}
+  if(TAR_DB) TAR_DB.add(id);
+  try{ const sb = SB2(); if(sb) sb.from("tarefas_feitas").upsert({ dia: today(), user_id: id, grupo: grupo || null }, { onConflict: "dia,user_id" }).then(() => {}, () => {}); }catch(e){}
+};
 const TAR_GRUPOS = [
-  ["novas", "🌱", "Chegaram e ainda não treinaram", "Mande a boas-vindas e o treino de 5 min."],
+  ["novas", "🌱", "Chegaram e ainda não treinaram", "Mensagem de incentivo com o treino de 5 min."],
   ["teste", "⏳", "Teste grátis acabando", "Hora de lembrar do Pro, com carinho."],
   ["app", "📲", "Não instalaram o app", "Mande o passo a passo de instalar."],
   ["sumiu", "💚", "Sumiram há alguns dias", "Convite leve para voltar, sem cobrança."]
@@ -16,7 +28,7 @@ function tarLista(){
   DB().users.filter(u => !u.admin && !u.soAdmin && !u.exemplo && !ehTeste(u) && !feitas.has(u.id) && zDig(u.whats).length >= 10).forEach(u => {
     const T = (u.treinos || []).filter(t => t && t.d), n = T.length, cad = zDias(u.criado), f = zFase(u);
     const ult = n ? T.map(t => t.d).sort().pop() : null;
-    if(n === 0 && cad >= 0 && cad <= 7) G.novas.push([u, cad <= 1 ? "m1" : "m2"]);
+    if(n === 0 && cad >= 0 && cad <= 7) G.novas.push([u, "m2"]);
     else if(f === "m4") G.teste.push([u, "m4"]);
     else if(!zApp(u) && cad <= 14) G.app.push([u, "m9"]);
     else if(n > 0 && zDias(ult) >= 3 && zDias(ult) <= 14) G.sumiu.push([u, "m7"]);
@@ -37,7 +49,9 @@ function tarPinta(){
       <div class="zq-lista">${G[k].slice(0, 40).map(linha).join("")}</div>${G[k].length > 40 ? `<p class="muted" style="margin:6px 0 0">Mostrando as 40 mais recentes.</p>` : ""}</details>`).join("")}</div>`);
   const box = $("tar-box");
   box.querySelectorAll(".tar-g").forEach(d => d.ontoggle = () => { TAR_ABERTO[d.dataset.g] = d.open; });
-  box.querySelectorAll("[data-tz]").forEach(b => b.onclick = () => { const u = DB().users.find(x => x.id === b.dataset.tz); const url = u && zLink(u, b.dataset.tk); if(url) window.open(url, "_blank", "noopener"); tarMarca(b.dataset.tz); setTimeout(tarPinta, 400); });
-  box.querySelectorAll("[data-tf]").forEach(b => b.onclick = () => { tarMarca(b.dataset.tf); tarPinta(); });
+  box.querySelectorAll("[data-tz]").forEach(b => b.onclick = () => { const u = DB().users.find(x => x.id === b.dataset.tz); const url = u && zLink(u, b.dataset.tk); if(url) window.open(url, "_blank", "noopener"); tarMarca(b.dataset.tz, b.closest(".tar-g") && b.closest(".tar-g").dataset.g); setTimeout(tarPinta, 400); });
+  box.querySelectorAll("[data-tf]").forEach(b => b.onclick = () => { tarMarca(b.dataset.tf, b.closest(".tar-g") && b.closest(".tar-g").dataset.g); tarPinta(); });
 }
-{ const v0 = VIEWS.resumo; if(v0) VIEWS.resumo = function(){ const r = v0.apply(this, arguments); setTimeout(tarPinta, 60); return r; }; }
+{ const v0 = VIEWS.resumo; if(v0) VIEWS.resumo = function(){ const r = v0.apply(this, arguments); setTimeout(tarPinta, 60); tarCarrega(true).then(() => { if(SEC === "resumo") tarPinta(); }); return r; }; }
+/* a cada 30 s, com o Dashboard aberto, puxa o que os outros admins já fizeram */
+setInterval(() => { try{ if(SEC === "resumo" && document.visibilityState === "visible") tarCarrega(true).then(() => { if(SEC === "resumo") tarPinta(); }); }catch(e){} }, 30000);
