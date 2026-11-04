@@ -263,7 +263,7 @@ const rPerfilCoach = rPerfil; rPerfil = function(){ const r = rPerfilCoach.apply
     $("p-coach").onclick = coachPrefsTela; } }catch(e){ console.warn(e); } return r; };
 /* recado aberto pelo aviso do celular (?coach=ID) */
 function coachAbrePorUrl(url){ const m = /[?&]coach=(\d+)/.exec(url || ""); if(!m) return false; const id = +m[1];
-  if(cNuvem()) NU.sb.rpc("coach_abriu", { p_id: id }).catch(() => {}); coachRecados(id); return true; }
+  if(cNuvem()) NU.sb.rpc("coach_abriu", { p_id: id }).then(() => {}, () => {}); coachRecados(id); return true; }
 { let n = 0; const t = setInterval(() => { if(ME && !$("v-app").hidden){ clearInterval(t); if(coachAbrePorUrl(location.search)) history.replaceState(null, "", location.pathname + location.hash); } else if(++n > 40) clearInterval(t); }, 500); }
 if("serviceWorker" in navigator) navigator.serviceWorker.addEventListener("message", e => { if(e.data && e.data.tipo === "push") coachAbrePorUrl(String(e.data.url || "")); });
 /* chip de recados no cartão da Coach */

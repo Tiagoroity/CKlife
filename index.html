@@ -9504,7 +9504,7 @@ const abrirPerfilEq = abrirPerfil; abrirPerfil = async function(u){
    Quem deixa o CK Life aberto (ou instalado na tela inicial) fica com a versão antiga até recarregar.
    O app confere a versão publicada ao abrir, ao voltar do segundo plano e a cada 5 minutos.
    Se houver versão nova, mostra a faixa "ATUALIZAR": um toque e pronto. Nunca aparece no meio do treino. */
-const CK_VER = "20261102225310";
+const CK_VER = "20261104141506";
 let CK_VER_NOVA = null;
 const ATU_K = "ck_atu";
 const atuTentou = () => { try{ return JSON.parse(localStorage.getItem(ATU_K) || "null"); }catch(e){ return null; } };
@@ -9981,7 +9981,7 @@ const rPerfilCoach = rPerfil; rPerfil = function(){ const r = rPerfilCoach.apply
     $("p-coach").onclick = coachPrefsTela; } }catch(e){ console.warn(e); } return r; };
 /* recado aberto pelo aviso do celular (?coach=ID) */
 function coachAbrePorUrl(url){ const m = /[?&]coach=(\d+)/.exec(url || ""); if(!m) return false; const id = +m[1];
-  if(cNuvem()) NU.sb.rpc("coach_abriu", { p_id: id }).catch(() => {}); coachRecados(id); return true; }
+  if(cNuvem()) NU.sb.rpc("coach_abriu", { p_id: id }).then(() => {}, () => {}); coachRecados(id); return true; }
 { let n = 0; const t = setInterval(() => { if(ME && !$("v-app").hidden){ clearInterval(t); if(coachAbrePorUrl(location.search)) history.replaceState(null, "", location.pathname + location.hash); } else if(++n > 40) clearInterval(t); }, 500); }
 if("serviceWorker" in navigator) navigator.serviceWorker.addEventListener("message", e => { if(e.data && e.data.tipo === "push") coachAbrePorUrl(String(e.data.url || "")); });
 /* chip de recados no cartão da Coach */
