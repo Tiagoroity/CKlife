@@ -49,7 +49,7 @@ document.addEventListener("visibilitychange", () => { if(document.hidden) docume
    Só para quem é gratuita e já passou dos dias sem anúncio (ENT.d.anuncios, decidido no servidor).
    Abre a cada X toques ou Y minutos (o painel controla em Campanhas › frequência), nunca no treino, no chat,
    com outra janela aberta ou durante a entrada. O botão de fechar aparece depois de 5 segundos. */
-const adLivre = () => !document.querySelector("#play:not([hidden]), #cook:not([hidden]), #pp, .ent, .ent-bv, .coach-1o, #ck-inst, #d21, .modal:not([hidden])")
+const adLivre = () => !document.querySelector("#cor, #play:not([hidden]), #cook:not([hidden]), #pp, .ent, .ent-bv, .coach-1o, #ck-inst, #d21, .modal:not([hidden])")
   && $("sheet").hidden && !$("v-app").hidden && !(typeof TAB !== "undefined" && TAB === "juntas" && document.querySelector(".so-chat, .chat-box, #chat"));
 mostrarAnuncio = function(c){
   const an = DB.anunciantes.find(a => a.id === c.anunc); if(!an) return;

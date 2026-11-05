@@ -47,7 +47,7 @@ function ppTela(html, cls){
 }
 /* nada aberto por cima (treino, Pro, outra janela, recado da Coach) */
 const ppVis = el => !!el && !el.hidden && el.getClientRects().length > 0 && getComputedStyle(el).display !== "none" && getComputedStyle(el).visibility !== "hidden";
-const ppLivre = () => $("sheet").hidden && $("play").hidden && !ppVis($("pw")) && ![...document.querySelectorAll(".ent:not(.pp), .coach-1o, #ck-inst, #res-ov, .modal:not([hidden]), #d21")].some(ppVis);
+const ppLivre = () => $("sheet").hidden && $("play").hidden && !ppVis($("pw")) && ![...document.querySelectorAll(".ent:not(.pp), .coach-1o, #ck-inst, #res-ov, .modal:not([hidden]), #d21, #cor")].some(ppVis);
 
 /* decide a próxima tela.  Ciclo: instalar → (abrir pelo ícone) → primeiro treino + avisos → (avisos que faltaram) → fim */
 const ppPodeAvisar = () => PUSH_OK() && !(ehIOS() && !instalado());
