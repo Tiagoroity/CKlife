@@ -123,7 +123,7 @@ function planilha(cab, linhas, nome){
 /* Plano de cada aluna: vem do servidor (assinaturas: Kiwify, teste, cortesia). Sem banco, usa o Premium antigo. */
 let PLU = null, VENDAS = null, PLU_T = 0;
 function catPlano(u){ const s = PLU && PLU[u.id]; if(s){ if(!s.pro) return "gratis"; if(s.trial) return "teste"; return ["kiwify", "apple", "google"].includes(s.provider) ? "pago" : "cortesia"; }
-  if(!F.isPremium(u)) return "gratis"; return u.premium.tipo === "vitalicio" ? "cortesia" : u.premium.tipo; }
+  if(!F.isPremium(u)) return "gratis"; if(!u.premium) return "cortesia"; return u.premium.tipo === "vitalicio" ? "cortesia" : u.premium.tipo; }
 /* compras feitas pela equipe (testes) não entram nos números; continuam na lista, marcadas como "teste da equipe" */
 /* conta de teste (NOME com "teste", só o nome): aparece na lista, mas não entra em nenhuma conta do painel */
 const ehTeste = u => !!u && /teste/i.test(String(u.nome || ""));
@@ -483,7 +483,7 @@ function vAlunos(){
   $("adm-main").querySelectorAll("[data-ed]").forEach(b => b.onclick = () => formAluno(db.users.find(u => u.id === b.dataset.ed)));
 }
 const DURS = [["7","7 dias"],["30","30 dias"],["90","3 meses"],["180","6 meses"],["365","1 ano"],["vitalicio","Vitalício"]];
-function aplicaPrem(u, dur){ if(dur === "vitalicio") u.premium = { tipo: "vitalicio", ate: "9999-12-31" }; else { const base = F.isPremium(u) && u.premium.tipo !== "teste" && u.premium.ate !== "9999-12-31" ? u.premium.ate : today(); u.premium = { tipo: "cortesia", ate: addD(base, +dur) }; } }
+function aplicaPrem(u, dur){ if(dur === "vitalicio") u.premium = { tipo: "vitalicio", ate: "9999-12-31" }; else { const base = F.isPremium(u) && u.premium && u.premium.tipo !== "teste" && u.premium.ate !== "9999-12-31" ? u.premium.ate : today(); u.premium = { tipo: "cortesia", ate: addD(base, +dur) }; } }
 function formPremium(){
   modal("Dar Premium cortesia", `<div class="field"><label for="pr-e">E-mail da aluna</label><input class="input" id="pr-e" type="email" placeholder="aluna@email.com"></div>
     <div class="field"><label for="pr-d">Por quanto tempo</label><select class="input" id="pr-d">${DURS.map(([k, n]) => `<option value="${k}" ${k === "30" ? "selected" : ""}>${n}</option>`).join("")}</select></div><div id="pr-msg"></div>

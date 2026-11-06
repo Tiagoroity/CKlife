@@ -9530,7 +9530,7 @@ const abrirPerfilEq = abrirPerfil; abrirPerfil = async function(u){
    Quem deixa o CK Life aberto (ou instalado na tela inicial) fica com a versão antiga até recarregar.
    O app confere a versão publicada ao abrir, ao voltar do segundo plano e a cada 5 minutos.
    Se houver versão nova, mostra a faixa "ATUALIZAR": um toque e pronto. Nunca aparece no meio do treino. */
-const CK_VER = "20261104212550";
+const CK_VER = "20261106145908";
 let CK_VER_NOVA = null;
 const ATU_K = "ck_atu";
 const atuTentou = () => { try{ return JSON.parse(localStorage.getItem(ATU_K) || "null"); }catch(e){ return null; } };
@@ -10431,7 +10431,7 @@ function trocarExercicio(){
   if(!PL) return; const s = PL.T.steps[PL.i], e = exById(s.id); PL.pausa = true;
   sheet("Trocar exercício", `<p class="muted" style="margin-top:0">${esc(e.nome)} · por que você quer trocar?</p><div class="opts">${TROCA_MOT.map(([k, n]) => `<button class="opt" data-tm="${k}"><span>${n}</span></button>`).join("")}</div>`, () => { if(PL) PL.pausa = false; });
   document.querySelectorAll("[data-tm]").forEach(b => b.onclick = () => {
-    const novo = trocaCandidato(s.id, b.dataset.tm);
+    if(!PL || !PL.T){ fecharSheet(); return; } const novo = trocaCandidato(s.id, b.dataset.tm);
     if(!novo){ toast("Não encontramos uma troca segura para esse. Você pode pular ou fazer no seu ritmo."); return; }
     const velho = s.id; PL.T.steps.forEach((x, j) => { if(j >= PL.i && x.id === velho) x.id = novo; });
     fecharSheet(); PL.pausa = false; toast(`Trocamos por ${exById(novo).nome} 💚`); if(PL.fase === "ex") comecaExercicio(); else desenhaPlay(); trocaBotao(); });
@@ -13412,7 +13412,7 @@ function planilha(cab, linhas, nome){
 /* Plano de cada aluna: vem do servidor (assinaturas: Kiwify, teste, cortesia). Sem banco, usa o Premium antigo. */
 let PLU = null, VENDAS = null, PLU_T = 0;
 function catPlano(u){ const s = PLU && PLU[u.id]; if(s){ if(!s.pro) return "gratis"; if(s.trial) return "teste"; return ["kiwify", "apple", "google"].includes(s.provider) ? "pago" : "cortesia"; }
-  if(!F.isPremium(u)) return "gratis"; return u.premium.tipo === "vitalicio" ? "cortesia" : u.premium.tipo; }
+  if(!F.isPremium(u)) return "gratis"; if(!u.premium) return "cortesia"; return u.premium.tipo === "vitalicio" ? "cortesia" : u.premium.tipo; }
 /* compras feitas pela equipe (testes) não entram nos números; continuam na lista, marcadas como "teste da equipe" */
 /* conta de teste (NOME com "teste", só o nome): aparece na lista, mas não entra em nenhuma conta do painel */
 const ehTeste = u => !!u && /teste/i.test(String(u.nome || ""));
@@ -13772,7 +13772,7 @@ function vAlunos(){
   $("adm-main").querySelectorAll("[data-ed]").forEach(b => b.onclick = () => formAluno(db.users.find(u => u.id === b.dataset.ed)));
 }
 const DURS = [["7","7 dias"],["30","30 dias"],["90","3 meses"],["180","6 meses"],["365","1 ano"],["vitalicio","Vitalício"]];
-function aplicaPrem(u, dur){ if(dur === "vitalicio") u.premium = { tipo: "vitalicio", ate: "9999-12-31" }; else { const base = F.isPremium(u) && u.premium.tipo !== "teste" && u.premium.ate !== "9999-12-31" ? u.premium.ate : today(); u.premium = { tipo: "cortesia", ate: addD(base, +dur) }; } }
+function aplicaPrem(u, dur){ if(dur === "vitalicio") u.premium = { tipo: "vitalicio", ate: "9999-12-31" }; else { const base = F.isPremium(u) && u.premium && u.premium.tipo !== "teste" && u.premium.ate !== "9999-12-31" ? u.premium.ate : today(); u.premium = { tipo: "cortesia", ate: addD(base, +dur) }; } }
 function formPremium(){
   modal("Dar Premium cortesia", `<div class="field"><label for="pr-e">E-mail da aluna</label><input class="input" id="pr-e" type="email" placeholder="aluna@email.com"></div>
     <div class="field"><label for="pr-d">Por quanto tempo</label><select class="input" id="pr-d">${DURS.map(([k, n]) => `<option value="${k}" ${k === "30" ? "selected" : ""}>${n}</option>`).join("")}</select></div><div id="pr-msg"></div>

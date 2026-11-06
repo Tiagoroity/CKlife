@@ -34,7 +34,7 @@ function trocarExercicio(){
   if(!PL) return; const s = PL.T.steps[PL.i], e = exById(s.id); PL.pausa = true;
   sheet("Trocar exercício", `<p class="muted" style="margin-top:0">${esc(e.nome)} · por que você quer trocar?</p><div class="opts">${TROCA_MOT.map(([k, n]) => `<button class="opt" data-tm="${k}"><span>${n}</span></button>`).join("")}</div>`, () => { if(PL) PL.pausa = false; });
   document.querySelectorAll("[data-tm]").forEach(b => b.onclick = () => {
-    const novo = trocaCandidato(s.id, b.dataset.tm);
+    if(!PL || !PL.T){ fecharSheet(); return; } const novo = trocaCandidato(s.id, b.dataset.tm);
     if(!novo){ toast("Não encontramos uma troca segura para esse. Você pode pular ou fazer no seu ritmo."); return; }
     const velho = s.id; PL.T.steps.forEach((x, j) => { if(j >= PL.i && x.id === velho) x.id = novo; });
     fecharSheet(); PL.pausa = false; toast(`Trocamos por ${exById(novo).nome} 💚`); if(PL.fase === "ex") comecaExercicio(); else desenhaPlay(); trocaBotao(); });
